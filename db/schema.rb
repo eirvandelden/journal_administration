@@ -10,10 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_05_195835) do
+ActiveRecord::Schema.define(version: 2019_10_05_204223) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "accounts", force: :cascade do |t|
+    t.string "account_number"
+    t.string "name"
+    t.integer "owner"
+    t.bigint "category_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["category_id"], name: "index_accounts_on_category_id"
+    t.index ["id"], name: "index_accounts_on_id"
+  end
 
   create_table "categories", force: :cascade do |t|
     t.string "name"
@@ -33,4 +44,5 @@ ActiveRecord::Schema.define(version: 2019_10_05_195835) do
     t.index ["remember_token"], name: "index_users_on_remember_token"
   end
 
+  add_foreign_key "accounts", "categories"
 end
