@@ -2,16 +2,23 @@
 %html
   %head
     %title JournalAdministration
-  %body
     = csrf_meta_tags
     = csp_meta_tag
     = stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload'
     = javascript_pack_tag 'application', 'data-turbolinks-track': 'reload'
-    - if signed_in?
-      Signed in as: #{current_user.email}
-      \#{button_to 'Sign out', sign_out_path, method: :delete}
-    - else
-      = link_to 'Sign in', sign_in_path
+  %body
+    %nav
+      %ul
+        %li= link_to 'Home', dashboard_index_path
+        -# %li= link_to 'Journal', transactions_index_path
+        -# %li= link_to 'Accounts', accounts_path
+        %li= link_to 'Categories', categories_path
+        %li
+          - if signed_in?
+            Signed in as: #{current_user.email} #{button_to 'Sign out', sign_out_path, method: :delete}
+          - else
+            = link_to 'Sign in', sign_in_path
+    %hr
     #flash
       - flash.each do |key, value|
         %div{class: "flash #{key}"}= value
