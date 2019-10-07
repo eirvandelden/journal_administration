@@ -5,7 +5,7 @@ class CreateAccounts < ActiveRecord::Migration[6.0]
       t.string :account_number
       t.string :name
       t.integer :owner
-      t.belongs_to :category, null: false, foreign_key: true
+      t.belongs_to :category, null: true, foreign_key: true
 
       t.timestamps
     end

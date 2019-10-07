@@ -155,4 +155,6 @@ end
   Category.find_or_create_by name: name
 end
 
+['Transfer'].each { |name| Category.find_or_create_by name: name }
+
 ## Accounts

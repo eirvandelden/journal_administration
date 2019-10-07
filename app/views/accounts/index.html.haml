@@ -19,7 +19,7 @@
         %td= account.account_number
         %td= account.name
         %td= account.owner
-        %td= account.category
+        %td= account.category&.name
         %td= link_to 'Show', account
         %td= link_to 'Edit', edit_account_path(account)
         %td= link_to 'Destroy', account, method: :delete, data: { confirm: 'Are you sure?' }
