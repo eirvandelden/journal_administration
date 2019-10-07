@@ -19,7 +19,7 @@ ActiveRecord::Schema.define(version: 2019_10_05_204223) do
     t.string "account_number"
     t.string "name"
     t.integer "owner"
-    t.bigint "category_id", null: false
+    t.bigint "category_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["category_id"], name: "index_accounts_on_category_id"

@@ -3,6 +3,7 @@
 %table
   %thead
     %tr
+      %th Id
       %th Name
       %th
       %th
@@ -11,6 +12,7 @@
   %tbody
     - @categories.each do |category|
       %tr
+        %td= category.id
         %td= category.name
         %td= link_to 'Show', category
         %td= link_to 'Edit', edit_category_path(category)
