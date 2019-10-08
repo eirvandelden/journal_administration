@@ -7,4 +7,5 @@ class Transaction < ApplicationRecord
   belongs_to :debitor, class_name: 'Account', foreign_key: 'debitor_account_id'
   belongs_to :creditor, class_name: 'Account', foreign_key: 'creditor_account_id'
   belongs_to :category
+  # TODO: add self relation for Transfer Transactions.
 end
