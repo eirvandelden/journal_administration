@@ -1,0 +1,37 @@
+%h1 Listing transactions
+
+%table
+  %thead
+    %tr
+      %th Id
+      %th From account
+      %th To account
+      %th Amount
+      %th Booked at
+      %th Interest at
+      %th Category
+      %th Note
+      %th Type
+      %th
+      %th
+      %th
+
+  %tbody
+    - @transactions.each do |transaction|
+      %tr
+        %td= transaction.id
+        %td= transaction.from_account
+        %td= transaction.to_account
+        %td= transaction.amount
+        %td= transaction.booked_at
+        %td= transaction.interest_at
+        %td= transaction.category
+        %td= transaction.note
+        %td= transaction.type
+        %td= link_to 'Show', transaction
+        %td= link_to 'Edit', edit_transaction_path(transaction)
+        %td= link_to 'Destroy', transaction, method: :delete, data: { confirm: 'Are you sure?' }
+
+%br
+
+= link_to 'New Transaction', new_transaction_path

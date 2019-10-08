@@ -1,0 +1,33 @@
+%p#notice= notice
+
+%p
+  %b Id:
+  = @transaction.id
+%p
+  %b From account:
+  = @transaction.from_account
+%p
+  %b To account:
+  = @transaction.to_account
+%p
+  %b Amount:
+  = @transaction.amount
+%p
+  %b Booked at:
+  = @transaction.booked_at
+%p
+  %b Interest at:
+  = @transaction.interest_at
+%p
+  %b Category:
+  = @transaction.category
+%p
+  %b Note:
+  = @transaction.note
+%p
+  %b Type:
+  = @transaction.type
+
+= link_to 'Edit', edit_transaction_path(@transaction)
+\|
+= link_to 'Back', transactions_path
