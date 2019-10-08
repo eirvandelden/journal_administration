@@ -4,11 +4,11 @@
   %thead
     %tr
       %th Id
-      %th From account
-      %th To account
+      %th DebitorAccount
+      %th CreditorAccount
       %th Amount
-      %th Booked at
-      %th Interest at
+      %th Booked at date
+      %th Interest date
       %th Category
       %th Note
       %th Type
@@ -20,8 +20,8 @@
     - @transactions.each do |transaction|
       %tr
         %td= transaction.id
-        %td= transaction.from_account
-        %td= transaction.to_account
+        %td= transaction.debitor_account
+        %td= transaction.creditor_ccount
         %td= transaction.amount
         %td= transaction.booked_at
         %td= transaction.interest_at
