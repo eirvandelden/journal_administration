@@ -67,21 +67,34 @@ class TransactionsController < ApplicationController
     csv = ing_params[:csv]
     failed = 0
     CSV.foreach(csv.tempfile.path) do |row|
-      next if row.first == 'Datum'
+      next if row == ["Datum","Naam / Omschrijving","Rekening","Tegenrekening","Code","Af Bij","Bedrag (EUR)","MutatieSoort","Mededelingen"]
 
       # ["Datum", "Naam / Omschrijving", "Rekening", "Tegenrekening", "Code", "Af Bij", "Bedrag (EUR)", "MutatieSoort", "Mededelingen"]
       date = DateTime.parse row[0]
-      counter_balance_name = row[1]
-      our_account = Account.find_by account_number: row[2]
-      counter_account = Account.find_or_by account_number: row[3]
-
+      initiator_account_name = row[1] # Note: this can be either OUR account name, or THEIRS
+      our_account = Account.find_or_create_by account_number: row[2]
+      their_account = Account.find_or_create_by account_number: row[3]
+      their_account.name ||= initiator_account_name
+      code = row[4]
+      direction = row[5]
+      negative = direction == 'Af' ? -1 : 1
+      amount = row[6].gsub(',','.').to_d
+      mutation_kind = row[7]
+      description = row[8]
 
       transaction = Transaction.new
-      transaction.date = DateTime.parse row[0]
+
+      case direction
+      when 'Af'
+        transaction.creditor = our_account
+        transaction.debitor =
+      when 'Bij'
+      end
+
       transaction.description = row[1] + "\n" + row[8]
 
       transaction.account = account if account.present?
-      negative = row[5] == 'Af' ? -1 : 1
+
       transaction.amount = negative * row[6].gsub(',','.').to_d
 
       failed += 1 unless transaction.save
