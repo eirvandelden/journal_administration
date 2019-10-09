@@ -1,3 +1,5 @@
+require 'csv'
+
 class TransactionsController < ApplicationController
   before_action :set_transaction, only: [:show, :edit, :update, :destroy]
 
@@ -61,6 +63,35 @@ class TransactionsController < ApplicationController
     end
   end
 
+  def upload
+    csv = ing_params[:csv]
+    failed = 0
+    CSV.foreach(csv.tempfile.path) do |row|
+      next if row.first == 'Datum'
+
+      # ["Datum", "Naam / Omschrijving", "Rekening", "Tegenrekening", "Code", "Af Bij", "Bedrag (EUR)", "MutatieSoort", "Mededelingen"]
+      date = DateTime.parse row[0]
+      counter_balance_name = row[1]
+      our_account = Account.find_by account_number: row[2]
+      counter_account = Account.find_or_by account_number: row[3]
+
+
+      transaction = Transaction.new
+      transaction.date = DateTime.parse row[0]
+      transaction.description = row[1] + "\n" + row[8]
+
+      transaction.account = account if account.present?
+      negative = row[5] == 'Af' ? -1 : 1
+      transaction.amount = negative * row[6].gsub(',','.').to_d
+
+      failed += 1 unless transaction.save
+    end
+
+    flash[:alert] = "#{failed} transacties niet geimporteerd" if failed > 0
+
+    redirect_to transactions_path
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_transaction
@@ -70,5 +101,9 @@ class TransactionsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def transaction_params
       params.require(:transaction).permit(:id, :debit_account_id, :credit_account_id, :amount, :booked_at, :interest_at, :category_id, :note, :type)
+    end
+
+    def csv_params
+      params.permit(:csv)
     end
 end

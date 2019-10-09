@@ -7,6 +7,8 @@ class Transaction < ApplicationRecord
 
   before_validation :determine_debit_credit_or_transfer_type
 
+  # validates_associated :debitor
+
   validates :type, inclusion: { in: %w(Credit Debit Transfer), message: "%{value} is not a valid type" }, presence: true
   validate :check_transfer_type_through_account_owners
 

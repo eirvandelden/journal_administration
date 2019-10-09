@@ -1,5 +1,9 @@
 Rails.application.routes.draw do
-  resources :transactions
+  resources :transactions do
+    collection do
+      post :upload
+    end
+  end
   resources :accounts
   resources :categories
   get 'dashboard/index'
