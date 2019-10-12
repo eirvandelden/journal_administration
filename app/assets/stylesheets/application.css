@@ -13,3 +13,17 @@
  *= require_tree .
  *= require_self
  */
+
+ /* Taken from here: https://tombrow.com/dark-mode-website-css */
+ @media (prefers-color-scheme: dark) {
+  body {
+    background-color: #444;
+    color: #e4e4e4;
+  }
+  a, a:visited {
+    color: #e39777;
+  }
+  img {
+    filter: grayscale(30%);
+  }
+}
