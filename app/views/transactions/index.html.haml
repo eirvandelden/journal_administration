@@ -10,15 +10,14 @@
 %table.transactions
   %thead
     %tr
-      %th Id
-      %th DebitorAccount
-      %th CreditorAccount
+      %th Type
+      %th Creditor
+      %th Debitor
       %th Amount
       %th Booked at date
       %th Interest date
       %th Category
       %th Note
-      %th Type
       %th
       %th
       %th
@@ -26,15 +25,14 @@
   %tbody
     - @transactions.each do |transaction|
       %tr
-        %td= transaction.id
-        %td= transaction.debitor_account
-        %td= transaction.creditor_ccount
-        %td= transaction.amount
-        %td= transaction.booked_at
-        %td= transaction.interest_at
-        %td= transaction.category
-        %td= transaction.note
         %td= transaction.type
+        %td= transaction.creditor.name || transaction.creditor.account_number
+        %td= transaction.debitor.name || transaction.debitor.account_number
+        %td= transaction.amount
+        %td= l transaction.booked_at
+        %td= l transaction.interest_at
+        %td= transaction.category&.name
+        %td= transaction.note
         %td= link_to 'Show', transaction
         %td= link_to 'Edit', edit_transaction_path(transaction)
         %td= link_to 'Destroy', transaction, method: :delete, data: { confirm: 'Are you sure?' }

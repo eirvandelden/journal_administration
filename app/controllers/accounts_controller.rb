@@ -1,6 +1,8 @@
 class AccountsController < ApplicationController
   before_action :set_account, only: [:show, :edit, :update, :destroy]
 
+  # TODO: Allow an account to update all transactions that are associated to category_id
+
   # GET /accounts
   # GET /accounts.json
   def index

@@ -64,17 +64,16 @@ class TransactionsController < ApplicationController
   end
 
   def upload
-    csv = ing_params[:csv]
+    csv = csv_params[:csv]
     failed = 0
     CSV.foreach(csv.tempfile.path) do |row|
       next if row == ["Datum","Naam / Omschrijving","Rekening","Tegenrekening","Code","Af Bij","Bedrag (EUR)","MutatieSoort","Mededelingen"]
 
-      # ["Datum", "Naam / Omschrijving", "Rekening", "Tegenrekening", "Code", "Af Bij", "Bedrag (EUR)", "MutatieSoort", "Mededelingen"]
+      # Extract all information
       date = DateTime.parse row[0]
       initiator_account_name = row[1] # Note: this can be either OUR account name, or THEIRS
       our_account = Account.find_or_create_by account_number: row[2]
-      their_account = Account.find_or_create_by account_number: row[3]
-      their_account.name ||= initiator_account_name
+      their_account = Account.find_or_create_by account_number: row[3] if row[3].present?
       code = row[4]
       direction = row[5]
       negative = direction == 'Af' ? -1 : 1
@@ -82,22 +81,37 @@ class TransactionsController < ApplicationController
       mutation_kind = row[7]
       description = row[8]
 
-      transaction = Transaction.new
+      # Set missing account to spaarpotje
+      if their_account.blank?
+        search_for_accounts = Account.where.not(owner: nil).map(&:account_number).join('|')
+        matched_account = /#{search_for_accounts}/.match description
+        their_account = Account.find_by account_number: matched_account.to_s if matched_account.present?
+      end
+      # Find missing account based on account_name
+      their_account = Account.find_or_create_by name: initiator_account_name if their_account.blank?
 
+      their_account.update name: initiator_account_name if their_account&.name.blank?
+
+      transaction = Transaction.new amount: amount, booked_at: date, interest_at: date
+      transaction.category = their_account.category || our_account.category
+      transaction.note = description+ "\n" + code + "\n" + mutation_kind
+
+      # determine type of transaction
       case direction
       when 'Af'
         transaction.creditor = our_account
-        transaction.debitor =
+        transaction.debitor = their_account
+        transaction.type = "Credit"
       when 'Bij'
+        transaction.debitor = our_account
+        transaction.creditor = their_account
+        transaction.type = "Debit"
       end
+      transaction.type = "Transfer" if our_account.owner == their_account.owner
 
-      transaction.description = row[1] + "\n" + row[8]
-
-      transaction.account = account if account.present?
-
-      transaction.amount = negative * row[6].gsub(',','.').to_d
-
-      failed += 1 unless transaction.save
+      # Do not import if this transaction has already been imported
+      next if Transaction.find_by(transaction.attributes.except('interest_at', 'category_id', 'created_at', 'updated_at', 'id')).present?
+      transaction.save!
     end
 
     flash[:alert] = "#{failed} transacties niet geimporteerd" if failed > 0
