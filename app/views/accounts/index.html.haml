@@ -3,6 +3,8 @@
 %section.actions
   = link_to 'New Account', new_account_path
 
+= pagy_nav(@pagy).html_safe
+
 %table.accounts
   %thead
     %tr
@@ -17,7 +19,7 @@
       %th
 
   %tbody
-    - @accounts.each do |account|
+    - @records.each do |account|
       %tr
         %td= account.id
         %td= account.account_number
@@ -28,3 +30,5 @@
         %td= link_to 'Edit', edit_account_path(account)
         %td= link_to 'Update Transactions', update_transactions_account_path(account)
         %td= link_to 'Destroy', account, method: :delete, data: { confirm: 'Are you sure?' }
+
+= pagy_nav(@pagy).html_safe

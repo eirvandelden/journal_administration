@@ -185,28 +185,28 @@ en:
   number:
     currency:
       format:
-        delimiter: ","
-        format: "%u%n"
+        delimiter: "."
+        format: "%u %n"
         precision: 2
-        separator: "."
+        separator: ","
         significant: false
         strip_insignificant_zeros: false
-        unit: "$"
+        unit: "€"
     format:
-      delimiter: ","
-      precision: 3
-      separator: "."
+      delimiter: "."
+      precision: 2
+      separator: ","
       significant: false
       strip_insignificant_zeros: false
     human:
       decimal_units:
         format: "%n %u"
         units:
-          billion: Billion
-          million: Million
-          quadrillion: Quadrillion
-          thousand: Thousand
-          trillion: Trillion
+          billion: miljard
+          million: miljoen
+          quadrillion: biljard
+          thousand: duizend
+          trillion: biljoen
           unit: ''
       format:
         delimiter: ''
@@ -217,13 +217,11 @@ en:
         format: "%n %u"
         units:
           byte:
-            one: Byte
-            other: Bytes
-          eb: EB
+            one: byte
+            other: bytes
           gb: GB
           kb: KB
           mb: MB
-          pb: PB
           tb: TB
     percentage:
       format:

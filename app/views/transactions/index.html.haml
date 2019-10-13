@@ -7,6 +7,8 @@
     = file_field_tag 'csv'
     = submit_tag 'Upload'
 
+= pagy_nav(@pagy).html_safe
+
 %table.transactions
   %thead
     %tr
@@ -23,12 +25,14 @@
       %th
 
   %tbody
-    - @transactions.each do |transaction|
+    - @records.each do |transaction|
       %tr
         %td= transaction.type
-        %td= transaction.creditor.name || transaction.creditor.account_number
-        %td= transaction.debitor.name || transaction.debitor.account_number
-        %td= transaction.amount
+        - creditor = transaction.creditor.name || transaction.creditor.account_number
+        %td= link_to creditor, account_path(transaction.creditor)
+        - debitor = transaction.debitor.name || transaction.debitor.account_number
+        %td= link_to debitor, account_path(transaction.debitor)
+        %td= number_to_currency transaction.amount
         %td= l transaction.booked_at
         %td= l transaction.interest_at
         %td= transaction.category&.name
@@ -37,4 +41,4 @@
         %td= link_to 'Edit', edit_transaction_path(transaction)
         %td= link_to 'Destroy', transaction, method: :delete, data: { confirm: 'Are you sure?' }
 
-
+= pagy_nav(@pagy).html_safe
