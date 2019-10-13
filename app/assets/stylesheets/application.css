@@ -10,20 +10,12 @@
  * files in this directory. Styles in this file should be added after the last require_* statement.
  * It is generally better to create a new file per style scope.
  *
- *= require_tree .
  *= require_self
+ *= require 'normalize'
+ *= require 'scaffolds'
+ *= require_tree './layout'
+ *= require_tree './modules'
+ *= require_tree './state'
+ *= require_tree './theme'
  */
 
- /* Taken from here: https://tombrow.com/dark-mode-website-css */
- @media (prefers-color-scheme: dark) {
-  body {
-    background-color: #444;
-    color: #e4e4e4;
-  }
-  a, a:visited {
-    color: #e39777;
-  }
-  img {
-    filter: grayscale(30%);
-  }
-}
