@@ -10,11 +10,13 @@
     = f.label :id
     = f.text_field :id
   .field
-    = f.label :from_account
-    = f.text_field :from_account
+    %strong TODO
+    = f.label :debitor
+    = f.text_field :debitor, disabled: :disabled
   .field
-    = f.label :to_account
-    = f.text_field :to_account
+    %strong TODO
+    = f.label :creditor
+    = f.text_field :creditor, disabled: :disabled
   .field
     = f.label :amount
     = f.text_field :amount

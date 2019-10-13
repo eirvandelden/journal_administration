@@ -1,3 +1,5 @@
+%h1 Show transactions
+
 %p#notice= notice
 
 %p
@@ -5,10 +7,10 @@
   = @transaction.id
 %p
   %b From account:
-  = @transaction.from_account
+  = @transaction.creditor
 %p
   %b To account:
-  = @transaction.to_account
+  = @transaction.debitor
 %p
   %b Amount:
   = @transaction.amount
