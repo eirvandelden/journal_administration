@@ -7,7 +7,8 @@ gem 'bootsnap', '>= 1.4.2', require: false # Reduces boot times through caching;
 gem 'bundle-audit'
 gem 'clearance'                   # Rails authentication with email & password.
 gem 'dotenv-rails'
-gem 'haml-rails'                        # Awesome templating engine
+gem 'sentry-raven'                # Use sentry to capture exceptions
+gem 'haml-rails'                  # Awesome templating engine
 gem 'jbuilder', '~> 2.7'          # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'pagy'                        # The Ultimate Pagination Ruby Gem
 gem 'pg', '>= 0.18', '< 2.0'      # Use postgresql as the database for Active Record
