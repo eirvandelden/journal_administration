@@ -1,5 +1,5 @@
 class AccountsController < ApplicationController
-  before_action :set_account, only: [:show, :edit, :update, :destroy]
+  before_action :set_account, only: [:show, :edit, :update, :destroy, :update_transactions]
 
   # TODO: Allow an account to update all transactions that are associated to category_id
 
@@ -61,6 +61,16 @@ class AccountsController < ApplicationController
       format.html { redirect_to accounts_url, notice: 'Account was successfully destroyed.' }
       format.json { head :no_content }
     end
+  end
+
+  # GET /accounts/1/update_transactions/
+  def update_transactions
+    return redirect_back fallback_location: accounts_url, alert: 'Account has no category' if @account.category.blank?
+    Transaction.where(debitor_account_id: @account, category_id: nil).update_all category_id: @account.category_id
+    Transaction.where(creditor_account_id: @account, category_id: nil).update_all category_id: @account.category_id
+
+    flash[:notice] = "Transactions for account #{@account} were updated to have category #{@account.category.name}."
+    redirect_back fallback_location: accounts_url
   end
 
   private

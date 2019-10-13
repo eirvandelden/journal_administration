@@ -14,6 +14,7 @@
       %th
       %th
       %th
+      %th
 
   %tbody
     - @accounts.each do |account|
@@ -25,4 +26,5 @@
         %td= account.category&.name
         %td= link_to 'Show', account
         %td= link_to 'Edit', edit_account_path(account)
+        %td= link_to 'Update Transactions', update_transactions_account_path(account)
         %td= link_to 'Destroy', account, method: :delete, data: { confirm: 'Are you sure?' }

@@ -14,8 +14,10 @@
   = @account.owner
 %p
   %b Category:
-  = @account.category
+  = @account.category&.name
 
 = link_to 'Edit', edit_account_path(@account)
+\|
+= link_to 'Update Transactions', update_transactions_account_path account
 \|
 = link_to 'Back', accounts_path
