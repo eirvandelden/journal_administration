@@ -2,17 +2,18 @@
 // DARK MODE
 //
 // Functionally Taken from here: https://tombrow.com/dark-mode-website-css
-// colours are from https://github.com/alphapapa/solarized-everything-css/blob/master/css/solarized-dark/solarized-dark-all-sites.css
+@import 'variables'
+
 @media (prefers-color-scheme: dark)
   *
-    border-color: #657b83 !important
+    border-color: $base0 !important
   body
-    background-color: #002b36 !important
-    color: #839496 !important
-  a
-    color: #e39777
-    :visited
-      color: #6c71c4 !important
-
+    background-color: $base03 !important
+    color: $base0 !important
+  h1, h2, h3, h4, h5, h6
+    color: $base1
+    border-color: $base0
+  a, a:active, a:visited
+    color: $yellow
   img
     filter: grayscale(30%)

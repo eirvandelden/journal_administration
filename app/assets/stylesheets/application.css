@@ -13,9 +13,9 @@
  *= require_self
  *= require 'normalize'
  *= require 'scaffolds'
+ *= require 'base'
  *= require_tree './layout'
  *= require_tree './modules'
  *= require_tree './state'
  *= require_tree './theme'
  */
-
