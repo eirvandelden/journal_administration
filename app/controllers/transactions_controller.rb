@@ -129,7 +129,8 @@ class TransactionsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def transaction_params
-      params.require(:transaction).permit(:id, :debit_account_id, :credit_account_id, :amount, :booked_at, :interest_at, :category_id, :note, :type)
+      key = (params.keys & %w(debit credit transfer transaction))[0]
+      params.require(key).permit(:id, :debit_account_id, :credit_account_id, :amount, :booked_at, :interest_at, :category_id, :note, :type)
     end
 
     def csv_params
