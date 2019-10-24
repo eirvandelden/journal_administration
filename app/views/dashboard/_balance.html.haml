@@ -13,17 +13,17 @@
       %tr
         - if i < 0
           %td= debits.keys[i+1]
-          %td.amount= debits[debits.keys[i+1]]
+          %td.amount= number_to_currency debits[debits.keys[i+1]]
           %td Winst/Verlies
-          %td.amount= profit_or_loss
+          %td.amount= number_to_currency profit_or_loss
         - else
           %td= debits.keys[i+1]
-          %td.amount= debits[debits.keys[i+1]]
+          %td.amount= number_to_currency debits[debits.keys[i+1]]
           %td= credits.keys[i]
-          %td.amount= credits[credits.keys[i]]
+          %td.amount= number_to_currency credits[credits.keys[i]]
   %tfoot
     %tr
       %td Totalen
-      %td.amount= debit_total
+      %td.amount= number_to_currency debit_total
       %td Totalen
-      %td.amount= credit_total
+      %td.amount= number_to_currency credit_total
