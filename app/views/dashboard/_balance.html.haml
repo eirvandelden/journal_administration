@@ -1,0 +1,29 @@
+%table.debit_credit
+  %thead
+    %tr
+      %th{colspan: 2} Debit
+      %th{colspan: 2} Credit
+    %tr
+      %th Category Name
+      %th Total amount
+      %th Category Name
+      %th Total amount
+  %tbody
+    - for i in -1..[debits.count, credits.count].max do
+      %tr
+        - if i < 0
+          %td= debits.keys[i+1]
+          %td.amount= debits[debits.keys[i+1]]
+          %td Winst/Verlies
+          %td.amount= profit_or_loss
+        - else
+          %td= debits.keys[i+1]
+          %td.amount= debits[debits.keys[i+1]]
+          %td= credits.keys[i]
+          %td.amount= credits[credits.keys[i]]
+  %tfoot
+    %tr
+      %td Totalen
+      %td.amount= debit_total
+      %td Totalen
+      %td.amount= credit_total

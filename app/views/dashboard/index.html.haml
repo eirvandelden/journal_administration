@@ -9,8 +9,5 @@
     %li= link_to 'last year', dashboard_index_path(filter: :last_year)
 %hr
 
-%h2 Debit
-%p On the left
-
-%h2 Credit
-%p On the right
+%article.debit-credit
+  = render partial: 'balance', locals: { debits: @debit_transactions, credits: @credit_transactions, debit_total: @debit_total, credit_total: @credit_total, profit_or_loss: @profit_or_loss }
