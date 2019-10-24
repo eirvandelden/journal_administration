@@ -6,7 +6,9 @@ class TransactionsController < ApplicationController
   # GET /transactions
   # GET /transactions.json
   def index
-    @pagy, @records = pagy Transaction.all.order interest_at: :desc
+    transactions = Transaction.all
+    transactions = transactions.where(category: nil) if params[:filter] == 'no_category'
+    @pagy, @records = pagy transactions.order interest_at: :desc
   end
 
   # GET /transactions/1
