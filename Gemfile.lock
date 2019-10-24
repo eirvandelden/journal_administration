@@ -88,6 +88,8 @@ GEM
       railties (>= 3.1)
     concurrent-ruby (1.1.5)
     crass (1.0.5)
+    data_migrate (6.0.5)
+      rails (>= 5.0)
     dotenv (2.7.5)
     dotenv-rails (2.7.5)
       dotenv (= 2.7.5)
@@ -99,6 +101,7 @@ GEM
     faraday (0.17.0)
       multipart-post (>= 1.2, < 3)
     ffi (1.11.1)
+    flutie (2.2.0)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
     haml (5.1.2)
@@ -250,7 +253,9 @@ DEPENDENCIES
   byebug
   capybara (>= 2.15)
   clearance
+  data_migrate
   dotenv-rails
+  flutie
   haml-rails
   jbuilder (~> 2.7)
   listen (>= 3.0.5, < 3.2)
