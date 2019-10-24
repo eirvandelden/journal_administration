@@ -1,8 +1,13 @@
 %h1 Dashboard
 
-%ul
-  %li Per Month
-  %li Per Year
+%nav
+  %ul
+    %li= link_to 'Month to date', dashboard_index_path(filter: :month_to_date)
+    %li= link_to 'last month', dashboard_index_path(filter: :last_month)
+    %li= link_to '3 months', dashboard_index_path(filter: :three_months)
+    %li= link_to 'year to date', dashboard_index_path(filter: :year_to_date)
+    %li= link_to 'last year', dashboard_index_path(filter: :last_year)
+%hr
 
 %h2 Debit
 %p On the left
