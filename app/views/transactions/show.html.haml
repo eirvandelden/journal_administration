@@ -13,7 +13,7 @@
   = @transaction.debitor
 %p
   %b Amount:
-  = @transaction.amount
+  = number_to_currency @transaction.amount
 %p
   %b Booked at:
   = @transaction.booked_at
