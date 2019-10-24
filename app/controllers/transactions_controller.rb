@@ -109,7 +109,7 @@ class TransactionsController < ApplicationController
         transaction.creditor = their_account
         transaction.type = "Debit"
       end
-      transaction.type = "Transfer" if our_account.owner == their_account.owner
+      transaction.type = "Transfer" if our_account.owner.present? && their_account.owner.present?
 
       # Do not import if this transaction has already been imported
       next if Transaction.find_by(transaction.attributes.except('interest_at', 'category_id', 'created_at', 'updated_at', 'id')).present?
