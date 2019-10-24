@@ -17,7 +17,7 @@
     = f.text_field :name
   .field
     = f.label :owner
-    = f.collection_select :owner, Account.owners, :second, :first, { include_blank: true }
+    = f.collection_select :owner, Account.owners, :first, :first, { include_blank: true }
   .field
     = f.label :category_id
     = f.collection_select :category_id, Category.all, :id, :name, { include_blank: true }
