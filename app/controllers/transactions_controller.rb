@@ -112,7 +112,7 @@ class TransactionsController < ApplicationController
 
       # Set category only if the default account matches the type of transaction
       transaction.category = case
-                             when transaction.is_a? Transfer
+                             when transaction.is_a?(Transfer)
                                Category.find_by(name: 'Transfer')
                              when (their_account.category.credit? && transaction.is_a?(Credit)) || (their_account.category.debit? && transaction.is_a?(Debit))
                                their_account.category
