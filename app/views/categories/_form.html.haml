@@ -9,5 +9,8 @@
   .field
     = f.label :name
     = f.text_field :name
+  .field
+    = f.label :direction
+    = f.collection_select :direction, Category::DIRECTIONS, :to_s, :to_s, { required: true }
   .actions
     = f.submit 'Save'

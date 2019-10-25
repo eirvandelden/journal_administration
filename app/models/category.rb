@@ -1,6 +1,7 @@
 class Category < ApplicationRecord
+  DIRECTIONS = %i(debit credit)
   has_many :transactions
-  enum direction: %i(debit credit)
+  enum direction: DIRECTIONS
 
   validates :direction, presence: true
 
