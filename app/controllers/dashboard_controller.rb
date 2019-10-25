@@ -13,8 +13,8 @@ class DashboardController < ApplicationController
         Time.current.beginning_of_month..Time.current.end_of_month
       end
 
-    @debit_transactions = Transaction.where(booked_at: daterange, category: Category.where(direction: :debit).ids).group(:category).sum(:amount)
-    @credit_transactions = Transaction.where(booked_at: daterange, category: Category.where(direction: :credit).ids).group(:category).sum(:amount)
+    @debit_transactions = Debit.where(booked_at: daterange).group(:category).sum(:amount)
+    @credit_transactions = Credit.where(booked_at: daterange).group(:category).sum(:amount)
 
     @debit_total = @debit_transactions.values.sum
     credit_sub_total = @credit_transactions.values.sum
