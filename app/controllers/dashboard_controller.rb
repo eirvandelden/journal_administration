@@ -13,8 +13,8 @@ class DashboardController < ApplicationController
         Time.current.beginning_of_month..Time.current.end_of_month
       end
 
-    @debit_transactions = Debit.where(booked_at: daterange).group(:category).sum(:amount).sort_by { |k, _v| k.name }.to_h
-    @credit_transactions = Credit.where(booked_at: daterange).group(:category).sum(:amount).sort_by { |k, _v| k.name }.to_h
+    @debit_transactions = Debit.where(booked_at: daterange).group(:category).sum(:amount).sort_by { |k, _v| k&.name }.to_h
+    @credit_transactions = Credit.where(booked_at: daterange).group(:category).sum(:amount).sort_by { |k, _v| k&.name }.to_h
 
     @debit_total = @debit_transactions.values.sum
     credit_sub_total = @credit_transactions.values.sum
