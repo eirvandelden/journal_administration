@@ -95,7 +95,6 @@ class TransactionsController < ApplicationController
       their_account.update name: initiator_account_name if their_account&.name.blank?
 
       transaction = Transaction.new amount: amount, booked_at: date, interest_at: date
-      transaction.category = their_account.category || our_account.category
       transaction.note = description+ "\n" + code + "\n" + mutation_kind
 
       # determine type of transaction
@@ -110,6 +109,18 @@ class TransactionsController < ApplicationController
         transaction.type = "Debit"
       end
       transaction.type = "Transfer" if our_account.owner.present? && their_account.owner.present?
+
+      # Set category only if the default account matches the type of transaction
+      transaction.category = case
+                             when transaction.is_a? Transfer
+                               Category.find_by(name: 'Transfer')
+                             when (their_account.category.credit? && transaction.is_a?(Credit)) || (their_account.category.debit? && transaction.is_a?(Debit))
+                               their_account.category
+                             when (our_account.category.credit? && transaction.is_a?(Credit)) || (our_account.category.debit? && transaction.is_a?(Debit))
+                               our_account.category
+                             else
+                               nil
+                             end
 
       # Do not import if this transaction has already been imported
       next if Transaction.find_by(transaction.attributes.except('interest_at', 'category_id', 'created_at', 'updated_at', 'id')).present?
