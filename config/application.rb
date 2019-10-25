@@ -16,8 +16,4 @@ module JournalAdministration
     # -- all .rb files in that directory are automatically loaded after loading
     # the framework and any gems in your application.
   end
-
-  Raven.configure do |config|
-    config.dsn = 'https://afb8d771ad114eddbcd7b14546680ad0:4b94b49acc9b4c7cab58ab8a00dd9e15@sentry.io/1778246'
-  end
 end
