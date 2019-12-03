@@ -114,9 +114,9 @@ class TransactionsController < ApplicationController
       transaction.category = case
                              when transaction.is_a?(Transfer)
                                Category.find_by(name: 'Transfer')
-                             when (their_account&.category&.credit? && transaction.is_a?(Credit)) || (their_account&.category&.debit? && transaction.is_a?(Debit))
+                             when (their_account&.category&.credit? && (transaction.type == 'Credit')) || (their_account&.category&.debit? && (transaction.type == 'Debit'))
                                their_account&.category
-                             when (our_account&.category&.credit? && transaction.is_a?(Credit)) || (our_account&.category&.debit? && transaction.is_a?(Debit))
+                             when (our_account&.category&.credit? && (transaction.type == 'Credit')) || (our_account&.category&.debit? && (transaction.type == 'Debit'))
                                our_account&.category
                              else
                                nil
