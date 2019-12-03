@@ -4,7 +4,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby '2.6.4'
 
 gem 'bootsnap', '>= 1.4.2', require: false # Reduces boot times through caching; required in config/boot.rb
-gem 'bundle-audit'
+gem 'bundler-audit'
 gem 'clearance'                   # Rails authentication with email & password.
 gem 'data_migrate'                # Migrate data alongside schema
 gem 'dotenv-rails'                # Read .env files and make available in Rails
