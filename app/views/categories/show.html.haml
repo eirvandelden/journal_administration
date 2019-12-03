@@ -1,4 +1,8 @@
-%h1 Show category
+%nav.secondary
+  %h1 Show category
+  %ul
+    %li= link_to 'Back', categories_path
+    %li= link_to 'Edit', edit_category_path(@category)
 
 %p#notice= notice
 
@@ -6,6 +10,3 @@
   %b Name:
   = @category.name
 
-= link_to 'Edit', edit_category_path(@category)
-\|
-= link_to 'Back', categories_path

@@ -1,7 +1,7 @@
-%h1 Editing account
+%nav.secondary
+  %h1 Editing account
+  %ul
+    %li= link_to 'Back', accounts_path
+    %li= link_to 'Show', @account
 
 = render 'form'
-
-= link_to 'Show', @account
-\|
-= link_to 'Back', accounts_path
