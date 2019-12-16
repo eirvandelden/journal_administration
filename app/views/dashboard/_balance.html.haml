@@ -15,8 +15,8 @@
         - if i < 0
           %td= debits.keys[i+1]
           %td.amount= number_to_currency debits[debits.keys[i+1]]
-          %td Winst/Verlies
-          %td.amount= number_to_currency profit_or_loss
+          %td.profit-and-loss Winst/Verlies
+          %td.profit-and-loss.amount= number_to_currency profit_or_loss
         - else
           %td= debits.keys[i+1] unless already_printed_nil
           %td.amount= number_to_currency debits[debits.keys[i+1]] unless already_printed_nil
