@@ -1,6 +1,8 @@
 # Transaction model holds all information for a trnansaction.
 # The owner of the debitor account determins the type of Transaction: Debit or Credit.
 class Transaction < ApplicationRecord
+  class HeaderStringError < StandardError; end
+
   TYPES = %w(Credit Debit Transfer).freeze
   belongs_to :debitor, class_name: 'Account', foreign_key: 'debitor_account_id', optional: true
   belongs_to :creditor, class_name: 'Account', foreign_key: 'creditor_account_id', optional: true
@@ -12,6 +14,12 @@ class Transaction < ApplicationRecord
 
   validates :type, inclusion: { in: TYPES, message: "%{value} is not a valid type" }, presence: true
   validate :check_transfer_type_through_account_owners
+
+  def initialize(attributes={})
+    return super unless attributes.is_a? String
+
+    raise HeaderStringError if attributes == '"Datum","Naam / Omschrijving","Rekening","Tegenrekening","Code","Af Bij","Bedrag (EUR)","MutatieSoort","Mededelingen"'
+  end
 
   def debitor_is_us?
     debitor&.owner&.in? Account::FAMILY_OWNERS
