@@ -21,17 +21,17 @@
     = f.label :amount
     = f.text_field :amount
   .field
-    = f.label :booked_at
-    = f.datetime_select :booked_at
-  .field
-    = f.label :interest_at
-    = f.datetime_select :interest_at
-  .field
     = f.label :category_id
     = f.collection_select :category_id, Category.all.order(:name), :id, :name, { include_blank: true }
   .field
     = f.label :note
     = f.text_area :note
+  .field
+    = f.label :booked_at
+    = f.datetime_select :booked_at
+  .field
+    = f.label :interest_at
+    = f.datetime_select :interest_at
   .field
     = f.label :type
     = f.collection_select :type, Transaction::TYPES, :to_s, :to_s
