@@ -4,32 +4,4 @@
     %li= link_to 'Back', transactions_path
     %li= link_to 'Edit', edit_transaction_path(@transaction)
 
-%p#notice= notice
-
-%p
-  %b Id:
-  = @transaction.id
-%p
-  %b From account:
-  = @transaction.creditor
-%p
-  %b To account:
-  = @transaction.debitor
-%p
-  %b Amount:
-  = number_to_currency @transaction.amount
-%p
-  %b Booked at:
-  = @transaction.booked_at
-%p
-  %b Interest at:
-  = @transaction.interest_at
-%p
-  %b Category:
-  = @transaction.category
-%p
-  %b Note:
-  = @transaction.note
-%p
-  %b Type:
-  = @transaction.type
+= render partial: 'form', locals: { disabled: :disabled }

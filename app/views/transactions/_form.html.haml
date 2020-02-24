@@ -1,3 +1,4 @@
+- disabled ||= nil
 = form_for @transaction do |f|
   - if @transaction.errors.any?
     #error_explanation
@@ -19,21 +20,22 @@
     = f.text_field :creditor, disabled: :disabled
   .field
     = f.label :amount
-    = f.text_field :amount
+    = f.text_field :amount, disabled: disabled
   .field
     = f.label :category_id
-    = f.collection_select :category_id, Category.all.order(:name), :id, :name, { include_blank: true }
+    = f.collection_select :category_id, Category.all.order(:name), :id, :name, { include_blank: true }, disabled: disabled
   .field
     = f.label :note
-    = f.text_area :note
+    = f.text_area :note,disabled: disabled
   .field
     = f.label :booked_at
-    = f.datetime_select :booked_at
+    = f.datetime_select :booked_at, disabled: disabled
   .field
     = f.label :interest_at
-    = f.datetime_select :interest_at
+    = f.datetime_select :interest_at, disabled: disabled
   .field
     = f.label :type
-    = f.collection_select :type, Transaction::TYPES, :to_s, :to_s
-  .actions
-    = f.submit 'Save'
+    = f.collection_select :type, Transaction::TYPES, :to_s, :to_s, {} , disabled: disabled
+  - unless disabled
+    .actions
+      = f.submit 'Save'
