@@ -13,8 +13,22 @@ class DashboardController < ApplicationController
         Time.current.beginning_of_month..Time.current.end_of_month
       end
     transfer_category_id = Category.find_by(name: 'Transfer').id
-    @debit_transactions = Debit.where(booked_at: daterange).where.not(category_id: transfer_category_id).group(:category).sum(:amount).sort_by { |k, _v| k&.name || '' }.to_h
-    @credit_transactions = Credit.where(booked_at: daterange).where.not(category_id: transfer_category_id).group(:category).sum(:amount).sort_by { |k, _v| k&.name || '' }.to_h
+
+    @debit_transactions = Debit.where(debitor_account_id: 1)
+                               .or(Debit.where(creditor_account_id: 1))
+                               .where(booked_at: daterange)
+                               .where.not(category_id: transfer_category_id)
+                               .group(:category)
+                               .sum(:amount)
+                               .sort_by { |k, _v| k&.name || '' }.to_h
+
+    @credit_transactions = Credit.where(debitor_account_id: 1)
+                                 .or(Credit.where(creditor_account_id: 1))
+                                 .where(booked_at: daterange)
+                                 .where.not(category_id: transfer_category_id)
+                                 .group(:category)
+                                 .sum(:amount)
+                                 .sort_by { |k, _v| k&.name || '' }.to_h
 
     @debit_total = @debit_transactions.values.sum
     credit_sub_total = @credit_transactions.values.sum
