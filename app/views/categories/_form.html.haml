@@ -1,3 +1,4 @@
+- disabled ||= nil
 = form_for @category do |f|
   - if @category.errors.any?
     #error_explanation
@@ -8,9 +9,10 @@
 
   .field
     = f.label :name
-    = f.text_field :name
+    = f.text_field :name, disabled: disabled
   .field
     = f.label :direction
-    = f.collection_select :direction, Category::DIRECTIONS, :to_s, :to_s, { required: true }
-  .actions
-    = f.submit 'Save'
+    = f.collection_select :direction, Category::DIRECTIONS, :to_s, :to_s, { required: true }, disabled: disabled
+  - unless disabled
+    .actions
+      = f.submit 'Save'

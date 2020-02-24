@@ -4,9 +4,4 @@
     %li= link_to 'Back', categories_path
     %li= link_to 'Edit', edit_category_path(@category)
 
-%p#notice= notice
-
-%p
-  %b Name:
-  = @category.name
-
+= render partial: 'form', locals: { disabled: :disabled }
