@@ -69,7 +69,7 @@ class TransactionsController < ApplicationController
     csv = csv_params[:csv]
     failed = 0
     CSV.foreach(csv.tempfile.path) do |row|
-      next if row == ["Datum","Naam / Omschrijving","Rekening","Tegenrekening","Code","Af Bij","Bedrag (EUR)","MutatieSoort","Mededelingen"]
+
 
       # Extract all information
       date = DateTime.parse row[0]
