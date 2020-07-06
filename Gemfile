@@ -22,6 +22,7 @@ gem 'webpacker', '~> 4.0'         # Transpile app-like JavaScript. Read more: ht
 # gem 'bcrypt', '~> 3.1.7' # Use Active Model has_secure_password
 # gem 'image_processing', '~> 1.2' # Use Active Storage variant
 # gem 'redis', '~> 4.0' # Use Redis adapter to run Action Cable in production
+gem 'symbol-fstring', require: 'fstring/all' # Performance improvement
 
 group :development, :test do
   gem 'byebug'                    # Call 'byebug' anywhere in the code to stop execution and get a debugger console
