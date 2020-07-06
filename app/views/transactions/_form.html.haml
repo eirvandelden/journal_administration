@@ -28,6 +28,9 @@
     = f.label :note
     = f.text_area :note,disabled: disabled
   .field
+    = f.label :original_note
+    = f.text_area :original_note, disabled: true
+  .field
     = f.label :booked_at
     = f.datetime_select :booked_at, disabled: disabled
   .field
