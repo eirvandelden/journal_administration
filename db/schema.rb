@@ -13,7 +13,29 @@
 ActiveRecord::Schema.define(version: 2020_07_06_191410) do
 
   # These are extensions that must be enabled in order to support this database
+  enable_extension "btree_gin"
+  enable_extension "btree_gist"
+  enable_extension "citext"
+  enable_extension "cube"
+  enable_extension "dblink"
+  enable_extension "dict_int"
+  enable_extension "dict_xsyn"
+  enable_extension "earthdistance"
+  enable_extension "fuzzystrmatch"
+  enable_extension "hstore"
+  enable_extension "intarray"
+  enable_extension "ltree"
+  enable_extension "pg_stat_statements"
+  enable_extension "pg_trgm"
+  enable_extension "pgcrypto"
+  enable_extension "pgrowlocks"
+  enable_extension "pgstattuple"
   enable_extension "plpgsql"
+  enable_extension "plv8"
+  enable_extension "tablefunc"
+  enable_extension "unaccent"
+  enable_extension "uuid-ossp"
+  enable_extension "xml2"
 
   create_table "accounts", force: :cascade do |t|
     t.string "account_number"
@@ -32,6 +54,9 @@ ActiveRecord::Schema.define(version: 2020_07_06_191410) do
     t.datetime "updated_at", precision: 6, null: false
     t.integer "direction"
     t.index ["id"], name: "index_categories_on_id"
+  end
+
+  create_table "data_migrations", primary_key: "version", id: :string, force: :cascade do |t|
   end
 
   create_table "transactions", force: :cascade do |t|
