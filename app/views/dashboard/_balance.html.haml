@@ -13,16 +13,15 @@
     - for i in -1..[debits.count, credits.count].max do
       %tr
         - if i < 0
-          %td= debits.keys[i+1]
-          %td.amount= number_to_currency debits[debits.keys[i+1]]
+          %td
+          %td.amount
           %td.profit-and-loss Winst/Verlies
           %td.profit-and-loss.amount= number_to_currency profit_or_loss
         - else
-          %td= debits.keys[i+1] unless already_printed_nil
-          %td.amount= number_to_currency debits[debits.keys[i+1]] unless already_printed_nil
-          %td= credits.keys[i]
+          %td= (debits.keys[i].blank? && debits[debits.keys[i]].present?) ? 'geen categorie' : debits.keys[i]
+          %td.amount= number_to_currency debits[debits.keys[i]]
+          %td= (credits.keys[i].blank? && credits[credits.keys[i]]) ? 'geen categorie' : credits.keys[i]
           %td.amount= number_to_currency credits[credits.keys[i]]
-          - already_printed_nil = true if debits.keys[i+1].blank?
   %tfoot
     %tr
       %td Totalen
