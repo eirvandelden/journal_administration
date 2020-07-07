@@ -18,9 +18,9 @@
           %td.profit-and-loss Winst/Verlies
           %td.profit-and-loss.amount= number_to_currency profit_or_loss
         - else
-          %td= ((debits.count > i) && debits.keys[i].blank?) ? 'geen categorie' : debits.keys[i]
+          %td= ((debits.count > i) && debits.keys[i].blank?) ? '-' : debits.keys[i]
           %td.amount= (debits.count > i) ? number_to_currency(debits[debits.keys[i]]) : ''
-          %td= ((credits.count > i) && credits.keys[i].blank?) ? 'geen categorie' : credits.keys[i]
+          %td= ((credits.count > i) && credits.keys[i].blank?) ? '-' : credits.keys[i]
           %td.amount= (credits.count > i) ? number_to_currency(credits[credits.keys[i]]) : ''
   %tfoot
     %tr
