@@ -1,34 +1,37 @@
 %nav.secondary
-  %h1 Accounts
   %ul
     %li= link_to 'New Account', new_account_path
 
-= pagy_nav(@pagy).html_safe
+%header
+  %h1 Accounts
 
-%table.accounts
-  %thead
-    %tr
-      %th Id
-      %th Account number
-      %th Name
-      %th Owner
-      %th Category
-      %th
-      %th
-      %th
-      %th
+%section
+  = pagy_nav(@pagy).html_safe
 
-  %tbody
-    - @records.each do |account|
+  %table.accounts
+    %thead
       %tr
-        %td= account.id
-        %td= account.account_number
-        %td= account.name
-        %td= account.owner
-        %td= account.category&.name
-        %td= link_to 'Show', account
-        %td= link_to 'Edit', edit_account_path(account)
-        %td= link_to 'Update Transactions', update_transactions_account_path(account)
-        %td= link_to 'Destroy', account, method: :delete, data: { confirm: 'Are you sure?' }
+        %th Id
+        %th Account number
+        %th Name
+        %th Owner
+        %th Category
+        %th
+        %th
+        %th
+        %th
 
-= pagy_nav(@pagy).html_safe
+    %tbody
+      - @records.each do |account|
+        %tr
+          %td= account.id
+          %td= account.account_number
+          %td= account.name
+          %td= account.owner
+          %td= account.category&.name
+          %td= link_to 'Show', account
+          %td= link_to 'Edit', edit_account_path(account)
+          %td= link_to 'Update Transactions', update_transactions_account_path(account)
+          %td= link_to 'Destroy', account, method: :delete, data: { confirm: 'Are you sure?' }
+
+  = pagy_nav(@pagy).html_safe

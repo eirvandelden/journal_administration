@@ -1,4 +1,5 @@
-// source; MVP.css v1.6.2 - https://github.com/andybrewer/mvp
+@import 'theme/variables'
+// source MVP.css v1.6.2 - https://github.com/andybrewer/mvp
 
 // form label
 //   display: block
@@ -14,16 +15,76 @@
 // form input[type="reset"],
 // form input[type="submit"]
 //     width: auto
-textarea
-  width: 25rem
-  height: 5rem
+// textarea
+//   width: 25rem
+//   height: 5rem
 
-input[type=text]
-  width: 25rem
+// input[type=text]
+//   width: 25rem
 
 .field
   display: flex
-  label
-    width: 6rem
-    text-align: right
+  select
     padding-right: 1rem
+
+/* Forms */
+
+button:disabled,
+input:disabled
+  background: $color-bg-secondary
+  border-color: $color-bg-secondary
+  color: $color-text-secondary
+  cursor: not-allowed
+
+button[disabled]:hover
+  filter: none
+
+form
+  background-color: $base2
+  border: 1px solid $color-bg-secondary
+  border-radius: $border-radius
+  box-shadow: $box-shadow $color-shadow
+  display: block
+  max-width: $width-card-wide
+  min-width: $width-card
+  padding: 1.5rem
+  text-align: $justify-normal
+
+form header
+  margin: 1.5rem 0
+  padding: 1.5rem 0
+
+input,
+label,
+select,
+textarea
+  display: block
+  font-size: inherit
+  max-width: $width-card-wide
+
+input[type="checkbox"],
+input[type="radio"]
+  display: inline-block
+
+input[type="checkbox"]+label,
+input[type="radio"]+label
+  display: inline-block
+  font-weight: normal
+  position: relative
+  top: 1px
+
+input,
+select,
+textarea
+  border: 1px solid $color-bg-secondary
+  border-radius: $border-radius
+  margin-bottom: 1rem
+  padding: 0.4rem 0.8rem
+
+input[readonly],
+textarea[readonly]
+  background-color: $color-bg-secondary
+
+label
+  font-weight: bold
+  margin-bottom: 0.2rem

@@ -9,12 +9,13 @@ table
   border-radius: $border-radius
   border-spacing: 0
   border-collapse: collapse
-  display: inline-block
+  // display: inline-block
   margin: 2rem 0
+  min-width: 100%
   max-width: 100%
-  overflow-x: auto
+  // overflow-x: auto
   padding: 0
-  white-space: nowrap
+  white-space: normal
 
 table td,
 table th,
@@ -45,4 +46,4 @@ table tr td:first-child
   text-align: $justify-normal
 
 table tr:nth-child(even)
-    // background-color: var(--color-accent) TODO: color
+  background-color: $color-accent //TODO: color

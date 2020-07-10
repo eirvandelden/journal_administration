@@ -1,18 +1,20 @@
 - disabled ||= nil
-= form_for @category do |f|
-  - if @category.errors.any?
-    #error_explanation
-      %h2= "#{pluralize(@category.errors.count, "error")} prohibited this category from being saved:"
-      %ul
-        - @category.errors.full_messages.each do |message|
-          %li= message
+%section
+  = form_for @category do |f|
+    - if @category.errors.any?
+      #error_explanation
+        %h2= "#{pluralize(@category.errors.count, "error")} prohibited this category from being saved:"
+        %ul
+          - @category.errors.full_messages.each do |message|
+            %li= message
 
-  .field
     = f.label :name
     = f.text_field :name, disabled: disabled
-  .field
+
+
     = f.label :direction
     = f.collection_select :direction, Category::DIRECTIONS, :to_s, :to_s, { required: true }, disabled: disabled
-  - unless disabled
-    .actions
-      = f.submit 'Save'
+    - unless disabled
+
+      .actions
+        = f.submit 'Save'

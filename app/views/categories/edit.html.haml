@@ -1,7 +1,8 @@
 %nav.secondary
-  %h1 Editing category
   %ul
     %li= link_to 'Back', categories_path
     %li= link_to 'Show', @category
-
-= render 'form'
+%main
+  %header
+    %h1 Editing category
+  = render 'form'

@@ -1,18 +1,22 @@
 %nav.secondary
-  %h1 Journal
   %ul
     %li= link_to 'All transactions', transactions_path
     %li= link_to 'Consolidatable', transactions_path(filter: :no_category)
 %hr
+%header
+  %h1 Journal
+
+%section.actions
+
+%section.transactions
+  = render partial: 'table', locals: { transactions: @transactions, pagy: @pagy }
 
 %section.actions
   %aside
-    = link_to 'New Transaction', new_transaction_path
+    = link_to new_transaction_path do
+      %strong New Transaction
 
   %aside
     = form_tag(upload_transactions_path, multipart: true) do
       = file_field_tag 'csv'
       = submit_tag 'Upload'
-
-%section.transactions
-  = render partial: 'table', locals: { transactions: @transactions, pagy: @pagy }

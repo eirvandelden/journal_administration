@@ -1,44 +1,42 @@
 - disabled ||= nil
-= form_for @transaction do |f|
-  - if @transaction.errors.any?
-    #error_explanation
-      %h2= "#{pluralize(@transaction.errors.count, "error")} prohibited this transaction from being saved:"
-      %ul
-        - @transaction.errors.full_messages.each do |message|
-          %li= message
+%section
+  = form_for @transaction do |f|
+    - if @transaction.errors.any?
+      #error_explanation
+        %h2= "#{pluralize(@transaction.errors.count, "error")} prohibited this transaction from being saved:"
+        %ul
+          - @transaction.errors.full_messages.each do |message|
+            %li= message
 
-  .field
     = f.label :id
     = f.text_field :id, disabled: :disaled
-  .field
-    -# %strong TODO
+
     = f.label :debitor
     = f.text_field :debitor, disabled: :disabled
-  .field
-    -# %strong TODO
+
     = f.label :creditor
     = f.text_field :creditor, disabled: :disabled
-  .field
+
     = f.label :amount
     = f.text_field :amount, disabled: disabled
-  .field
+
     = f.label :category_id
     = f.collection_select :category_id, Category.all.order(:name), :id, :name, { include_blank: true }, disabled: disabled
-  .field
+
     = f.label :note
     = f.text_area :note,disabled: disabled
-  .field
+
     = f.label :original_note
     = f.text_area :original_note, disabled: true
-  .field
-    = f.label :booked_at
-    = f.datetime_select :booked_at, disabled: disabled
-  .field
-    = f.label :interest_at
-    = f.datetime_select :interest_at, disabled: disabled
-  .field
+    .field
+      = f.label :booked_at
+      = f.datetime_select :booked_at, disabled: disabled
+    .field
+      = f.label :interest_at
+      = f.datetime_select :interest_at, disabled: disabled
+
     = f.label :type
     = f.collection_select :type, Transaction::TYPES, :to_s, :to_s, {} , disabled: disabled
-  - unless disabled
-    .actions
-      = f.submit 'Save'
+    - unless disabled
+      .actions
+        = f.submit 'Save'

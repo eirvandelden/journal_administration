@@ -1,7 +1,9 @@
 %nav.secondary
-  %h1 Editing transaction
   %ul
     %li= link_to 'Back', transactions_path
     %li= link_to 'Show', @transaction
+
+%header
+  %h1 Editing transaction
 
 = render partial: 'form'
