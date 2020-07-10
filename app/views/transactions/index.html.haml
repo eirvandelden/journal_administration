@@ -6,10 +6,13 @@
 %hr
 
 %section.actions
-  = link_to 'New Transaction', new_transaction_path
+  %aside
+    = link_to 'New Transaction', new_transaction_path
 
-  = form_tag(upload_transactions_path, multipart: true) do
-    = file_field_tag 'csv'
-    = submit_tag 'Upload'
+  %aside
+    = form_tag(upload_transactions_path, multipart: true) do
+      = file_field_tag 'csv'
+      = submit_tag 'Upload'
 
-= render partial: 'table', locals: { transactions: @transactions, pagy: @pagy }
+%section.transactions
+  = render partial: 'table', locals: { transactions: @transactions, pagy: @pagy }

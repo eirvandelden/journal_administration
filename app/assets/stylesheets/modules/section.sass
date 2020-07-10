@@ -1,0 +1,29 @@
+@import 'theme/variables'
+
+/* source: MVP.css v1.6.2 - https://github.com/andybrewer/mvp */
+section
+    display: flex
+    flex-wrap: wrap
+    justify-content: center
+
+section header
+    padding-top: 0
+    width: 100%
+
+
+section aside
+    // border: 1px solid var(--color-bg-secondary) TODO: color
+    border-radius: var(--border-radius)
+    box-shadow: var(--box-shadow) var(--color-shadow)
+    margin: 1rem
+    padding: 1.25rem
+    width: var(--width-card)
+
+
+section aside:hover
+    box-shadow: var(--box-shadow) var(--color-bg-secondary)
+
+
+section aside img
+    max-width: 100%
+
