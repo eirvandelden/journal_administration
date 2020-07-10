@@ -8,7 +8,8 @@ class TransactionsController < ApplicationController
   def index
     transactions = Transaction.all
     transactions = transactions.where(category: nil) if params[:filter] == 'no_category'
-    @pagy, @records = pagy transactions.order interest_at: :desc
+
+    @pagy, @transactions = pagy transactions.order(interest_at: :desc), items: 20
   end
 
   # GET /transactions/1
