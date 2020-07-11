@@ -126,7 +126,7 @@ class TransactionsController < ApplicationController
       transaction.original_note = description
 
       # Do not import if this transaction has already been imported
-      next if Transaction.find_by(transaction.attributes.except('interest_at', 'category_id', 'created_at', 'updated_at', 'id')).present?
+      # next if Transaction.find_by(transaction.attributes.except('interest_at', 'category_id', 'created_at', 'updated_at', 'id')).present?
       transaction.save!
     end
 
