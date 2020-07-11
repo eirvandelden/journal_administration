@@ -11,10 +11,13 @@
     = f.label :name
     = f.text_field :name, disabled: disabled
 
-
     = f.label :direction
-    = f.collection_select :direction, Category::DIRECTIONS, :to_s, :to_s, { required: true }, disabled: disabled
-    - unless disabled
+    = f.collection_select :direction, Category::DIRECTIONS, :to_s, :to_s, { required: true }, { disabled: disabled }
 
+    = f.label :parent_category
+    = f.grouped_collection_select :parent_category_id, Category.all.order(:name), :secondaries, :name, :id, :name, { include_blank: true }, { disabled: disabled }
+    -# = f.collection_select :parent, Category.all, :id, :name, { include_blank: true }, { disabled: disabled }
+
+    - unless disabled
       .actions
         = f.submit 'Save'

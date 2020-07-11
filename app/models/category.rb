@@ -6,11 +6,17 @@ class Category < ApplicationRecord
   has_many :secondaries, class_name: "Category",
   foreign_key: "parent_category_id"
 
-  belongs_to :parent, class_name: "Category", optional: true
+  belongs_to :parent_category, class_name: "Category", optional: true
+
+  scope :parents, -> { where(parent_category_id: nil) }
 
   validates :direction, presence: true
 
   def to_s
-    name
+    if parent_category.present?
+      "#{parent_category.name} - #{name}"
+    else
+      name
+    end
   end
 end

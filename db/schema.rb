@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_06_191410) do
+ActiveRecord::Schema.define(version: 2020_07_10_191518) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
@@ -53,7 +53,9 @@ ActiveRecord::Schema.define(version: 2020_07_06_191410) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "direction"
+    t.bigint "parent_category_id"
     t.index ["id"], name: "index_categories_on_id"
+    t.index ["parent_category_id"], name: "index_categories_on_parent_category_id"
   end
 
   create_table "data_migrations", primary_key: "version", id: :string, force: :cascade do |t|
