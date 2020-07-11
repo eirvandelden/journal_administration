@@ -1,7 +1,7 @@
 # Transaction model holds all information for a trnansaction.
 # The owner of the debitor account determins the type of Transaction: Debit or Credit.
 class Transaction < ApplicationRecord
-  TYPES = %w(Credit Debit Transfer).freeze
+  TYPES = %w[Credit Debit Transfer].freeze
   belongs_to :debitor, class_name: 'Account', foreign_key: 'debitor_account_id', optional: true
   belongs_to :creditor, class_name: 'Account', foreign_key: 'creditor_account_id', optional: true
   belongs_to :category, optional: true
@@ -10,7 +10,7 @@ class Transaction < ApplicationRecord
 
   # validates_associated :debitor
 
-  validates :type, inclusion: { in: TYPES, message: "%{value} is not a valid type" }, presence: true
+  validates :type, inclusion: { in: TYPES, message: "#{value} is not a valid type" }, presence: true
   validate :check_transfer_type_through_account_owners
 
   def debitor_is_us?
@@ -34,7 +34,7 @@ class Transaction < ApplicationRecord
   end
 
   def check_transfer_type_through_account_owners
-    return false # TODO: change this to work
+    false # TODO: change this to work
     # return errors.add(:type, "must be Transfer if debitor and creditor is us") if type == 'Transfer' && debitor_is_us? && creditor_is_us?
     # return errors.add(:type, "must be Debit if debitor is us") if type == 'Debit' && debitor_is_us?
     # return errors.add(:type, "must be Credit if creditor is us") if type == 'Credit' && creditor_is_us?

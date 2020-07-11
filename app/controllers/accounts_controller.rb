@@ -1,5 +1,5 @@
 class AccountsController < ApplicationController
-  before_action :set_account, only: [:show, :edit, :update, :destroy, :update_transactions]
+  before_action :set_account, only: %i[show edit update destroy update_transactions]
 
   # GET /accounts
   # GET /accounts.json
@@ -9,8 +9,7 @@ class AccountsController < ApplicationController
 
   # GET /accounts/1
   # GET /accounts/1.json
-  def show
-  end
+  def show; end
 
   # GET /accounts/new
   def new
@@ -18,8 +17,7 @@ class AccountsController < ApplicationController
   end
 
   # GET /accounts/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /accounts
   # POST /accounts.json
@@ -64,6 +62,7 @@ class AccountsController < ApplicationController
   # GET /accounts/1/update_transactions/
   def update_transactions
     return redirect_back fallback_location: accounts_url, alert: 'Account has no category' if @account.category.blank?
+
     Transaction.where(debitor_account_id: @account, category_id: nil).update_all category_id: @account.category_id
     Transaction.where(creditor_account_id: @account, category_id: nil).update_all category_id: @account.category_id
 
@@ -72,13 +71,14 @@ class AccountsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_account
-      @account = Account.find(params[:id])
-    end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def account_params
-      params.require(:account).permit(:id, :account_number, :name, :owner, :category_id)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_account
+    @account = Account.find(params[:id])
+  end
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def account_params
+    params.require(:account).permit(:id, :account_number, :name, :owner, :category_id)
+  end
 end

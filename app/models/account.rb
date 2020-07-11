@@ -1,6 +1,6 @@
 class Account < ApplicationRecord
-  FAMILY_OWNERS = %w(samen etienne michelle serena)
-  enum owner: %i(samen etienne michelle serena)
+  FAMILY_OWNERS = %w[samen etienne michelle serena].freeze
+  enum owner: %i[samen etienne michelle serena]
 
   belongs_to :category, optional: true
 
@@ -8,6 +8,7 @@ class Account < ApplicationRecord
 
   def to_s
     return name unless name.blank?
+
     account_number
   end
 end

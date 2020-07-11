@@ -1,7 +1,7 @@
 require 'csv'
 
 class TransactionsController < ApplicationController
-  before_action :set_transaction, only: [:show, :edit, :update, :destroy]
+  before_action :set_transaction, only: %i[show edit update destroy]
 
   # GET /transactions
   # GET /transactions.json
@@ -14,8 +14,7 @@ class TransactionsController < ApplicationController
 
   # GET /transactions/1
   # GET /transactions/1.json
-  def show
-  end
+  def show; end
 
   # GET /transactions/new
   def new
@@ -23,8 +22,7 @@ class TransactionsController < ApplicationController
   end
 
   # GET /transactions/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /transactions
   # POST /transactions.json
@@ -70,7 +68,7 @@ class TransactionsController < ApplicationController
     csv = csv_params[:csv]
     failed = 0
     CSV.foreach(csv.tempfile.path) do |row|
-      next if row[0] == "Datum"
+      next if row[0] == 'Datum'
 
       # Extract all information
       date = DateTime.parse row[0]
@@ -79,8 +77,8 @@ class TransactionsController < ApplicationController
       their_account = Account.find_or_create_by account_number: row[3] if row[3].present?
       code = row[4]
       direction = row[5]
-      negative = direction == 'Af' ? -1 : 1
-      amount = row[6].gsub(',','.').to_d
+      _negative = direction == 'Af' ? -1 : 1
+      amount = row[6].gsub(',', '.').to_d
       mutation_kind = row[7]
       description = row[8]
 
@@ -96,31 +94,28 @@ class TransactionsController < ApplicationController
       their_account.update name: initiator_account_name if their_account&.name.blank?
 
       transaction = Transaction.new amount: amount, booked_at: date, interest_at: date
-      transaction.note = description+ "\n" + code + "\n" + mutation_kind
+      transaction.note = description + "\n" + code + "\n" + mutation_kind
 
       # determine type of transaction
       case direction
       when 'Af'
         transaction.creditor = our_account
         transaction.debitor = their_account
-        transaction.type = "Credit"
+        transaction.type = 'Credit'
       when 'Bij'
         transaction.debitor = our_account
         transaction.creditor = their_account
-        transaction.type = "Debit"
+        transaction.type = 'Debit'
       end
-      transaction.type = "Transfer" if our_account.owner.present? && their_account.owner.present?
+      transaction.type = 'Transfer' if our_account.owner.present? && their_account.owner.present?
 
       # Set category only if the default account matches the type of transaction
-      transaction.category = case
-                             when transaction.is_a?(Transfer)
+      transaction.category = if transaction.is_a?(Transfer)
                                Category.find_by(name: 'Transfer')
-                             when (their_account&.category&.credit? && (transaction.type == 'Credit')) || (their_account&.category&.debit? && (transaction.type == 'Debit'))
+                             elsif (their_account&.category&.credit? && (transaction.type == 'Credit')) || (their_account&.category&.debit? && (transaction.type == 'Debit'))
                                their_account&.category
-                             when (our_account&.category&.credit? && (transaction.type == 'Credit')) || (our_account&.category&.debit? && (transaction.type == 'Debit'))
+                             elsif (our_account&.category&.credit? && (transaction.type == 'Credit')) || (our_account&.category&.debit? && (transaction.type == 'Debit'))
                                our_account&.category
-                             else
-                               nil
                              end
 
       transaction.original_note = description
@@ -130,24 +125,25 @@ class TransactionsController < ApplicationController
       transaction.save!
     end
 
-    flash[:alert] = "#{failed} transacties niet geimporteerd" if failed > 0
+    flash[:alert] = "#{failed} transacties niet geimporteerd" if failed.positive?
 
     redirect_to transactions_path
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_transaction
-      @transaction = Transaction.find(params[:id])
-    end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def transaction_params
-      key = (params.keys & %w(debit credit transfer transaction))[0]
-      params.require(key).permit(:id, :debit_account_id, :credit_account_id, :amount, :booked_at, :interest_at, :category_id, :note, :type)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_transaction
+    @transaction = Transaction.find(params[:id])
+  end
 
-    def csv_params
-      params.permit(:csv)
-    end
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def transaction_params
+    key = (params.keys & %w[debit credit transfer transaction])[0]
+    params.require(key).permit(:id, :debit_account_id, :credit_account_id, :amount, :booked_at, :interest_at, :category_id, :note, :type)
+  end
+
+  def csv_params
+    params.permit(:csv)
+  end
 end
