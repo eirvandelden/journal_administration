@@ -10,7 +10,7 @@ class Transaction < ApplicationRecord
 
   # validates_associated :debitor
 
-  validates :type, inclusion: { in: TYPES, message: "#{value} is not a valid type" }, presence: true
+  validates :type, inclusion: { in: TYPES, message: "#{type} is not a valid type" }, presence: true
   validate :check_transfer_type_through_account_owners
 
   def debitor_is_us?
