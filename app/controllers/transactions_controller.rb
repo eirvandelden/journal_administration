@@ -67,7 +67,7 @@ class TransactionsController < ApplicationController
   def upload
     csv = csv_params[:csv]
     failed = 0
-    CSV.foreach(csv.tempfile.path) do |row|
+    CSV.foreach(csv.tempfile.path, col_sep: ';') do |row|
       next if row[0] == 'Datum'
 
       # Extract all information
