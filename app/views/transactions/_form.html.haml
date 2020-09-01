@@ -26,8 +26,6 @@
     = f.label :note
     = f.text_area :note,disabled: disabled
 
-    = f.label :original_note
-    = f.text_area :original_note, disabled: true
     .field
       = f.label :booked_at
       = f.datetime_select :booked_at, disabled: disabled
@@ -37,6 +35,17 @@
 
     = f.label :type
     = f.collection_select :type, Transaction::TYPES, :to_s, :to_s, {} , disabled: disabled
+
+    - if current_user.admin?
+      = f.label :original_note
+      = f.text_area :original_note, disabled: true
+
+      = f.label :original_balance_after_mutation
+      = f.text_field :original_balance_after_mutation, disabled: true
+
+      = f.label :original_tag
+      = f.text_field :original_tag, disabled: true
+
     - unless disabled
       .actions
         = f.submit 'Save'

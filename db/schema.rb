@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_10_191518) do
+ActiveRecord::Schema.define(version: 2020_09_01_193351) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
@@ -73,6 +73,8 @@ ActiveRecord::Schema.define(version: 2020_07_10_191518) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.text "original_note"
+    t.decimal "original_balance_after_mutation"
+    t.string "original_tag"
     t.index ["category_id"], name: "index_transactions_on_category_id"
     t.index ["id"], name: "index_transactions_on_id"
   end

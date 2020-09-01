@@ -81,6 +81,8 @@ class TransactionsController < ApplicationController
       amount = row[6].gsub(',', '.').to_d
       mutation_kind = row[7]
       description = row[8]
+      original_balance_after_mutation = row [9]
+      original_tag = row[10]
 
       # Set missing account to spaarpotje
       if their_account.blank?
@@ -119,6 +121,8 @@ class TransactionsController < ApplicationController
                              end
 
       transaction.original_note = description
+      transaction.original_balance_after_mutation = original_balance_after_mutation
+      transaction.original_tag = original_tag
 
       # Do not import if this transaction has already been imported
       # next if Transaction.find_by(transaction.attributes.except('interest_at', 'category_id', 'created_at', 'updated_at', 'id')).present?
