@@ -86,10 +86,11 @@ class TransactionsController < ApplicationController
 
       # Set missing account to spaarpotje
       if their_account.blank?
-        search_for_accounts = Account.where.not(owner: nil).map(&:account_number).join('|')
-        matched_account = /#{search_for_accounts}/.match description
-        their_account = Account.find_by account_number: matched_account.to_s if matched_account.present?
+        our_accounts = Account.where.not(owner: nil).map(&:account_number).reject(&:blank?)
+        matched_account = our_accounts.select { |account| description.include?(account)}
+        their_account = Account.find_by account_number: matched_account if matched_account.present?
       end
+
       # Find missing account based on account_name
       their_account = Account.find_or_create_by name: initiator_account_name if their_account.blank?
 
