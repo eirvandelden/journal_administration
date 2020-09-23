@@ -111,13 +111,13 @@ class TransactionsController < ApplicationController
       end
       transaction.type = 'Transfer' if our_account.owner.present? && their_account.owner.present?
 
-      # Set category only if the default account matches the type of transaction
-      transaction.category = if transaction.is_a?(Transfer)
+      transaction.category = case transaction.type
+                             when 'Transfer'
                                Category.find_by(name: 'Transfer')
-                             elsif (their_account&.category&.credit? && (transaction.type == 'Credit')) || (their_account&.category&.debit? && (transaction.type == 'Debit'))
-                               their_account&.category
-                             elsif (our_account&.category&.credit? && (transaction.type == 'Credit')) || (our_account&.category&.debit? && (transaction.type == 'Debit'))
-                               our_account&.category
+                             when 'Credit'
+                               transaction.debitor.category
+                             when 'Debit'
+                               transaction.creditor.category
                              end
 
       transaction.original_note = description
