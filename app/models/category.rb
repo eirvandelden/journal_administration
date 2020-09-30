@@ -3,10 +3,10 @@ class Category < ApplicationRecord
   enum direction: DIRECTIONS
 
   has_many :transactions
-  has_many :secondaries, class_name: 'Category',
-                         foreign_key: 'parent_category_id'
+  has_many :secondaries, class_name: "Category",
+                         foreign_key: "parent_category_id"
 
-  belongs_to :parent_category, class_name: 'Category', optional: true
+  belongs_to :parent_category, class_name: "Category", optional: true
 
   default_scope { order(name: :asc) }
   scope :groups, -> { where(parent_category_id: nil) }
