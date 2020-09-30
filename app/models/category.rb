@@ -8,7 +8,7 @@ class Category < ApplicationRecord
 
   belongs_to :parent_category, class_name: 'Category', optional: true
 
-  scope :parents, -> { where(parent_category_id: nil) }
+  scope :groups, -> { where(parent_category_id: nil) }
 
   validates :direction, presence: true
 
