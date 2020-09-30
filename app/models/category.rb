@@ -13,6 +13,11 @@ class Category < ApplicationRecord
 
   validates :direction, presence: true
 
+  # Instance methods
+  def children
+    Category.where(parent_category_id: id).or(Category.where(id: id))
+  end
+
   def to_s
     if parent_category.present?
       "#{parent_category.name} - #{name}"
