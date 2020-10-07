@@ -3,11 +3,13 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '2.7.1'
 
+# Needs to be loaded first
+gem 'dotenv-rails'                # Read .env files and make available in Rails
+
 gem 'bootsnap', '>= 1.4.2', require: false # Reduces boot times through caching; required in config/boot.rb
 gem 'bundler-audit'
 gem 'clearance'                   # Rails authentication with email & password.
 gem 'data_migrate'                # Migrate data alongside schema
-gem 'dotenv-rails'                # Read .env files and make available in Rails
 gem 'flutie'                      # Flutie provides some utility view helpers for use with Rails applications.
 gem 'haml-rails'                  # Awesome templating engine
 gem 'jbuilder', '~> 2.7'          # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
