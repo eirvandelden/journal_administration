@@ -1,6 +1,6 @@
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
-  config.hosts.concat ENV["URL_HOSTS"]
+  config.hosts.concat ENV["HOSTS"].split(",")
 
   # Code is not reloaded between requests.
   config.cache_classes = true

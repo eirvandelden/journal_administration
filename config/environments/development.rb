@@ -1,6 +1,6 @@
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
-  config.hosts << 'journal.test'
+  config.hosts.concat ENV["HOSTS"].split(",")
 
   # In the development environment your application's code is reloaded on
   # every request. This slows down response time but is perfect for development
@@ -36,7 +36,7 @@ Rails.application.configure do
   config.action_mailer.raise_delivery_errors = false
 
   config.action_mailer.perform_caching = false
-  config.action_mailer.default_url_options = { host: 'journal.dev.lico.nl:3000' }
+  config.action_mailer.default_url_options = { host: ENV["DEFAULT_HOST"] }
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
