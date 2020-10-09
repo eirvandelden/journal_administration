@@ -15,7 +15,7 @@ gem 'haml-rails'                  # Awesome templating engine
 gem 'jbuilder', '~> 2.7'          # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'pagy'                        # The Ultimate Pagination Ruby Gem
 gem 'pg', '>= 0.18', '< 2.0'      # Use postgresql as the database for Active Record
-gem 'puma', '~> 3.11'             # Use Puma as the app server
+gem 'puma', '~> 3.12'             # Use Puma as the app server
 gem 'rails', '~> 6.0.0'
 gem 'sass-rails', '~> 5'          # Use SCSS for stylesheets
 gem 'sentry-raven'                # Use sentry to capture exceptions
