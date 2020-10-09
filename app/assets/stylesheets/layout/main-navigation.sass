@@ -1,3 +1,5 @@
+@import "../base.sass"
+
 body
   display: flex
   flex-wrap: wrap
@@ -15,12 +17,20 @@ nav.main-nav
     margin: -1rem .5rem
     padding: 0
 
+    @include for-tablet-landscape-up
+      flex-direction: row
+      height: initial
+
   li
     padding: .5rem
 
   li.login
     margin-top: auto
     text-align: right
+
+    @include for-tablet-landscape-up
+      margin-top: 0
+      margin-left: auto
 
   a
     font-variant: small-caps
@@ -32,4 +42,3 @@ main
   flex-basis: 0
   flex-grow: 999
   min-width: 1024px
-
