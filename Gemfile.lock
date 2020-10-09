@@ -144,7 +144,7 @@ GEM
     pagy (3.6.0)
     pg (1.1.4)
     public_suffix (4.0.1)
-    puma (3.12.1)
+    puma (3.12.6)
     rack (2.2.3)
     rack-proxy (0.6.5)
       rack
@@ -247,31 +247,31 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bootsnap (>= 1.4.2)
+  bootsnap
   bundler-audit
   byebug
-  capybara (>= 2.15)
+  capybara
   clearance
   data_migrate
   dotenv-rails
   flutie
   haml-rails
-  jbuilder (~> 2.7)
-  listen (>= 3.0.5, < 3.2)
+  jbuilder
+  listen
   pagy
   pg (>= 0.18, < 2.0)
-  puma (~> 3.11)
-  rails (~> 6.0.0)
-  sass-rails (~> 5)
+  puma
+  rails
+  sass-rails
   selenium-webdriver
   sentry-raven
   spring
-  spring-watcher-listen (~> 2.0.0)
+  spring-watcher-listen
   symbol-fstring
-  turbolinks (~> 5)
-  web-console (>= 3.3.0)
+  turbolinks
+  web-console
   webdrivers
-  webpacker (~> 4.0)
+  webpacker
 
 RUBY VERSION
    ruby 2.7.1p83
