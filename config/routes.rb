@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :category_groups
+  resources :categories_groups
   resources :transactions do
     collection do
       post :upload
