@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_01_193351) do
+ActiveRecord::Schema.define(version: 2020_10_16_101236) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
@@ -54,8 +54,18 @@ ActiveRecord::Schema.define(version: 2020_09_01_193351) do
     t.datetime "updated_at", precision: 6, null: false
     t.integer "direction"
     t.bigint "parent_category_id"
+    t.bigint "category_group_id"
+    t.index ["category_group_id"], name: "index_categories_on_category_group_id"
     t.index ["id"], name: "index_categories_on_id"
     t.index ["parent_category_id"], name: "index_categories_on_parent_category_id"
+  end
+
+  create_table "category_groups", force: :cascade do |t|
+    t.string "name"
+    t.bigint "account_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["account_id"], name: "index_category_groups_on_account_id"
   end
 
   create_table "data_migrations", primary_key: "version", id: :string, force: :cascade do |t|
@@ -91,5 +101,7 @@ ActiveRecord::Schema.define(version: 2020_09_01_193351) do
   end
 
   add_foreign_key "accounts", "categories"
+  add_foreign_key "categories", "category_groups"
+  add_foreign_key "category_groups", "accounts"
   add_foreign_key "transactions", "categories"
 end

@@ -1,0 +1,21 @@
+%nav.secondary
+  %ul
+    %li= link_to 'New Category group', new_category_group_path
+%hr
+
+%table
+  %thead
+    %tr
+      %th Name
+      %th Categories
+      %th
+      %th
+      %th
+
+  %tbody
+    - @category_groups.each do |category_group|
+      %tr
+        %td= category_group.name
+        %td= link_to 'Show', category_group
+        %td= link_to 'Edit', edit_category_group_path(category_group)
+        %td= link_to 'Destroy', category_group, method: :delete, data: { confirm: 'Are you sure?' }

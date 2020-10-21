@@ -1,0 +1,16 @@
+= form_for @category_group do |f|
+  - if @category_group.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@category_group.errors.count, "error")} prohibited this category_group from being saved:"
+      %ul
+        - @category_group.errors.full_messages.each do |message|
+          %li= message
+
+  .field
+    = f.label :name
+    = f.text_field :name
+  .field
+    = f.label :account
+    = f.collection_select :account_id, Account.where(owner: :samen).order(:name), :id, :name, { include_blank: true }
+  .actions
+    = f.submit 'Save'
