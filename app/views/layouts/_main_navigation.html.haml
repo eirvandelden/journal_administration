@@ -1,0 +1,11 @@
+%ul
+  %li= link_to_unless_current t('dashboard.name'), { controller: 'dashboard' }
+  %li= link_to_unless_current Transaction.model_name.human, { controller: 'transactions' }
+  %li= link_to_unless_current Account.model_name.human, { controller: 'accounts' }
+  %li= link_to_unless_current Category.model_name.human, { controller: 'categories' }
+  %li= link_to_unless_current CategoryGroup.model_name.human, { controller: 'category_groups' }
+  %li.login
+    - if signed_in?
+      Signed in as: #{current_user.email} #{link_to 'Sign out', sign_out_path, method: :delete}
+    - else
+      = link_to ' Sign in', sign_in_path
