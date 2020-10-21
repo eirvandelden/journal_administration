@@ -3,9 +3,6 @@
     %li= link_to 'Back', categories_path
     %li= link_to 'Edit', edit_category_path(@category)
 
-%header
-  %h1 Show category
-
 = render partial: 'form', locals: { disabled: :disabled }
 
 %section

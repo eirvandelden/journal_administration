@@ -3,8 +3,6 @@
     %li= link_to 'Back', transactions_path
     %li= link_to 'Edit', edit_transaction_path(@transaction)
 
-%header
-  %h1 Show transactions
 = render partial: 'form', locals: { disabled: :disabled }
 
 %section
