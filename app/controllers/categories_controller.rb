@@ -68,8 +68,6 @@ class CategoriesController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def category_params
-    params.require(:category).permit(%i[name direction parent_category_id]).tap do |param|
-      param["parent_category_id"] = param["parent_category_id"].to_i
-    end
+    params.require(:category).permit(%i[name direction category_group_id])
   end
 end

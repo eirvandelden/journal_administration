@@ -14,8 +14,8 @@
     = f.label :direction
     = f.collection_select :direction, Category::DIRECTIONS, :to_s, :to_s, { required: true }, { disabled: disabled }
 
-    = f.label :parent_category
-    = f.grouped_collection_select :parent_category_id, Category.groups, :children, :name, :id, :name, { include_blank: true }
+    = f.label :group_category
+    = f.collection_select :category_group_id, CategoryGroup.all, :id, :name, { required: false, include_blank: true }, { disabled: disabled }
 
     - unless disabled
       .actions

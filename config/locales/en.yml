@@ -42,7 +42,7 @@ en:
       category:
         one: Category
       category_group:
-        one: Group
+        one: Category group
   # defaults
     errors:
       messages:

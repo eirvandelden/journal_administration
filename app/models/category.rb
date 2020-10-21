@@ -7,6 +7,7 @@ class Category < ApplicationRecord
                          foreign_key: "parent_category_id"
 
   belongs_to :parent_category, class_name: "Category", optional: true
+  belongs_to :category_group, optional: true
 
   default_scope { order(name: :asc) }
   scope :groups, -> { where(parent_category_id: nil) }
