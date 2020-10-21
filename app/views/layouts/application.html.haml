@@ -8,16 +8,8 @@
     = javascript_pack_tag 'application', 'data-turbolinks-track': 'reload'
   %body{ class: body_class }
     %nav.main-nav
-      %ul
-        %li= link_to 'Home', dashboard_index_path
-        %li= link_to 'Journal', transactions_path
-        %li= link_to 'Accounts', accounts_path
-        %li= link_to 'Categories', categories_path
-        %li.login
-          - if signed_in?
-            Signed in as: #{current_user.email} #{link_to 'Sign out', sign_out_path, method: :delete}
-          - else
-            = link_to ' Sign in', sign_in_path
+      = render 'layouts/main_navigation'
+
     %main
       #flash
         - flash.each do |key, value|
