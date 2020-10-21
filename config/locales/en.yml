@@ -31,7 +31,19 @@
 
 ---
 en:
+  dashboard:
+    name: Home
   activerecord:
+    models:
+      transaction:
+        one: Journal
+      account:
+        one: Transaction
+      category:
+        one: Category
+      category_group:
+        one: Group
+  # defaults
     errors:
       messages:
         record_invalid: 'Validation failed: %{errors}'
