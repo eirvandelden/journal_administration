@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_16_101236) do
+ActiveRecord::Schema.define(version: 2020_11_10_205034) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
@@ -69,6 +69,11 @@ ActiveRecord::Schema.define(version: 2020_10_16_101236) do
   end
 
   create_table "data_migrations", primary_key: "version", id: :string, force: :cascade do |t|
+  end
+
+  create_table "foos", force: :cascade do |t|
+    t.integer "foo_id", null: false
+    t.integer "bar_id", null: false
   end
 
   create_table "transactions", force: :cascade do |t|
