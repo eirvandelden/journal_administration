@@ -2,6 +2,7 @@
 # The owner of the debitor account determins the type of Transaction: Debit or Credit.
 class Transaction < ApplicationRecord
   TYPES = %w[Credit Debit Transfer].freeze
+
   belongs_to :debitor, class_name: "Account", foreign_key: "debitor_account_id", optional: true
   belongs_to :creditor, class_name: "Account", foreign_key: "creditor_account_id", optional: true
   belongs_to :category, optional: true
@@ -10,7 +11,9 @@ class Transaction < ApplicationRecord
 
   # validates_associated :debitor
 
+  # rubocop:disable Style/FormatStringToken
   validates :type, inclusion: { in: TYPES, message: "%{value} is not a valid type" }, presence: true
+  # rubocop:enable Style/FormatStringToken
 
   def debitor_is_us?
     debitor&.owner&.in? Account::FAMILY_OWNERS
