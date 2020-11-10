@@ -12,14 +12,14 @@ body > nav
   // Put menu options below each other instead of side-by-side
   ul
     flex-direction: column
+    height: initial
     justify-content: flex-start
-    height: 100vh
     margin: -1rem .5rem
     padding: 0
 
     @include for-tablet-landscape-up
+      height: 100vh
       flex-direction: row
-      height: initial
 
   li
     width: 100%

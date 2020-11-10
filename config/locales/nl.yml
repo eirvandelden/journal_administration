@@ -1,6 +1,17 @@
 ---
 nl:
+  dashboard:
+    name: Home
   activerecord:
+    models:
+      transaction:
+        one: Journaal
+      account:
+        one: Transacties
+      category:
+        one: Categoriën
+      category_group:
+        one: Categorie groepen
     errors:
       messages:
         record_invalid: 'Validatie mislukt: %{errors}'
