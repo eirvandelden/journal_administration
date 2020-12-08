@@ -71,9 +71,9 @@ ActiveRecord::Schema.define(version: 2020_11_10_205034) do
   create_table "data_migrations", primary_key: "version", id: :string, force: :cascade do |t|
   end
 
-  create_table "foos", force: :cascade do |t|
-    t.integer "foo_id", null: false
-    t.integer "bar_id", null: false
+  create_table "transaction_groups", force: :cascade do |t|
+    t.integer "parent_id", null: false
+    t.integer "related_id", null: false
   end
 
   create_table "transactions", force: :cascade do |t|

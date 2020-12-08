@@ -7,10 +7,11 @@ class Transaction < ApplicationRecord
   belongs_to :creditor, class_name: "Account", foreign_key: "creditor_account_id", optional: true
   belongs_to :category, optional: true
 
-  # TODO: belongs_to through?
+  has_many :transaction_groups, foreign_key: :parent_id
+  has_many :transactions, through: :transaction_groups, source: :related#, inverse_of: :parent
 
-  has_many :foo, foreign_key: :foo_id
-  has_many :transactions, through: :foo, source: :bar, inverse_of: :foo
+  has_one :transaction_group, foreign_key: "related_id"
+  has_one :parent, through: :transaction_group
 
   before_validation :determine_debit_credit_or_transfer_type
 
