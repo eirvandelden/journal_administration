@@ -1,6 +1,7 @@
 !!! html
-%html
+%html{ lang: I18n.locale }
   %head
+    %meta{ charset: 'utf-8' }
     %title JournalAdministration
     = csrf_meta_tags
     = csp_meta_tag
