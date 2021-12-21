@@ -88,9 +88,6 @@ GEM
     crass (1.0.6)
     data_migrate (6.0.5)
       rails (>= 5.0)
-    debase (0.2.5.beta2)
-      debase-ruby_core_source (>= 0.10.12)
-    debase-ruby_core_source (0.10.12)
     dotenv (2.7.5)
     dotenv-rails (2.7.5)
       dotenv (= 2.7.5)
@@ -185,8 +182,6 @@ GEM
     rb-inotify (0.10.0)
       ffi (~> 1.0)
     regexp_parser (1.6.0)
-    ruby-debug-ide (0.7.3)
-      rake (>= 0.8.1)
     ruby_dep (1.5.0)
     ruby_parser (3.13.1)
       sexp_processor (~> 4.9)
@@ -259,7 +254,6 @@ DEPENDENCIES
   capybara
   clearance
   data_migrate
-  debase (~> 0.2.5.beta2)
   dotenv-rails
   flutie
   haml-rails
@@ -269,7 +263,6 @@ DEPENDENCIES
   pg (>= 0.18, < 2.0)
   puma
   rails
-  ruby-debug-ide
   sass-rails
   selenium-webdriver
   sentry-raven
@@ -285,4 +278,4 @@ RUBY VERSION
    ruby 2.7.4
 
 BUNDLED WITH
-   2.1.4
+   2.2.32
