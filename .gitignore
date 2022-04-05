@@ -135,5 +135,3 @@ yarn-debug.log*
 !.vscode/launch.json
 !.vscode/extensions.json
 
-## LICO Specific
-lico.yml
