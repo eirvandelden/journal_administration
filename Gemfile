@@ -24,7 +24,7 @@ gem "turbolinks"                  # Turbolinks makes navigating your web applica
 gem "webpacker"                   # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
 
 group :development, :test do
-  gem "byebug"                    # Call 'byebug' anywhere in the code to stop execution and get a debugger console
+  gem "debug", ">= 1.0.0"
 end
 
 group :development do

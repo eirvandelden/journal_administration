@@ -1,5 +1,1 @@
 eval_gemfile 'Gemfile'
-
-gem 'byebug'
-gem 'debase', '~> 0.2.5.beta2'
-gem 'ruby-debug-ide'
