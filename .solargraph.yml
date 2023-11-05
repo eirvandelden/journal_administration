@@ -1,0 +1,7 @@
+include:
+  - "app/**/*.rb"
+  - "lib/**/*.rb"
+reporters:
+  - rubocop
+plugins:
+  - solargraph-rails
