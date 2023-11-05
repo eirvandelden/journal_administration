@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.0.2"
+ruby "3.2.2"
 
 # Needs to be loaded first
 gem "dotenv-rails" # Read .env files and make available in Rails
@@ -13,15 +13,19 @@ gem "data_migrate"                # Migrate data alongside schema
 gem "flutie"                      # Flutie provides some utility view helpers for use with Rails applications.
 gem "haml-rails"                  # Awesome templating engine
 gem "jbuilder" # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem "pagy"                        # The Ultimate Pagination Ruby Gem
-gem "pg", ">= 0.18", "< 2.0"      # Use postgresql as the database for Active Record
+gem "pagy" # The Ultimate Pagination Ruby Gem
+gem "pg", ">= 1.2", "< 2.0" # Use postgresql as the database for Active Record
 gem "puma"                        # Use Puma as the app server
 gem "rails"
 gem "sass-rails"                  # Use SCSS for stylesheets
 gem "sentry-raven"                # Use sentry to capture exceptions
+gem "sqlite3", "~> 1.4" # Use sqlite3 as the database for Active Record
 gem "symbol-fstring", require: "fstring/all" # Performance improvement
 gem "turbolinks"                  # Turbolinks makes navigating your web application faster.
 gem "webpacker"                   # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
+
+# BUGS
+gem "psych", "< 4.0"
 
 group :development, :test do
   gem "debug", ">= 1.0.0"
