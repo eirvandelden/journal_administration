@@ -1,22 +1,3 @@
-# PostgreSQL. Versions 9.3 and up are supported.
-#
-default: &default
-  adapter: postgresql
-  encoding: unicode
-  # For details on connection pooling, see Rails configuration guide
-  # https://guides.rubyonrails.org/configuring.html#database-pooling
-  pool: <%= ENV['RAILS_MAX_THREADS'] || 5 %>
-  host: <%= ENV['DOCKER_DB_HOST'] || 'localhost' %>
-  port: <%= ENV['DOCKER_DB_PORT'] || 5432 %>
-
-development:
-  <<: *default
-  database: journal_administration
-
-test:
-  <<: *default
-  database: journal_administration_test
-
 # As with config/credentials.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
 # ever seen by anyone, they now have access to your database.
@@ -36,6 +17,45 @@ test:
 #   production:
 #     url: <%= ENV['DATABASE_URL'] %>
 #
-production:
+# production:
+#   <<: default
+#   # URL: <%= ENV['JOURNAL_ADMINISTRATION_DB_URL'] %>
+#   database: storage/production.sqlite3
+#
+#
+# # SQLite. Versions 3.8.0 and up are supported.
+# PostgreSQL. Versions 9.3 and up are supported.
+#
+#   #   gem install sqlite3
+#   #
+#   #   Ensure the SQLite 3 gem is defined in your Gemfile
+#   #   gem "sqlite3"
+#   #
+default: &default
+  # adapter: postgresql
+  adapter: sqlite3
+  encoding: unicode
+  # For details on connection pooling, see Rails configuration guide
+  # https://guides.rubyonrails.org/configuring.html#database-pooling
+  pool: <%= ENV['RAILS_MAX_THREADS'] || 5 %>
+  host: <%= ENV['DOCKER_DB_HOST'] || 'localhost' %>
+  port: <%= ENV['DOCKER_DB_PORT'] || 5432 %>
+  # timeout: 5000
+
+development:
   <<: *default
-  URL: <%= ENV['JOURNAL_ADMINISTRATION_DB_URL'] %>
+  database: storage/development.sqlite3
+  # database: journal_administration
+
+#
+#   # Warning: The database defined as "test" will be erased and
+#   # re-generated from your development database when you run "rake".
+#   # Do not set this db to the same as development or production.
+test:
+  <<: *default
+  # database: storage/test.sqlite3
+  database: journal_administration_test
+
+# production:
+  # <<: *default
+  # database: storage/production.sqlite3
