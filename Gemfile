@@ -14,7 +14,6 @@ gem "flutie"                      # Flutie provides some utility view helpers fo
 gem "haml-rails"                  # Awesome templating engine
 gem "jbuilder" # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem "pagy" # The Ultimate Pagination Ruby Gem
-gem "pg", ">= 1.2", "< 2.0" # Use postgresql as the database for Active Record
 gem "puma"                        # Use Puma as the app server
 gem "rails"
 gem "sass-rails"                  # Use SCSS for stylesheets
