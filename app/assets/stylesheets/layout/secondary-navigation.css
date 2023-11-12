@@ -1,0 +1,17 @@
+nav ul {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  list-style-type: none;
+}
+
+nav.secondary {
+  display: flex;
+  align-items: baseline;
+}
+
+nav.secondary li {
+  min-width: 10rem;
+  font-size: 1.2rem;
+}

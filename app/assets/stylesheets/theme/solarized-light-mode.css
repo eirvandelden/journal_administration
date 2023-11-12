@@ -1,0 +1,29 @@
+/*
+// LIGHT MODE
+//
+// Functionally Taken from here: https://tombrow.com/dark-mode-website-css */
+@import url('variables');
+
+@media (prefers-color-scheme: light) {
+  * {
+    border-color: var(--base00) !important;
+  }
+
+  body {
+    background-color: var(--base3) !important;
+    color: var(--base00) !important;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--base01);
+    border-color: var(--base00);
+  }
+
+  a, a:active, a:visited {
+    color: var(--yellow);
+  }
+
+  img {
+    filter: grayscale(30%);
+  }
+}

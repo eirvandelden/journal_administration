@@ -1,0 +1,34 @@
+/*
+DARK MODE
+
+Functionally Taken from here: https://tombrow.com/dark-mode-website-css
+*/
+@import url('variables');
+
+@media (prefers-color-scheme: dark) {
+  * {
+    border-color: var(--base0) !important;
+  }
+
+  body {
+    background-color: var(--base03) !important;
+    color: var(--base0) !important;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--base1);
+    border-color: var(--base0);
+  }
+
+  a, a:active, a:visited {
+    color: var(--yellow);
+  }
+
+  img {
+    filter: grayscale(30%);
+  }
+
+  tbody tr:nth-child(odd) {
+    background-color: var(--base02);
+  }
+}

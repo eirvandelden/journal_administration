@@ -1,0 +1,23 @@
+.dashboard article {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  padding: 0.25em 5em;
+}
+
+.dashboard section {
+  width: 50%;
+}
+
+.dashboard table td {
+  min-width: 20em;
+}
+
+.dashboard table td.amount {
+  text-align: right;
+  max-width: 5em;
+}
+
+.dashboard table .profit-and-loss {
+  font-weight: bold;
+}

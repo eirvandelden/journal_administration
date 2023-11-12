@@ -1,0 +1,47 @@
+body {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* The Sidebar */
+nav.main-nav {
+  flex-basis: 10rem;
+  flex-grow: 1;
+}
+
+/* Put menu options below each other instead of side-by-side */
+nav.main-nav ul {
+  flex-direction: column;
+  justify-content: flex-start;
+  height: calc(100vh - 1rem);
+  margin: -1rem .5rem;
+  padding: 0;
+}
+
+@media screen and (max-width: 800px) {
+  nav.main-nav ul {
+    height: fit-content;
+    margin: 0;
+  }
+}
+
+nav.main-nav li {
+  padding: .5rem;
+}
+
+nav.main-nav li.login {
+  margin-top: auto;
+  text-align: right;
+}
+
+nav.main-nav a {
+  font-variant: small-caps;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+/* NOT the sidebar */
+main {
+  flex-basis: 0;
+  flex-grow: 999;
+  min-width: 50%; }

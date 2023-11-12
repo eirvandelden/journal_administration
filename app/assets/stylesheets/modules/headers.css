@@ -1,0 +1,25 @@
+@import url('theme/variables');
+// source MVP.css v1.6.2 - https://github.com/andybrewer/mvp
+
+/* Headers */
+article header,
+div header,
+main header {
+  padding-top: 0; }
+
+header {
+  text-align: var(--justify-important); }
+
+header a b,
+header a em,
+header a i,
+header a strong {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem; }
+
+header nav img {
+  margin: 1rem 0; }
+
+section header {
+  padding-top: 0;
+  width: 100%; }

@@ -1,0 +1,97 @@
+@import 'theme/variables';
+/*
+ source MVP.css v1.6.2 - https://github.com/andybrewer/mvp
+
+ form label
+   display: block
+
+ form input
+   display: inline-block
+   margin-bottom: 10px
+   padding: 10px
+   width: 100%
+
+ form input[type="radio"],
+ form input[type="checkbox"],
+ form input[type="reset"],
+ form input[type="submit"]
+     width: auto
+ textarea
+   width: 25rem
+   height: 5rem
+
+ input[type=text]
+   width: 25rem */
+
+
+.field {
+  display: flex;
+}
+
+.field select {
+  padding-right: 1rem; }
+
+/* Forms */
+button:disabled,
+input:disabled {
+  background: var(--color-bg-secondary);
+  border-color: var(--color-bg-secondary);
+  color: var(--color-text-secondary);
+  cursor: not-allowed; }
+
+button[disabled]:hover {
+  filter: none; }
+
+form {
+  background-color: var(--base2);
+  border: 1px solid var(--color-bg-secondary);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow) var(--color-shadow);
+  display: block;
+  max-width: var(--width-card-wide);
+  min-width: var(--width-card);
+  padding: 1.5rem;
+  text-align: var(--justify-normal); }
+
+form header {
+  margin: 1.5rem 0;
+  padding: 1.5rem 0; }
+
+input,
+label,
+select,
+textarea {
+  display: block;
+  font-size: inherit;
+  max-width: var(--width-card-wide); }
+
+textarea {
+  min-height: 5em;
+  width: 100%; }
+
+input[type="checkbox"],
+input[type="radio"] {
+  display: inline-block; }
+
+input[type="checkbox"] + label,
+input[type="radio"] + label {
+  display: inline-block;
+  font-weight: normal;
+  position: relative;
+  top: 1px; }
+
+input,
+select,
+textarea {
+  border: 1px solid var(--color-bg-secondary);
+  border-radius: var(--border-radius);
+  margin-bottom: 1rem;
+  padding: 0.4rem 0.8rem; }
+
+input[readonly],
+textarea[readonly] {
+  background-color: var(--color-bg-secondary); }
+
+label {
+  font-weight: bold;
+  margin-bottom: 0.2rem; }
