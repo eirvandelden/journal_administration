@@ -14,6 +14,7 @@ gem "flutie"                      # Flutie provides some utility view helpers fo
 gem "haml-rails"                  # Awesome templating engine
 gem "jbuilder" # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem "pagy" # The Ultimate Pagination Ruby Gem
+gem "propshaft"
 gem "puma"                        # Use Puma as the app server
 gem "rails", "~> 7.0"
 gem "sentry-raven"                # Use sentry to capture exceptions
@@ -25,7 +26,6 @@ gem "webpacker"                   # Transpile app-like JavaScript. Read more: ht
 # BUGS
 gem "psych", "< 4.0"
 gem "rexml"
-gem "sprockets-rails"
 
 group :development, :test do
   gem "debug", ">= 1.0.0"
