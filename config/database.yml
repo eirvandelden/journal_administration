@@ -56,6 +56,6 @@ test:
   # database: storage/test.sqlite3
   database: journal_administration_test
 
-# production:
-  # <<: *default
-  # database: storage/production.sqlite3
+production:
+  <<: *default
+  database: storage/production.sqlite3
