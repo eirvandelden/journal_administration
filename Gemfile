@@ -16,7 +16,6 @@ gem "jbuilder" # Build JSON APIs with ease. Read more: https://github.com/rails/
 gem "pagy" # The Ultimate Pagination Ruby Gem
 gem "puma"                        # Use Puma as the app server
 gem "rails"
-gem "sass-rails"                  # Use SCSS for stylesheets
 gem "sentry-raven"                # Use sentry to capture exceptions
 gem "sqlite3", "~> 1.4" # Use sqlite3 as the database for Active Record
 gem "symbol-fstring", require: "fstring/all" # Performance improvement
@@ -25,6 +24,7 @@ gem "webpacker"                   # Transpile app-like JavaScript. Read more: ht
 
 # BUGS
 gem "psych", "< 4.0"
+gem "rexml"
 
 group :development, :test do
   gem "debug", ">= 1.0.0"
