@@ -15,6 +15,7 @@ gem "haml-rails"                  # Awesome templating engine
 gem "jbuilder" # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem "pagy" # The Ultimate Pagination Ruby Gem
 gem "propshaft"
+gem "importmap-rails", "~> 1.2"
 gem "puma"                        # Use Puma as the app server
 gem "rails", "~> 7.0"
 gem "sentry-raven"                # Use sentry to capture exceptions

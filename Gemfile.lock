@@ -154,6 +154,10 @@ GEM
       ruby_parser (~> 3.5)
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
+    importmap-rails (1.2.3)
+      actionpack (>= 6.0.0)
+      activesupport (>= 6.0.0)
+      railties (>= 6.0.0)
     io-console (0.6.0)
     irb (1.9.0)
       rdoc
@@ -300,7 +304,9 @@ GEM
     zeitwerk (2.6.12)
 
 PLATFORMS
+  aarch64-linux
   ruby
+  x86_64-linux
 
 DEPENDENCIES
   bootsnap
@@ -312,6 +318,7 @@ DEPENDENCIES
   dotenv-rails
   flutie
   haml-rails
+  importmap-rails (~> 1.2)
   jbuilder
   listen
   pagy
@@ -335,4 +342,4 @@ RUBY VERSION
    ruby 3.2.2p53
 
 BUNDLED WITH
-   2.4.21
+   2.4.22
