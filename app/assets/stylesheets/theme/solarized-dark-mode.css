@@ -3,7 +3,6 @@ DARK MODE
 
 Functionally Taken from here: https://tombrow.com/dark-mode-website-css
 */
-@import url('variables');
 
 @media (prefers-color-scheme: dark) {
   * {
