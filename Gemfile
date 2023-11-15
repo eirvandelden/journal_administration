@@ -16,13 +16,12 @@ gem "jbuilder" # Build JSON APIs with ease. Read more: https://github.com/rails/
 gem "pagy" # The Ultimate Pagination Ruby Gem
 gem "propshaft"
 gem "importmap-rails", "~> 1.2"
-gem "puma"                        # Use Puma as the app server
+gem "puma" # Use Puma as the app server
 gem "rails", "~> 7.0"
-gem "sentry-raven"                # Use sentry to capture exceptions
+# gem "sentry-raven"                # Use sentry to capture exceptions
 gem "sqlite3", "~> 1.4" # Use sqlite3 as the database for Active Record
 gem "symbol-fstring", require: "fstring/all" # Performance improvement
-gem "turbolinks"                  # Turbolinks makes navigating your web application faster.
-gem "webpacker"                   # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
+gem "turbolinks" # Turbolinks makes navigating your web application faster.
 
 # BUGS
 gem "psych", "< 4.0"
