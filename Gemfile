@@ -17,7 +17,7 @@ gem "pagy" # The Ultimate Pagination Ruby Gem
 gem "propshaft"
 gem "importmap-rails", "~> 1.2"
 gem "puma" # Use Puma as the app server
-gem "rails", "~> 7.0"
+gem "rails", "~> 7.1"
 gem "sqlite3", "~> 1.4" # Use sqlite3 as the database for Active Record
 gem "symbol-fstring", require: "fstring/all" # Performance improvement
 gem "redis", "~> 4.0" # Use Redis for Action Cable
