@@ -340,7 +340,7 @@ DEPENDENCIES
   webdrivers
 
 RUBY VERSION
-   ruby 3.2.4p170
+   ruby 3.3.1p55
 
 BUNDLED WITH
    2.4.22
