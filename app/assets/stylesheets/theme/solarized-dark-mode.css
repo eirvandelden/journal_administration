@@ -7,8 +7,8 @@ Functionally Taken from here: https://tombrow.com/dark-mode-website-css
 @media (prefers-color-scheme: dark) {
   :root {
     --color-text: var(--base3);
-    --color-table: var(--cyan);
-    --color-link: var(--cyan);
+    --color-table: var(--yellow);
+    --color-link: var(--yellow);
     --color-accent: var(--base02);
   }
 
