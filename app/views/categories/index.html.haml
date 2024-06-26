@@ -1,22 +1,21 @@
-%nav.secondary
-  %ul
-    %li= link_to 'New Category', new_category_path
-
-%header
-  %h1 Categories
-
 %table.categories
   %thead
     %tr
+      %th
       %th Id
       %th Name
       %th Parent
-      %th
 
   %tbody
     - @categories.each do |category|
       %tr
+        %td
+          = link_to category do
+            %b Show
         %td= category.id
         %td= category.name
         %td= category.parent_category&.name
-        %td= link_to 'Show', category
+
+%section
+  = link_to new_category_path do
+    %b New Category

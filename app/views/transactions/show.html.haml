@@ -1,12 +1,12 @@
-%nav.secondary
-  %ul
-    %li= link_to 'Back', transactions_path
-    %li= link_to 'Edit', edit_transaction_path(@transaction)
+= content_for(:secondary_nav) do
+  %nav.secondary
+    %ul
+      %li= link_to 'All transactions', transactions_path
+      %li= link_to 'Consolidatable', transactions_path(filter: :no_category)
 
-%header
-  %h1 Show transactions
+%h1
+  = "#{@transaction.creditor} ➡️ #{@transaction.debitor}"
+  = link_to edit_transaction_path(@transaction) do
+    %b Edit
+
 = render partial: 'form', locals: { disabled: :disabled }
-
-%section
-  = link_to @transaction, method: :delete, data: { confirm: 'Are you sure?' } do
-    %b Destroy

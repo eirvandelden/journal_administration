@@ -3,6 +3,7 @@
 %table.transactions
   %thead
     %tr
+      %th
       %th Type
       %th Creditor
       %th Debitor
@@ -11,12 +12,14 @@
       %th Interest date
       %th Category
       %th{} Note
-      %th
 
   %tbody
     - transactions.each do |transaction|
       %tr
-        %td= transaction.type
+        %td
+          = link_to transaction do
+            %b Show
+        %td= transaction.type_icon
         - creditor = transaction&.creditor&.name || transaction&.creditor&.account_number
         %td= link_to creditor, account_path(transaction&.creditor)
         - debitor = transaction&.debitor&.name || transaction&.debitor&.account_number
@@ -25,9 +28,6 @@
         %td= l transaction&.booked_at
         %td= l transaction&.interest_at
         %td= transaction&.category&.name
-        %td= transaction&.note
-        %td
-          = link_to transaction do
-            %b Show
+        %td= transaction&.note.truncate(20)
 
 = pagy_nav(pagy).html_safe

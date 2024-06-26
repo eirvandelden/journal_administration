@@ -1,6 +1,7 @@
-%nav.secondary
-  %h1 New transaction
-  %ul
-    %li= link_to 'Back', transactions_path
+= content_for(:secondary_nav) do
+  %nav.secondary
+    %ul
+      %li= link_to 'Back', :back
 
+%h1 New transaction
 = render 'form'

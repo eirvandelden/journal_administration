@@ -1,7 +1,5 @@
-%nav.secondary
-  %h1 Editing account
-  %ul
-    %li= link_to 'Back', accounts_path
-    %li= link_to 'Show', @account
-
+%h1
+  = @account.name
+  = link_to @account do
+    %b Show
 = render 'form'

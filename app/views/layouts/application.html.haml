@@ -12,18 +12,16 @@
     = stylesheet_link_tag 'theme/_index.css', media: 'all', 'data-turbo-track': 'reload'
 
     = javascript_importmap_tags
-  %body{ class: body_class }
-    %nav.main-nav
-      %ul
-        %li= link_to 'Home', dashboard_index_path
-        %li= link_to 'Journal', transactions_path
-        %li= link_to 'Accounts', accounts_path
-        %li= link_to 'Categories', categories_path
-        %li.login
-          - if signed_in?
-            Signed in as: #{current_user.email} #{link_to 'Sign out', sign_out_path, method: :delete}
-          - else
-            = link_to ' Sign in', sign_in_path
+  %body
+    %header
+      %nav
+        %ul
+          %li= link_to 'Home', dashboard_index_path
+          %li= link_to 'Journal', transactions_path
+          %li= link_to 'Accounts', accounts_path
+          %li= link_to 'Categories', categories_path
+      = yield(:secondary_nav)
+    %hr
     %main
       #flash
         - flash.each do |key, value|
