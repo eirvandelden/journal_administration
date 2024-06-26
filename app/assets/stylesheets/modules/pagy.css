@@ -1,0 +1,7 @@
+.pagy-nav {
+  margin: .2rem 0;
+
+  .page {
+    margin: 0 .15rem;
+  }
+}
