@@ -32,4 +32,12 @@ Functionally Taken from here: https://tombrow.com/dark-mode-website-css
   img {
     filter: grayscale(30%);
   }
+
+  input:disabled,
+  select:disabled,
+  textarea:disabled {
+    /* TODO: add disabled icon */
+    background-color: var(--base00);
+    color: var(--base3);
+  }
 }
