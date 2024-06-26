@@ -12,16 +12,7 @@
     = stylesheet_link_tag 'theme/_index.css', media: 'all', 'data-turbo-track': 'reload'
 
     = javascript_importmap_tags
-  %body
-    %header
-      %nav
-        %ul
-          %li= link_to 'Home', dashboard_index_path
-          %li= link_to 'Journal', transactions_path
-          %li= link_to 'Accounts', accounts_path
-          %li= link_to 'Categories', categories_path
-      = yield(:secondary_nav)
-    %hr
+  %body{ class: body_class }
     %main
       #flash
         - flash.each do |key, value|

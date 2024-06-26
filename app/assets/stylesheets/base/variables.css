@@ -17,28 +17,43 @@
   --cyan:      #2aa198;
   --green:     #859900;
 
-  /* // source; MVP.css v1.6.2 - https://github.com/andybrewer/mvp */
+  /* // source; MVP.css - https://github.com/andybrewer/mvp */
+  --active-brightness: 0.85;
   --border-radius: 5px;
+  --box-shadow: 2px 2px 10px;
+  --color-accent: #118bee15;
+  --color-bg: #fff;
+  --color-bg-secondary: #e9e9e9;
+  --color-link: #118bee;
+  --color-secondary: #920de9;
+  --color-secondary-accent: #920de90b;
+  --color-shadow: #f4f4f4;
+  --color-table: #118bee;
+  --color-text: #000;
+  --color-text-secondary: #999;
+  --color-scrollbar: #cacae8;
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  --hover-brightness: 1.2;
   --justify-important: center;
   --justify-normal: left;
-  --box-shadow: 2px 2px 10px; /* // TODO: remify */
-
-  --color-shadow: #f4f4f4;
-
-  --color: var(--blue);
-  --color-accent: var(--base03); /*#118bee15*/
-  --color-bg: var(--base3);
-  --color-bg-secondary: var(--base3);
-  --color-secondary: var(--red); /*/#920de9*/
-  --color-secondary-accent: var(--magenta); /*#920de90b*/
-  --color-shadow: var(--base1);
-  --color-text: var(--base0);
-  --color-text-secondary: var(--base02);
-  --hover-brightness: 1.2;
   --line-height: 1.5;
+  --width-card: 285px;
+  --width-card-medium: 460px;
+  --width-card-wide: 800px;
+  --width-content: 1080px;
+}
 
-  --width-card: 285px; /* TODO: remify */
-  --width-card-medium: 460px; /* TODO: remify */
-  --width-card-wide: 800px; /* TODO: remify */
-  --width-content: 1080px; /* TODO: remify */
+@media (prefers-color-scheme: dark) {
+  :root[color-mode="user"] {
+      --color-accent: #0097fc4f;
+      --color-bg: #333;
+      --color-bg-secondary: #555;
+      --color-link: #0097fc;
+      --color-secondary: #e20de9;
+      --color-secondary-accent: #e20de94f;
+      --color-shadow: #bbbbbb20;
+      --color-table: #0097fc;
+      --color-text: #f7f7f7;
+      --color-text-secondary: #aaa;
+  }
 }

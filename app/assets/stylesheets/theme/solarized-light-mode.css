@@ -4,17 +4,22 @@
 // Functionally Taken from here: https://tombrow.com/dark-mode-website-css */
 
 @media (prefers-color-scheme: light) {
+  :root {
+    --color-text: var(--base00);
+    --color-table: var(--yellow);
+    --color-link: var(--yellow);
+    --color-accent: var(--base2);
+  }
+
   * {
-    border-color: var(--base00) !important;
+    border-color: var(--base00);
   }
 
   body {
-    background-color: var(--base3) !important;
-    color: var(--base00) !important;
+    background-color: var(--base3);
   }
 
   h1, h2, h3, h4, h5, h6 {
-    color: var(--base01);
     border-color: var(--base00);
   }
 
@@ -24,5 +29,13 @@
 
   img {
     filter: grayscale(30%);
+  }
+
+  input:disabled,
+  select:disabled,
+  textarea:disabled {
+    /* TODO: add disabled icon */
+    background-color: var(--base0);
+    color: var(--base03);
   }
 }

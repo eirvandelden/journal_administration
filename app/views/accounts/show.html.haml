@@ -1,11 +1,7 @@
-%nav.secondary
-  %h1 Show account
-  %ul
-    %li= link_to 'Back', accounts_path
-    %li= link_to 'Edit', edit_account_path(@account)
-    %li= link_to 'Update Transactions', update_transactions_account_path(@account)
-
-%p#notice= notice
+%h1
+  = @account.name
+  = link_to edit_account_path(@account) do
+    %b Edit
 
 %p
   %b Id:
@@ -22,3 +18,6 @@
 %p
   %b Category:
   = @account.category&.name
+
+= link_to update_transactions_account_path(@account) do
+  %b Update Transactions
