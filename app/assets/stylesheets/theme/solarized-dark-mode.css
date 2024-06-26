@@ -21,7 +21,6 @@ Functionally Taken from here: https://tombrow.com/dark-mode-website-css
   }
 
   h1, h2, h3, h4, h5, h6 {
-    color: var(--base1);
     border-color: var(--base0);
   }
 
