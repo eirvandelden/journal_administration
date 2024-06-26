@@ -14,7 +14,6 @@
     = link_to new_transaction_path do
       %strong New Transaction
 
-  %aside
-    = form_tag(upload_transactions_path, multipart: true) do
-      = file_field_tag 'csv'
-      = submit_tag 'Upload'
+  = form_tag(upload_transactions_path, multipart: true) do
+    = file_field_tag 'csv'
+    = submit_tag 'Upload'
