@@ -1,6 +1,4 @@
-@import url("forms.css");
-@import url("headers.css");
-@import url("links.css");
-@import url("section.css");
-@import url("table.css");
-@import url("ugly-duck-ca.css");
+@import url("buttons.css");
+@import url("form_errors.css");
+@import url("horizontal_rules.css");
+@import url("notifications.css");
