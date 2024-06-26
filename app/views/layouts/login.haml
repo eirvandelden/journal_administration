@@ -1,0 +1,20 @@
+!!! html
+%html
+  %head
+    %title JournalAdministration
+    = csrf_meta_tags
+    = csp_meta_tag
+
+    = stylesheet_link_tag 'base/_index.css', media: 'all', 'data-turbo-track': 'reload'
+    = stylesheet_link_tag 'layout/_index.css', media: 'all', 'data-turbo-track': 'reload'
+    = stylesheet_link_tag 'modules/_index.css', media: 'all', 'data-turbo-track': 'reload'
+    = stylesheet_link_tag 'state/_index.css', media: 'all', 'data-turbo-track': 'reload'
+    = stylesheet_link_tag 'theme/_index.css', media: 'all', 'data-turbo-track': 'reload'
+
+    = javascript_importmap_tags
+  %body{ class: body_class }
+    %main
+      #flash
+        - flash.each do |key, value|
+          %div{class: "flash #{key}"}= value
+      = yield
