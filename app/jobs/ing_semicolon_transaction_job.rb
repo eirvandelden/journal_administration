@@ -71,6 +71,8 @@ class IngSemicolonTransactionJob < ApplicationJob
         "Albert Heijn B.V."
       when /Jumbo /
         "Jumbo B.V."
+      when /.*(Kruidvat|KRUIDVAT)/
+        "Kruidvat B.V."
       else
         original_name
       end

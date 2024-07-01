@@ -55,5 +55,20 @@ class IngSemicolonTransactionJobTest < ActiveJob::TestCase
 
       assert_equal Transaction.last.debitor_account_id, jumbo.id
     end
+
+    kruidvat = Account.find_or_create_by(name: "Kruidvat B.V.")
+    [
+      "Kruidvat 6939 BREUKELEN UT NLD",
+      "Kruidvat 7661 EINDHOVEN NLD",
+      "1840003 KRUIDVAT 3140> UTRECHT"
+    ].each do |current_name|
+      perform_enqueued_jobs do
+        IngSemicolonTransactionJob.perform_later([
+          "20240229", current_name, "NL00INGB0123456789", "", "", "Af", "75,00", "Online bankieren", "beschrijving", "75,00", "🛒"
+        ])
+      end
+
+      assert_equal Transaction.last.debitor_account_id, kruidvat.id
+    end
   end
 end
