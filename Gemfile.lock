@@ -262,8 +262,8 @@ GEM
     regexp_parser (2.8.2)
     reline (0.5.9)
       io-console (~> 0.5)
-    rexml (3.2.7)
-      strscan (>= 3.0.9)
+    rexml (3.3.2)
+      strscan
     ruby-graphviz (1.2.5)
       rexml
     ruby_parser (3.13.1)
