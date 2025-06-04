@@ -19,7 +19,7 @@ servers:
 # Note: If using Cloudflare, set encryption mode in SSL/TLS setting to "Full" to enable CF-to-app encryption.
 proxy:
   ssl: false
-  host: finances.vandelden.family
+  host: 192.168.1.216
   # Proxy connects to your container on port 80 by default.
   app_port: 3000
   healthcheck:

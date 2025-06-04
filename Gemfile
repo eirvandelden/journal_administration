@@ -34,10 +34,10 @@ end
 
 group :development do
   gem "kamal", require: false     # Deployment
-  gem "rails-erd"
   gem "listen"
-  gem "spring"                    # Spring speeds up development by keeping your application running in the background.
+  gem "rails-erd"
   gem "spring-watcher-listen"
+  gem "spring"                    # Spring speeds up development by keeping your application running in the background.
   gem "web-console"               # Access an interactive console on exception pages or by calling 'console' anywhere.
 end
 

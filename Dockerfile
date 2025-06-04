@@ -6,6 +6,9 @@ FROM ruby:${RUBY_VERSION}
 
 FROM registry.docker.com/library/ruby:$RUBY_VERSION-slim as base
 
+# set version label
+LABEL service="journal_administration"
+
 # Rails app lives here
 WORKDIR /rails
 
