@@ -33,6 +33,7 @@ group :development, :test do
 end
 
 group :development do
+  gem "kamal", require: false     # Deployment
   gem "rails-erd"
   gem "listen"
   gem "spring"                    # Spring speeds up development by keeping your application running in the background.
