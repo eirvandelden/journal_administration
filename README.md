@@ -13,7 +13,17 @@ For example, in a .env file:
   DEFAULT_HOST=foo.example.com
 ```
 
-# Things todo when going to production
+## Things todo when going to production
 
 1. Clearance emails `config.action_mailer.default_url_options = { host: 'localhost:3000' }`
 
+
+## Releasing
+
+## Manually building image
+
+Build the image using
+
+```
+docker build --build-arg RUBY_VERSION=$(cat .ruby-version) -t journal_administration .
+```
