@@ -1,0 +1,6 @@
+actioncable
+daterange
+hotwired
+importmap
+Railsisms
+stylesheet

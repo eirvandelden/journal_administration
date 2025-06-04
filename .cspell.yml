@@ -1,0 +1,91 @@
+version: "0.2"
+language: en
+words:
+  # Add project-specific terms, acronyms, or Railsisms here
+  - Rakefile
+  - ActiveRecord
+  - ActiveSupport
+  - Sidekiq
+  - Redis
+  - Postgres
+  - RuboCop
+  - Devise
+  - RSpec
+  - FactoryBot
+  - Rubygems
+  - Gemfile
+ignorePaths:
+  - app/assets
+  - bin/**
+  - config/**
+  - coverage/**
+  - log/**
+  - node_modules/**
+  - public/**
+  - storage/**
+  - tmp/**
+  - test/fixtures/**
+  - vendor/**
+  - db/schema.rb
+  - db/structure.sql
+  - db/migrate/**
+  - db/data/**
+  - db/db.sql
+  - yarn-error.log
+  - Gemfile
+  - Dockerfile
+  - "*.min.*"
+  - "*.map"
+  - "*.lock"
+  - "*.log"
+  - "*.png"
+  - "*.jpg"
+  - "*.jpeg"
+  - "*.gif"
+  - "*.svg"
+  - "*.ico"
+  - "*.eot"
+  - "*.ttf"
+  - "*.woff"
+  - "*.woff2"
+  - lib/Alle_rekeningen*.csv
+  - lefthook.yml
+dictionaries:
+  - companies
+  - css
+  - en_us
+  - en-gb
+  - filetypes
+  - fonts
+  - html
+  - misc
+  - networkingTerms
+  - node
+  - npm
+  - rails
+  - ruby
+  - softwareTerms
+  - softwareTerms
+  - journal-administration
+  - content
+dictionaryDefinitions:
+  - name: rails
+    path: ./config/dictionaries/rails-apps.txt
+    description: "Rails domain-specific vocabulary"
+  - name: journal-administration
+    path: ./config/dictionaries/journal-administration.txt
+    description: "App specific vocabulary"
+  - name: content
+    path: ./config/dictionaries/content.txt
+    description: "Content"
+enableFiletypes:
+  - ".rb"
+  - ".erb"
+  - ".rake"
+  - ".js"
+  - ".yml"
+  - ".json"
+  - ".md"
+  - ".gemspec"
+  - ".html"
+  - ".css"
