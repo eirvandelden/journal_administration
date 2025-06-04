@@ -3,8 +3,18 @@ require "test_helper"
 class IngSemicolonTransactionJobTest < ActiveJob::TestCase
   test "on a header row" do
     perform_enqueued_jobs do
-      IngSemicolonTransactionJob.perform_later(["Datum", "Naam / Omschrijving", "Rekening", "Tegenrekening", "Code",
-"Af Bij""Bedrag (EUR)", "Mutatiesoort", "Mededelingen", "Saldo na mutatie", "Tag"])
+      IngSemicolonTransactionJob.perform_later([
+        "Datum",
+        "Naam / Omschrijving",
+        "Rekening",
+        "Tegenrekening",
+        "Code",
+        "Af Bij""Bedrag (EUR)",
+        "Mutatiesoort",
+        "Mededelingen",
+        "Saldo na mutatie",
+        "Tag"
+      ])
     end
 
     assert_equal Transaction.count, 0
@@ -34,8 +44,8 @@ class IngSemicolonTransactionJobTest < ActiveJob::TestCase
     ].each do |current_name|
       perform_enqueued_jobs do
         IngSemicolonTransactionJob.perform_later([
-          "20240229", current_name, "NL00INGB0123456789", "", "", "Af", "75,00", "Online bankieren", "beschrijving", "75,00", "🛒"
-        ])
+          "20240229", current_name, "NL00INGB0123456789", "", "", "Af",
+          "75,00", "Online bankieren", "beschrijving", "75,00", "🛒"])
       end
 
       assert_equal Transaction.last.debitor_account_id, ah.id
@@ -49,8 +59,8 @@ class IngSemicolonTransactionJobTest < ActiveJob::TestCase
     ].each do |current_name|
       perform_enqueued_jobs do
         IngSemicolonTransactionJob.perform_later([
-          "20240229", current_name, "NL00INGB0123456789", "", "", "Af", "75,00", "Online bankieren", "beschrijving", "75,00", "🛒"
-        ])
+          "20240229", current_name, "NL00INGB0123456789", "", "", "Af", "75,00", "Online bankieren", "beschrijving",
+          "75,00", "🛒"])
       end
 
       assert_equal Transaction.last.debitor_account_id, jumbo.id
@@ -64,8 +74,8 @@ class IngSemicolonTransactionJobTest < ActiveJob::TestCase
     ].each do |current_name|
       perform_enqueued_jobs do
         IngSemicolonTransactionJob.perform_later([
-          "20240229", current_name, "NL00INGB0123456789", "", "", "Af", "75,00", "Online bankieren", "beschrijving", "75,00", "🛒"
-        ])
+          "20240229", current_name, "NL00INGB0123456789", "", "", "Af", "75,00", "Online bankieren", "beschrijving",
+          "75,00", "🛒"])
       end
 
       assert_equal Transaction.last.debitor_account_id, kruidvat.id

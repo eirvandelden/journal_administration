@@ -1,5 +1,5 @@
-# Transaction model holds all information for a trnansaction.
-# The owner of the debitor account determins the type of Transaction: Debit or Credit.
+# Transaction model holds all information for a transaction.
+# The owner of the debtor account determines the type of Transaction: Debit or Credit.
 class Transaction < ApplicationRecord
   TYPES = %w[Credit Debit Transfer].freeze
 
@@ -47,7 +47,8 @@ class Transaction < ApplicationRecord
 
    def check_transfer_type_through_account_owners
      false # TODO: change this to work
-     # return errors.add(:type, "must be Transfer if debitor and creditor is us") if type == 'Transfer' && debitor_is_us? && creditor_is_us?
+     # return errors.add(:type, "must be Transfer if debitor and creditor is us")
+     #  && if type == 'Transfer' && debitor_is_us? && creditor_is_us?
      # return errors.add(:type, "must be Debit if debitor is us") if type == 'Debit' && debitor_is_us?
      # return errors.add(:type, "must be Credit if creditor is us") if type == 'Credit' && creditor_is_us?
    end

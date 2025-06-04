@@ -4,7 +4,7 @@ Fill in the journal with all your transactions. Look at the dashboard to get a s
 
 ## Configuration
 
-To setup a whitelist of urls, define `ENV["HOSTS"]` as a comma seperated list.
+To setup a whitelist of urls, define `ENV["HOSTS"]` as a comma separated list.
 Sending emails uses the `ENV["DEFAULT_HOST"]` variable
 For example, in a .env file:
 
