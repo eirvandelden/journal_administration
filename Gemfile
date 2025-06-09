@@ -47,16 +47,8 @@ end
 group :development do
   gem "rails-erd", require: false
   gem "web-console" # Access an interactive console on exception pages or by calling 'console' anywhere.
-end
 
-group :test do
-  gem "capybara"                   # Adds support for Capybara system testing and selenium driver
-  gem "selenium-webdriver"
-  gem "webdrivers"                 # Easy installation and use of web drivers to run system tests with browsers
-end
-
-# Linting and formatting
-group :linting do
+  # Linting and formatting
   gem "rubocop-capybara", require: false
   gem "rubocop-minitest", require: false
   gem "rubocop-obsession", require: false
@@ -65,4 +57,10 @@ group :linting do
   gem "rubocop-rails", require: false
   gem "rubocop-rails-omakase", require: false
   gem "rubocop-rspec", require: false
+end
+
+group :test do
+  gem "capybara"                   # Adds support for Capybara system testing and selenium driver
+  gem "selenium-webdriver"
+  gem "webdrivers"                 # Easy installation and use of web drivers to run system tests with browsers
 end
