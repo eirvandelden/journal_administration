@@ -23,10 +23,11 @@ FROM --platform=$TARGETPLATFORM base AS build
 
 # Install packages needed to build gems
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential git libvips pkg-config ssh
+    apt-get install --no-install-recommends -y build-essential git libvips pkg-config ssh libsqlite3-dev
 
 # Install application gems
 COPY Gemfile Gemfile.lock .ruby-version ./
+RUN bundle config jobs 1
 RUN bundle install --without linting && \
     rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git
 
