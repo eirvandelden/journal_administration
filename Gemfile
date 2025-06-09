@@ -41,17 +41,8 @@ gem "useragent", github: "basecamp/useragent"
 group :development, :test do
   gem "debug", ">= 1.0.0"
   gem "brakeman", require: false
-
-  # Linting & Formatting
-  gem "rubocop-capybara", require: false
-  gem "rubocop-minitest", require: false
-  gem "rubocop-obsession", require: false
-  gem "rubocop-packaging", require: false
-  gem "rubocop-performance", require: false
-  gem "rubocop-rails", require: false
-  gem "rubocop-rails-omakase", require: false
-  gem "rubocop-rspec", require: false
 end
+
 
 group :development do
   gem "rails-erd", require: false
@@ -62,4 +53,16 @@ group :test do
   gem "capybara"                   # Adds support for Capybara system testing and selenium driver
   gem "selenium-webdriver"
   gem "webdrivers"                 # Easy installation and use of web drivers to run system tests with browsers
+end
+
+# Linting and formatting
+group :linting do
+  gem "rubocop-capybara", require: false
+  gem "rubocop-minitest", require: false
+  gem "rubocop-obsession", require: false
+  gem "rubocop-packaging", require: false
+  gem "rubocop-performance", require: false
+  gem "rubocop-rails", require: false
+  gem "rubocop-rails-omakase", require: false
+  gem "rubocop-rspec", require: false
 end
