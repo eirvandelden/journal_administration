@@ -68,6 +68,11 @@ Rails.application.configure do
   # Use a different cache store in production.
   # config.cache_store = :mem_cache_store
 
+  # Assets are cacheable
+  config.public_file_server.headers = {
+    "Cache-Control" => "public, max-age=#{1.year.to_i}"
+  }
+
   # Use a real queuing backend for Active Job (and separate queues per environment).
   # config.active_job.queue_adapter     = :resque
   # config.active_job.queue_name_prefix = "journal_administration_production"
@@ -82,11 +87,18 @@ Rails.application.configure do
   # the I18n.default_locale when a translation cannot be found).
   config.i18n.fallbacks = true
 
+  # Always be SSL'ing (unless told not to)
+  config.assume_ssl = ENV["DISABLE_SSL"].blank?
+  config.force_ssl  = ENV["DISABLE_SSL"].blank?
+
   # Don't log any deprecations.
   config.active_support.report_deprecations = false
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  # SQLite is good, actually
+  config.active_record.sqlite3_production_warning = false
 
   # Enable DNS rebinding protection and other `Host` header attacks.
   # config.hosts = [

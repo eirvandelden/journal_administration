@@ -40,11 +40,12 @@ default: &default
   pool: <%= ENV['RAILS_MAX_THREADS'] || 5 %>
   host: <%= ENV['DOCKER_DB_HOST'] || 'localhost' %>
   port: <%= ENV['DOCKER_DB_PORT'] || 5432 %>
-  # timeout: 5000
+  timeout: 100
+  default_transaction_mode: immediate
 
 development:
   <<: *default
-  database: storage/development.sqlite3
+  database: storage/db/development.sqlite3
   # database: journal_administration
 
 #
@@ -54,8 +55,8 @@ development:
 test:
   <<: *default
   # database: storage/test.sqlite3
-  database: journal_administration_test
+  database: storage/db/test.sqlite3
 
 production:
   <<: *default
-  database: /storage/production.sqlite3
+  database: storage/db/production.sqlite3

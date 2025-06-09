@@ -4,3 +4,5 @@ hotwired
 importmap
 Railsisms
 stylesheet
+deactivated
+httponly
