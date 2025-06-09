@@ -1,19 +1,19 @@
 class DashboardController < ApplicationController
   def index
     daterange = case params[:filter]
-                when "last_month"
+    when "last_month"
                   Time.current.last_month.beginning_of_month..Time.current.last_month.end_of_month
-                when "three_months"
+    when "three_months"
                   Time.current.months_ago(3).beginning_of_month..Time.current.last_month.end_of_month
-                when "year_to_date"
+    when "year_to_date"
                   Time.current.beginning_of_year..Time.current.end_of_year
-                when "last_year"
+    when "last_year"
                   Time.current.last_year.beginning_of_year..Time.current.last_year.end_of_year
-                else
+    else
                   Time.current.beginning_of_month..Time.current.end_of_month
     end
 
-    transfer_category_id      = Category.find_by(name: "Transfer").id
+    transfer_category_id      = Category.find_by(name: "Transfer")&.id
     debit_transactions_scope  = Debit.where(debitor_account_id: 1)
                                      .where(booked_at: daterange)
 
