@@ -15,8 +15,6 @@ For example, in a .env file:
 
 ## Things todo when going to production
 
-1. Clearance emails `config.action_mailer.default_url_options = { host: 'localhost:3000' }`
-
 
 ## Releasing
 

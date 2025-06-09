@@ -1,14 +1,29 @@
 class CreateUsers < ActiveRecord::Migration[6.0]
   def change
-    create_table :users do |t|
-      t.timestamps null: false
-      t.string :email, null: false
-      t.string :encrypted_password, limit: 128, null: false
-      t.string :confirmation_token, limit: 128
-      t.string :remember_token, limit: 128, null: false
+    create_table "sessions", force: :cascade do |t|
+      t.integer "user_id", null: false
+      t.string "token", null: false
+      t.string "ip_address"
+      t.string "user_agent"
+      t.datetime "last_active_at", null: false
+      t.datetime "created_at", null: false
+      t.datetime "updated_at", null: false
+      t.index [ "token" ], name: "index_sessions_on_token", unique: true
+      t.index [ "user_id" ], name: "index_sessions_on_user_id"
     end
 
-    add_index :users, :email
-    add_index :users, :remember_token
+    create_table "users", force: :cascade do |t|
+      t.string "name", null: false
+      t.string "email_address", null: false
+      t.string "password_digest", null: false
+      t.integer "role", null: false
+      t.boolean "active", default: true
+      t.datetime "created_at", null: false
+      t.datetime "updated_at", null: false
+      t.index [ "email_address" ], name: "index_users_on_email_address", unique: true
+      t.index [ "name" ], name: "index_users_on_name", unique: true
+    end
+
+    add_foreign_key "sessions", "users"
   end
 end

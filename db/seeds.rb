@@ -7,8 +7,8 @@
 #   Character.create(name: 'Luke', movie: movies.first]
 
 ## Users
-User.create(email: "etienne@vandelden.family",
-password: "testtest1") unless User.find_by(email: "etienne@vandelden.family").present?
+User.create(name: "Etienne van Delden de la Haije", email_address: "etienne@vandelden.family",
+password: "testtest1", role: :administrator) unless User.find_by(email_address: "etienne@vandelden.family").present?
 
 ## Categories
 [
@@ -156,6 +156,6 @@ end
   Category.find_or_create_by name: name
 end
 
-["Transfer"].each { |name| Category.find_or_create_by name: name }
+[ "Transfer" ].each { |name| Category.find_or_create_by name: name }
 
 ## Accounts
