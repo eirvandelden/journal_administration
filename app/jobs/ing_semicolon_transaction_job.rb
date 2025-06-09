@@ -47,11 +47,11 @@ class IngSemicolonTransactionJob < ApplicationJob
     transaction.type = "Transfer" if our_account.owner.present? && their_account.owner.present?
 
     transaction.category = case transaction.type
-                           when "Transfer"
+    when "Transfer"
                              Category.find_by(name: "Transfer")
-                           when "Credit"
+    when "Credit"
                              transaction.debitor.category
-                           when "Debit"
+    when "Debit"
                              transaction.creditor.category
     end
 

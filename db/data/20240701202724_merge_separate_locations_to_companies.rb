@@ -11,7 +11,7 @@ class MergeSeparateLocationsToCompanies < ActiveRecord::Migration[7.1]
       Transaction.where(debitor_account_id: ah.id).update_all(debitor_account_id: target.id)
       Transaction.where(creditor_account_id: ah.id).update_all(creditor_account_id: target.id)
     end
-    albert_heijns = albert_heijns - [target]
+    albert_heijns = albert_heijns - [ target ]
     albert_heijns.map(&:destroy)
 
     # Jumbo
@@ -22,7 +22,7 @@ class MergeSeparateLocationsToCompanies < ActiveRecord::Migration[7.1]
       Transaction.where(creditor_account_id: jumbo.id).update_all(creditor_account_id: target.id)
     end
 
-    jumbos = jumbos - [target]
+    jumbos = jumbos - [ target ]
     jumbos.map(&:destroy)
 
     # Kruidvat
@@ -33,7 +33,7 @@ class MergeSeparateLocationsToCompanies < ActiveRecord::Migration[7.1]
       Transaction.where(creditor_account_id: kruidvat.id).update_all(creditor_account_id: target.id)
     end
 
-    kruidvat = kruidvat - [target]
+    kruidvat = kruidvat - [ target ]
     kruidvat.map(&:destroy)
   end
 
