@@ -19,6 +19,7 @@ Eigen
 eirvandelden
 ~eten
 ~etienne
+~chiara
 Etiennes
 Extraatjes
 Feest
