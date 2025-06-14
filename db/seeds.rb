@@ -21,7 +21,7 @@ password: "testtest1", role: :administrator) unless User.find_by(email_address: 
   "Inkomsten - Kinderbijslag",
   "Inkomsten - Reiskostenvergoeding"
 ].each do |name|
-  Category.find_or_create_by name: name
+  Category.find_or_create_by name: name, direction: :debit
 end
 
 [
@@ -33,7 +33,7 @@ end
   "Vaste lasten - Energie",
   "Vaste lasten - Brabant Water"
 ].each do |name|
-  Category.find_or_create_by name: name
+  Category.find_or_create_by name: name, direction: :credit
 end
 
 [
@@ -43,7 +43,7 @@ end
   "Heffingen - Riool",
   "Heffingen - Afval"
 ].each do |name|
-  Category.find_or_create_by name: name
+  Category.find_or_create_by name: name, direction: :credit
 end
 
 [
@@ -55,7 +55,7 @@ end
   "Abonnementen - Sport",
   "Abonnementen - Lezen"
 ].each do |name|
-  Category.find_or_create_by name: name
+  Category.find_or_create_by name: name, direction: :credit
 end
 
 [
@@ -64,7 +64,7 @@ end
   "Verzekeringen - Privepakket",
   "Verzekeringen - Uitvaartverzekering"
 ].each do |name|
-  Category.find_or_create_by name: name
+  Category.find_or_create_by name: name, direction: :credit
 end
 
 [
@@ -73,7 +73,7 @@ end
   "Auto en vervoer - Parkeren",
   "Auto en vervoer - Onderhoud"
 ].each do |name|
-  Category.find_or_create_by name: name
+  Category.find_or_create_by name: name, direction: :credit
 end
 
 [
@@ -84,7 +84,7 @@ end
   "Huishoudelijke uitgaven - Kapper",
   "Huishoudelijke uitgaven - Tandarts"
 ].each do |name|
-  Category.find_or_create_by name: name
+  Category.find_or_create_by name: name, direction: :credit
 end
 
 [
@@ -93,7 +93,7 @@ end
   "Schulden - Creditcard",
   "Schulden - Geleend"
 ].each do |name|
-  Category.find_or_create_by name: name
+  Category.find_or_create_by name: name, direction: :credit
 end
 
 [
@@ -109,16 +109,18 @@ end
   "Ontspanning - Hobby",
   "Ontspanning - Lectuur"
 ].each do |name|
-  Category.find_or_create_by name: name
+  Category.find_or_create_by name: name, direction: :credit
 end
 
 [
   "Kleding",
   "Kleding - Etienne",
   "Kleding - Michèlle",
-  "Kleding - Serena"
+  "Kleding - Serena",
+  "Kleding - Cosimo",
+  "Kleding - Chiara"
 ].each do |name|
-  Category.find_or_create_by name: name
+  Category.find_or_create_by name: name, direction: :credit
 end
 
 [
@@ -127,7 +129,7 @@ end
   "Vakantie - Vervoer",
   "Vakantie - Eten en drinken"
 ].each do |name|
-  Category.find_or_create_by name: name
+  Category.find_or_create_by name: name, direction: :credit
 end
 
 [
@@ -137,7 +139,7 @@ end
   "Huis - Tuin",
   "Huis - Klussen"
 ].each do |name|
-  Category.find_or_create_by name: name
+  Category.find_or_create_by name: name, direction: :credit
 end
 
 [
@@ -145,7 +147,7 @@ end
   "Overige uitgaven - Cadeautjes",
   "Overige Uitgaven -"
 ].each do |name|
-  Category.find_or_create_by name: name
+  Category.find_or_create_by name: name, direction: :credit
 end
 
 [
@@ -153,9 +155,9 @@ end
   "Technisch - Domein",
   "Technisch - Online opslag"
 ].each do |name|
-  Category.find_or_create_by name: name
+  Category.find_or_create_by name: name, direction: :credit
 end
 
-[ "Transfer" ].each { |name| Category.find_or_create_by name: name }
+[ "Transfer" ].each { |name| Category.find_or_create_by name: name, direction: :debit }
 
 ## Accounts

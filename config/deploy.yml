@@ -26,7 +26,7 @@ proxy:
   # Proxy connects to your container on port 80 by default.
   app_port: 3000
   healthcheck:
-    path: /
+    path: /up
     interval: 2
     timeout: 2
 
@@ -52,6 +52,7 @@ builder:
 #
 env:
   clear:
+    APP_NAME: JournalAdministration
     REGISTRY_HTTP_ADDR: registry.vandelden.family
   #   clear:
   #     DB_HOST: 192.168.0.2
@@ -109,4 +110,4 @@ volumes:
 #     directories:
 #       - data:/data
 
-deploy_timeout: 60
+deploy_timeout: 20

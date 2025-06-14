@@ -2,8 +2,6 @@ require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
-  config.hosts << "finances.vandelden.family"
-  config.hosts << "journal_administration.vandelden.family"
 
   # Code is not reloaded between requests.
   config.enable_reloading = false
