@@ -19,7 +19,10 @@ servers:
 # Note: If using Cloudflare, set encryption mode in SSL/TLS setting to "Full" to enable CF-to-app encryption.
 proxy:
   ssl: false
-  host: 192.168.1.216
+  hosts:
+    - finances.vandelden.family
+    - journal_administration.vandelden.family
+  forward_headers: true
   # Proxy connects to your container on port 80 by default.
   app_port: 3000
   healthcheck:
@@ -75,7 +78,7 @@ volumes:
 # hitting 404 on in-flight requests. Combines all files from new and old
 # version inside the asset_path.
 #
-asset_path: app/public/assets
+# asset_path: app/public/assets
 # Configure rolling deploys by setting a wait time between batches of restarts.
 #
 # boot:
