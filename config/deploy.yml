@@ -72,8 +72,8 @@ aliases:
 # Use a persistent storage volume.
 #
 volumes:
-  - "home/app_storage/journal_administration/db:/app/db"
-  - "home/app_storage/journal_administration/storage:/app/storage"
+  - "/home/app_storage/journal_administration/db:/app/db"
+  - "/home/app_storage/journal_administration/storage:/app/storage"
 # Bridge fingerprinted assets, like JS and CSS, between versions to avoid
 # hitting 404 on in-flight requests. Combines all files from new and old
 # version inside the asset_path.
@@ -109,4 +109,4 @@ volumes:
 #     directories:
 #       - data:/data
 
-deploy_timeout: 20
+deploy_timeout: 60

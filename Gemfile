@@ -35,8 +35,8 @@ gem "flutie"                      # Flutie provides some utility view helpers fo
 gem "jbuilder" # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem "pagy" # The Ultimate Pagination Ruby Gem
 gem "symbol-fstring", require: "fstring/all" # Performance improvement
+gem "thruster"
 gem "useragent", github: "basecamp/useragent"
-# TODO: gem "thruster"
 
 group :development, :test do
   gem "debug", ">= 1.0.0"
