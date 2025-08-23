@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :chattels
   root "dashboard#index"
 
   resource :session, only: %i[ new create destroy ] do

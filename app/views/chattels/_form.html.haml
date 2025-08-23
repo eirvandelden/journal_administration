@@ -1,0 +1,40 @@
+= form_for @chattel do |f|
+  - if @chattel.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@chattel.errors.count, "error")} prohibited this chattel from being saved:"
+      %ul
+        - @chattel.errors.full_messages.each do |message|
+          %li= message
+
+  .field
+    = f.label :name
+    = f.text_field :name
+  .field
+    = f.label :kind
+    = f.text_field :kind
+  .field
+    = f.label :model_number
+    = f.text_field :model_number
+  .field
+    = f.label :serial_number
+    = f.text_field :serial_number
+  .field
+    = f.label :purchase_transaction_id
+    = f.number_field :purchase_transaction_id
+  .field
+    = f.label :purchased_at
+    = f.date_field :purchased_at
+  .field
+    = f.label :warranty_expires_at
+    = f.date_field :warranty_expires_at
+  .field
+    = f.label :left_possession_at
+    = f.date_field :left_possession_at
+  .field
+    = f.label :purchase_price
+    = f.text_field :purchase_price
+  .field
+    = f.label :notes
+    = f.text_area :notes
+  .actions
+    = f.submit 'Save'

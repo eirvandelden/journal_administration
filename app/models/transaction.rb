@@ -6,6 +6,7 @@ class Transaction < ApplicationRecord
   belongs_to :debitor, class_name: "Account", foreign_key: "debitor_account_id", optional: true
   belongs_to :creditor, class_name: "Account", foreign_key: "creditor_account_id", optional: true
   belongs_to :category, optional: true
+  has_many :chattels
 
   before_validation :determine_debit_credit_or_transfer_type
 

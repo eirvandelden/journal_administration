@@ -1,0 +1,7 @@
+= render "table", header: t("warrantied"), chattels: @warrantied if @warrantied.present?
+= render "table", header: t("out_of_warranty"), chattels: @out_of_warranty if @out_of_warranty.present?
+= render "table", header: t("left"), chattels: @left if @left.present?
+
+%br
+
+= link_to 'New Chattel', new_chattel_path

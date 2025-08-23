@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2023_11_12_152521) do
+ActiveRecord::Schema[7.2].define(version: 2025_08_17_131820) do
   create_table "accounts", force: :cascade do |t|
     t.string "account_number"
     t.string "name"
@@ -30,6 +30,22 @@ ActiveRecord::Schema[7.2].define(version: 2023_11_12_152521) do
     t.integer "parent_category_id"
     t.index ["id"], name: "index_categories_on_id"
     t.index ["parent_category_id"], name: "index_categories_on_parent_category_id"
+  end
+
+  create_table "chattels", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "kind"
+    t.string "model_number"
+    t.string "serial_number"
+    t.integer "purchase_transaction_id"
+    t.datetime "purchased_at"
+    t.datetime "warranty_expires_at"
+    t.datetime "left_possession_at"
+    t.decimal "purchase_price", precision: 10, scale: 2
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["purchase_transaction_id"], name: "index_chattels_on_purchase_transaction_id"
   end
 
   create_table "sessions", force: :cascade do |t|
@@ -76,6 +92,7 @@ ActiveRecord::Schema[7.2].define(version: 2023_11_12_152521) do
   end
 
   add_foreign_key "accounts", "categories"
+  add_foreign_key "chattels", "transactions", column: "purchase_transaction_id"
   add_foreign_key "sessions", "users"
   add_foreign_key "transactions", "categories"
 end

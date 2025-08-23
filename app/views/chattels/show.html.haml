@@ -1,0 +1,36 @@
+%p#notice= notice
+
+%p
+  %b Name:
+  = @chattel.name
+%p
+  %b Kind:
+  = @chattel.kind
+%p
+  %b Model number:
+  = @chattel.model_number
+%p
+  %b Serial number:
+  = @chattel.serial_number
+%p
+  %b Purchase transaction:
+  = @chattel.purchase_transaction
+%p
+  %b Purchased at:
+  = l @chattel.purchased_at, format: :short
+%p
+  %b Warranty expires at:
+  = l @chattel.warranty_expires_at, format: :short
+%p
+  %b Left posession at:
+  = l @chattel.left_possession_at, format: :short
+%p
+  %b Purchase price:
+  = @chattel.purchase_price
+%p
+  %b Notes:
+  = @chattel.notes
+
+= link_to 'Edit', edit_chattel_path(@chattel)
+\|
+= link_to 'Back', chattels_path
