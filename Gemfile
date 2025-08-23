@@ -20,7 +20,7 @@ gem "puma" # Use Puma as the app server
 
 # Front-end
 gem "haml-rails"                  # Awesome templating engine
-gem "importmap-rails", "~> 1.2"
+gem "importmap-rails"
 gem "propshaft"
 gem "stimulus-rails"
 gem "turbo-rails" # Turbo makes navigating your web application faster.
