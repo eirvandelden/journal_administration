@@ -23,7 +23,8 @@
       = yield(:secondary_nav)
     %hr
     %main
-      #flash
+      %article
         - flash.each do |key, value|
-          %div{class: "flash #{key}"}= value
+          %aside
+            %p{class: "flash #{key}"}= value
       = yield
