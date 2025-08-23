@@ -16,10 +16,10 @@
     %header
       %nav
         %ul
-          %li= link_to 'Home', dashboard_index_path
-          %li= link_to 'Journal', transactions_path
-          %li= link_to 'Accounts', accounts_path
-          %li= link_to 'Categories', categories_path
+          %li= link_to t('Home'), dashboard_index_path
+          %li= link_to t('Journal'), transactions_path
+          %li= link_to t('Accounts'), accounts_path
+          %li= link_to t('Categories'), categories_path
       = yield(:secondary_nav)
     %hr
     %main

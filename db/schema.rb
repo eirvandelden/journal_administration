@@ -70,6 +70,7 @@ ActiveRecord::Schema[7.2].define(version: 2023_11_12_152521) do
     t.boolean "active", default: true
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
+    t.integer "locale", default: 0, null: false
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
     t.index ["name"], name: "index_users_on_name", unique: true
   end
