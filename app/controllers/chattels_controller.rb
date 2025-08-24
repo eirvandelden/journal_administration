@@ -4,7 +4,7 @@ class ChattelsController < ApplicationController
   # GET /chattels or /chattels.json
   def index
     @warrantied = Chattel.active.warrantied
-    @out_of_warranty = Chattel.active.out_of_warranty 
+    @out_of_warranty = Chattel.active.out_of_warranty
     @left = Chattel.left
   end
 
@@ -67,6 +67,7 @@ class ChattelsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def chattel_params
-      params.require(:chattel).permit(:name, :kind, :model_number, :serial_number, :purchase_transaction_id, :purchased_at, :warranty_expires_at, :left_possession_at, :purchase_price, :notes)
+      params.require(:chattel).permit(:name, :kind, :model_number, :serial_number, :purchase_transaction_id, :purchased_at,
+:warranty_expires_at, :left_possession_at, :purchase_price, :notes)
     end
 end
