@@ -4,7 +4,7 @@
 ARG RUBY_VERSION=3.3.8
 ARG TARGETPLATFORM
 
-FROM registry.docker.com/library/ruby:$RUBY_VERSION-slim AS base
+FROM --platform=$TARGETPLATFORM registry.docker.com/library/ruby:$RUBY_VERSION-slim AS base
 
 # set version label
 LABEL service="journal_administration"
