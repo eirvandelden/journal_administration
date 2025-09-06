@@ -44,6 +44,8 @@ registry:
 # Configure builder setup.
 builder:
   arch: amd64
+  remote: ssh://root@192.168.1.128
+  local: false
   context: "."
   # Pass in additional build args needed for your Dockerfile.
   args:

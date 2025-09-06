@@ -18,18 +18,24 @@ ENV RAILS_ENV="production" \
     BUNDLE_PATH="/usr/local/bundle" \
     BUNDLE_WITHOUT="development"
 
-
 # Throw-away build stage to reduce size of final image
 FROM --platform=$TARGETPLATFORM base AS build
 
 # Install packages needed to build gems
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential git libvips pkg-config ssh libsqlite3-dev
+    apt-get install --no-install-recommends -y \
+      build-essential git pkg-config ssh \
+      libsqlite3-dev libyaml-dev \
+      libxml2-dev libxslt1-dev zlib1g-dev && \
+    rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Install application gems
 COPY Gemfile Gemfile.lock .ruby-version ./
-RUN bundle config jobs 1
-RUN bundle install --without development test && \
+# Ensure linux/amd64 gems are in the lock and installed
+RUN bundle lock --add-platform x86_64-linux \
+ && bundle config set deployment true \
+ && bundle config set without 'development test' \
+ && bundle install --jobs 4 --retry 3 && \
     rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git
 
 # Copy application code
@@ -47,7 +53,9 @@ FROM base
 
 # Install packages needed for deployment
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y curl libsqlite3-0 libvips && \
+    apt-get install --no-install-recommends -y \
+      curl libsqlite3-0 libvips \
+      libxml2 libxslt1.1 zlib1g && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Copy built artifacts: gems, application
