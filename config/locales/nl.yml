@@ -1,4 +1,12 @@
 nl:
+  home: Thuis
+  journal: Journaal
+  filters:
+    month_to_date: Deze maand
+    last_month: Vorige maand
+    three_months: Afgelopen 3 maanden
+    year_to_date: Dit jaar
+    last_year: Afgelopen jaar
   activerecord:
     models:
       chattel: "Bezitting"
@@ -33,3 +41,4 @@ nl:
   datetime:
     formats:
       short: "%d-%m-%Y"
+
