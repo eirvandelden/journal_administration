@@ -1,8 +1,11 @@
 actioncable
 daterange
 hotwired
+~hotwire
 importmap
 Railsisms
 stylesheet
 deactivated
 httponly
+kamal
+SMACCS
