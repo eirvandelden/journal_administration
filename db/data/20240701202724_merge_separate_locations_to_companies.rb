@@ -33,7 +33,7 @@ class MergeSeparateLocationsToCompanies < ActiveRecord::Migration[7.1]
       Transaction.where(creditor_account_id: kruidvat.id).update_all(creditor_account_id: target.id)
     end
 
-    kruidvat = kruidvat - [ target ]
+    kruidvat = kruidvaten - [ target ]
     kruidvat.map(&:destroy)
   end
 
