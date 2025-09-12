@@ -16,7 +16,7 @@
       <% end %>
       <% categories.each do |category| %>
         <tr>
-          <td><%= link_to 'Show', category %></td>
+          <td><%= link_to t("show"), category %></td>
           <td><%= category.id %></td>
           <td><%= category.name %></td>
           <td><%= category.parent_category&.name %></td>
@@ -27,5 +27,5 @@
 </table>
 
 <section>
-  <%= link_to 'New Category', new_category_path %>
+  <%= link_to t("categories.new"), new_category_path %>
 </section>
