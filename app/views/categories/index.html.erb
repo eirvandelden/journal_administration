@@ -1,0 +1,31 @@
+<table class="categories">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Id</th>
+      <th>Name</th>
+      <th>Parent</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @categories.group_by(&:parent_category_id).each do |parent_id, categories| %>
+      <% if categories.any? %>
+        <tr>
+          <td colspan="4" style="font-weight: bold;"><%= categories.first.parent_category&.name || t("categories.main") %></td>
+        </tr>
+      <% end %>
+      <% categories.each do |category| %>
+        <tr>
+          <td><%= link_to 'Show', category %></td>
+          <td><%= category.id %></td>
+          <td><%= category.name %></td>
+          <td><%= category.parent_category&.name %></td>
+        </tr>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>
+
+<section>
+  <%= link_to 'New Category', new_category_path %>
+</section>

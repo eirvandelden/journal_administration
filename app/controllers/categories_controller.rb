@@ -4,7 +4,7 @@ class CategoriesController < ApplicationController
   # GET /categories
   # GET /categories.json
   def index
-    @categories = Category.all.order(:name)
+    @categories = Category.includes(:parent_category).order("parent_category_id, name")
   end
 
   # GET /categories/1
