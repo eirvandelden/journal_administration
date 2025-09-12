@@ -1,171 +1,172 @@
-en:
+---
+en_defaults:
   activerecord:
+    attributes:
+      account:
+        iban: IBAN
+        name: Name
+        number: Number
+      category:
+        kind: Kind
+        name: Name
+      chattel:
+        kind: Kind
+        left_possession_at: Left Possession At
+        model_number: Model Number
+        name: Name
+        notes: Notes
+        purchase_price: Purchase Price
+        purchase_transaction: Transaction
+        purchased_at: Purchase Date
+        serial_number: Serial Number
+        warranty_expires_at: Warranty Expires At
+      transaction:
+        account: Account
+        amount: Amount
+        category: Category
+        date: Date
+        description: Description
     errors:
       messages:
-        record_invalid: 'Validation failed: %{errors}'
+        record_invalid: 'Validatie mislukt: %{errors}'
         restrict_dependent_destroy:
-          has_one: Cannot delete record because a dependent %{record} exists
-          has_many: Cannot delete record because dependent %{record} exist
+          has_many: Kan item niet verwijderen omdat afhankelijke %{record} bestaan
+          has_one: Kan item niet verwijderen omdat %{record} afhankelijk is
+    models:
+      account: Account
+      category: Category
+      chattel: Chattel
+      transaction: Transaction
+  categories:
+    main: Hoofdcategoriëen
   date:
-    abbr_day_names:
-    - zo
-    - ma
-    - di
-    - wo
-    - do
-    - vr
-    - za
-    abbr_month_names:
-    -
-    - jan
-    - feb
-    - mrt
-    - apr
-    - mei
-    - jun
-    - jul
-    - aug
-    - sep
-    - okt
-    - nov
-    - dec
-    day_names:
-    - zondag
-    - maandag
-    - dinsdag
-    - woensdag
-    - donderdag
-    - vrijdag
-    - zaterdag
+    abbr_day_names: '["zo", "ma", "di", "wo", "do", "vr", "za"]'
+    abbr_month_names: '[nil, "jan", "feb", "mrt", "apr", "mei", "jun", "jul", "aug", "sep", "okt", "nov", "dec"]'
+    day_names: '["zondag", "maandag", "dinsdag", "woensdag", "donderdag", "vrijdag", "zaterdag"]'
     formats:
       default: "%d-%m-%Y"
       long: "%e %B %Y"
       short: "%e %b"
-    month_names:
-    -
-    - januari
-    - februari
-    - maart
-    - april
-    - mei
-    - juni
-    - juli
-    - augustus
-    - september
-    - oktober
-    - november
-    - december
-    order:
-    - :day
-    - :month
-    - :year
+    month_names: '[nil, "januari", "februari", "maart", "april", "mei", "juni", "juli", "augustus", "september", "oktober", "november", "december"]'
+    order: "[:day, :month, :year]"
   datetime:
     distance_in_words:
       about_x_hours:
-        one: about 1 hour
-        other: about %{count} hours
+        one: ongeveer een uur
+        other: ongeveer %{count} uur
       about_x_months:
-        one: about 1 month
-        other: about %{count} months
+        one: ongeveer een maand
+        other: ongeveer %{count} maanden
       about_x_years:
-        one: about 1 year
-        other: about %{count} years
+        one: ongeveer een jaar
+        other: ongeveer %{count} jaar
       almost_x_years:
-        one: almost 1 year
-        other: almost %{count} years
-      half_a_minute: half a minute
-      less_than_x_seconds:
-        one: less than 1 second
-        other: less than %{count} seconds
+        one: bijna een jaar
+        other: bijna %{count} jaar
+      half_a_minute: een halve minuut
       less_than_x_minutes:
-        one: less than a minute
-        other: less than %{count} minutes
+        one: minder dan een minuut
+        other: minder dan %{count} minuten
+      less_than_x_seconds:
+        one: minder dan een seconde
+        other: minder dan %{count} seconden
       over_x_years:
-        one: over 1 year
-        other: over %{count} years
-      x_seconds:
-        one: 1 second
-        other: "%{count} seconds"
-      x_minutes:
-        one: 1 minute
-        other: "%{count} minutes"
+        one: meer dan een jaar
+        other: meer dan %{count} jaar
       x_days:
-        one: 1 day
-        other: "%{count} days"
+        one: 1 dag
+        other: "%{count} dagen"
+      x_minutes:
+        one: 1 minuut
+        other: "%{count} minuten"
       x_months:
-        one: 1 month
-        other: "%{count} months"
+        one: 1 maand
+        other: "%{count} maanden"
+      x_seconds:
+        one: 1 seconde
+        other: "%{count} seconden"
       x_years:
-        one: 1 year
-        other: "%{count} years"
+        one: 1 jaar
+        other: "%{count} jaar"
+    formats:
+      short: "%Y-%m-%d"
     prompts:
-      second: Second
-      minute: Minute
-      hour: Hour
-      day: Day
-      month: Month
-      year: Year
+      day: dag
+      hour: uur
+      minute: minuut
+      month: maand
+      second: seconde
+      year: jaar
   errors:
     format: "%{attribute} %{message}"
     messages:
-      accepted: must be accepted
-      blank: can't be blank
-      confirmation: doesn't match %{attribute}
-      empty: can't be empty
-      equal_to: must be equal to %{count}
-      even: must be even
-      exclusion: is reserved
-      greater_than: must be greater than %{count}
-      greater_than_or_equal_to: must be greater than or equal to %{count}
-      inclusion: is not included in the list
-      invalid: is invalid
-      less_than: must be less than %{count}
-      less_than_or_equal_to: must be less than or equal to %{count}
-      model_invalid: 'Validation failed: %{errors}'
-      not_a_number: is not a number
-      not_an_integer: must be an integer
-      odd: must be odd
-      other_than: must be other than %{count}
-      present: must be blank
-      required: must exist
-      taken: has already been taken
+      accepted: moet worden geaccepteerd
+      blank: moet opgegeven zijn
+      confirmation: komt niet overeen met %{attribute}
+      empty: moet opgegeven zijn
+      equal_to: moet gelijk zijn aan %{count}
+      even: moet even zijn
+      exclusion: is gereserveerd
+      greater_than: moet groter zijn dan %{count}
+      greater_than_or_equal_to: moet groter dan of gelijk zijn aan %{count}
+      inclusion: is niet in de lijst opgenomen
+      invalid: is ongeldig
+      less_than: moet minder zijn dan %{count}
+      less_than_or_equal_to: moet minder dan of gelijk zijn aan %{count}
+      model_invalid: 'Validatie mislukt: %{errors}'
+      not_a_number: is geen getal
+      not_an_integer: moet een geheel getal zijn
+      odd: moet oneven zijn
+      other_than: moet anders zijn dan %{count}
+      present: moet leeg zijn
+      required: moet bestaan
+      taken: is al in gebruik
       too_long:
-        one: is too long (maximum is 1 character)
-        other: is too long (maximum is %{count} characters)
+        one: is te lang (maximaal %{count} teken)
+        other: is te lang (maximaal %{count} tekens)
       too_short:
-        one: is too short (minimum is 1 character)
-        other: is too short (minimum is %{count} characters)
+        one: is te kort (minimaal %{count} teken)
+        other: is te kort (minimaal %{count} tekens)
       wrong_length:
-        one: is the wrong length (should be 1 character)
-        other: is the wrong length (should be %{count} characters)
+        one: heeft onjuiste lengte (moet 1 teken lang zijn)
+        other: heeft onjuiste lengte (moet %{count} tekens lang zijn)
     template:
-      body: 'There were problems with the following fields:'
+      body: 'Er zijn problemen met de volgende velden:'
       header:
-        one: 1 error prohibited this %{model} from being saved
-        other: "%{count} errors prohibited this %{model} from being saved"
+        one: "%{model} niet opgeslagen: 1 fout gevonden"
+        other: "%{model} niet opgeslagen: %{count} fouten gevonden"
+  filters:
+    last_month: Vorige maand
+    last_year: Afgelopen jaar
+    month_to_date: Deze maand
+    three_months: Afgelopen 3 maanden
+    year_to_date: Dit jaar
   helpers:
     select:
-      prompt: Please select
+      prompt: Maak een keuze
     submit:
-      create: Create %{model}
-      submit: Save %{model}
-      update: Update %{model}
+      create: "%{model} toevoegen"
+      submit: "%{model} opslaan"
+      update: "%{model} bijwerken"
+  home: Thuis
+  journal: Journaal
+  left: Left
   number:
     currency:
       format:
         delimiter: "."
         format: "%u %n"
-        precision: 2
+        precision: '2'
         separator: ","
-        significant: false
-        strip_insignificant_zeros: false
+        significant: Significant
+        strip_insignificant_zeros: Strip insignificant zeros
         unit: "€"
     format:
       delimiter: "."
-      precision: 2
+      precision: '2'
       separator: ","
-      significant: false
-      strip_insignificant_zeros: false
+      significant: Significant
+      strip_insignificant_zeros: Strip insignificant zeros
     human:
       decimal_units:
         format: "%n %u"
@@ -175,12 +176,12 @@ en:
           quadrillion: biljard
           thousand: duizend
           trillion: biljoen
-          unit: ''
+          unit: Unit
       format:
-        delimiter: ''
-        precision: 3
-        significant: true
-        strip_insignificant_zeros: true
+        delimiter: Delimiter
+        precision: '3'
+        significant: 'true'
+        strip_insignificant_zeros: 'true'
       storage_units:
         format: "%n %u"
         units:
@@ -193,20 +194,22 @@ en:
           tb: TB
     percentage:
       format:
-        delimiter: ''
+        delimiter: Delimiter
         format: "%n%"
     precision:
       format:
-        delimiter: ''
+        delimiter: Delimiter
+  out_of_warranty: Out of warranty
   support:
     array:
-      last_word_connector: ", and "
-      two_words_connector: " and "
+      last_word_connector: " en "
+      two_words_connector: " en "
       words_connector: ", "
   time:
     am: "'s ochtends"
     formats:
-      default: "%a %d %b %Y"
+      default: "%a %d %b %Y %H:%M:%S %Z"
       long: "%d %B %Y %H:%M"
       short: "%d %b %H:%M"
     pm: "'s middags"
+  warrantied: Warrantied
