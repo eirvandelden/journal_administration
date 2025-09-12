@@ -48,6 +48,9 @@ group :development do
   gem "rails-erd", require: false
   gem "web-console" # Access an interactive console on exception pages or by calling 'console' anywhere.
 
+  # Localization
+  gem "i18n-tasks"
+
   # Linting and formatting
   gem "rubocop-capybara", require: false
   gem "rubocop-minitest", require: false
