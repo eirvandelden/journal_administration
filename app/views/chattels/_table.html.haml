@@ -22,9 +22,9 @@
         %td= link_to chattel.name, chattel
         %td= chattel.kind
         %td= chattel.model_number
-        %td= l(chattel.purchased_at.to_date)
-        %td= l(chattel.warranty_expires_at.to_date)
-        %td= l(chattel.left_possession_at.to_date)
+        %td= l(chattel.purchased_at&.to_date)
+        %td= l(chattel.warranty_expires_at&.to_date)
+        %td= l(chattel.left_possession_at&.to_date)
         %td= number_to_currency chattel.purchase_price
         %td= link_to 'Edit', edit_chattel_path(chattel)
         %td= link_to 'Destroy', chattel, method: :delete, data: { confirm: 'Are you sure?' }
