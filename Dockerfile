@@ -10,9 +10,6 @@ FROM --platform=$TARGETPLATFORM registry.docker.com/library/ruby:$RUBY_VERSION-s
 # set version label
 LABEL service="journal_administration"
 
-# set version label
-LABEL service="journal_administration"
-
 # Rails app lives here
 WORKDIR /rails
 
