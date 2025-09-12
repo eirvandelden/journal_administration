@@ -15,7 +15,6 @@ For example, in a .env file:
 
 ## Things todo when going to production
 
-
 ## Releasing
 
 ## Manually building image

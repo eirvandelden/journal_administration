@@ -76,10 +76,13 @@ aliases:
 #
 volumes:
   - "/home/app_storage/journal_administration/storage:/rails/storage"
+  - "home/app_storage/journal_administration/db:/app/db"
+  - "home/app_storage/journal_administration/storage:/app/storage"
 # Bridge fingerprinted assets, like JS and CSS, between versions to avoid
 # hitting 404 on in-flight requests. Combines all files from new and old
 # version inside the asset_path.
 #
+# TODO: check if this can be enabled agaain
 # asset_path: app/public/assets
 # Configure rolling deploys by setting a wait time between batches of restarts.
 #
