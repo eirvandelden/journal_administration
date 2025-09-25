@@ -4,13 +4,14 @@ class ApplicationController < ActionController::Base
 
   # Disable origin-checking CSRF mitigation
   skip_before_action :verify_authenticity_token
-  before_action :locale
+  around_action :switch_locale
 
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   allow_browser versions: :modern
 
   private
-    def locale
-      I18n.locale = Current.user&.locale || "en"
+    def switch_locale(&action)
+      locale = Current.user.try(:locale) || I18n.default_locale
+      I18n.with_locale(locale, &action)
     end
 end
