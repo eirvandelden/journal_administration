@@ -150,23 +150,22 @@ nl:
       update: "%{model} bijwerken"
   home: Thuis
   journal: Journaal
-  left: Left
   number:
     currency:
       format:
         delimiter: "."
         format: "%u %n"
-        precision: '2'
+        precision: 2
         separator: ","
-        significant: Significant
-        strip_insignificant_zeros: Strip insignificant zeros
+        significant: false
+        strip_insignificant_zeros: false
         unit: "€"
     format:
       delimiter: "."
-      precision: '2'
+      precision: 2
       separator: ","
-      significant: Significant
-      strip_insignificant_zeros: Strip insignificant zeros
+      significant: false
+      strip_insignificant_zeros: false
     human:
       decimal_units:
         format: "%n %u"
@@ -176,12 +175,12 @@ nl:
           quadrillion: biljard
           thousand: duizend
           trillion: biljoen
-          unit: Unit
+          unit: ''
       format:
-        delimiter: Delimiter
-        precision: '3'
-        significant: 'true'
-        strip_insignificant_zeros: 'true'
+        delimiter: ''
+        precision: 3
+        significant: true
+        strip_insignificant_zeros: true
       storage_units:
         format: "%n %u"
         units:
@@ -194,11 +193,11 @@ nl:
           tb: TB
     percentage:
       format:
-        delimiter: Delimiter
+        delimiter: ''
         format: "%n%"
     precision:
       format:
-        delimiter: Delimiter
+        delimiter: ''
   out_of_warranty: Out of warranty
   support:
     array:
