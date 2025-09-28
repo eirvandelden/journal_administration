@@ -3,6 +3,8 @@
 class Transaction < ApplicationRecord
   TYPES = %w[Credit Debit Transfer].freeze
 
+  default_scope { order(booked_at: :desc) }
+
   belongs_to :debitor, class_name: "Account", foreign_key: "debitor_account_id", optional: true
   belongs_to :creditor, class_name: "Account", foreign_key: "creditor_account_id", optional: true
   belongs_to :category, optional: true
