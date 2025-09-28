@@ -1,7 +1,9 @@
-.pagy-nav {
-  margin: .2rem 0;
-
-  .page {
-    margin: 0 .15rem;
+nav.pagy {
+  a {
+    padding: .2rem 0;
+  }
+  a[aria-disabled] {
+      text-decoration: none;
+    }
   }
 }
