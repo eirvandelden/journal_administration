@@ -1,7 +1,7 @@
 # syntax = docker/dockerfile:1
 
 # Make sure RUBY_VERSION matches the Ruby version in .ruby-version and Gemfile
-ARG RUBY_VERSION=3.3.8
+ARG RUBY_VERSION=3.3.9
 # FROM ruby:${RUBY_VERSION}
 ARG TARGETPLATFORM
 
