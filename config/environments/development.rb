@@ -1,7 +1,9 @@
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
   config.hosts << "journal.vandelden.test"
+  config.hosts << "journal.vandelden.localhost"
   config.hosts << "journal.test"
+  config.hosts << "journal.localhost"
 
   # Always be SSL'ing (unless told not to)
   config.assume_ssl = ENV["DISABLE_SSL"].blank?
