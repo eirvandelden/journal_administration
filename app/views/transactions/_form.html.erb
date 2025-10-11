@@ -1,0 +1,65 @@
+<%# Ensure disabled local has a default value when not provided %>
+<% disabled = local_assigns.key?(:disabled) ? local_assigns[:disabled] : nil %>
+
+<section>
+  <%= form_for @transaction do |f| %>
+    <% if @transaction.errors.any? %>
+      <div id="error_explanation">
+        <h2><%= "#{pluralize(@transaction.errors.count, 'error')} prohibited this transaction from being saved:" %></h2>
+        <ul>
+          <% @transaction.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <%= f.label :id %>
+    <%= f.text_field :id, disabled: :disabled %>
+
+    <%= f.label :debitor %>
+    <%= f.text_field :debitor, disabled: :disabled %>
+
+    <%= f.label :creditor %>
+    <%= f.text_field :creditor, disabled: :disabled %>
+
+    <%= f.label :amount %>
+    <%= f.text_field :amount, disabled: disabled %>
+
+    <%= f.label :category_id %>
+    <%= f.collection_select(:category_id, Category.all.order(:name), :id, :name, { include_blank: true }, { disabled: disabled }) %>
+
+    <%= f.label :note %>
+    <%= f.text_area :note, disabled: disabled %>
+
+    <div class="field">
+      <%= f.label :booked_at %>
+      <%= f.datetime_select :booked_at, {}, { disabled: disabled } %>
+    </div>
+
+    <div class="field">
+      <%= f.label :interest_at %>
+      <%= f.datetime_select :interest_at, {}, { disabled: disabled } %>
+    </div>
+
+    <%= f.label :type %>
+    <%= f.collection_select(:type, Transaction::TYPES, :to_s, :to_s, {}, { disabled: disabled }) %>
+
+    <% if Current.user.can_administer? %>
+      <%= f.label :original_note %>
+      <%= f.text_area :original_note, disabled: true %>
+
+      <%= f.label :original_balance_after_mutation %>
+      <%= f.text_field :original_balance_after_mutation, disabled: true %>
+
+      <%= f.label :original_tag %>
+      <%= f.text_field :original_tag, disabled: true %>
+    <% end %>
+
+    <% unless disabled %>
+      <div class="actions">
+        <%= f.submit 'Save' %>
+      </div>
+    <% end %>
+  <% end %>
+</section>
