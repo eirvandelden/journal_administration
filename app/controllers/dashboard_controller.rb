@@ -21,7 +21,15 @@ class DashboardController < ApplicationController
                                                         .or(debit_transactions_scope.where(category_id: nil))
                                                         .group(:category)
                                                         .sum(:amount)
-                                                        .sort_by { |k, _v| k&.name || "" }.to_h
+                                                        .sort_by do |k, _v|
+                                                                                                                  if k.nil?
+                                                                                                                    ["", 0, ""]
+                                                                                                                  elsif k.parent_category.nil?
+                                                                                                                    [k.name.downcase, 0, ""]
+                                                                                                                  else
+                                                                                                                    [k.parent_category.name.downcase, 1, k.name.downcase]
+                                                                                                                  end
+                                                                                                                end.to_h
 
     credit_transactions_scope = Credit.where(creditor_account_id: 7)
                                       .where(booked_at: daterange)
@@ -30,7 +38,15 @@ class DashboardController < ApplicationController
                                                          .or(credit_transactions_scope.where(category_id: nil))
                                                          .group(:category)
                                                          .sum(:amount)
-                                                         .sort_by { |k, _v| k&.name || "" }.to_h
+                                                         .sort_by do |k, _v|
+                                                           if k.nil?
+                                                             ["", 0, ""]
+                                                           elsif k.parent_category.nil?
+                                                             [k.name.downcase, 0, ""]
+                                                           else
+                                                             [k.parent_category.name.downcase, 1, k.name.downcase]
+                                                           end
+                                                         end.to_h
 
     @debit_total              = @debit_transactions.values.sum
     credit_sub_total          = @credit_transactions.values.sum
