@@ -1,0 +1,34 @@
+<h2><%= header %></h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Kind</th>
+      <th>Model number</th>
+      <th>Purchased at</th>
+      <th>Warranty expires at</th>
+      <th>Left posession at</th>
+      <th>Purchase price</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% chattels.each do |chattel| %>
+      <tr>
+        <td><%= link_to chattel.name, chattel %></td>
+        <td><%= chattel.kind %></td>
+        <td><%= chattel.model_number %></td>
+        <td><%= l(chattel.purchased_at&.to_date) %></td>
+        <td><%= l(chattel.warranty_expires_at.to_date) if chattel.warranty_expires_at.present? %></td>
+        <td><%= l(chattel.left_possession_at.to_date) if chattel.left_possession_at.present? %></td>
+        <td><%= number_to_currency(chattel.purchase_price) %></td>
+        <td><%= link_to 'Edit', edit_chattel_path(chattel) %></td>
+        <td><%= link_to 'Destroy', chattel, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
