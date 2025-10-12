@@ -19,6 +19,11 @@ class Category < ApplicationRecord
   end
 
   def to_s
+    name
+  end
+
+  # Returns a displayable full name "Parent - Child" for children, or just the name for parents.
+  def full_name
     if parent_category.present?
       "#{parent_category.name} - #{name}"
     else
