@@ -37,6 +37,8 @@ nl:
       category: Categorie
       chattel: Bezitting
       transaction: Transactie
+  balance:
+    profit_or_loss: Winst/Verlies
   categories:
     main: Hoofdcategoriëen
   date:
