@@ -27,7 +27,7 @@
         %td= number_to_currency transaction&.amount
         %td= l transaction&.booked_at
         %td= l transaction&.interest_at
-        %td= transaction&.category&.name
+        %td= transaction&.category&.to_s
         %td= transaction&.note.truncate(20)
 
 = pagy_nav(pagy).html_safe

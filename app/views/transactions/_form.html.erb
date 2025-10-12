@@ -27,7 +27,7 @@
     <%= f.text_field :amount, disabled: disabled %>
 
     <%= f.label :category_id %>
-    <%= f.collection_select(:category_id, Category.all.order(:name), :id, :name, { include_blank: true }, { disabled: disabled }) %>
+    <%= f.select :category_id, grouped_category_options(selected: f.object.category_id), { include_blank: true }, { disabled: disabled } %>
 
     <%= f.label :note %>
     <%= f.text_area :note, disabled: disabled %>
