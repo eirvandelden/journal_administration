@@ -21,9 +21,9 @@
           <td class="profit-and-loss"><%= t "balance.profit_or_loss" %></td>
           <td class="profit-and-loss amount"><%= number_to_currency profit_or_loss %></td>
         <% else %>
-          <td><%= ((debits.count > i) && debits.keys[i].blank?) ? '-' : debits.keys[i] %></td>
+          <td><%= ((debits.count > i) && debits.keys[i].blank?) ? '-' : debits.keys[i]&.full_name %></td>
           <td class="amount"><%= (debits.count > i) ? number_to_currency(debits[debits.keys[i]]) : '' %></td>
-          <td><%= ((credits.count > i) && credits.keys[i].blank?) ? '-' : credits.keys[i] %></td>
+          <td><%= ((credits.count > i) && credits.keys[i].blank?) ? '-' : credits.keys[i]&.full_name %></td>
           <td class="amount"><%= (credits.count > i) ? number_to_currency(credits[credits.keys[i]]) : '' %></td>
         <% end %>
       </tr>
