@@ -23,11 +23,13 @@ class DashboardController < ApplicationController
                                                         .sum(:amount)
                                                         .sort_by do |k, _v|
                                                                                                                   if k.nil?
-                                                                                                                    ["", 0, ""]
+                                                                                                                    [ "", 0, "" ]
                                                                                                                   elsif k.parent_category.nil?
-                                                                                                                    [k.name.downcase, 0, ""]
+                                                                                                                    [ k.name.downcase, 0,
+"" ]
                                                                                                                   else
-                                                                                                                    [k.parent_category.name.downcase, 1, k.name.downcase]
+                                                                                                                    [
+k.parent_category.name.downcase, 1, k.name.downcase ]
                                                                                                                   end
                                                                                                                 end.to_h
 
@@ -40,11 +42,11 @@ class DashboardController < ApplicationController
                                                          .sum(:amount)
                                                          .sort_by do |k, _v|
                                                            if k.nil?
-                                                             ["", 0, ""]
+                                                             [ "", 0, "" ]
                                                            elsif k.parent_category.nil?
-                                                             [k.name.downcase, 0, ""]
+                                                             [ k.name.downcase, 0, "" ]
                                                            else
-                                                             [k.parent_category.name.downcase, 1, k.name.downcase]
+                                                             [ k.parent_category.name.downcase, 1, k.name.downcase ]
                                                            end
                                                          end.to_h
 

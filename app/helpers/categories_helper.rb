@@ -10,19 +10,18 @@ module CategoriesHelper
     groups = []
 
     # First nameless group with parent categories
-    parent_options = parents.map { |p| [p.name, p.id] }
-    groups << [I18n.t("categories.main"), parent_options] if parent_options.any?
+    parent_options = parents.map { |p| [ p.name, p.id ] }
+    groups << [ I18n.t("categories.main"), parent_options ] if parent_options.any?
 
     # Then one group per parent with its children
     parents.each do |parent|
       children = parent.secondaries.sort_by { |c| c.name.downcase }
       next if children.empty?
 
-      child_options = children.map { |c| [c.name, c.id] }
-      groups << [parent.name, child_options]
+      child_options = children.map { |c| [ c.name, c.id ] }
+      groups << [ parent.name, child_options ]
     end
 
     grouped_options_for_select(groups, selected)
   end
 end
-
