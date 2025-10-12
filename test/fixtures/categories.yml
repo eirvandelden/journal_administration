@@ -1,0 +1,23 @@
+abonnementen:
+  name: Abonnementen
+  direction: debit
+
+boodschappen:
+  name: Boodschappen
+  direction: debit
+
+abonnementen_streaming:
+  name: Streaming
+  direction: debit
+  parent_category: abonnementen
+
+abonnementen_lezen:
+  name: Lezen
+  direction: debit
+  parent_category: abonnementen
+
+boodschappen_supermarkt:
+  name: Supermarkt
+  direction: debit
+  parent_category: boodschappen
+
