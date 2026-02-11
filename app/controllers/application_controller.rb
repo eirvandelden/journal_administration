@@ -2,8 +2,7 @@ class ApplicationController < ActionController::Base
   include Authentication, Authorization, VersionHeaders
   include Pagy::Backend
 
-  # Disable origin-checking CSRF mitigation
-  skip_before_action :verify_authenticity_token
+  protect_from_forgery with: :exception
   around_action :switch_locale
 
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
