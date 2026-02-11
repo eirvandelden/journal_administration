@@ -5,8 +5,6 @@ module Authentication
   included do
     before_action :require_authentication
     helper_method :signed_in?
-
-    protect_from_forgery with: :exception, unless: -> { authenticated_by.bot_key? }
   end
 
   class_methods do
