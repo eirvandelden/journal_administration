@@ -14,7 +14,7 @@ class DashboardController < ApplicationController
     end
 
     transfer_category_id      = Category.find_by(name: "Transfer")&.id
-    debit_transactions_scope  = Debit.where(debitor_account_id: 7)
+    debit_transactions_scope  = Debit.where(debitor_account_id: Current.account.id)
                                      .where(booked_at: daterange)
 
     @debit_transactions       = debit_transactions_scope.where.not(category_id: transfer_category_id)
@@ -33,7 +33,7 @@ k.parent_category.name.downcase, 1, k.name.downcase ]
                                                                                                                   end
                                                                                                                 end.to_h
 
-    credit_transactions_scope = Credit.where(creditor_account_id: 7)
+    credit_transactions_scope = Credit.where(creditor_account_id: Current.account.id)
                                       .where(booked_at: daterange)
 
     @credit_transactions      = credit_transactions_scope.where.not(category_id: transfer_category_id)
