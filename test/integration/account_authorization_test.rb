@@ -1,8 +1,14 @@
 require "test_helper"
 
 class AccountAuthorizationTest < ActionDispatch::IntegrationTest
-  test "Current.account maps user email to account owner" do
-    # Create a user with email matching an account owner enum
+  test "Current.account returns the samen (shared) account" do
+    # Create the shared family account
+    samen_account = Account.create!(
+      name: "Shared Family Account",
+      owner: :samen
+    )
+
+    # Create a user
     user = User.create!(
       name: "Etienne Test",
       email_address: "etienne@test.com",
@@ -10,48 +16,43 @@ class AccountAuthorizationTest < ActionDispatch::IntegrationTest
       role: :member
     )
 
-    # Create an account with matching owner
-    account = Account.create!(
-      name: "Etienne's Account",
-      owner: :etienne
-    )
-
     # Set current user
     Current.user = user
 
-    # Verify Current.account returns the matching account
-    assert_equal account.id, Current.account.id
-    assert_equal "etienne", Current.account.owner
+    # Verify Current.account returns the samen account
+    assert_equal samen_account.id, Current.account.id
+    assert_equal "samen", Current.account.owner
   end
 
-  test "Current.account falls back to Account.first for unknown users" do
-    # Create a user with email that doesn't match any owner enum
+  test "Current.account falls back to Account.first when samen account doesn't exist" do
+    # Ensure at least one account exists (but not samen)
+    fallback_account = Account.create!(name: "Fallback Account", owner: :etienne)
+
     user = User.create!(
-      name: "Unknown User",
-      email_address: "unknown@test.com",
+      name: "Test User",
+      email_address: "test@test.com",
       password: "password123",
       role: :member
     )
 
-    # Ensure at least one account exists
-    Account.create!(name: "Default Account", owner: :samen)
-
     Current.user = user
 
-    # Should fall back to Account.first
+    # Should fall back to Account.first since samen doesn't exist
     assert_equal Account.first.id, Current.account.id
   end
 
-  test "Current.account returns Account.first when no user" do
-    Current.user = nil
+  test "dashboard shows samen account for all authenticated users" do
+    # This verifies that all family members see the same shared account
+    samen_account = Account.create!(name: "Family Account", owner: :samen)
 
-    # Should return Account.first
-    assert_equal Account.first.id, Current.account.id
-  end
+    etienne = User.create!(name: "Etienne", email_address: "etienne@test.com", password: "password123", role: :member)
+    michelle = User.create!(name: "Michelle", email_address: "michelle@test.com", password: "password123", role: :member)
 
-  test "dashboard shows correct account data for authenticated user" do
-    # This integration test would verify end-to-end that the dashboard
-    # only shows data for the current user's account
-    skip "Requires full authentication setup with fixtures"
+    # Both users should see the samen account
+    Current.user = etienne
+    assert_equal samen_account.id, Current.account.id
+
+    Current.user = michelle
+    assert_equal samen_account.id, Current.account.id
   end
 end
