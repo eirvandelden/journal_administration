@@ -47,7 +47,7 @@
       <article>
         <% flash.each do |key, value| %>
           <aside>
-            <p class="flash <%= key %>"><%= value %></p>
+            <p class="flash <%= key.to_s.gsub(/[^a-z_-]/, '') %>"><%= value %></p>
           </aside>
         <% end %>
 
