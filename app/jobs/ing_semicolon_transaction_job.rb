@@ -5,7 +5,12 @@ class IngSemicolonTransactionJob < ApplicationJob
     return if row[0] == "Datum"
 
     # Extract all information
-    date                            = DateTime.parse row[0]
+    begin
+      date = DateTime.parse(row[0])
+    rescue ArgumentError
+      Rails.logger.warn "Invalid date format in CSV: #{row[0]}"
+      return
+    end
     initiator_account_name          = determine_name(row[1]) # Note:this can be either OUR account name or THEIRS
     our_account                     = Account.find_or_create_by account_number: row[2]
     their_account                   = Account.find_or_create_by account_number: row[3] if row[3].present?
