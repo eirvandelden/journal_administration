@@ -5,8 +5,6 @@ module Authentication
   included do
     before_action :require_authentication
     helper_method :signed_in?
-
-    protect_from_forgery with: :exception, unless: -> { authenticated_by.bot_key? }
   end
 
   class_methods do
@@ -58,7 +56,6 @@ module Authentication
 
     def authenticated_as(session)
       Current.user = session.user
-      set_authenticated_by(:session)
       cookies.signed.permanent[:session_token] = { value: session.token, httponly: true, same_site: :lax }
     end
 
@@ -68,13 +65,5 @@ module Authentication
 
     def reset_authentication
       cookies.delete(:session_token)
-    end
-
-    def set_authenticated_by(method)
-      @authenticated_by = method.to_s.inquiry
-    end
-
-    def authenticated_by
-      @authenticated_by ||= "".inquiry
     end
 end
