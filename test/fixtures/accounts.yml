@@ -1,0 +1,25 @@
+# Family accounts (have owners)
+checking:
+  account_number: NL54INGB0671255150
+  name: Gezamenlijke Rekening
+  owner: samen
+  category: groceries
+
+savings:
+  account_number: NL00INGB0123456789
+  name: Spaarrekening
+  owner: etienne
+
+# External accounts (no owner)
+albert_heijn:
+  account_number: NL00ABNA9999999999
+  name: Albert Heijn B.V.
+  category: supermarket
+
+employer:
+  account_number: NL00RABO1111111111
+  name: Werkgever B.V.
+  category: salary
+
+unknown:
+  name: Unknown Account

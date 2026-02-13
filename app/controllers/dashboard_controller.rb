@@ -1,58 +1,20 @@
+# Displays financial dashboard for the current account
+#
+# Shows debit and credit transactions grouped by category for a date range,
+# with calculations for profit/loss over the selected period.
 class DashboardController < ApplicationController
+  # Displays the account dashboard with categorized transactions and totals
+  #
+  # Supports optional date range filtering via params[:filter] (last_month, year_to_date, etc.)
+  #
+  # @return [void]
   def index
-    daterange = case params[:filter]
-    when "last_month"
-                  Time.current.last_month.beginning_of_month..Time.current.last_month.end_of_month
-    when "three_months"
-                  Time.current.months_ago(3).beginning_of_month..Time.current.last_month.end_of_month
-    when "year_to_date"
-                  Time.current.beginning_of_year..Time.current.end_of_year
-    when "last_year"
-                  Time.current.last_year.beginning_of_year..Time.current.last_year.end_of_year
-    else
-                  Time.current.beginning_of_month..Time.current.end_of_month
-    end
+    dashboard = Dashboard.new(account: Current.account, filter: params[:filter])
 
-    transfer_category_id      = Category.find_by(name: "Transfer")&.id
-    debit_transactions_scope  = Debit.where(debitor_account_id: Current.account.id)
-                                     .where(booked_at: daterange)
-
-    @debit_transactions       = debit_transactions_scope.where.not(category_id: transfer_category_id)
-                                                        .or(debit_transactions_scope.where(category_id: nil))
-                                                        .group(:category)
-                                                        .sum(:amount)
-                                                        .sort_by do |k, _v|
-                                                                                                                  if k.nil?
-                                                                                                                    [ "", 0, "" ]
-                                                                                                                  elsif k.parent_category.nil?
-                                                                                                                    [ k.name.downcase, 0,
-"" ]
-                                                                                                                  else
-                                                                                                                    [
-k.parent_category.name.downcase, 1, k.name.downcase ]
-                                                                                                                  end
-                                                                                                                end.to_h
-
-    credit_transactions_scope = Credit.where(creditor_account_id: Current.account.id)
-                                      .where(booked_at: daterange)
-
-    @credit_transactions      = credit_transactions_scope.where.not(category_id: transfer_category_id)
-                                                         .or(credit_transactions_scope.where(category_id: nil))
-                                                         .group(:category)
-                                                         .sum(:amount)
-                                                         .sort_by do |k, _v|
-                                                           if k.nil?
-                                                             [ "", 0, "" ]
-                                                           elsif k.parent_category.nil?
-                                                             [ k.name.downcase, 0, "" ]
-                                                           else
-                                                             [ k.parent_category.name.downcase, 1, k.name.downcase ]
-                                                           end
-                                                         end.to_h
-
-    @debit_total              = @debit_transactions.values.sum
-    credit_sub_total          = @credit_transactions.values.sum
-    @profit_or_loss           = @debit_total - credit_sub_total
-    @credit_total             = credit_sub_total + @profit_or_loss
+    @debit_transactions = dashboard.debit_transactions
+    @debit_total = dashboard.debit_total
+    @credit_transactions = dashboard.credit_transactions
+    @credit_total = dashboard.credit_total
+    @profit_or_loss = dashboard.profit_or_loss
   end
 end

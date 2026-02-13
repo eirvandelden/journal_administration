@@ -1,6 +1,21 @@
+# Legacy job for importing transactions from ING bank semicolon-delimited CSV
+#
+# This job handles the original ING CSV format with semicolon delimiters.
+# Consider using Importing::ING::ImportJob for new imports as it's more maintainable.
+#
+# @deprecated Use {Importing::ING::ImportJob} instead
 class IngSemicolonTransactionJob < ApplicationJob
   queue_as :default
 
+  # Processes a CSV row from ING bank semicolon-delimited export format
+  #
+  # Parses date, accounts (both ours and theirs), transaction direction,
+  # amount, and description. Resolves counterparty accounts by account number,
+  # embedded account reference in description, or merchant name.
+  #
+  # @param row [Array<String>] A row from the semicolon-delimited CSV file
+  # @return [void]
+  # @raise [ActiveRecord::RecordInvalid] If the transaction fails validation
   def perform(row)
     return if row[0] == "Datum"
 

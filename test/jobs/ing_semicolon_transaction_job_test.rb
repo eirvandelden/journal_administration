@@ -2,33 +2,33 @@ require "test_helper"
 
 class IngSemicolonTransactionJobTest < ActiveJob::TestCase
   test "on a header row" do
-    perform_enqueued_jobs do
-      IngSemicolonTransactionJob.perform_later([
-        "Datum",
-        "Naam / Omschrijving",
-        "Rekening",
-        "Tegenrekening",
-        "Code",
-        "Af Bij""Bedrag (EUR)",
-        "Mutatiesoort",
-        "Mededelingen",
-        "Saldo na mutatie",
-        "Tag"
-      ])
+    assert_no_difference "Transaction.count" do
+      perform_enqueued_jobs do
+        IngSemicolonTransactionJob.perform_later([
+          "Datum",
+          "Naam / Omschrijving",
+          "Rekening",
+          "Tegenrekening",
+          "Code",
+          "Af Bij", "Bedrag (EUR)",
+          "Mutatiesoort",
+          "Mededelingen",
+          "Saldo na mutatie",
+          "Tag"
+        ])
+      end
     end
-
-    assert_equal Transaction.count, 0
   end
 
   test "with a valid row, for an unknown account" do
-    perform_enqueued_jobs do
-      IngSemicolonTransactionJob.perform_later([
-        "20200818", "EIR van Delden-de la Haije, M van Delden-de la Haije", "NL54INGB0671255150", "", "GT", "Bij",
-        "100,00", "Online bankieren", "Van Oranje spaarrekening L29925215 Valutadatum: 18-08-2020", "158,24", "☀️"
-      ])
+    assert_difference "Transaction.count", 1 do
+      perform_enqueued_jobs do
+        IngSemicolonTransactionJob.perform_later([
+          "20200818", "EIR van Delden-de la Haije, M van Delden-de la Haije", "NL54INGB0671255150", "", "GT", "Bij",
+          "100,00", "Online bankieren", "Van Oranje spaarrekening L29925215 Valutadatum: 18-08-2020", "158,24", "\u2600\uFE0F"
+        ])
+      end
     end
-
-    assert_equal Transaction.count, 1
   end
 
   test "with a valid row, if initiator_account_name is a variant, match to an existing account" do
@@ -45,10 +45,10 @@ class IngSemicolonTransactionJobTest < ActiveJob::TestCase
       perform_enqueued_jobs do
         IngSemicolonTransactionJob.perform_later([
           "20240229", current_name, "NL00INGB0123456789", "", "", "Af",
-          "75,00", "Online bankieren", "beschrijving", "75,00", "🛒" ])
+          "75,00", "Online bankieren", "beschrijving", "75,00", "\u{1F6D2}" ])
       end
 
-      assert_equal Transaction.last.debitor_account_id, ah.id
+      assert_equal ah.id, Transaction.last.debitor_account_id
     end
 
     jumbo = Account.find_or_create_by(name: "Jumbo B.V.")
@@ -60,10 +60,10 @@ class IngSemicolonTransactionJobTest < ActiveJob::TestCase
       perform_enqueued_jobs do
         IngSemicolonTransactionJob.perform_later([
           "20240229", current_name, "NL00INGB0123456789", "", "", "Af", "75,00", "Online bankieren", "beschrijving",
-          "75,00", "🛒" ])
+          "75,00", "\u{1F6D2}" ])
       end
 
-      assert_equal Transaction.last.debitor_account_id, jumbo.id
+      assert_equal jumbo.id, Transaction.last.debitor_account_id
     end
 
     kruidvat = Account.find_or_create_by(name: "Kruidvat B.V.")
@@ -75,10 +75,10 @@ class IngSemicolonTransactionJobTest < ActiveJob::TestCase
       perform_enqueued_jobs do
         IngSemicolonTransactionJob.perform_later([
           "20240229", current_name, "NL00INGB0123456789", "", "", "Af", "75,00", "Online bankieren", "beschrijving",
-          "75,00", "🛒" ])
+          "75,00", "\u{1F6D2}" ])
       end
 
-      assert_equal Transaction.last.debitor_account_id, kruidvat.id
+      assert_equal kruidvat.id, Transaction.last.debitor_account_id
     end
   end
 end

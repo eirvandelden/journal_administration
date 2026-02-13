@@ -1,26 +1,34 @@
+# Manages transaction categories with hierarchical parent-child relationships
 class CategoriesController < ApplicationController
   before_action :set_category, only: %i[show edit update destroy]
 
-  # GET /categories
-  # GET /categories.json
+  # Lists all categories with parent categories included
+  #
+  # @return [void]
   def index
     @categories = Category.includes(:parent_category).order("parent_category_id, name")
   end
 
-  # GET /categories/1
-  # GET /categories/1.json
+  # Displays a single category
+  #
+  # @return [void]
   def show; end
 
-  # GET /categories/new
+  # Renders form for creating a new category
+  #
+  # @return [void]
   def new
     @category = Category.new
   end
 
-  # GET /categories/1/edit
+  # Renders form for editing a category
+  #
+  # @return [void]
   def edit; end
 
-  # POST /categories
-  # POST /categories.json
+  # Creates a new category
+  #
+  # @return [void]
   def create
     @category = Category.new(category_params)
 
@@ -35,8 +43,9 @@ class CategoriesController < ApplicationController
     end
   end
 
-  # PATCH/PUT /categories/1
-  # PATCH/PUT /categories/1.json
+  # Updates a category
+  #
+  # @return [void]
   def update
     respond_to do |format|
       if @category.update(category_params)
@@ -49,8 +58,9 @@ class CategoriesController < ApplicationController
     end
   end
 
-  # DELETE /categories/1
-  # DELETE /categories/1.json
+  # Deletes a category
+  #
+  # @return [void]
   def destroy
     @category.destroy
     respond_to do |format|
@@ -60,15 +70,14 @@ class CategoriesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_category
-      @category = Category.find(params[:id])
-    end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def category_params
-      params.require(:category).permit(%i[name direction parent_category_id]).tap do |param|
-        param["parent_category_id"] = param["parent_category_id"].to_i
-      end
+  def set_category
+    @category = Category.find(params[:id])
+  end
+
+  def category_params
+    params.require(:category).permit(%i[name direction parent_category_id]).tap do |param|
+      param["parent_category_id"] = param["parent_category_id"].to_i
     end
+  end
 end
