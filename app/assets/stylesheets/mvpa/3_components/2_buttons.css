@@ -1,0 +1,21 @@
+/*
+ * Button Variants
+ * Minimal classes for button color variants
+ */
+
+.button-success {
+  --button-bg: var(--color-success);
+}
+
+.button-danger {
+  --button-bg: var(--color-danger);
+}
+
+.button-warning {
+  --button-bg: var(--color-warning);
+}
+
+.button-secondary {
+  --button-bg: var(--color-bg-darker);
+  --button-fg: var(--color-fg);
+}

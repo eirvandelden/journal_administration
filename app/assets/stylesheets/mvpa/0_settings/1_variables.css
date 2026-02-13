@@ -1,0 +1,75 @@
+/*
+ * CSS Custom Properties
+ * 37signals spacing system: 1ch × 1rem base
+ */
+
+:root {
+  /* Spacing system - consistent 1ch × 1rem base */
+  --inline-space: 1ch;
+  --inline-space-half: 0.5ch;
+  --inline-space-double: 2ch;
+  --inline-space-triple: 3ch;
+  --inline-space-quad: 4ch;
+
+  --block-space: 1rem;
+  --block-space-half: 0.5rem;
+  --block-space-double: 2rem;
+  --block-space-triple: 3rem;
+  --block-space-quad: 4rem;
+
+  /* Typography scale */
+  --text-xx-small: 0.65rem;
+  --text-x-small: 0.75rem;
+  --text-small: 0.85rem;
+  --text-normal: 1rem;
+  --text-medium: 1.1rem;
+  --text-large: 1.5rem;
+  --text-x-large: 2rem;
+  --text-xx-large: 2.5rem;
+
+  /* Line heights */
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+  --line-height-loose: 1.8;
+
+  /* Border radius */
+  --radius-small: 0.25rem;
+  --radius: 0.5rem;
+  --radius-large: 1rem;
+
+  /* Transitions */
+  --transition-fast: 150ms ease-in-out;
+  --transition: 250ms ease-in-out;
+  --transition-slow: 400ms ease-in-out;
+
+  /* Animation durations */
+  --animation-duration-fast: 200ms;
+  --animation-duration: 350ms;
+  --animation-duration-slow: 500ms;
+
+  /* Easing functions */
+  --animation-spring: cubic-bezier(0.34, 1.56, 0.64, 1); /* Spring overshoot */
+  --animation-ease-out: cubic-bezier(0.33, 1, 0.68, 1); /* Smooth ease-out */
+
+  /* Animation scales */
+  --animation-scale-small: 1.02;
+  --animation-scale-medium: 1.05;
+  --animation-scale-large: 1.08;
+
+  /* Animation distances */
+  --animation-distance-small: 4px;
+  --animation-distance-medium: 8px;
+  --animation-distance-large: 16px;
+
+  /* Z-index stack */
+  --z-base: 1;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-modal: 1000;
+  --z-notification: 1100;
+
+  /* Max widths */
+  --max-width-text: 65ch;
+  --max-width-content: 80ch;
+  --max-width-wide: 1200px;
+}

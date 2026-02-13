@@ -1,0 +1,364 @@
+/*
+ * Animations
+ * Whimsical micro-interactions for interactive elements
+ * Inspired by Josh W Comeau's animation principles
+ */
+
+@media (prefers-reduced-motion: no-preference) {
+  /* =====================================================
+     Keyframe Definitions
+     ===================================================== */
+
+  /* Button: Boop animation with spring overshoot */
+  @keyframes button-boop {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(var(--animation-scale-large));
+    }
+    100% {
+      transform: scale(var(--animation-scale-medium));
+    }
+  }
+
+  /* Link: Underline wiggle animation */
+  @keyframes link-underline-wiggle {
+    0% {
+      transform: scaleX(0);
+    }
+    60% {
+      transform: scaleX(1.05);
+    }
+    100% {
+      transform: scaleX(1);
+    }
+  }
+
+  /* Input: Focus pulse with expanding glow */
+  @keyframes input-focus-pulse {
+    0% {
+      box-shadow: 0 0 0 0 oklch(from var(--color-primary) l c h / 0.7);
+    }
+    70% {
+      box-shadow: 0 0 0 12px oklch(from var(--color-primary) l c h / 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 oklch(from var(--color-primary) l c h / 0);
+    }
+  }
+
+  /* Details: Content expand with fade */
+  @keyframes details-expand {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Flash: Message slide-in from top with bounce */
+  @keyframes flash-enter {
+    0% {
+      opacity: 0;
+      transform: translateY(-100%);
+    }
+    70% {
+      opacity: 1;
+      transform: translateY(8px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Checkbox/Radio: Pop animation on check */
+  @keyframes checkbox-pop {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.3);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  /* Focus: Outline expand from small to full size */
+  @keyframes focus-ring-draw {
+    from {
+      outline-width: 1px;
+      outline-offset: 0;
+    }
+    to {
+      outline-width: 2px;
+      outline-offset: 2px;
+    }
+  }
+
+  /* Progress: Shimmer for indeterminate state */
+  @keyframes progress-shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  /* Table Row: Fade-in */
+  @keyframes table-row-fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* Table Cell: Highlight pulse for updated cells */
+  @keyframes table-cell-highlight {
+    0% {
+      background-color: oklch(0.95 0.08 85); /* Soft yellow */
+    }
+    100% {
+      background-color: transparent;
+    }
+  }
+
+  /* Turbo: Slide in from right */
+  @keyframes turbo-slide-in-right {
+    from {
+      opacity: 0;
+      transform: translateX(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  /* Turbo: Slide in from top */
+  @keyframes turbo-slide-in-top {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Turbo: Slide in from bottom */
+  @keyframes turbo-slide-in-bottom {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Turbo: Fade out with scale down */
+  @keyframes turbo-fade-out {
+    from {
+      opacity: 1;
+      transform: scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+  }
+
+  /* Turbo: Highlight update flash */
+  @keyframes turbo-highlight-update {
+    0% {
+      background-color: oklch(0.95 0.05 85); /* Soft yellow */
+    }
+    100% {
+      background-color: transparent;
+    }
+  }
+
+  /* Sort Arrow: Spin animation */
+  @keyframes sort-arrow-bounce {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-2px);
+    }
+  }
+
+  /* =====================================================
+     Animation Applications
+     ===================================================== */
+
+  /* Buttons: Boop on hover */
+  button:not(:disabled):hover {
+    animation: button-boop var(--animation-duration) var(--animation-spring);
+    transform: scale(var(--animation-scale-medium));
+  }
+
+  button:focus-visible {
+    animation: focus-ring-draw var(--animation-duration-fast) ease-out forwards;
+  }
+
+  /* Links: Underline wiggle on hover */
+  a:not([class]) {
+    position: relative;
+  }
+
+  a:not([class])::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--animation-duration) ease-out;
+  }
+
+  a:not([class]):hover::after {
+    animation: link-underline-wiggle var(--animation-duration) var(--animation-spring);
+    transform: scaleX(1);
+  }
+
+  /* Form Inputs: Focus pulse glow */
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    animation: input-focus-pulse var(--animation-duration-slow) ease-out;
+  }
+
+  /* Details/Summary: Expand animation */
+  details[open] > :not(summary) {
+    animation: details-expand var(--animation-duration) var(--animation-ease-out);
+  }
+
+  /* Summary Arrow: Rotate on toggle */
+  details > summary {
+    cursor: pointer;
+  }
+
+  details > summary::marker {
+    animation: sort-arrow-bounce var(--animation-duration) var(--animation-spring);
+  }
+
+  /* Checkboxes: Pop on check */
+  input[type="checkbox"],
+  input[type="radio"] {
+    animation: none;
+  }
+
+  input[type="checkbox"]:checked,
+  input[type="radio"]:checked {
+    animation: checkbox-pop var(--animation-duration-fast) ease-out;
+  }
+
+  /* Flash Messages: Slide in with bounce */
+  [role="alert"],
+  [role="status"] {
+    animation: flash-enter var(--animation-duration-slow) var(--animation-spring);
+  }
+
+  /* Progress Bar: Shimmer for indeterminate */
+  progress:not([value]) {
+    background: linear-gradient(
+      90deg,
+      var(--color-bg-lighter) 25%,
+      var(--color-bg) 50%,
+      var(--color-bg-lighter) 75%
+    );
+    background-size: 200% 100%;
+    animation: progress-shimmer 1.5s ease-in-out infinite;
+  }
+
+  /* Table Rows: Fade-in with stagger */
+  tbody tr {
+    animation: table-row-fade-in var(--animation-duration) var(--animation-ease-out) backwards;
+  }
+
+  /* Staggered row delays */
+  tbody tr:nth-child(1) { animation-delay: 0ms; }
+  tbody tr:nth-child(2) { animation-delay: 40ms; }
+  tbody tr:nth-child(3) { animation-delay: 80ms; }
+  tbody tr:nth-child(4) { animation-delay: 120ms; }
+  tbody tr:nth-child(5) { animation-delay: 160ms; }
+  tbody tr:nth-child(n+6) { animation-delay: 200ms; }
+
+  /* Table Row: Hover effect */
+  tbody tr {
+    transition: background-color 150ms ease-out, transform 150ms ease-out;
+  }
+
+  tbody tr:hover {
+    transform: scale(1.002);
+  }
+
+  /* Table Header: Sortable indicator animation */
+  th[data-sort-direction="asc"]::after,
+  th[data-sort-direction="desc"]::after {
+    animation: sort-arrow-bounce var(--animation-duration) var(--animation-spring);
+  }
+
+  /* Turbo Stream: Append/Prepend animations */
+  [data-turbo-stream-transition="slide-in"] {
+    animation: turbo-slide-in-right var(--animation-duration) var(--animation-spring);
+  }
+
+  [data-turbo-stream-transition="slide-in-top"] {
+    animation: turbo-slide-in-top var(--animation-duration) var(--animation-spring);
+  }
+
+  [data-turbo-stream-transition="slide-in-bottom"] {
+    animation: turbo-slide-in-bottom var(--animation-duration) var(--animation-spring);
+  }
+
+  /* Turbo Stream: Update highlight */
+  [data-turbo-stream-transition="highlight"],
+  [data-updated] {
+    animation: turbo-highlight-update 800ms ease-out;
+  }
+
+  /* Turbo Stream: Fade out for removal */
+  [data-turbo-stream-transition="fade-out"] {
+    animation: turbo-fade-out var(--animation-duration) ease-out forwards;
+  }
+
+  /* Utility classes for Stimulus controllers */
+  .animating-in {
+    animation: turbo-slide-in-right var(--animation-duration) var(--animation-spring);
+  }
+
+  .animating-out {
+    animation: turbo-fade-out var(--animation-duration) ease-out forwards;
+  }
+
+  .highlight-update {
+    animation: turbo-highlight-update 800ms ease-out;
+  }
+}
+
+/* Accessibility: Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

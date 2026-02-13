@@ -1,0 +1,111 @@
+/*
+ * Typography
+ * Headings, paragraphs, and text elements
+ */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-block-start: var(--block-space-double);
+  margin-block-end: var(--block-space);
+  line-height: var(--line-height-tight);
+  color: var(--color-fg-darkest);
+}
+
+h1 {
+  font-size: var(--text-xx-large);
+}
+h2 {
+  font-size: var(--text-x-large);
+}
+h3 {
+  font-size: var(--text-large);
+}
+h4 {
+  font-size: var(--text-medium);
+}
+h5 {
+  font-size: var(--text-normal);
+}
+h6 {
+  font-size: var(--text-small);
+}
+
+p {
+  margin-block: var(--block-space);
+  max-inline-size: var(--max-width-text);
+}
+
+a {
+  color: var(--color-primary);
+  text-underline-offset: 0.2em;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--color-blue);
+}
+
+a:visited {
+  color: var(--color-violet);
+}
+
+*:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-small);
+}
+
+ul,
+ol {
+  padding-inline-start: var(--inline-space-double);
+  margin-block: var(--block-space);
+}
+
+li {
+  margin-block: var(--block-space-half);
+}
+
+code,
+kbd,
+samp,
+pre {
+  font-family: "SF Mono", "Monaco", "Consolas", monospace;
+  font-size: 0.9em;
+}
+
+code,
+kbd,
+samp {
+  padding: 0.125em 0.25em;
+  background-color: var(--color-bg-darker);
+  border-radius: var(--radius-small);
+}
+
+pre {
+  padding: var(--block-space);
+  background-color: var(--color-bg-darker);
+  border-radius: var(--radius);
+  overflow-x: auto;
+}
+
+pre code {
+  padding: 0;
+  background: none;
+}
+
+hr {
+  border: none;
+  border-block-start: 1px solid var(--color-bg-darker);
+  margin-block: var(--block-space-double);
+}
+
+blockquote {
+  margin-inline-start: var(--inline-space-double);
+  padding-inline-start: var(--inline-space);
+  border-inline-start: 4px solid var(--color-bg-darker);
+  color: var(--color-fg-lighter);
+}

@@ -1,0 +1,27 @@
+/*
+ * Progress Bar
+ * Native progress element styling
+ */
+
+progress {
+  inline-size: 100%;
+  block-size: 1.5em;
+  border: none;
+  border-radius: var(--radius);
+  background-color: var(--color-bg-darker);
+}
+
+progress::-webkit-progress-bar {
+  background-color: var(--color-bg-darker);
+  border-radius: var(--radius);
+}
+
+progress::-webkit-progress-value {
+  background-color: var(--color-primary);
+  border-radius: var(--radius);
+}
+
+progress::-moz-progress-bar {
+  background-color: var(--color-primary);
+  border-radius: var(--radius);
+}

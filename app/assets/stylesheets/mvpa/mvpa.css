@@ -1,0 +1,21 @@
+/* MVPA.css - Import all framework styles in order */
+@import "0_settings/0_colors.css";
+@import "0_settings/1_variables.css";
+@import "1_base/0_reset.css";
+@import "1_base/1_typography.css";
+@import "1_base/2_tables.css";
+@import "1_base/3_forms.css";
+@import "1_base/4_details.css";
+@import "1_base/5_animations.css";
+@import "2_layout/0_header.css";
+@import "2_layout/1_main.css";
+@import "2_layout/2_footer.css";
+@import "3_components/0_flash.css";
+@import "3_components/1_errors.css";
+@import "3_components/2_buttons.css";
+@import "3_components/3_progress.css";
+@import "3_components/4_definition_list.css";
+@import "3_components/5_article.css";
+@import "3_components/6_mark.css";
+@import "4_themes/0_themes.css";
+@import "5_utilities/0_turbo-transitions.css";

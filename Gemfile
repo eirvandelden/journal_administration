@@ -1,6 +1,5 @@
 source "https://gem.coop"
 
-ruby file: ".ruby-version"
 
 # Needs to be loaded first
 gem "dotenv-rails" # Read .env files and make available in Rails

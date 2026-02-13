@@ -1,0 +1,23 @@
+/* Navigation spacing adjustments */
+nav {
+  margin-bottom: 0;
+}
+
+nav ul {
+  margin-top: 0;
+}
+
+/* Page layout customizations */
+body > header {
+  padding: 1rem;
+}
+
+body > main {
+  padding-top: 0;
+}
+
+/* Horizontal rules spacing */
+hr {
+  margin: unset;
+  margin-bottom: 1rem;
+}
