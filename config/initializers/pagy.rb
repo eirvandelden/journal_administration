@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 
 # Pagy initializer file (3.6.0)
 # Customize only what you really need and notice that Pagy works also without any of the following lines.
@@ -159,9 +160,7 @@
 #                 {locale: 'xyz',  # not built-in
 #                  filepath: 'path/to/pagy-xyz.yml',
 #                  pluralize: lambda{|count| ... } )
-# Note: Pagy::I18n.load is private in newer versions
-# Pagy::I18n.load(locale: "nl")
-# Pagy::I18n.load(locale: "en")
+Pagy::I18n.load({ locale: "nl" }, { locale: "en" })
 
 
 # I18n extra: uses the standard i18n gem which is ~18x slower using ~10x more memory
@@ -172,5 +171,4 @@
 # Default i18n key
 # Pagy::DEFAULT[:i18n_key] = 'pagy.item_name'   # default
 
-# Note: Pagy::DEFAULT is frozen in newer versions; use Pagy configuration differently
-# Pagy::DEFAULT[:items] = 50
+Pagy::DEFAULT[:items] = 50
