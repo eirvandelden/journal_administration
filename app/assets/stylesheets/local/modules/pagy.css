@@ -1,0 +1,8 @@
+/* Pagy pagination navigation */
+nav.pagy a {
+  padding: .2rem 0;
+}
+
+nav.pagy a[aria-disabled] {
+  text-decoration: none;
+}

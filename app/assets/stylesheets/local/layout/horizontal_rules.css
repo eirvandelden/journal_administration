@@ -1,0 +1,5 @@
+/* Horizontal rules spacing */
+hr {
+  margin: unset;
+  margin-bottom: 1rem;
+}
