@@ -1,0 +1,48 @@
+<section>
+  <%= pagy_nav(@pagy).html_safe %>
+
+  <table class="accounts">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Id</th>
+        <th>Account number</th>
+        <th>Name</th>
+        <th>Owner</th>
+        <th>Category</th>
+        <th></th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @records.each do |account| %>
+        <tr>
+          <td>
+            <%= link_to account do %>
+              <b>Show</b>
+            <% end %>
+          </td>
+          <td><%= account.id %></td>
+          <td><%= account.account_number %></td>
+          <td><%= account.name %></td>
+          <td><%= account.owner %></td>
+          <td><%= account.category&.name %></td>
+          <td><%= link_to 'Edit', edit_account_path(account) %></td>
+          <td><%= button_to 'Update Transactions', account_transactions_bulk_path(account), method: :patch %></td>
+          <td><%= link_to 'Destroy', account, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <%= pagy_nav(@pagy).html_safe %>
+
+</section>
+
+<section>
+  <%= link_to new_account_path do %>
+    <b>New Account</b>
+  <% end %>
+</section>

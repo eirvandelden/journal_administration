@@ -1,10 +1,10 @@
-require "csv"
-
+# Manages transaction resources
 class TransactionsController < ApplicationController
   before_action :set_transaction, only: %i[show edit update destroy]
 
-  # GET /transactions
-  # GET /transactions.json
+  # Lists all transactions with optional category filtering
+  #
+  # @return [void]
   def index
     transactions = Transaction.all
     transactions = transactions.where(category: nil) if params[:filter] == "no_category"
@@ -12,20 +12,26 @@ class TransactionsController < ApplicationController
     @pagy, @transactions = pagy transactions.order(interest_at: :desc), items: 20
   end
 
-  # GET /transactions/1
-  # GET /transactions/1.json
+  # Displays a single transaction
+  #
+  # @return [void]
   def show; end
 
-  # GET /transactions/new
+  # Renders form for creating a new transaction
+  #
+  # @return [void]
   def new
     @transaction = Transaction.new
   end
 
-  # GET /transactions/1/edit
+  # Renders form for editing a transaction
+  #
+  # @return [void]
   def edit; end
 
-  # POST /transactions
-  # POST /transactions.json
+  # Creates a new transaction
+  #
+  # @return [void]
   def create
     @transaction = Transaction.new(transaction_params)
 
@@ -40,8 +46,9 @@ class TransactionsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /transactions/1
-  # PATCH/PUT /transactions/1.json
+  # Updates a transaction
+  #
+  # @return [void]
   def update
     respond_to do |format|
       if @transaction.update(transaction_params)
@@ -54,8 +61,9 @@ class TransactionsController < ApplicationController
     end
   end
 
-  # DELETE /transactions/1
-  # DELETE /transactions/1.json
+  # Deletes a transaction
+  #
+  # @return [void]
   def destroy
     @transaction.destroy
     respond_to do |format|
@@ -64,50 +72,15 @@ class TransactionsController < ApplicationController
     end
   end
 
-  def upload
-    csv = csv_params[:csv]
+  private
 
-    # Validate file type
-    unless csv.content_type.in?(['text/csv', 'text/plain', 'application/vnd.ms-excel'])
-      flash[:alert] = "Invalid file type. Please upload a CSV file."
-      return redirect_to transactions_path
-    end
-
-    # Validate file size
-    if csv.size > 5.megabytes
-      flash[:alert] = "File too large. Maximum size is 5MB."
-      return redirect_to transactions_path
-    end
-
-    # Process CSV with error tracking
-    failed = 0
-    CSV.foreach(csv.tempfile.path, col_sep: ";") do |row|
-      IngSemicolonTransactionJob.perform_now(row)
-    rescue StandardError => e
-      Rails.logger.warn "Failed to import row: #{e.message}"
-      failed += 1
-    end
-
-    flash[:notice] = "Import complete."
-    flash[:alert] = "#{failed} transactions failed to import" if failed.positive?
-
-    redirect_to transactions_path
+  def set_transaction
+    @transaction = Transaction.find(params[:id])
   end
 
-  private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_transaction
-      @transaction = Transaction.find(params[:id])
-    end
-
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def transaction_params
-      key = (params.keys & %w[debit credit transfer transaction])[0]
-      params.require(key).permit(:id, :debit_account_id, :credit_account_id, :amount, :booked_at, :interest_at,
+  def transaction_params
+    key = (params.keys & %w[debit credit transfer transaction])[0]
+    params.require(key).permit(:id, :debit_account_id, :credit_account_id, :amount, :booked_at, :interest_at,
   :category_id, :note, :type)
-    end
-
-    def csv_params
-      params.permit(:csv)
-    end
+  end
 end

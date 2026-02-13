@@ -1,0 +1,32 @@
+# Parent categories
+groceries:
+  name: Groceries
+  direction: debit
+
+housing:
+  name: Housing
+  direction: debit
+
+income:
+  name: Income
+  direction: credit
+
+transfer:
+  name: Transfer
+  direction: debit
+
+# Child categories
+supermarket:
+  name: Supermarket
+  direction: debit
+  parent_category: groceries
+
+rent:
+  name: Rent
+  direction: debit
+  parent_category: housing
+
+salary:
+  name: Salary
+  direction: credit
+  parent_category: income
