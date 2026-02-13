@@ -1,29 +1,29 @@
 <h1>
   <%= @account.name %>
   <%= link_to edit_account_path(@account) do %>
-    <b>Edit</b>
+    <b><%= t('.edit') %></b>
   <% end %>
 </h1>
 
 <p>
-  <b>Id:</b>
+  <b><%= t('.id') %></b>
   <%= @account.id %>
 </p>
 <p>
-  <b>Account number:</b>
+  <b><%= t('.account_number') %></b>
   <%= @account.account_number %>
 </p>
 <p>
-  <b>Name:</b>
+  <b><%= t('.name') %></b>
   <%= @account.name %>
 </p>
 <p>
-  <b>Owner:</b>
+  <b><%= t('.owner') %></b>
   <%= @account.owner %>
 </p>
 <p>
-  <b>Category:</b>
+  <b><%= t('.category') %></b>
   <%= @account.category&.name %>
 </p>
 
-<%= button_to "Update Transactions", account_transactions_bulk_path(@account), method: :patch %>
+<%= button_to t('.update_transactions'), account_transactions_bulk_path(@account), method: :patch %>

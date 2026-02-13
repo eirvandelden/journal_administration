@@ -5,11 +5,11 @@
     <thead>
       <tr>
         <th></th>
-        <th>Id</th>
-        <th>Account number</th>
-        <th>Name</th>
-        <th>Owner</th>
-        <th>Category</th>
+        <th><%= t('.id') %></th>
+        <th><%= t('.account_number') %></th>
+        <th><%= t('.name') %></th>
+        <th><%= t('.owner') %></th>
+        <th><%= t('.category') %></th>
         <th></th>
         <th></th>
         <th></th>
@@ -21,7 +21,7 @@
         <tr>
           <td>
             <%= link_to account do %>
-              <b>Show</b>
+              <b><%= t('.show') %></b>
             <% end %>
           </td>
           <td><%= account.id %></td>
@@ -29,9 +29,9 @@
           <td><%= account.name %></td>
           <td><%= account.owner %></td>
           <td><%= account.category&.name %></td>
-          <td><%= link_to 'Edit', edit_account_path(account) %></td>
-          <td><%= button_to 'Update Transactions', account_transactions_bulk_path(account), method: :patch %></td>
-          <td><%= link_to 'Destroy', account, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+          <td><%= link_to t('.edit'), edit_account_path(account) %></td>
+          <td><%= button_to t('.update_transactions'), account_transactions_bulk_path(account), method: :patch %></td>
+          <td><%= link_to t('.destroy'), account, method: :delete, data: { confirm: t('.confirm_destroy') } %></td>
         </tr>
       <% end %>
     </tbody>
@@ -43,6 +43,6 @@
 
 <section>
   <%= link_to new_account_path do %>
-    <b>New Account</b>
+    <b><%= t('.new_account') %></b>
   <% end %>
 </section>

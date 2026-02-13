@@ -37,10 +37,52 @@ nl:
       category: Categorie
       chattel: Bezitting
       transaction: Transactie
+  accounts:
+    index:
+      title: Rekeningen
+      id: Id
+      account_number: Rekeningnummer
+      name: Naam
+      owner: Eigenaar
+      category: Categorie
+      show: Tonen
+      edit: Bewerken
+      update_transactions: Transacties bijwerken
+      destroy: Verwijderen
+      confirm_destroy: Weet je het zeker?
+      new_account: Nieuwe rekening
+    show:
+      edit: Bewerken
+      id: "Id:"
+      account_number: "Rekeningnummer:"
+      name: "Naam:"
+      owner: "Eigenaar:"
+      category: "Categorie:"
+      update_transactions: Transacties bijwerken
   balance:
     profit_or_loss: Winst/Verlies
   categories:
     main: Hoofdcategoriëen
+  transactions:
+    index:
+      new_transaction: Nieuwe transactie
+      upload: Uploaden
+    table:
+      type: Type
+      creditor: Crediteur
+      debitor: Debiteur
+      amount: Bedrag
+      booked_at: Boekingsdatum
+      interest_date: Rentedatum
+      category: Categorie
+      note: Opmerking
+      show: Tonen
+    imports:
+      no_file: Selecteer een CSV-bestand om te uploaden.
+      invalid_file_type: Ongeldig bestandstype. Upload een CSV-bestand.
+      file_too_large: Bestand te groot. Maximum grootte is 5MB.
+      import_complete: Import voltooid.
+      import_failed: "%{count} transacties konden niet worden geïmporteerd"
   date:
     abbr_day_names:
       - zo
