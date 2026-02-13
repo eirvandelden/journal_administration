@@ -1,0 +1,196 @@
+/*
+ * OKLCH Color Definitions
+ * Based on Selenized color scheme
+ * https://github.com/jan-warchol/selenized/blob/master/the-values.md
+ *
+ * Uses prefers-color-scheme for automatic light/dark switching
+ * User can override with data-theme attribute
+ */
+
+/* ============================================
+   Light themes (default)
+   ============================================ */
+
+/* Selenized Light - default light theme */
+:root {
+  --lch-bg-lightest: 96% 0.04 85;
+  --lch-bg-lighter: 94% 0.04 85;
+  --lch-bg: 92% 0.04 85;
+  --lch-bg-darker: 87% 0.04 85;
+  --lch-bg-darkest: 82% 0.04 85;
+
+  --lch-fg-darkest: 28% 0.02 85;
+  --lch-fg-darker: 35% 0.02 85;
+  --lch-fg: 42% 0.02 85;
+  --lch-fg-lighter: 52% 0.02 85;
+  --lch-fg-lightest: 62% 0.02 85;
+
+  --lch-red: 50% 0.19 20;
+  --lch-green: 50% 0.13 140;
+  --lch-yellow: 60% 0.14 85;
+  --lch-blue: 50% 0.13 250;
+  --lch-magenta: 50% 0.15 330;
+  --lch-cyan: 50% 0.12 200;
+  --lch-orange: 55% 0.16 50;
+  --lch-violet: 50% 0.14 290;
+}
+
+/* White theme - explicit override */
+[data-theme="white"] {
+  --lch-bg-lightest: 100% 0 0;
+  --lch-bg-lighter: 98% 0 0;
+  --lch-bg: 96% 0 0;
+  --lch-bg-darker: 94% 0 0;
+  --lch-bg-darkest: 92% 0 0;
+
+  --lch-fg-darkest: 20% 0 0;
+  --lch-fg-darker: 30% 0 0;
+  --lch-fg: 40% 0 0;
+  --lch-fg-lighter: 50% 0 0;
+  --lch-fg-lightest: 60% 0 0;
+
+  --lch-red: 50% 0.19 20;
+  --lch-green: 50% 0.13 140;
+  --lch-yellow: 60% 0.14 85;
+  --lch-blue: 50% 0.13 250;
+  --lch-magenta: 50% 0.15 330;
+  --lch-cyan: 50% 0.12 200;
+  --lch-orange: 55% 0.16 50;
+  --lch-violet: 50% 0.14 290;
+}
+
+/* Selenized Light - explicit override */
+[data-theme="selenized_light"] {
+  --lch-bg-lightest: 96% 0.04 85;
+  --lch-bg-lighter: 94% 0.04 85;
+  --lch-bg: 92% 0.04 85;
+  --lch-bg-darker: 87% 0.04 85;
+  --lch-bg-darkest: 82% 0.04 85;
+
+  --lch-fg-darkest: 28% 0.02 85;
+  --lch-fg-darker: 35% 0.02 85;
+  --lch-fg: 42% 0.02 85;
+  --lch-fg-lighter: 52% 0.02 85;
+  --lch-fg-lightest: 62% 0.02 85;
+
+  --lch-red: 50% 0.19 20;
+  --lch-green: 50% 0.13 140;
+  --lch-yellow: 60% 0.14 85;
+  --lch-blue: 50% 0.13 250;
+  --lch-magenta: 50% 0.15 330;
+  --lch-cyan: 50% 0.12 200;
+  --lch-orange: 55% 0.16 50;
+  --lch-violet: 50% 0.14 290;
+}
+
+/* ============================================
+   Dark themes (via prefers-color-scheme)
+   ============================================ */
+
+/* Selenized Dark - default dark theme */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --lch-bg-lightest: 22% 0.02 85;
+    --lch-bg-lighter: 20% 0.02 85;
+    --lch-bg: 18% 0.02 85;
+    --lch-bg-darker: 16% 0.02 85;
+    --lch-bg-darkest: 14% 0.02 85;
+
+    --lch-fg-darkest: 85% 0.02 85;
+    --lch-fg-darker: 75% 0.02 85;
+    --lch-fg: 65% 0.02 85;
+    --lch-fg-lighter: 55% 0.02 85;
+    --lch-fg-lightest: 45% 0.02 85;
+
+    --lch-red: 60% 0.19 20;
+    --lch-green: 60% 0.13 140;
+    --lch-yellow: 70% 0.14 85;
+    --lch-blue: 60% 0.13 250;
+    --lch-magenta: 60% 0.15 330;
+    --lch-cyan: 60% 0.12 200;
+    --lch-orange: 65% 0.16 50;
+    --lch-violet: 60% 0.14 290;
+  }
+}
+
+/* Black theme - explicit override */
+[data-theme="black"] {
+  --lch-bg-lightest: 20% 0 0;
+  --lch-bg-lighter: 18% 0 0;
+  --lch-bg: 16% 0 0;
+  --lch-bg-darker: 14% 0 0;
+  --lch-bg-darkest: 12% 0 0;
+
+  --lch-fg-darkest: 95% 0 0;
+  --lch-fg-darker: 85% 0 0;
+  --lch-fg: 75% 0 0;
+  --lch-fg-lighter: 65% 0 0;
+  --lch-fg-lightest: 55% 0 0;
+
+  --lch-red: 60% 0.19 20;
+  --lch-green: 60% 0.13 140;
+  --lch-yellow: 70% 0.14 85;
+  --lch-blue: 60% 0.13 250;
+  --lch-magenta: 60% 0.15 330;
+  --lch-cyan: 60% 0.12 200;
+  --lch-orange: 65% 0.16 50;
+  --lch-violet: 60% 0.14 290;
+}
+
+/* Selenized Dark - explicit override */
+[data-theme="selenized_dark"] {
+  --lch-bg-lightest: 22% 0.02 85;
+  --lch-bg-lighter: 20% 0.02 85;
+  --lch-bg: 18% 0.02 85;
+  --lch-bg-darker: 16% 0.02 85;
+  --lch-bg-darkest: 14% 0.02 85;
+
+  --lch-fg-darkest: 85% 0.02 85;
+  --lch-fg-darker: 75% 0.02 85;
+  --lch-fg: 65% 0.02 85;
+  --lch-fg-lighter: 55% 0.02 85;
+  --lch-fg-lightest: 45% 0.02 85;
+
+  --lch-red: 60% 0.19 20;
+  --lch-green: 60% 0.13 140;
+  --lch-yellow: 70% 0.14 85;
+  --lch-blue: 60% 0.13 250;
+  --lch-magenta: 60% 0.15 330;
+  --lch-cyan: 60% 0.12 200;
+  --lch-orange: 65% 0.16 50;
+  --lch-violet: 60% 0.14 290;
+}
+
+/* ============================================
+   Convert OKLCH to colors
+   ============================================ */
+
+:root {
+  --color-bg-lightest: oklch(var(--lch-bg-lightest));
+  --color-bg-lighter: oklch(var(--lch-bg-lighter));
+  --color-bg: oklch(var(--lch-bg));
+  --color-bg-darker: oklch(var(--lch-bg-darker));
+  --color-bg-darkest: oklch(var(--lch-bg-darkest));
+
+  --color-fg-darkest: oklch(var(--lch-fg-darkest));
+  --color-fg-darker: oklch(var(--lch-fg-darker));
+  --color-fg: oklch(var(--lch-fg));
+  --color-fg-lighter: oklch(var(--lch-fg-lighter));
+  --color-fg-lightest: oklch(var(--lch-fg-lightest));
+
+  --color-red: oklch(var(--lch-red));
+  --color-green: oklch(var(--lch-green));
+  --color-yellow: oklch(var(--lch-yellow));
+  --color-blue: oklch(var(--lch-blue));
+  --color-magenta: oklch(var(--lch-magenta));
+  --color-cyan: oklch(var(--lch-cyan));
+  --color-orange: oklch(var(--lch-orange));
+  --color-violet: oklch(var(--lch-violet));
+
+  /* Semantic color mappings */
+  --color-primary: var(--color-blue);
+  --color-success: var(--color-green);
+  --color-danger: var(--color-red);
+  --color-warning: var(--color-yellow);
+  --color-info: var(--color-cyan);
+}

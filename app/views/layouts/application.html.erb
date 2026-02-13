@@ -1,15 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html data-theme="selenized_light" data-color-scheme="system">
   <head>
     <title>JournalAdministration</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <%= stylesheet_link_tag 'base/_index.css', media: 'all', 'data-turbo-track': 'reload' %>
-    <%= stylesheet_link_tag 'layout/_index.css', media: 'all', 'data-turbo-track': 'reload' %>
-    <%= stylesheet_link_tag 'modules/_index.css', media: 'all', 'data-turbo-track': 'reload' %>
-    <%= stylesheet_link_tag 'state/_index.css', media: 'all', 'data-turbo-track': 'reload' %>
-    <%= stylesheet_link_tag 'theme/_index.css', media: 'all', 'data-turbo-track': 'reload' %>
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbo-track': 'reload' %>
 
     <%= javascript_importmap_tags %>
   </head>

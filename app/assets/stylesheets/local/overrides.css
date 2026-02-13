@@ -1,0 +1,46 @@
+/* Button fine-tuning for links and submits */
+a > b,
+a > strong,
+input[type="submit"] {
+  padding: .2rem;
+  margin: 0 .4rem;
+}
+
+/* Pagy pagination navigation */
+nav.pagy a {
+  padding: .2rem 0;
+}
+
+nav.pagy a[aria-disabled] {
+  text-decoration: none;
+}
+
+/* Rails form error styling - adapt to MVPA.css structure */
+.field_with_errors {
+  padding: 2px;
+  background-color: var(--color-danger, red);
+  display: table;
+}
+
+#error_explanation {
+  width: 450px;
+  border: 2px solid var(--color-danger, red);
+  padding: 7px 7px 0;
+  margin-bottom: 20px;
+  background-color: var(--color-bg-secondary, #f0f0f0);
+}
+
+#error_explanation h2 {
+  text-align: left;
+  font-weight: bold;
+  padding: 5px 5px 5px 15px;
+  font-size: 12px;
+  margin: -7px -7px 0;
+  background-color: var(--color-danger, #c00);
+  color: var(--color-bg, #fff);
+}
+
+#error_explanation ul li {
+  font-size: 12px;
+  list-style: square;
+}

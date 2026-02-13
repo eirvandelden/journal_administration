@@ -1,0 +1,148 @@
+/*
+ * Forms
+ * Classless form element styling
+ */
+
+form {
+  max-inline-size: var(--max-width-content);
+}
+
+fieldset {
+  border: 1px solid var(--color-bg-darker);
+  border-radius: var(--radius);
+  padding: var(--block-space);
+  margin-block: var(--block-space);
+}
+
+legend {
+  padding-inline: var(--inline-space-half);
+  font-weight: 600;
+  color: var(--color-fg-darker);
+}
+
+label {
+  display: block;
+  margin-block-end: var(--block-space-half);
+  font-weight: 500;
+  color: var(--color-fg-darker);
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="url"],
+input[type="tel"],
+input[type="number"],
+input[type="search"],
+input[type="date"],
+input[type="datetime-local"],
+input[type="month"],
+input[type="week"],
+input[type="time"],
+textarea,
+select {
+  inline-size: 100%;
+  padding-block: 0.5em;
+  padding-inline: 0.75em;
+  font-size: 1rem;
+  font-family: inherit;
+  line-height: var(--line-height-normal);
+  background-color: var(--color-bg-lightest);
+  color: var(--color-fg);
+  border: 1px solid var(--color-bg-darker);
+  border-radius: var(--radius);
+  transition: border-color var(--transition-fast);
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="url"]:focus,
+input[type="tel"]:focus,
+input[type="number"]:focus,
+input[type="search"]:focus,
+input[type="date"]:focus,
+input[type="datetime-local"]:focus,
+input[type="month"]:focus,
+input[type="week"]:focus,
+input[type="time"]:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+textarea {
+  min-block-size: 8em;
+  resize: vertical;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+  inline-size: 1.125em;
+  block-size: 1.125em;
+  margin-inline-end: var(--inline-space-half);
+  vertical-align: middle;
+}
+
+button,
+input[type="submit"],
+input[type="button"],
+input[type="reset"] {
+  --button-bg: var(--color-primary);
+  --button-fg: var(--color-bg-lightest);
+
+  display: inline-block;
+  padding-block: 0.5em;
+  padding-inline: 1.5em;
+  font-size: 1rem;
+  font-weight: 500;
+  font-family: inherit;
+  line-height: var(--line-height-normal);
+  text-decoration: none;
+  background-color: var(--button-bg);
+  color: var(--button-fg);
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: filter var(--transition-fast);
+}
+
+button:hover,
+input[type="submit"]:hover,
+input[type="button"]:hover,
+input[type="reset"]:hover {
+  filter: brightness(1.1);
+}
+
+button:active,
+input[type="submit"]:active,
+input[type="button"]:active,
+input[type="reset"]:active {
+  filter: brightness(0.95);
+}
+
+button:disabled,
+input[type="submit"]:disabled,
+input[type="button"]:disabled,
+input[type="reset"]:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+input:invalid,
+textarea:invalid,
+select:invalid {
+  border-color: var(--color-danger);
+}
+
+small {
+  display: block;
+  margin-block-start: var(--block-space-half);
+  color: var(--color-fg-lighter);
+  font-size: var(--text-small);
+}
+
+form > * + * {
+  margin-block-start: var(--block-space);
+}

@@ -1,0 +1,19 @@
+/*
+ * Definition Lists
+ * Grid-based layout for dl/dt/dd
+ */
+
+dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--block-space-half) var(--inline-space-double);
+}
+
+dt {
+  font-weight: 600;
+  color: var(--color-fg-darker);
+}
+
+dd {
+  margin: 0;
+}
