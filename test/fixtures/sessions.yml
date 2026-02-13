@@ -1,0 +1,13 @@
+admin_session:
+  user: admin
+  token: <%= SecureRandom.base58(24) %>
+  ip_address: 127.0.0.1
+  user_agent: TestAgent
+  last_active_at: <%= Time.now.to_fs(:db) %>
+
+member_session:
+  user: member
+  token: <%= SecureRandom.base58(24) %>
+  ip_address: 127.0.0.1
+  user_agent: TestAgent
+  last_active_at: <%= Time.now.to_fs(:db) %>

@@ -37,8 +37,50 @@ en:
       category: Category
       chattel: Chattel
       transaction: Transaction
+  accounts:
+    index:
+      title: Accounts
+      id: Id
+      account_number: Account number
+      name: Name
+      owner: Owner
+      category: Category
+      show: Show
+      edit: Edit
+      update_transactions: Update Transactions
+      destroy: Destroy
+      confirm_destroy: Are you sure?
+      new_account: New Account
+    show:
+      edit: Edit
+      id: "Id:"
+      account_number: "Account number:"
+      name: "Name:"
+      owner: "Owner:"
+      category: "Category:"
+      update_transactions: Update Transactions
   categories:
     main: Categories
+  transactions:
+    index:
+      new_transaction: New Transaction
+      upload: Upload
+    table:
+      type: Type
+      creditor: Creditor
+      debitor: Debitor
+      amount: Amount
+      booked_at: Booked at date
+      interest_date: Interest date
+      category: Category
+      note: Note
+      show: Show
+    imports:
+      no_file: Please select a CSV file to upload.
+      invalid_file_type: Invalid file type. Please upload a CSV file.
+      file_too_large: File too large. Maximum size is 5MB.
+      import_complete: Import complete.
+      import_failed: "%{count} transactions failed to import"
   date:
     abbr_day_names:
     - Sun

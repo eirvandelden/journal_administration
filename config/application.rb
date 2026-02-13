@@ -16,6 +16,9 @@ module JournalAdministration
     # Common ones are `templates`, `generators`, or `middleware`, for example.
     config.autoload_lib(ignore: %w[assets tasks])
 
+    # Map the "ing" directory to ING (bank acronym) for Zeitwerk autoloading
+    Rails.autoloaders.main.inflector.inflect("ing" => "ING")
+
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files

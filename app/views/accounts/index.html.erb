@@ -1,0 +1,48 @@
+<section>
+  <%= pagy_nav(@pagy).html_safe %>
+
+  <table class="accounts">
+    <thead>
+      <tr>
+        <th></th>
+        <th><%= t('.id') %></th>
+        <th><%= t('.account_number') %></th>
+        <th><%= t('.name') %></th>
+        <th><%= t('.owner') %></th>
+        <th><%= t('.category') %></th>
+        <th></th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @records.each do |account| %>
+        <tr>
+          <td>
+            <%= link_to account do %>
+              <b><%= t('.show') %></b>
+            <% end %>
+          </td>
+          <td><%= account.id %></td>
+          <td><%= account.account_number %></td>
+          <td><%= account.name %></td>
+          <td><%= account.owner %></td>
+          <td><%= account.category&.name %></td>
+          <td><%= link_to t('.edit'), edit_account_path(account) %></td>
+          <td><%= button_to t('.update_transactions'), account_transactions_bulk_path(account), method: :patch %></td>
+          <td><%= link_to t('.destroy'), account, method: :delete, data: { confirm: t('.confirm_destroy') } %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <%= pagy_nav(@pagy).html_safe %>
+
+</section>
+
+<section>
+  <%= link_to new_account_path do %>
+    <b><%= t('.new_account') %></b>
+  <% end %>
+</section>
