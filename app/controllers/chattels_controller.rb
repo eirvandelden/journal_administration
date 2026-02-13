@@ -1,27 +1,40 @@
+# Manages household chattels (valuable items with warranties and insurance)
 class ChattelsController < ApplicationController
-  before_action :set_chattel, only: %i[ show edit update destroy ]
+  before_action :set_chattel, only: %i[show edit update destroy]
 
-  # GET /chattels or /chattels.json
+  # Lists chattels organized by warranty status
+  #
+  # Separates active items into warrantied and out-of-warranty, plus items that have left possession.
+  #
+  # @return [void]
   def index
     @warrantied = Chattel.active.warrantied
     @out_of_warranty = Chattel.active.out_of_warranty
     @left = Chattel.left
   end
 
-  # GET /chattels/1 or /chattels/1.json
+  # Displays a single chattel
+  #
+  # @return [void]
   def show
   end
 
-  # GET /chattels/new
+  # Renders form for creating a new chattel
+  #
+  # @return [void]
   def new
     @chattel = Chattel.new
   end
 
-  # GET /chattels/1/edit
+  # Renders form for editing a chattel
+  #
+  # @return [void]
   def edit
   end
 
-  # POST /chattels or /chattels.json
+  # Creates a new chattel
+  #
+  # @return [void]
   def create
     @chattel = Chattel.new(chattel_params)
 
@@ -36,7 +49,9 @@ class ChattelsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /chattels/1 or /chattels/1.json
+  # Updates a chattel
+  #
+  # @return [void]
   def update
     respond_to do |format|
       if @chattel.update(chattel_params)
@@ -49,7 +64,9 @@ class ChattelsController < ApplicationController
     end
   end
 
-  # DELETE /chattels/1 or /chattels/1.json
+  # Deletes a chattel
+  #
+  # @return [void]
   def destroy
     @chattel.destroy!
 
