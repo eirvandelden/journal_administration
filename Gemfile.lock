@@ -4,6 +4,13 @@ GIT
   specs:
     useragent (0.16.11)
 
+GIT
+  remote: https://github.com/eirvandelden/mvpa.css.git
+  revision: 988ea6c75e23e5959758b7d71a9791f02f3605f1
+  specs:
+    mvpa-css (0.1.0.pre.git.ad5752d)
+      railties (>= 6.0)
+
 GEM
   remote: https://gem.coop/
   specs:
@@ -423,6 +430,7 @@ DEPENDENCIES
   importmap-rails
   jbuilder
   kamal
+  mvpa-css!
   pagy
   propshaft
   puma
@@ -512,6 +520,7 @@ CHECKSUMS
   mini_portile2 (2.8.9) sha256=0cd7c7f824e010c072e33f68bc02d85a00aeb6fce05bb4819c03dfd3c140c289
   minitest (6.0.1) sha256=7854c74f48e2e975969062833adc4013f249a4b212f5e7b9d5c040bf838d54bb
   msgpack (1.8.0) sha256=e64ce0212000d016809f5048b48eb3a65ffb169db22238fb4b72472fecb2d732
+  mvpa-css (0.1.0.pre.git.ad5752d)
   net-imap (0.6.3) sha256=9bab75f876596d09ee7bf911a291da478e0cd6badc54dfb82874855ccc82f2ad
   net-pop (0.1.2) sha256=848b4e982013c15b2f0382792268763b748cce91c9e91e36b0f27ed26420dff3
   net-protocol (0.2.2) sha256=aa73e0cba6a125369de9837b8d8ef82a61849360eba0521900e2c3713aa162a8
