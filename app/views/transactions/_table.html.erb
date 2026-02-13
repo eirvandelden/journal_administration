@@ -1,0 +1,41 @@
+<%= pagy_nav(pagy).html_safe %>
+
+<table class="transactions">
+  <thead>
+    <tr>
+      <th></th>
+      <th><%= t('.type') %></th>
+      <th><%= t('.creditor') %></th>
+      <th><%= t('.debitor') %></th>
+      <th><%= t('.amount') %></th>
+      <th><%= t('.booked_at') %></th>
+      <th><%= t('.interest_date') %></th>
+      <th><%= t('.category') %></th>
+      <th><%= t('.note') %></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% transactions.each do |transaction| %>
+      <tr>
+        <td>
+          <%= link_to transaction do %>
+            <b><%= t('.show') %></b>
+          <% end %>
+        </td>
+        <td><%= transaction.type_icon %></td>
+        <% creditor = transaction&.creditor&.name || transaction&.creditor&.account_number %>
+        <td><%= link_to creditor, account_path(transaction&.creditor) %></td>
+        <% debitor = transaction&.debitor&.name || transaction&.debitor&.account_number %>
+        <td><%= link_to debitor, account_path(transaction&.debitor) %></td>
+        <td><%= number_to_currency transaction&.amount %></td>
+        <td><%= l transaction&.booked_at %></td>
+        <td><%= l transaction&.interest_at %></td>
+        <td><%= transaction&.category&.to_s %></td>
+        <td><%= transaction&.note.truncate(20) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= pagy_nav(pagy).html_safe %>

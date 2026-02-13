@@ -8,15 +8,21 @@ class Transactions::ImportsController < ApplicationController
   def create
     csv = imports_params[:csv]
 
+    # Validate file presence
+    if csv.blank?
+      flash[:alert] = t('.no_file')
+      return redirect_to transactions_path
+    end
+
     # Validate file type
     unless csv.content_type.in?(['text/csv', 'text/plain', 'application/vnd.ms-excel'])
-      flash[:alert] = "Invalid file type. Please upload a CSV file."
+      flash[:alert] = t('.invalid_file_type')
       return redirect_to transactions_path
     end
 
     # Validate file size
     if csv.size > 5.megabytes
-      flash[:alert] = "File too large. Maximum size is 5MB."
+      flash[:alert] = t('.file_too_large')
       return redirect_to transactions_path
     end
 
@@ -29,8 +35,8 @@ class Transactions::ImportsController < ApplicationController
       failed += 1
     end
 
-    flash[:notice] = "Import complete."
-    flash[:alert] = "#{failed} transactions failed to import" if failed.positive?
+    flash[:notice] = t('.import_complete')
+    flash[:alert] = t('.import_failed', count: failed) if failed.positive?
 
     redirect_to transactions_path
   end

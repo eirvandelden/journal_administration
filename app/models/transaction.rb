@@ -35,8 +35,12 @@ class Transaction < ApplicationRecord
     end
   end
 
-  private
-
+  # Determines transaction type based on account ownership
+  #
+  # Sets the type to Transfer if both accounts are family-owned,
+  # Credit if creditor is family-owned, or Debit if debitor is family-owned.
+  #
+  # @return [void]
   def determine_debit_credit_or_transfer_type
     # is debitor_account owned by us? This is a Debit Transaction!
     # is creditor_account owned by us? This is a Credit Transaction!
@@ -46,6 +50,8 @@ class Transaction < ApplicationRecord
     return self.type = "Credit" if creditor_is_us?
     self.type        = "Debit" if debitor_is_us?
   end
+
+  private
 
   def check_transfer_type_through_account_owners
     if type == "Transfer"
