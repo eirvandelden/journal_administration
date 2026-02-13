@@ -1,5 +1,5 @@
 /* MVPA.css framework - provides base styles, components, themes */
-@import "mvpa/mvpa";
+@import "mvpa/mvpa.css";
 
 /* Local customizations (SMACSS structure) - load after MVPA to override */
 @import "local/layout/_index.css";
