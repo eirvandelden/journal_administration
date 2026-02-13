@@ -10,7 +10,7 @@ help build a scalable application by:
 
 - following rails best practices and hooks patterns
 - implementing restful apis with proper error handling
-- ensuring responsive design with MVP.css, SMACCS and plain CSS3
+- ensuring responsive design with MVPA.css, SMACCS and plain CSS3
 - writing comprehensive unit and integration tests
 
 ## project context
@@ -21,7 +21,7 @@ In the future it will also keep track of our energy costs and maybe some basic e
 
 ## technology stack
 
-- frontend: stimulus, mvp.css
+- frontend: stimulus, MVPA.css
 - backend: Ruby on Rails, SQlite
 - testing: minitest
 - deployment: kamal, docker
