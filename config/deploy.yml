@@ -7,7 +7,7 @@ image: journal_administration
 # Deploy to these servers.
 servers:
   web:
-    - 192.168.1.216
+    - <%= ENV.fetch("DEPLOY_WEB_HOST") %>
   # job:
   #   hosts:
   #     - 192.168.0.1
@@ -19,9 +19,7 @@ servers:
 # Note: If using Cloudflare, set encryption mode in SSL/TLS setting to "Full" to enable CF-to-app encryption.
 proxy:
   ssl: false
-  hosts:
-    - finances.vandelden.family
-    - journal_administration.vandelden.family
+  hosts: <%= ENV.fetch("DEPLOY_PROXY_HOSTS").split(",") %>
   forward_headers: true
   # Proxy connects to your container on port 80 by default.
   app_port: 3000
@@ -34,8 +32,8 @@ proxy:
 registry:
   # Specify the registry server, if you're not using Docker Hub
   # server: registry.digitalocean.com / ghcr.io / ...
-  server: registry.vandelden.family
-  username: root
+  server: <%= ENV.fetch("KAMAL_REGISTRY_SERVER") %>
+  username: <%= ENV.fetch("KAMAL_REGISTRY_USERNAME", "root") %>
 
   # Always use an access token rather than real password (pulled from .kamal/secrets).
   password:
@@ -44,7 +42,7 @@ registry:
 # Configure builder setup.
 builder:
   arch: amd64
-  remote: ssh://root@192.168.1.128
+  remote: <%= ENV.fetch("DEPLOY_BUILDER_HOST") %>
   local: false
   context: "."
   # Pass in additional build args needed for your Dockerfile.
