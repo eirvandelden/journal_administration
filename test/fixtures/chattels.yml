@@ -1,25 +1,21 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
 one:
-  name: MyString
-  kind: MyString
-  model_number: MyString
-  serial_number: MyString
-  purchase_transaction: one
-  purchased_at: 2025-08-17 14:57:31
-  warranty_expires_at: 2025-08-17 14:57:31
-  left_possession_at: 2025-08-17 14:57:31
-  purchase_price: 9.99
-  notes: MyText
+  name: Laptop
+  kind: electronics
+  model_number: XPS-15
+  serial_number: SN123456
+  purchase_transaction: debit_grocery
+  purchased_at: <%= 6.months.ago.to_fs(:db) %>
+  warranty_expires_at: <%= 6.months.from_now.to_fs(:db) %>
+  purchase_price: 1299.99
+  notes: Work laptop
 
 two:
-  name: MyString
-  kind: MyString
-  model_number: MyString
-  serial_number: MyString
-  purchase_transaction: two
-  purchased_at: 2025-08-17 14:57:31
-  warranty_expires_at: 2025-08-17 14:57:31
-  left_possession_at: 2025-08-17 14:57:31
-  purchase_price: 9.99
-  notes: MyText
+  name: Old Phone
+  kind: electronics
+  model_number: Pixel-7
+  serial_number: SN654321
+  purchased_at: <%= 2.years.ago.to_fs(:db) %>
+  warranty_expires_at: <%= 1.year.ago.to_fs(:db) %>
+  left_possession_at: <%= 1.month.ago.to_fs(:db) %>
+  purchase_price: 599.00
+  notes: Replaced with newer model

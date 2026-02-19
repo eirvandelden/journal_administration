@@ -1,23 +1,32 @@
-abonnementen:
-  name: Abonnementen
+# Parent categories
+groceries:
+  name: Groceries
   direction: debit
 
-boodschappen:
-  name: Boodschappen
+housing:
+  name: Housing
   direction: debit
 
-abonnementen_streaming:
-  name: Streaming
-  direction: debit
-  parent_category: abonnementen
+income:
+  name: Income
+  direction: credit
 
-abonnementen_lezen:
-  name: Lezen
+transfer:
+  name: Transfer
   direction: debit
-  parent_category: abonnementen
 
-boodschappen_supermarkt:
-  name: Supermarkt
+# Child categories
+supermarket:
+  name: Supermarket
   direction: debit
-  parent_category: boodschappen
+  parent_category: groceries
 
+rent:
+  name: Rent
+  direction: debit
+  parent_category: housing
+
+salary:
+  name: Salary
+  direction: credit
+  parent_category: income
