@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  mount Faultline::Engine, at: "/faultline"
   resources :chattels
   root "dashboard#index"
 
