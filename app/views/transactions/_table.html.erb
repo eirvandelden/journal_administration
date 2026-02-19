@@ -1,4 +1,4 @@
-<%= pagy_nav(pagy).html_safe %>
+<%= pagy_nav(pagy) %>
 
 <table class="transactions">
   <thead>
@@ -24,10 +24,10 @@
           <% end %>
         </td>
         <td><%= transaction.type_icon %></td>
-        <% creditor = transaction&.creditor&.name || transaction&.creditor&.account_number %>
-        <td><%= link_to creditor, account_path(transaction&.creditor) %></td>
-        <% debitor = transaction&.debitor&.name || transaction&.debitor&.account_number %>
-        <td><%= link_to debitor, account_path(transaction&.debitor) %></td>
+        <% creditor = transaction.creditor %>
+        <td><%= creditor ? link_to(creditor.name || creditor.account_number, account_path(creditor)) : "" %></td>
+        <% debitor = transaction.debitor %>
+        <td><%= debitor ? link_to(debitor.name || debitor.account_number, account_path(debitor)) : "" %></td>
         <td><%= number_to_currency transaction&.amount %></td>
         <td><%= l transaction&.booked_at %></td>
         <td><%= l transaction&.interest_at %></td>
@@ -38,4 +38,4 @@
   </tbody>
 </table>
 
-<%= pagy_nav(pagy).html_safe %>
+<%= pagy_nav(pagy) %>

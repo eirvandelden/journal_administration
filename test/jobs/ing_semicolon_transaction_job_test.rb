@@ -48,7 +48,7 @@ class IngSemicolonTransactionJobTest < ActiveJob::TestCase
           "75,00", "Online bankieren", "beschrijving", "75,00", "\u{1F6D2}" ])
       end
 
-      assert_equal ah.id, Transaction.last.debitor_account_id
+      assert_equal ah.id, Transaction.unscoped.last.debitor_account_id
     end
 
     jumbo = Account.find_or_create_by(name: "Jumbo B.V.")
@@ -63,7 +63,7 @@ class IngSemicolonTransactionJobTest < ActiveJob::TestCase
           "75,00", "\u{1F6D2}" ])
       end
 
-      assert_equal jumbo.id, Transaction.last.debitor_account_id
+      assert_equal jumbo.id, Transaction.unscoped.last.debitor_account_id
     end
 
     kruidvat = Account.find_or_create_by(name: "Kruidvat B.V.")
@@ -78,7 +78,7 @@ class IngSemicolonTransactionJobTest < ActiveJob::TestCase
           "75,00", "\u{1F6D2}" ])
       end
 
-      assert_equal kruidvat.id, Transaction.last.debitor_account_id
+      assert_equal kruidvat.id, Transaction.unscoped.last.debitor_account_id
     end
   end
 end

@@ -1,10 +1,18 @@
 module Importing
   module ING
+    # Represents a single row from an ING bank semicolon-delimited CSV export
+    #
+    # Parses raw CSV data into a structured object with typed accessors and
+    # convenience predicates for transaction direction.
     class Row
       attr_reader :date, :initiator_name, :our_account_number, :their_account_number,
                   :code, :direction, :amount, :mutation_kind, :description,
                   :original_balance, :original_tag
 
+      # Parses a raw CSV row into a Row object
+      #
+      # @param csv_row [Array<String>] A row from the ING CSV export
+      # @return [Row, nil] Parsed row, or nil if the row is a header row
       def self.parse(csv_row)
         return nil if csv_row[0] == "Datum"
 
@@ -39,14 +47,23 @@ module Importing
         @original_tag = original_tag
       end
 
+      # Builds the transaction note from available fields, omitting blank values
+      #
+      # @return [String] Newline-joined non-blank fields from description, code, and mutation_kind
       def note
-        "#{description}\n#{code}\n#{mutation_kind}"
+        [description, code, mutation_kind].compact_blank.join("\n")
       end
 
+      # Returns true if this is a debit transaction (money leaving our account)
+      #
+      # @return [Boolean]
       def debit?
         direction == "Af"
       end
 
+      # Returns true if this is a credit transaction (money entering our account)
+      #
+      # @return [Boolean]
       def credit?
         direction == "Bij"
       end
