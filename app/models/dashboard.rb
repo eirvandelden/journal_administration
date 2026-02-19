@@ -62,8 +62,11 @@ class Dashboard
 
   private
 
+  def transfer_category_id
+    @transfer_category_id ||= Category.find_by(name: "Transfer")&.id
+  end
+
   def grouped_transactions_for(transaction_class, account_column)
-    transfer_category_id = Category.find_by(name: "Transfer")&.id
     scope = transaction_class.where(account_column => account.id,
                                     booked_at: date_range.to_range)
 

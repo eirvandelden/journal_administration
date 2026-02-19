@@ -1,5 +1,5 @@
 <section>
-  <%= pagy_nav(@pagy).html_safe %>
+  <%= pagy_nav(@pagy) %>
 
   <table class="accounts">
     <thead>
@@ -31,13 +31,13 @@
           <td><%= account.category&.name %></td>
           <td><%= link_to t('.edit'), edit_account_path(account) %></td>
           <td><%= button_to t('.update_transactions'), account_transactions_bulk_path(account), method: :patch %></td>
-          <td><%= link_to t('.destroy'), account, method: :delete, data: { confirm: t('.confirm_destroy') } %></td>
+          <td><%= button_to t('.destroy'), account, method: :delete, data: { turbo_confirm: t('.confirm_destroy') } %></td>
         </tr>
       <% end %>
     </tbody>
   </table>
 
-  <%= pagy_nav(@pagy).html_safe %>
+  <%= pagy_nav(@pagy) %>
 
 </section>
 
