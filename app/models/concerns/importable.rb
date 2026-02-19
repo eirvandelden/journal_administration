@@ -35,7 +35,8 @@ module Importable
         transaction.creditor = their_account
       end
 
-      transaction.determine_debit_credit_or_transfer_type
+      transaction.type = "Transfer" if transaction.both_accounts_are_ours?
+      transaction.type ||= row.debit? ? "Credit" : "Debit"
       transaction.assign_category_from_type
 
       their_account.update(name: row.initiator_name) if their_account&.name.blank?
