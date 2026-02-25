@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 Faultline.configure do |config|
   # =============================================================================
   # User Configuration
@@ -45,9 +43,14 @@ Faultline.configure do |config|
 
   # Return true if the user should have access to the dashboard
   # IMPORTANT: Configure this before deploying to production!
-  config.authenticate_with = lambda { |request|
-    Session.find_by(token: request.cookies[:session_token])&.user.present?
-  }
+  config.authenticate_with = lambda do |request|
+    raw = request.cookies[:session_token]
+    next false unless raw
+    token = Rails.application.message_verifier("signed cookie").verify(raw)
+    Session.find_by(token: token)&.user.present?
+  rescue ActiveSupport::MessageVerifier::InvalidSignature
+    false
+  end
 
   # Optional: Additional authorization after authentication
   # config.authorize_with = lambda { |request|
@@ -66,9 +69,9 @@ Faultline.configure do |config|
   config.notification_rules = {
     on_first_occurrence: true,           # Alert on new error types
     on_reopen: true,                     # Alert when resolved errors reoccur
-    on_threshold: [10, 50, 100, 500],    # Alert at these occurrence counts
+    on_threshold: [ 10, 50, 100, 500 ],    # Alert at these occurrence counts
     critical_exceptions: [],              # Always alert for these exception classes
-    notify_in_environments: ["production"]
+    notify_in_environments: [ "production" ]
   }
 
   # --- Telegram Notifier ---
@@ -177,7 +180,7 @@ Faultline.configure do |config|
   config.register_error_subscriber = true
 
   # Paths to ignore (no error tracking for these)
-  config.middleware_ignore_paths = ["/assets", "/up", "/health", "/faultline"]
+  config.middleware_ignore_paths = [ "/assets", "/up", "/health", "/faultline" ]
 
   # =============================================================================
   # Data Configuration
