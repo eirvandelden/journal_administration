@@ -210,6 +210,20 @@ en:
   home: Thuis
   journal: Journaal
   left: Left
+  todo: Todo
+  todos:
+    index:
+      upload_heading: Upload new CSV
+      upload_submit: Upload
+      empty: Nothing to do. All transactions are categorized and all accounts are up to date.
+      date: Date
+      kind: Kind
+      description: Description
+      actions: Actions
+      transaction: Transaction
+      account: Account
+      edit: Edit
+      update_transactions: Update Transactions
   number:
     currency:
       format:
