@@ -78,11 +78,12 @@ nl:
       note: Opmerking
       show: Tonen
     imports:
-      no_file: Selecteer een CSV-bestand om te uploaden.
-      invalid_file_type: Ongeldig bestandstype. Upload een CSV-bestand.
-      file_too_large: Bestand te groot. Maximum grootte is 5MB.
-      import_complete: Import voltooid.
-      import_failed: "%{count} transacties konden niet worden geïmporteerd"
+      create:
+        no_file: Selecteer een CSV-bestand om te uploaden.
+        invalid_file_type: Ongeldig bestandstype. Upload een CSV-bestand.
+        file_too_large: Bestand te groot. Maximum grootte is 5MB.
+        import_complete: Import voltooid.
+        import_failed: "%{count} transacties konden niet worden geïmporteerd"
   date:
     abbr_day_names:
       - zo
