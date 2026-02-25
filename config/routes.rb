@@ -15,10 +15,9 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :transactions do
-    scope module: "transactions" do
-      resources :imports, only: [:create]
-    end
+  resources :transactions
+  namespace :transactions do
+    resources :imports, only: [:create]
   end
   resources :credit, controller: "transactions", type: "Transaction"
   resources :debit, controller: "transactions", type: "Transaction"

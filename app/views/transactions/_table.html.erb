@@ -32,7 +32,7 @@
         <td><%= l transaction&.booked_at %></td>
         <td><%= l transaction&.interest_at %></td>
         <td><%= transaction&.category&.to_s %></td>
-        <td><%= transaction&.note.truncate(20) %></td>
+        <td><%= transaction&.note&.truncate(20) %></td>
       </tr>
     <% end %>
   </tbody>

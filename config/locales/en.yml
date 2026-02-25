@@ -76,11 +76,12 @@ en:
       note: Note
       show: Show
     imports:
-      no_file: Please select a CSV file to upload.
-      invalid_file_type: Invalid file type. Please upload a CSV file.
-      file_too_large: File too large. Maximum size is 5MB.
-      import_complete: Import complete.
-      import_failed: "%{count} transactions failed to import"
+      create:
+        no_file: Please select a CSV file to upload.
+        invalid_file_type: Invalid file type. Please upload a CSV file.
+        file_too_large: File too large. Maximum size is 5MB.
+        import_complete: Import complete.
+        import_failed: "%{count} transactions failed to import"
   date:
     abbr_day_names:
     - Sun
