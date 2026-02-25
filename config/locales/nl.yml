@@ -238,6 +238,20 @@ nl:
       update: "%{model} bijwerken"
   home: Thuis
   journal: Journaal
+  todo: Todo
+  todos:
+    index:
+      upload_heading: Nieuw CSV uploaden
+      upload_submit: Uploaden
+      empty: Niets te doen. Alle transacties zijn gecategoriseerd en alle rekeningen zijn bijgewerkt.
+      date: Datum
+      kind: Soort
+      description: Omschrijving
+      actions: Acties
+      transaction: Transactie
+      account: Rekening
+      edit: Bewerken
+      update_transactions: Transacties bijwerken
   number:
     currency:
       format:
