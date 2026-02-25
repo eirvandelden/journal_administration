@@ -34,6 +34,7 @@
           <li><%= link_to Account.model_name.human, accounts_path %></li>
           <li><%= link_to Category.model_name.human, categories_path %></li>
           <li><%= link_to Chattel.model_name.human, chattels_path %></li>
+          <li><%= link_to t('todo'), todo_path %></li>
         </ul>
       </nav>
       <%= yield(:secondary_nav) %>

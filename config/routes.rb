@@ -24,11 +24,12 @@ Rails.application.routes.draw do
   resources :transfer, controller: "transactions", type: "Transaction"
   resources :accounts do
     scope module: "accounts" do
-      resource :transactions_bulk, only: [:update]
+      resource :transactions_bulk, only: [ :update ]
     end
   end
   resources :categories
   get "dashboard/index"
+  get "todo", to: "todos#index", as: :todo
 
   get "up" => "rails/health#show", as: :rails_health_check
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
