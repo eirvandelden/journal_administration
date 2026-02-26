@@ -300,3 +300,66 @@ nl:
       short: "%d %b %H:%M"
     pm: "'s middags"
   warrantied: Warrantied
+  admin:
+    title: "Admin"
+    nav:
+      dashboard: "Dashboard"
+      users: "Gebruikers"
+      faultline: "Faultline"
+      back_to_site: "Terug naar site"
+    dashboard:
+      index:
+        title: "Dashboard"
+        summary: "Overzicht"
+        total_users: "Totaal gebruikers"
+        admin_users: "Beheerders"
+        recent_signups: "Recente registraties"
+        name: "Naam"
+        email: "E-mail"
+        role: "Rol"
+        created_at: "Aangemaakt"
+        actions: "Acties"
+        view: "Bekijken"
+        edit: "Bewerken"
+    users:
+      index:
+        title: "Gebruikersbeheer"
+        new_user: "Nieuwe gebruiker"
+        name: "Naam"
+        email: "E-mail"
+        role: "Rol"
+        created_at: "Aangemaakt"
+        actions: "Acties"
+        view: "Bekijken"
+        edit: "Bewerken"
+        delete: "Verwijderen"
+        confirm_delete: "Weet je zeker dat je deze gebruiker wilt verwijderen?"
+      show:
+        title: "Gebruikersdetails"
+        name: "Naam"
+        email: "E-mail"
+        role: "Rol"
+        created_at: "Aangemaakt"
+        active_sessions: "Actieve sessies"
+        edit: "Bewerken"
+        back: "Terug"
+      new:
+        title: "Nieuwe gebruiker"
+        submit: "Gebruiker aanmaken"
+      form:
+        name: "Naam"
+        email: "E-mail"
+        role: "Rol"
+        password: "Wachtwoord"
+        password_confirmation: "Wachtwoord bevestigen"
+        cancel: "Annuleren"
+      create:
+        success: "Gebruiker succesvol aangemaakt"
+      edit:
+        title: "Gebruiker bewerken"
+        submit: "Gebruiker bijwerken"
+      update:
+        success: "Gebruiker succesvol bijgewerkt"
+      destroy:
+        success: "Gebruiker succesvol verwijderd"
+        cannot_delete_self: "Je kunt jezelf niet verwijderen"
