@@ -47,7 +47,7 @@ Faultline.configure do |config|
     raw = request.cookies[:session_token]
     next false unless raw
     token = Rails.application.message_verifier("signed cookie").verify(raw)
-    Session.find_by(token: token)&.user.present?
+    Session.find_by(token: token)&.user&.can_administer?
   rescue ActiveSupport::MessageVerifier::InvalidSignature
     false
   end
