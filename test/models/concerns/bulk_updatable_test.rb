@@ -52,4 +52,36 @@ class BulkUpdatableTest < ActiveSupport::TestCase
     # The category should NOT change because it was manually set
     assert_equal original_category_id, manually_categorized.reload.category_id
   end
+
+  test "update_uncategorized_transactions! keeps manual categories for the updated account" do
+    account = accounts(:albert_heijn)
+    default_category = categories(:supermarket)
+    manual_category = categories(:rent)
+
+    default_transaction = Transaction.create!(
+      type: "Debit",
+      amount: 10.00,
+      booked_at: Time.current,
+      interest_at: Time.current,
+      debitor: accounts(:checking),
+      creditor: account,
+      category: default_category
+    )
+
+    manually_categorized_transaction = Transaction.create!(
+      type: "Debit",
+      amount: 12.00,
+      booked_at: Time.current,
+      interest_at: Time.current,
+      debitor: accounts(:checking),
+      creditor: account,
+      category: manual_category
+    )
+
+    count = account.update_uncategorized_transactions!
+
+    assert_equal 0, count
+    assert_equal default_category.id, default_transaction.reload.category_id
+    assert_equal manual_category.id, manually_categorized_transaction.reload.category_id
+  end
 end
