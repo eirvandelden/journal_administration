@@ -2,7 +2,7 @@ class Admin::UsersController < Admin::BaseController
   before_action :set_user, only: [ :show, :edit, :update, :destroy ]
 
   def index
-    @users = User.all.order(created_at: :desc)
+    @pagy, @users = pagy(User.order(created_at: :desc), items: 20)
   end
 
   def show
@@ -13,7 +13,7 @@ class Admin::UsersController < Admin::BaseController
   end
 
   def create
-    @user = User.new(user_params)
+    @user = User.new(create_user_params)
 
     if @user.save
       redirect_to admin_user_path(@user), notice: t(".success")
@@ -26,7 +26,7 @@ class Admin::UsersController < Admin::BaseController
   end
 
   def update
-    if @user.update(user_params)
+    if @user.update(update_user_params)
       redirect_to admin_user_path(@user), notice: t(".success")
     else
       render :edit, status: :unprocessable_entity
@@ -50,5 +50,26 @@ class Admin::UsersController < Admin::BaseController
 
   def user_params
     params.require(:user).permit(:name, :email_address, :role, :password, :password_confirmation)
+  end
+
+  def create_user_params
+    user_params.tap do |permitted|
+      permitted[:role] = normalize_role(permitted[:role], fallback: "member")
+    end
+  end
+
+  def update_user_params
+    user_params.tap do |permitted|
+      permitted[:role] = normalize_role(permitted[:role], fallback: @user.role)
+
+      if permitted[:password].blank? && permitted[:password_confirmation].blank?
+        permitted.delete(:password)
+        permitted.delete(:password_confirmation)
+      end
+    end
+  end
+
+  def normalize_role(role, fallback:)
+    role.presence_in(User.roles.keys) || fallback
   end
 end

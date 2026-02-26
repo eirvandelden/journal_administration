@@ -1,6 +1,7 @@
 <h1><%= t(".title") %></h1>
 
 <p><%= link_to t(".new_user"), new_admin_user_path %></p>
+<%= pagy_nav(@pagy) if @pagy.pages > 1 %>
 
 <table>
   <thead>
@@ -28,3 +29,5 @@
     <% end %>
   </tbody>
 </table>
+
+<%= pagy_nav(@pagy) if @pagy.pages > 1 %>
