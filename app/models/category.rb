@@ -5,11 +5,9 @@
 class Category < ApplicationRecord
   include Sortable
 
-  DIRECTIONS = %i[debit credit].freeze
-
   # @!attribute [rw] direction
   #   @return [String] The category direction (debit or credit)
-  enum :direction, DIRECTIONS
+  enum :direction, { debit: 0, credit: 1 }
 
   has_many :transactions
   has_many :secondaries, class_name: "Category",

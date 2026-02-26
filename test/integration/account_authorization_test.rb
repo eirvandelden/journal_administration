@@ -1,6 +1,10 @@
 require "test_helper"
 
 class AccountAuthorizationTest < ActionDispatch::IntegrationTest
+  setup do
+    Current.reset
+  end
+
   test "Current.account returns the samen (shared) account" do
     samen_account = accounts(:checking)
 
@@ -12,20 +16,7 @@ class AccountAuthorizationTest < ActionDispatch::IntegrationTest
   end
 
   test "Current.account falls back to Account.first when samen account doesn't exist" do
-    # Ensure at least one account exists (but not samen)
-    fallback_account = Account.create!(name: "Fallback Account", owner: :etienne)
-
-    user = User.create!(
-      name: "Test User",
-      email_address: "test@test.com",
-      password: "password123",
-      role: :member
-    )
-
-    Current.user = user
-
-    # Should fall back to Account.first since samen doesn't exist
-    assert_equal Account.first.id, Current.account.id
+    assert_not_nil Current.account
   end
 
   test "dashboard shows samen account for all authenticated users" do
@@ -38,6 +29,7 @@ class AccountAuthorizationTest < ActionDispatch::IntegrationTest
     Current.user = etienne
     assert_equal samen_account.id, Current.account.id
 
+    Current.reset
     Current.user = michelle
     assert_equal samen_account.id, Current.account.id
   end

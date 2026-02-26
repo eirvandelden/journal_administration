@@ -9,16 +9,15 @@ class CategoriesHelperTest < ActionView::TestCase
     housing = categories(:housing)
     supermarket = categories(:supermarket)
 
-    # Ensure named first group exists with the i18n label
-    main_group_label = I18n.t("categories.main")
-    assert_includes html, "<optgroup label=\"#{main_group_label}\">"
+    # Ensure nameless first group exists
+    assert_includes html, "<optgroup label=\"\">"
 
     # Ensure parents in alphabetical order
-    first_group_start = html.index("<optgroup label=\"#{main_group_label}\">")
+    first_group_start = html.index("<optgroup label=\"\">")
     first_group_end = html.index("</optgroup>", first_group_start)
     first_group = html[first_group_start..first_group_end]
     assert first_group.index(">#{groceries.name}</option>") < first_group.index(">#{housing.name}</option>"),
-"Parents not sorted alphabetically"
+      "Parents not sorted alphabetically"
 
     # Ensure child groups exist labeled by parent
     assert_includes html, "<optgroup label=\"#{groceries.name}\">"
