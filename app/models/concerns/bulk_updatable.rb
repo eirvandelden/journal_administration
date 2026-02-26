@@ -19,11 +19,9 @@ module BulkUpdatable
   def update_uncategorized_transactions!
     raise MissingCategoryError, "Account must have a category" if category.blank?
 
-    count = Transaction.where(debitor_account_id: id, category_id: nil)
-                      .where.not(type: "Transfer")
+    count = Transaction.where(debitor_account_id: id, category_id: nil, type: ["Credit", "Debit"])
                       .update_all(category_id: category_id)
-    count += Transaction.where(creditor_account_id: id, category_id: nil)
-                       .where.not(type: "Transfer")
+    count += Transaction.where(creditor_account_id: id, category_id: nil, type: ["Credit", "Debit"])
                        .update_all(category_id: category_id)
     count
   end

@@ -27,4 +27,18 @@ class BulkUpdatableTest < ActiveSupport::TestCase
 
     assert_equal account.category_id, uncategorized.reload.category_id
   end
+
+  test "update_uncategorized_transactions! does not override manually set categories" do
+    account = accounts(:checking)
+    manually_categorized = transactions(:debit_grocery)
+
+    # Verify that the transaction has a category different from the account's default
+    assert_not_equal account.category_id, manually_categorized.category_id
+    original_category_id = manually_categorized.category_id
+
+    account.update_uncategorized_transactions!
+
+    # The category should NOT change because it was manually set
+    assert_equal original_category_id, manually_categorized.reload.category_id
+  end
 end
