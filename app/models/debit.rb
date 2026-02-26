@@ -1,2 +1,0 @@
-class Debit < Transaction
-end

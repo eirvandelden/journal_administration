@@ -1,0 +1,43 @@
+# debit_grocery: checking pays Albert Heijn €50
+debit_grocery_our:
+  journal_entry: debit_grocery
+  account: checking
+  amount: -50.00
+
+debit_grocery_theirs:
+  journal_entry: debit_grocery
+  account: albert_heijn
+  amount: 50.00
+
+# credit_salary: employer pays €3000 into checking
+credit_salary_our:
+  journal_entry: credit_salary
+  account: checking
+  amount: 3000.00
+
+credit_salary_theirs:
+  journal_entry: credit_salary
+  account: employer
+  amount: -3000.00
+
+# transfer_savings: checking transfers €500 to savings
+transfer_savings_checking:
+  journal_entry: transfer_savings
+  account: checking
+  amount: -500.00
+
+transfer_savings_savings:
+  journal_entry: transfer_savings
+  account: savings
+  amount: 500.00
+
+# uncategorized: checking pays unknown €25
+uncategorized_our:
+  journal_entry: uncategorized
+  account: checking
+  amount: -25.00
+
+uncategorized_theirs:
+  journal_entry: uncategorized
+  account: unknown
+  amount: 25.00
