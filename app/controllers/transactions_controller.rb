@@ -6,7 +6,7 @@ class TransactionsController < ApplicationController
   #
   # @return [void]
   def index
-    transactions = Transaction.all
+    transactions = Transaction.ordered
     transactions = transactions.where(category: nil) if params[:filter] == "no_category"
 
     @pagy, @transactions = pagy transactions.order(interest_at: :desc), items: 20
@@ -79,8 +79,12 @@ class TransactionsController < ApplicationController
   end
 
   def transaction_params
-    key = (params.keys & %w[debit credit transfer transaction])[0]
-    params.require(key).permit(:id, :debit_account_id, :credit_account_id, :amount, :booked_at, :interest_at,
-  :category_id, :note, :type)
+    payload = params[:transaction] || params[:debit] || params[:credit] || params[:transfer] || {}
+    ActionController::Parameters.new(payload).permit(
+      :booked_at,
+      :interest_at,
+      :category_id,
+      :note
+    )
   end
 end

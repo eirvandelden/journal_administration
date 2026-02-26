@@ -19,19 +19,33 @@ module Importing
       def perform(csv_row)
         row = Row.parse(csv_row)
         return unless row
+        persist_transaction_for(row)
+      end
 
+      private
+
+      def persist_transaction_for(row)
         our_account = Account.find_or_create_by(account_number: row.our_account_number)
-        their_account = Account.resolve_for_import(
+        their_account = resolve_counterparty_for(row)
+        transaction = nil
+        our_account.with_lock { transaction = build_transaction(row, our_account, their_account) }
+        transaction&.save!
+      end
+
+      def resolve_counterparty_for(row)
+        Account.resolve_for_import(
           account_number: row.their_account_number,
           description: row.description,
           name: row.initiator_name
         )
+      end
 
-        transaction = Transaction.build_from_import(row,
+      def build_transaction(row, our_account, their_account)
+        Transaction.build_from_import(
+          row,
           our_account: our_account,
           their_account: their_account
         )
-        transaction.save!
       end
     end
   end
