@@ -1,5 +1,27 @@
 ---
 nl:
+  accounts:
+    index:
+      account_number: Rekeningnummer
+      category: Categorie
+      confirm_destroy: Weet je het zeker?
+      destroy: Verwijderen
+      edit: Bewerken
+      id: Id
+      name: Naam
+      new_account: Nieuwe rekening
+      owner: Eigenaar
+      show: Tonen
+      title: Rekeningen
+      update_transactions: Transacties bijwerken
+    show:
+      account_number: 'Rekeningnummer:'
+      category: 'Categorie:'
+      edit: Bewerken
+      id: 'Id:'
+      name: 'Naam:'
+      owner: 'Eigenaar:'
+      update_transactions: Transacties bijwerken
   activerecord:
     attributes:
       account:
@@ -37,144 +59,101 @@ nl:
       category: Categorie
       chattel: Bezitting
       transaction: Transactie
-  accounts:
-    index:
-      title: Rekeningen
-      id: Id
-      account_number: Rekeningnummer
-      name: Naam
-      owner: Eigenaar
-      category: Categorie
-      show: Tonen
-      edit: Bewerken
-      update_transactions: Transacties bijwerken
-      destroy: Verwijderen
-      confirm_destroy: Weet je het zeker?
-      new_account: Nieuwe rekening
-    show:
-      edit: Bewerken
-      id: "Id:"
-      account_number: "Rekeningnummer:"
-      name: "Naam:"
-      owner: "Eigenaar:"
-      category: "Categorie:"
-      update_transactions: Transacties bijwerken
   balance:
     profit_or_loss: Winst/Verlies
   categories:
     main: Hoofdcategoriëen
-  transactions:
-    index:
-      new_transaction: Nieuwe transactie
-      upload: Uploaden
-    table:
-      type: Type
-      creditor: Crediteur
-      debitor: Debiteur
-      amount: Bedrag
-      booked_at: Boekingsdatum
-      interest_date: Rentedatum
-      category: Categorie
-      note: Opmerking
-      show: Tonen
-    imports:
-      create:
-        no_file: Selecteer een CSV-bestand om te uploaden.
-        invalid_file_type: Ongeldig bestandstype. Upload een CSV-bestand.
-        file_too_large: Bestand te groot. Maximum grootte is 5MB.
-        import_complete: Import voltooid.
-        import_failed: "%{count} transacties konden niet worden geïmporteerd"
   date:
     abbr_day_names:
-      - zo
-      - ma
-      - di
-      - wo
-      - do
-      - vr
-      - za
+    - zo
+    - ma
+    - di
+    - wo
+    - do
+    - vr
+    - za
     abbr_month_names:
-      -
-      - jan
-      - feb
-      - mrt
-      - apr
-      - mei
-      - jun
-      - jul
-      - aug
-      - sep
-      - okt
-      - nov
-      - dec
+    -
+    - jan
+    - feb
+    - mrt
+    - apr
+    - mei
+    - jun
+    - jul
+    - aug
+    - sep
+    - okt
+    - nov
+    - dec
     day_names:
-      - zondag
-      - maandag
-      - dinsdag
-      - woensdag
-      - donderdag
-      - vrijdag
-      - zaterdag
+    - zondag
+    - maandag
+    - dinsdag
+    - woensdag
+    - donderdag
+    - vrijdag
+    - zaterdag
     formats:
       default: "%d-%m-%Y"
       long: "%e %B %Y"
       short: "%e %b"
     month_names:
-      -
-      - januari
-      - februari
-      - maart
-      - april
-      - mei
-      - juni
-      - juli
-      - augustus
-      - september
-      - oktober
-      - november
-      - december
+    -
+    - januari
+    - februari
+    - maart
+    - april
+    - mei
+    - juni
+    - juli
+    - augustus
+    - september
+    - oktober
+    - november
+    - december
     order:
-      - :day
-      - :month
-      - :year
+    - :day
+    - :month
+    - :year
   datetime:
     distance_in_words:
       about_x_hours:
-        one: ongeveer een uur
+        one: ongeveer %{count} uur
         other: ongeveer %{count} uur
       about_x_months:
-        one: ongeveer een maand
+        one: ongeveer %{count} maand
         other: ongeveer %{count} maanden
       about_x_years:
-        one: ongeveer een jaar
+        one: ongeveer %{count} jaar
         other: ongeveer %{count} jaar
       almost_x_years:
-        one: bijna een jaar
+        one: bijna %{count} jaar
         other: bijna %{count} jaar
       half_a_minute: een halve minuut
       less_than_x_minutes:
         one: minder dan een minuut
         other: minder dan %{count} minuten
       less_than_x_seconds:
-        one: minder dan een seconde
+        one: minder dan %{count} seconde
         other: minder dan %{count} seconden
       over_x_years:
-        one: meer dan een jaar
+        one: meer dan %{count} jaar
         other: meer dan %{count} jaar
       x_days:
-        one: 1 dag
+        one: "%{count} dag"
         other: "%{count} dagen"
       x_minutes:
-        one: 1 minuut
+        one: "%{count} minuut"
         other: "%{count} minuten"
       x_months:
-        one: 1 maand
+        one: "%{count} maand"
         other: "%{count} maanden"
       x_seconds:
-        one: 1 seconde
+        one: "%{count} seconde"
         other: "%{count} seconden"
       x_years:
-        one: 1 jaar
+        one: "%{count} jaar"
         other: "%{count} jaar"
     formats:
       short: "%d-%m-%Y"
@@ -216,12 +195,12 @@ nl:
         one: is te kort (minimaal %{count} teken)
         other: is te kort (minimaal %{count} tekens)
       wrong_length:
-        one: heeft onjuiste lengte (moet 1 teken lang zijn)
+        one: heeft onjuiste lengte (moet %{count} teken lang zijn)
         other: heeft onjuiste lengte (moet %{count} tekens lang zijn)
     template:
       body: 'Er zijn problemen met de volgende velden:'
       header:
-        one: "%{model} niet opgeslagen: 1 fout gevonden"
+        one: "%{model} niet opgeslagen: %{count} fout gevonden"
         other: "%{model} niet opgeslagen: %{count} fouten gevonden"
   filters:
     last_month: Vorige maand
@@ -238,19 +217,6 @@ nl:
       update: "%{model} bijwerken"
   home: Thuis
   journal: Journaal
-  todos:
-    index:
-      upload_heading: Nieuw CSV uploaden
-      upload_submit: Uploaden
-      empty: Niets te doen. Alle transacties zijn gecategoriseerd en alle rekeningen zijn bijgewerkt.
-      date: Datum
-      kind: Soort
-      description: Omschrijving
-      actions: Acties
-      transaction: Transactie
-      account: Rekening
-      edit: Bewerken
-      update_transactions: Transacties bijwerken
   number:
     currency:
       format:
@@ -312,6 +278,40 @@ nl:
       long: "%d %B %Y %H:%M"
       short: "%d %b %H:%M"
     pm: "'s middags"
+  todos:
+    index:
+      account: Rekening
+      actions: Acties
+      date: Datum
+      description: Omschrijving
+      edit: Bewerken
+      empty: Niets te doen. Alle transacties zijn gecategoriseerd en alle rekeningen zijn bijgewerkt.
+      kind: Soort
+      transaction: Transactie
+      update_transactions: Transacties bijwerken
+      upload_heading: Nieuw CSV uploaden
+      upload_submit: Uploaden
+  transactions:
+    imports:
+      create:
+        file_too_large: Bestand te groot. Maximum grootte is 5MB.
+        import_complete: Import voltooid.
+        import_failed: "%{count} transacties konden niet worden geïmporteerd"
+        invalid_file_type: Ongeldig bestandstype. Upload een CSV-bestand.
+        no_file: Selecteer een CSV-bestand om te uploaden.
+    index:
+      new_transaction: Nieuwe transactie
+      upload: Uploaden
+    table:
+      amount: Bedrag
+      booked_at: Boekingsdatum
+      category: Categorie
+      creditor: Crediteur
+      debitor: Debiteur
+      interest_date: Rentedatum
+      note: Opmerking
+      show: Tonen
+      type: Type
   warrantied: Warrantied
   admin:
     title: "Admin"

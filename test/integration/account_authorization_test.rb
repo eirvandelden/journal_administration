@@ -2,24 +2,11 @@ require "test_helper"
 
 class AccountAuthorizationTest < ActionDispatch::IntegrationTest
   test "Current.account returns the samen (shared) account" do
-    # Create the shared family account
-    samen_account = Account.create!(
-      name: "Shared Family Account",
-      owner: :samen
-    )
+    samen_account = accounts(:checking)
 
-    # Create a user
-    user = User.create!(
-      name: "Etienne Test",
-      email_address: "etienne@test.com",
-      password: "password123",
-      role: :member
-    )
-
-    # Set current user
+    user = users(:member)
     Current.user = user
 
-    # Verify Current.account returns the samen account
     assert_equal samen_account.id, Current.account.id
     assert_equal "samen", Current.account.owner
   end
@@ -42,11 +29,10 @@ class AccountAuthorizationTest < ActionDispatch::IntegrationTest
   end
 
   test "dashboard shows samen account for all authenticated users" do
-    # This verifies that all family members see the same shared account
-    samen_account = Account.create!(name: "Family Account", owner: :samen)
+    samen_account = accounts(:checking)
 
-    etienne = User.create!(name: "Etienne", email_address: "etienne@test.com", password: "password123", role: :member)
-    michelle = User.create!(name: "Michelle", email_address: "michelle@test.com", password: "password123", role: :member)
+    etienne = users(:admin)
+    michelle = users(:member)
 
     # Both users should see the samen account
     Current.user = etienne

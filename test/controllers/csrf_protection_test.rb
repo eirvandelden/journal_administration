@@ -9,7 +9,7 @@ class CsrfProtectionTest < ActionDispatch::IntegrationTest
   end
 
   test "POST requests with valid authenticity token succeed when authenticated" do
-    user = users(:one)
+    user = users(:admin)
     sign_in_as(user)
 
     get new_transaction_path
@@ -26,16 +26,15 @@ class CsrfProtectionTest < ActionDispatch::IntegrationTest
     }
 
     # Should either succeed or fail validation, but not CSRF error
-    assert_response [:success, :redirect, :unprocessable_entity]
+    assert_response [ :success, :redirect, :unprocessable_entity ]
   end
 
   private
 
   def sign_in_as(user)
-    session = user.sessions.create!(
-      user_agent: "Test",
-      ip_address: "127.0.0.1"
-    )
-    cookies.signed[:session_token] = session.token
+    post session_url, params: {
+      email_address: user.email_address,
+      password: "password123"
+    }
   end
 end
