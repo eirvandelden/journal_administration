@@ -231,7 +231,6 @@ en:
   home: Thuis
   journal: Journaal
   left: Left
-  todo: Todo
   todos:
     index:
       upload_heading: Upload new CSV

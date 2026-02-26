@@ -3,6 +3,8 @@
 # Aggregates uncategorized transactions and untouched accounts into a single
 # date-sorted list, and determines whether a CSV upload prompt is needed.
 class Todo
+  extend ActiveModel::Naming
+
   # Number of days after which the CSV upload prompt is shown
   UPLOAD_PROMPT_THRESHOLD = 13
 

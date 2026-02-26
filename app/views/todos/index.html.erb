@@ -1,0 +1,51 @@
+<% if @show_upload_form %>
+  <section class="upload">
+    <h2><%= t('.upload_heading') %></h2>
+    <%= form_tag(transactions_imports_path, multipart: true) do %>
+      <%= file_field_tag 'csv' %>
+      <%= submit_tag t('.upload_submit') %>
+    <% end %>
+  </section>
+<% end %>
+
+<section class="todo-list">
+  <% if @empty %>
+    <p><%= t('.empty') %></p>
+  <% else %>
+    <table class="todo">
+      <thead>
+        <tr>
+          <th><%= t('.date') %></th>
+          <th><%= t('.kind') %></th>
+          <th><%= t('.description') %></th>
+          <th><%= t('.actions') %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @items.each do |item| %>
+          <% if item.kind == :transaction %>
+            <tr>
+              <td><%= l item.date, format: :short %></td>
+              <td><%= t('.transaction') %></td>
+              <td>
+                <%= item.record.note&.truncate(40) %>
+                <%= number_to_currency item.record.amount %>
+              </td>
+              <td><%= link_to t('.edit'), edit_transaction_path(item.record) %></td>
+            </tr>
+          <% else %>
+            <tr>
+              <td><%= l item.date, format: :short %></td>
+              <td><%= t('.account') %></td>
+              <td><%= item.record.to_s %></td>
+              <td>
+                <%= link_to t('.edit'), edit_account_path(item.record) %>
+                <%= button_to t('.update_transactions'), account_transactions_bulk_path(item.record), method: :patch %>
+              </td>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+</section>
