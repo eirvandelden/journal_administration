@@ -1,40 +1,18 @@
 debit_grocery:
-  type: Debit
-  amount: 50.00
-  booked_at: <%= (Time.current.beginning_of_month + 1.hour).to_fs(:db) %>
-  interest_at: <%= (Time.current.beginning_of_month + 1.hour).to_fs(:db) %>
-  debitor: checking
-  creditor: albert_heijn
+  booked_at: <%= 1.week.ago.to_fs(:db) %>
+  interest_at: <%= 1.week.ago.to_fs(:db) %>
   category: supermarket
   note: Groceries at AH
 
-debit_bakery:
-  type: Debit
-  amount: 12.50
-  booked_at: <%= (Time.current.beginning_of_month + 2.hours).to_fs(:db) %>
-  interest_at: <%= (Time.current.beginning_of_month + 2.hours).to_fs(:db) %>
-  debitor: checking
-  creditor: unknown
-  category: bakery
-  note: Bakery purchase
-
 credit_salary:
-  type: Credit
-  amount: 3000.00
-  booked_at: <%= (Time.current.beginning_of_month + 1.hour).to_fs(:db) %>
-  interest_at: <%= (Time.current.beginning_of_month + 1.hour).to_fs(:db) %>
-  debitor: employer
-  creditor: checking
+  booked_at: <%= 2.weeks.ago.to_fs(:db) %>
+  interest_at: <%= 2.weeks.ago.to_fs(:db) %>
   category: salary
   note: Monthly salary
 
 transfer_savings:
-  type: Transfer
-  amount: 500.00
   booked_at: <%= 3.days.ago.to_fs(:db) %>
   interest_at: <%= 3.days.ago.to_fs(:db) %>
-  debitor: checking
-  creditor: savings
   category: transfer
   note: Transfer to savings
 
@@ -49,12 +27,8 @@ transfer_for_grocery:
   note: Transfer from savings for groceries
 
 uncategorized:
-  type: Debit
-  amount: 25.00
   booked_at: <%= 1.day.ago.to_fs(:db) %>
   interest_at: <%= 1.day.ago.to_fs(:db) %>
-  debitor: checking
-  creditor: unknown
   note: Uncategorized transaction
 
 uncategorized_credit:
