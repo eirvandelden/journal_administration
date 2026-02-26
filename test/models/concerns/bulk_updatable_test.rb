@@ -6,7 +6,7 @@ class BulkUpdatableTest < ActiveSupport::TestCase
 
     count = account.update_uncategorized_transactions!
 
-    assert count >= 0
+    assert_equal 2, count
   end
 
   test "update_uncategorized_transactions! raises when account has no category" do
@@ -26,6 +26,17 @@ class BulkUpdatableTest < ActiveSupport::TestCase
     account.update_uncategorized_transactions!
 
     assert_equal account.category_id, uncategorized.reload.category_id
+  end
+
+  test "update_uncategorized_transactions! sets category on uncategorized creditor transactions" do
+    account = accounts(:checking)
+    uncategorized_credit = transactions(:uncategorized_credit)
+
+    assert_nil uncategorized_credit.category_id
+
+    account.update_uncategorized_transactions!
+
+    assert_equal account.category_id, uncategorized_credit.reload.category_id
   end
 
   test "update_uncategorized_transactions! does not override manually set categories" do
