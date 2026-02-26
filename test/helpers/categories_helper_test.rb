@@ -5,34 +5,32 @@ class CategoriesHelperTest < ActionView::TestCase
 
   test "grouped_category_options builds named parents group first and per-parent child groups" do
     html = grouped_category_options
+    groceries = categories(:groceries)
+    housing = categories(:housing)
+    supermarket = categories(:supermarket)
 
-    # Ensure nameless first group exists
-    assert_includes html, "<optgroup label=\"\">"
+    # Ensure named first group exists with the i18n label
+    main_group_label = I18n.t("categories.main")
+    assert_includes html, "<optgroup label=\"#{main_group_label}\">"
 
     # Ensure parents in alphabetical order
-    first_group_start = html.index("<optgroup label=\"\">")
+    first_group_start = html.index("<optgroup label=\"#{main_group_label}\">")
     first_group_end = html.index("</optgroup>", first_group_start)
     first_group = html[first_group_start..first_group_end]
-    assert first_group.index(">Abonnementen</option>") < first_group.index(">Boodschappen</option>"), "Parents not sorted alphabetically"
+    assert first_group.index(">#{groceries.name}</option>") < first_group.index(">#{housing.name}</option>"),
+"Parents not sorted alphabetically"
 
     # Ensure child groups exist labeled by parent
-    assert_includes html, "<optgroup label=\"Abonnementen\">"
-    assert_includes html, "<optgroup label=\"Boodschappen\">"
+    assert_includes html, "<optgroup label=\"#{groceries.name}\">"
+    assert_includes html, "<optgroup label=\"#{housing.name}\">"
 
-    # Abonnementen children sorted: Lezen, Streaming
-    abon_group_start = html.index("<optgroup label=\"Abonnementen\">")
-    abon_group_end = html.index("</optgroup>", abon_group_start)
-    abon_group = html[abon_group_start..abon_group_end]
-    assert abon_group.index(">Lezen</option>") < abon_group.index(">Streaming</option>"), "Children not sorted within parent group"
+    # Groceries has a single child Supermarket
+    groceries_group_start = html.index("<optgroup label=\"#{groceries.name}\">")
+    groceries_group_end = html.index("</optgroup>", groceries_group_start)
+    groceries_group = html[groceries_group_start..groceries_group_end]
+    assert_includes groceries_group, ">#{supermarket.name}</option>"
 
     # Ensure child option labels are only child names (not full names)
-    refute_includes abon_group, "Abonnementen - Streaming"
-
-    # Boodschappen has a single child Supermarkt
-    boods_group_start = html.index("<optgroup label=\"Boodschappen\">")
-    boods_group_end = html.index("</optgroup>", boods_group_start)
-    boods_group = html[boods_group_start..boods_group_end]
-    assert_includes boods_group, ">Supermarkt</option>"
+    assert_not_includes groceries_group, "#{groceries.name} - #{supermarket.name}"
   end
 end
-

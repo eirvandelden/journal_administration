@@ -13,7 +13,7 @@ class User < ApplicationRecord
   scope :active, -> { where(active: true) }
   scope :ordered, -> { order(:name) }
 
-  enum locale: { nl: 0, en: 1, it: 2 }
+  enum :locale, { nl: 0, en: 1, it: 2 }
 
   def current?
     self == Current.user

@@ -9,7 +9,7 @@ class Category < ApplicationRecord
 
   # @!attribute [rw] direction
   #   @return [String] The category direction (debit or credit)
-  enum direction: DIRECTIONS
+  enum :direction, DIRECTIONS
 
   has_many :transactions
   has_many :secondaries, class_name: "Category",

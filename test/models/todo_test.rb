@@ -2,6 +2,7 @@ require "test_helper"
 
 class TodoTest < ActiveSupport::TestCase
   test "show_upload_form? returns true when no transactions exist" do
+    Chattel.update_all(purchase_transaction_id: nil)
     Transaction.delete_all
     todo = Todo.new
 

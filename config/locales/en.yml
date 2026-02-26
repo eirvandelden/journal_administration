@@ -1,5 +1,27 @@
 ---
 en:
+  accounts:
+    index:
+      account_number: Account number
+      category: Category
+      confirm_destroy: Are you sure?
+      destroy: Destroy
+      edit: Edit
+      id: Id
+      name: Name
+      new_account: New Account
+      owner: Owner
+      show: Show
+      title: Accounts
+      update_transactions: Update Transactions
+    show:
+      account_number: 'Account number:'
+      category: 'Category:'
+      edit: Edit
+      id: 'Id:'
+      name: 'Name:'
+      owner: 'Owner:'
+      update_transactions: Update Transactions
   activerecord:
     attributes:
       account:
@@ -37,51 +59,8 @@ en:
       category: Category
       chattel: Chattel
       transaction: Transaction
-  accounts:
-    index:
-      title: Accounts
-      id: Id
-      account_number: Account number
-      name: Name
-      owner: Owner
-      category: Category
-      show: Show
-      edit: Edit
-      update_transactions: Update Transactions
-      destroy: Destroy
-      confirm_destroy: Are you sure?
-      new_account: New Account
-    show:
-      edit: Edit
-      id: "Id:"
-      account_number: "Account number:"
-      name: "Name:"
-      owner: "Owner:"
-      category: "Category:"
-      update_transactions: Update Transactions
   categories:
     main: Categories
-  transactions:
-    index:
-      new_transaction: New Transaction
-      upload: Upload
-    table:
-      type: Type
-      creditor: Creditor
-      debitor: Debitor
-      amount: Amount
-      booked_at: Booked at date
-      interest_date: Interest date
-      category: Category
-      note: Note
-      show: Show
-    imports:
-      create:
-        no_file: Please select a CSV file to upload.
-        invalid_file_type: Invalid file type. Please upload a CSV file.
-        file_too_large: File too large. Maximum size is 5MB.
-        import_complete: Import complete.
-        import_failed: "%{count} transactions failed to import"
   date:
     abbr_day_names:
     - Sun
@@ -231,19 +210,6 @@ en:
   home: Thuis
   journal: Journaal
   left: Left
-  todos:
-    index:
-      upload_heading: Upload new CSV
-      upload_submit: Upload
-      empty: Nothing to do. All transactions are categorized and all accounts are up to date.
-      date: Date
-      kind: Kind
-      description: Description
-      actions: Actions
-      transaction: Transaction
-      account: Account
-      edit: Edit
-      update_transactions: Update Transactions
   number:
     currency:
       format:
@@ -310,4 +276,38 @@ en:
       long: "%B %d, %Y %H:%M"
       short: "%d %b %H:%M"
     pm: pm
+  todos:
+    index:
+      account: Account
+      actions: Actions
+      date: Date
+      description: Description
+      edit: Edit
+      empty: Nothing to do. All transactions are categorized and all accounts are up to date.
+      kind: Kind
+      transaction: Transaction
+      update_transactions: Update Transactions
+      upload_heading: Upload new CSV
+      upload_submit: Upload
+  transactions:
+    imports:
+      create:
+        file_too_large: File too large. Maximum size is 5MB.
+        import_complete: Import complete.
+        import_failed: "%{count} transactions failed to import"
+        invalid_file_type: Invalid file type. Please upload a CSV file.
+        no_file: Please select a CSV file to upload.
+    index:
+      new_transaction: New Transaction
+      upload: Upload
+    table:
+      amount: Amount
+      booked_at: Booked at date
+      category: Category
+      creditor: Creditor
+      debitor: Debitor
+      interest_date: Interest date
+      note: Note
+      show: Show
+      type: Type
   warrantied: Warrantied
