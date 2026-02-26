@@ -23,7 +23,7 @@
   = l @chattel.warranty_expires_at, format: :short
 %p
   %b Left posession at:
-  = l @chattel.left_possession_at, format: :short
+  = l @chattel.left_possession_at, format: :short if @chattel.left_possession_at
 %p
   %b Purchase price:
   = @chattel.purchase_price

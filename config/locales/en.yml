@@ -12,7 +12,6 @@ en:
       new_account: New Account
       owner: Owner
       show: Show
-      title: Accounts
       update_transactions: Update Transactions
     show:
       account_number: 'Account number:'
@@ -59,8 +58,11 @@ en:
       category: Category
       chattel: Chattel
       transaction: Transaction
+  balance:
+    profit_or_loss: Profit/Loss
   categories:
     main: Categories
+    new: New Category
   date:
     abbr_day_names:
     - Sun
@@ -153,6 +155,8 @@ en:
       x_years:
         one: "%{count} year"
         other: "%{count} years"
+    formats:
+      short: "%m/%d/%Y"
     prompts:
       day: Day
       hour: Hour
@@ -200,6 +204,12 @@ en:
       header:
         one: "%{count} error prohibited this %{model} from being saved"
         other: "%{count} errors prohibited this %{model} from being saved"
+  filters:
+    last_month: Last Month
+    last_year: Last Year
+    month_to_date: Month to Date
+    three_months: Last 3 Months
+    year_to_date: Year to Date
   helpers:
     select:
       prompt: Please select
@@ -264,6 +274,7 @@ en:
       format:
         delimiter: ''
   out_of_warranty: Out of warranty
+  show: Show
   support:
     array:
       last_word_connector: ", and "

@@ -12,7 +12,6 @@ nl:
       new_account: Nieuwe rekening
       owner: Eigenaar
       show: Tonen
-      title: Rekeningen
       update_transactions: Transacties bijwerken
     show:
       account_number: 'Rekeningnummer:'
@@ -63,6 +62,7 @@ nl:
     profit_or_loss: Winst/Verlies
   categories:
     main: Hoofdcategoriëen
+    new: Nieuwe categorie
   date:
     abbr_day_names:
     - zo
@@ -176,6 +176,7 @@ nl:
       exclusion: is gereserveerd
       greater_than: moet groter zijn dan %{count}
       greater_than_or_equal_to: moet groter dan of gelijk zijn aan %{count}
+      in: moet in %{count} staan
       inclusion: is niet in de lijst opgenomen
       invalid: is ongeldig
       less_than: moet minder zijn dan %{count}
@@ -185,6 +186,7 @@ nl:
       not_an_integer: moet een geheel getal zijn
       odd: moet oneven zijn
       other_than: moet anders zijn dan %{count}
+      password_too_long: is te lang
       present: moet leeg zijn
       required: moet bestaan
       taken: is al in gebruik
@@ -217,11 +219,13 @@ nl:
       update: "%{model} bijwerken"
   home: Thuis
   journal: Journaal
+  left: Verlaten
   number:
     currency:
       format:
         delimiter: "."
         format: "%u %n"
+        negative_format: "-%u%n"
         precision: 2
         separator: ","
         significant: false
@@ -230,6 +234,7 @@ nl:
     format:
       delimiter: "."
       precision: 2
+      round_mode: default
       separator: ","
       significant: false
       strip_insignificant_zeros: false
@@ -254,10 +259,13 @@ nl:
           byte:
             one: byte
             other: bytes
+          eb: EB
           gb: GB
           kb: KB
           mb: MB
+          pb: PB
           tb: TB
+          zb: ZB
     percentage:
       format:
         delimiter: ''
@@ -266,6 +274,7 @@ nl:
       format:
         delimiter: ''
   out_of_warranty: Out of warranty
+  show: Tonen
   support:
     array:
       last_word_connector: " en "
