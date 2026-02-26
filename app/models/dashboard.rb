@@ -18,18 +18,18 @@ class Dashboard
     @date_range = DateRange.from_filter(filter)
   end
 
-  # Returns debit transactions grouped by category with totals
+  # Returns debit transactions (money leaving the account) grouped by category with totals
   #
   # @return [Hash{Category => Float}] Categories mapped to debit amounts
   def debit_transactions
-    @debit_transactions ||= grouped_transactions_for(Debit, :debitor_account_id)
+    @debit_transactions ||= grouped_transactions_for(:debit)
   end
 
-  # Returns credit transactions grouped by category with totals
+  # Returns credit transactions (money entering the account) grouped by category with totals
   #
   # @return [Hash{Category => Float}] Categories mapped to credit amounts
   def credit_transactions
-    @credit_transactions ||= grouped_transactions_for(Credit, :creditor_account_id)
+    @credit_transactions ||= grouped_transactions_for(:credit)
   end
 
   # Calculates total debit amount
@@ -66,20 +66,33 @@ class Dashboard
     @transfer_category_id ||= Category.find_by(name: "Transfer")&.id
   end
 
-  def grouped_transactions_for(transaction_class, account_column)
-    scope = transaction_class.where(account_column => account.id,
-                                    booked_at: date_range.to_range)
+  def grouped_transactions_for(direction)
+    transactions = grouped_amounts_for(direction)
+    categories = indexed_categories_for(transactions.keys.compact)
+    Category.sort_by_hierarchy(transactions.transform_keys { |category_id| categories[category_id] })
+  end
 
-    transactions = scope.where.not(category_id: transfer_category_id)
-                       .or(scope.where(category_id: nil))
-                       .group(:category_id)
-                       .sum(:amount)
+  def grouped_amounts_for(direction)
+    scope = transaction_scope_for(direction)
+    scope.where.not(category_id: transfer_category_id)
+         .or(scope.where(category_id: nil))
+         .group(:category_id)
+         .sum("ABS(mutations.amount)")
+  end
 
-    category_ids = transactions.keys.compact
-    categories = Category.where(id: category_ids).includes(:parent_category).index_by(&:id)
+  def transaction_scope_for(direction)
+    mutation_scope = scoped_mutations_for(direction)
+    Transaction.joins(:mutations)
+               .where(mutations: { id: mutation_scope.select(:id) })
+               .where(booked_at: date_range.to_range)
+  end
 
-    transactions_by_category = transactions.transform_keys { |category_id| categories[category_id] }
+  def scoped_mutations_for(direction)
+    scope = Mutation.where(account_id: account.id)
+    direction == :debit ? scope.where("amount < 0") : scope.where("amount > 0")
+  end
 
-    Category.sort_by_hierarchy(transactions_by_category)
+  def indexed_categories_for(category_ids)
+    Category.where(id: category_ids).includes(:parent_category).index_by(&:id)
   end
 end

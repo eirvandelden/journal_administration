@@ -15,3 +15,22 @@
 </h1>
 
 <%= render partial: 'form', locals: { disabled: :disabled } %>
+
+<h2>Mutations</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Account</th>
+      <th>Amount</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @transaction.mutations.each do |mutation| %>
+      <tr>
+        <td><%= link_to mutation.account, account_path(mutation.account) %></td>
+        <td><%= number_to_currency mutation.amount %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

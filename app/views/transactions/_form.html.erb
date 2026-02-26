@@ -42,9 +42,6 @@
       <%= f.datetime_select :interest_at, {}, { disabled: disabled } %>
     </div>
 
-    <%= f.label :type %>
-    <%= f.collection_select(:type, Transaction::TYPES, :to_s, :to_s, {}, { disabled: disabled }) %>
-
     <% if Current.user.can_administer? %>
       <%= f.label :original_note %>
       <%= f.text_area :original_note, disabled: true %>
