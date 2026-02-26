@@ -3,7 +3,7 @@ source "https://gem.coop"
 ruby file: ".ruby-version"
 
 # Needs to be loaded first
-gem "dotenv-rails" # Read .env files and make available in Rails
+gem "dotenv-rails", "~> 3.2" # Read .env files and make available in Rails
 
 gem "rails", "~> 8.0"
 gem "faultline", git: "https://github.com/dlt/faultline.git"
