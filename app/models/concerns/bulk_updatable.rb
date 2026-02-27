@@ -10,23 +10,31 @@ module BulkUpdatable
 
   # Updates all uncategorized transactions for this account to its default category
   #
-  # Only updates transactions where this account is either debitor or creditor.
-  # Transfer transactions are explicitly excluded because they involve two family
-  # accounts and would require ambiguous categorization logic.
+  # Only updates uncategorized non-transfer transactions where this account has a
+  # mutation. Transfer transactions are excluded because both mutations are on
+  # family-owned accounts.
   #
   # @return [Integer] Number of transactions updated
   # @raise [MissingCategoryError] If the account has no default category
   def update_uncategorized_transactions!
     raise MissingCategoryError, "Account must have a category" if category.blank?
 
-    Transaction.where(category_id: nil, type: updatable_transaction_types)
-               .where("debitor_account_id = :account_id OR creditor_account_id = :account_id", account_id: id)
-               .update_all(category_id: category_id)
+    Transaction.where(id: updatable_transaction_ids).update_all(category_id: category_id)
   end
 
   private
 
-  def updatable_transaction_types
-    Transaction::TYPES - ["Transfer"]
+  def updatable_transaction_ids
+    Transaction.where(category_id: nil)
+               .where(id: transactions_for_account.select(:id))
+               .where(id: non_transfer_transactions.select(:id))
+  end
+
+  def transactions_for_account
+    Transaction.joins(:mutations).where(mutations: { account_id: id }).distinct
+  end
+
+  def non_transfer_transactions
+    Transaction.joins(mutations: :account).where(accounts: { owner: nil }).distinct
   end
 end

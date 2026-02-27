@@ -79,8 +79,7 @@ class TransactionsController < ApplicationController
   end
 
   def transaction_params
-    payload = params[:transaction] || params[:debit] || params[:credit] || params[:transfer] || {}
-    ActionController::Parameters.new(payload).permit(
+    params.require(:transaction).permit(
       :booked_at,
       :interest_at,
       :category_id,

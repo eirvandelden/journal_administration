@@ -25,6 +25,7 @@ class DashboardTest < ActiveSupport::TestCase
     dashboard = Dashboard.new(account: accounts(:checking), filter: "year_to_date")
 
     assert_equal 3000, dashboard.credit_transactions[categories(:salary)]
+    assert_equal 75, dashboard.credit_transactions[nil]
   end
 
   test "debit_total returns the summed outgoing amount for the account" do
@@ -36,13 +37,13 @@ class DashboardTest < ActiveSupport::TestCase
   test "credit_sub_total returns the summed incoming amount excluding transfers" do
     dashboard = Dashboard.new(account: accounts(:checking), filter: "year_to_date")
 
-    assert_equal 3000, dashboard.credit_sub_total
+    assert_equal 3075, dashboard.credit_sub_total
   end
 
   test "profit_or_loss returns debit total minus credit subtotal" do
     dashboard = Dashboard.new(account: accounts(:checking), filter: "year_to_date")
 
-    assert_equal(-2925, dashboard.profit_or_loss)
+    assert_equal(-3000, dashboard.profit_or_loss)
   end
 
   test "credit_total balances credit side to match debit total" do
