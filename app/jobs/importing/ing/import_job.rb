@@ -27,9 +27,10 @@ module Importing
       def persist_transaction_for(row)
         our_account = Account.find_or_create_by(account_number: row.our_account_number)
         their_account = resolve_counterparty_for(row)
-        transaction = nil
-        our_account.with_lock { transaction = build_transaction(row, our_account, their_account) }
-        transaction&.save!
+        lock_accounts_for_import(our_account, their_account) do
+          transaction = build_transaction(row, our_account, their_account)
+          transaction&.save!
+        end
       end
 
       def resolve_counterparty_for(row)
@@ -46,6 +47,15 @@ module Importing
           our_account: our_account,
           their_account: their_account
         )
+      end
+
+      def lock_accounts_for_import(our_account, their_account)
+        family_accounts = [ our_account, their_account ].compact.select { |account| account.owner.present? }.uniq
+
+        Account.transaction do
+          family_accounts.sort_by(&:id).each(&:lock!)
+          yield
+        end
       end
     end
   end

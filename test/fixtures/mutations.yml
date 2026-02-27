@@ -41,3 +41,14 @@ uncategorized_theirs:
   journal_entry: uncategorized
   account: unknown
   amount: 25.00
+
+# uncategorized_credit: employer pays €75 into checking
+uncategorized_credit_our:
+  journal_entry: uncategorized_credit
+  account: checking
+  amount: 75.00
+
+uncategorized_credit_theirs:
+  journal_entry: uncategorized_credit
+  account: employer
+  amount: -75.00

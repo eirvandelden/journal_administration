@@ -22,10 +22,6 @@ uncategorized:
   note: Uncategorized transaction
 
 uncategorized_credit:
-  type: Credit
-  amount: 75.00
   booked_at: <%= 1.day.ago.to_fs(:db) %>
   interest_at: <%= 1.day.ago.to_fs(:db) %>
-  debitor: albert_heijn
-  creditor: checking
   note: Uncategorized credit transaction

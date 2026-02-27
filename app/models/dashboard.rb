@@ -89,7 +89,9 @@ class Dashboard
 
   def scoped_mutations_for(direction)
     scope = Mutation.where(account_id: account.id)
-    direction == :debit ? scope.where("amount < 0") : scope.where("amount > 0")
+    amount = Mutation.arel_table[:amount]
+    condition = direction == :debit ? amount.lt(0) : amount.gt(0)
+    scope.where(condition)
   end
 
   def indexed_categories_for(category_ids)
