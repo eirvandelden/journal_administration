@@ -1,6 +1,8 @@
 ---
 en:
   accounts:
+    errors:
+      missing_category: Account must have a category
     index:
       account_number: Account number
       category: Category
@@ -146,6 +148,12 @@ en:
       new_chattel: "➕ New Chattel"
     new:
       title: "➕ New chattel"
+    create:
+      success: Chattel was successfully created.
+    destroy:
+      success: Chattel was successfully destroyed.
+    update:
+      success: Chattel was successfully updated.
   common:
     back: "↩️ Back"
     confirm_destroy: "⚠️ Are you sure?"
@@ -404,6 +412,10 @@ en:
       upload_heading: "📥 Upload new CSV"
       upload_submit: Upload
   transactions:
+    create:
+      success: Transaction was successfully created.
+    destroy:
+      success: Transaction was successfully destroyed.
     imports:
       create:
         file_too_large: "⚠️ File too large. Maximum size is 5MB."
@@ -418,6 +430,13 @@ en:
       upload: Upload
     new:
       title: "➕ New transaction"
+    show:
+      account: Account
+      all_transactions: All transactions
+      amount: Amount
+      consolidatable: Consolidatable
+      edit: Edit
+      mutations: Mutations
     table:
       amount: Amount
       booked_at: Booked at date
@@ -428,6 +447,8 @@ en:
       note: Note
       show: Show
       type: Type
+    update:
+      success: Transaction was successfully updated.
   users:
     profiles:
       edit:

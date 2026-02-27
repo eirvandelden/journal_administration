@@ -3,7 +3,7 @@ one:
   kind: electronics
   model_number: XPS-15
   serial_number: SN123456
-  purchase_transaction: debit_grocery
+  purchase_transaction: credit_grocery
   purchased_at: <%= 6.months.ago.to_fs(:db) %>
   warranty_expires_at: <%= 6.months.from_now.to_fs(:db) %>
   purchase_price: 1299.99

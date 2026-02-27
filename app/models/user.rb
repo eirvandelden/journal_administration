@@ -1,3 +1,4 @@
+# Represents an authenticated application user.
 class User < ApplicationRecord
   include Role, Transferable
 
@@ -15,10 +16,16 @@ class User < ApplicationRecord
 
   enum :locale, { nl: 0, en: 1, it: 2 }
 
+  # Indicates whether this user is the current request user.
+  #
+  # @return [Boolean]
   def current?
     self == Current.user
   end
 
+  # Deactivates the user and expires all active sessions.
+  #
+  # @return [void]
   def deactivate
     transaction do
       sessions.delete_all

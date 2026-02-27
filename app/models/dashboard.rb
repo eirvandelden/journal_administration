@@ -18,14 +18,14 @@ class Dashboard
     @date_range = DateRange.from_filter(filter)
   end
 
-  # Returns debit transactions (money leaving the account) grouped by category with totals
+  # Returns debit transactions (money entering the account) grouped by category with totals
   #
   # @return [Hash{Category => Float}] Categories mapped to debit amounts
   def debit_transactions
     @debit_transactions ||= grouped_transactions_for(:debit)
   end
 
-  # Returns credit transactions (money entering the account) grouped by category with totals
+  # Returns credit transactions (money leaving the account) grouped by category with totals
   #
   # @return [Hash{Category => Float}] Categories mapped to credit amounts
   def credit_transactions
@@ -90,7 +90,7 @@ class Dashboard
   def scoped_mutations_for(direction)
     scope = Mutation.where(account_id: account.id)
     amount = Mutation.arel_table[:amount]
-    condition = direction == :debit ? amount.lt(0) : amount.gt(0)
+    condition = (direction == :debit) ? amount.gt(0) : amount.lt(0)
     scope.where(condition)
   end
 

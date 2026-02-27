@@ -1,6 +1,8 @@
 ---
 nl:
   accounts:
+    errors:
+      missing_category: Rekening moet een categorie hebben
     index:
       account_number: Rekeningnummer
       category: Categorie
@@ -146,6 +148,12 @@ nl:
       new_chattel: "➕ Nieuwe bezitting"
     new:
       title: "➕ Nieuwe bezitting"
+    create:
+      success: Bezitting is succesvol aangemaakt.
+    destroy:
+      success: Bezitting is succesvol verwijderd.
+    update:
+      success: Bezitting is succesvol bijgewerkt.
   common:
     back: "↩️ Terug"
     confirm_destroy: "⚠️ Weet je het zeker?"
@@ -404,6 +412,10 @@ nl:
       upload_heading: "📥 Nieuw CSV uploaden"
       upload_submit: Uploaden
   transactions:
+    create:
+      success: Transactie is succesvol aangemaakt.
+    destroy:
+      success: Transactie is succesvol verwijderd.
     imports:
       create:
         file_too_large: "⚠️ Bestand te groot. Maximum grootte is 5MB."
@@ -418,6 +430,13 @@ nl:
       upload: Uploaden
     new:
       title: "➕ Nieuwe transactie"
+    show:
+      account: Rekening
+      all_transactions: Alle transacties
+      amount: Bedrag
+      consolidatable: Consolideerbaar
+      edit: Bewerken
+      mutations: Mutaties
     table:
       amount: Bedrag
       booked_at: Boekingsdatum
@@ -428,6 +447,8 @@ nl:
       note: Opmerking
       show: Tonen
       type: Type
+    update:
+      success: Transactie is succesvol bijgewerkt.
   users:
     profiles:
       edit:

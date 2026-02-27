@@ -1,3 +1,4 @@
+# Builds transactions from imported bank rows.
 module Importable
   extend ActiveSupport::Concern
 
