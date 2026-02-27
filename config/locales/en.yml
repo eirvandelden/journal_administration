@@ -58,6 +58,68 @@ en:
       category: Category
       chattel: Chattel
       transaction: Transaction
+  admin:
+    dashboard:
+      index:
+        actions: Actions
+        admin_users: Administrators
+        created_at: Created
+        edit: Edit
+        email: Email
+        name: Name
+        recent_signups: Recent Signups
+        role: Role
+        summary: Summary
+        title: Dashboard
+        total_users: Total Users
+        view: View
+    nav:
+      back_to_site: Back to Site
+      dashboard: Dashboard
+      faultline: Faultline
+      users: Users
+    users:
+      create:
+        success: User created successfully
+      destroy:
+        cannot_delete_self: You cannot delete yourself
+        success: User deleted successfully
+      edit:
+        submit: Update User
+        title: Edit User
+      form:
+        cancel: Cancel
+        email: Email
+        name: Name
+        password: Password
+        password_confirmation: Confirm Password
+        role: Role
+      index:
+        actions: Actions
+        confirm_delete: Are you sure you want to delete this user?
+        created_at: Created
+        delete: Delete
+        edit: Edit
+        email: Email
+        name: Name
+        new_user: New User
+        role: Role
+        title: User Management
+        view: View
+      new:
+        submit: Create User
+        title: New User
+      show:
+        active_sessions: Active Sessions
+        back: Back
+        created_at: Created
+        edit: Edit
+        email: Email
+        name: Name
+        role: Role
+        title: User Details
+      update:
+        success: User updated successfully
   balance:
     profit_or_loss: Profit/Loss
   categories:
@@ -165,6 +227,7 @@ en:
       second: Seconds
       year: Year
   errors:
+    admin_required: You must be an administrator to access this page.
     format: "%{attribute} %{message}"
     messages:
       accepted: must be accepted
@@ -322,66 +385,3 @@ en:
       show: Show
       type: Type
   warrantied: Warrantied
-  admin:
-    title: "Admin"
-    nav:
-      dashboard: "Dashboard"
-      users: "Users"
-      faultline: "Faultline"
-      back_to_site: "Back to Site"
-    dashboard:
-      index:
-        title: "Dashboard"
-        summary: "Summary"
-        total_users: "Total Users"
-        admin_users: "Administrators"
-        recent_signups: "Recent Signups"
-        name: "Name"
-        email: "Email"
-        role: "Role"
-        created_at: "Created"
-        actions: "Actions"
-        view: "View"
-        edit: "Edit"
-    users:
-      index:
-        title: "User Management"
-        new_user: "New User"
-        name: "Name"
-        email: "Email"
-        role: "Role"
-        created_at: "Created"
-        actions: "Actions"
-        view: "View"
-        edit: "Edit"
-        delete: "Delete"
-        confirm_delete: "Are you sure you want to delete this user?"
-      show:
-        title: "User Details"
-        name: "Name"
-        email: "Email"
-        role: "Role"
-        created_at: "Created"
-        active_sessions: "Active Sessions"
-        edit: "Edit"
-        back: "Back"
-      new:
-        title: "New User"
-        submit: "Create User"
-      form:
-        name: "Name"
-        email: "Email"
-        role: "Role"
-        password: "Password"
-        password_confirmation: "Confirm Password"
-        cancel: "Cancel"
-      create:
-        success: "User created successfully"
-      edit:
-        title: "Edit User"
-        submit: "Update User"
-      update:
-        success: "User updated successfully"
-      destroy:
-        success: "User deleted successfully"
-        cannot_delete_self: "You cannot delete yourself"

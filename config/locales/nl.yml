@@ -58,6 +58,68 @@ nl:
       category: Categorie
       chattel: Bezitting
       transaction: Transactie
+  admin:
+    dashboard:
+      index:
+        actions: Acties
+        admin_users: Beheerders
+        created_at: Aangemaakt
+        edit: Bewerken
+        email: E-mail
+        name: Naam
+        recent_signups: Recente registraties
+        role: Rol
+        summary: Overzicht
+        title: Dashboard
+        total_users: Totaal gebruikers
+        view: Bekijken
+    nav:
+      back_to_site: Terug naar site
+      dashboard: Dashboard
+      faultline: Faultline
+      users: Gebruikers
+    users:
+      create:
+        success: Gebruiker succesvol aangemaakt
+      destroy:
+        cannot_delete_self: Je kunt jezelf niet verwijderen
+        success: Gebruiker succesvol verwijderd
+      edit:
+        submit: Gebruiker bijwerken
+        title: Gebruiker bewerken
+      form:
+        cancel: Annuleren
+        email: E-mail
+        name: Naam
+        password: Wachtwoord
+        password_confirmation: Wachtwoord bevestigen
+        role: Rol
+      index:
+        actions: Acties
+        confirm_delete: Weet je zeker dat je deze gebruiker wilt verwijderen?
+        created_at: Aangemaakt
+        delete: Verwijderen
+        edit: Bewerken
+        email: E-mail
+        name: Naam
+        new_user: Nieuwe gebruiker
+        role: Rol
+        title: Gebruikersbeheer
+        view: Bekijken
+      new:
+        submit: Gebruiker aanmaken
+        title: Nieuwe gebruiker
+      show:
+        active_sessions: Actieve sessies
+        back: Terug
+        created_at: Aangemaakt
+        edit: Bewerken
+        email: E-mail
+        name: Naam
+        role: Rol
+        title: Gebruikersdetails
+      update:
+        success: Gebruiker succesvol bijgewerkt
   balance:
     profit_or_loss: Winst/Verlies
   categories:
@@ -165,6 +227,7 @@ nl:
       second: seconde
       year: jaar
   errors:
+    admin_required: Je moet een beheerder zijn om toegang te krijgen tot deze pagina.
     format: "%{attribute} %{message}"
     messages:
       accepted: moet worden geaccepteerd
@@ -322,66 +385,3 @@ nl:
       show: Tonen
       type: Type
   warrantied: Warrantied
-  admin:
-    title: "Admin"
-    nav:
-      dashboard: "Dashboard"
-      users: "Gebruikers"
-      faultline: "Faultline"
-      back_to_site: "Terug naar site"
-    dashboard:
-      index:
-        title: "Dashboard"
-        summary: "Overzicht"
-        total_users: "Totaal gebruikers"
-        admin_users: "Beheerders"
-        recent_signups: "Recente registraties"
-        name: "Naam"
-        email: "E-mail"
-        role: "Rol"
-        created_at: "Aangemaakt"
-        actions: "Acties"
-        view: "Bekijken"
-        edit: "Bewerken"
-    users:
-      index:
-        title: "Gebruikersbeheer"
-        new_user: "Nieuwe gebruiker"
-        name: "Naam"
-        email: "E-mail"
-        role: "Rol"
-        created_at: "Aangemaakt"
-        actions: "Acties"
-        view: "Bekijken"
-        edit: "Bewerken"
-        delete: "Verwijderen"
-        confirm_delete: "Weet je zeker dat je deze gebruiker wilt verwijderen?"
-      show:
-        title: "Gebruikersdetails"
-        name: "Naam"
-        email: "E-mail"
-        role: "Rol"
-        created_at: "Aangemaakt"
-        active_sessions: "Actieve sessies"
-        edit: "Bewerken"
-        back: "Terug"
-      new:
-        title: "Nieuwe gebruiker"
-        submit: "Gebruiker aanmaken"
-      form:
-        name: "Naam"
-        email: "E-mail"
-        role: "Rol"
-        password: "Wachtwoord"
-        password_confirmation: "Wachtwoord bevestigen"
-        cancel: "Annuleren"
-      create:
-        success: "Gebruiker succesvol aangemaakt"
-      edit:
-        title: "Gebruiker bewerken"
-        submit: "Gebruiker bijwerken"
-      update:
-        success: "Gebruiker succesvol bijgewerkt"
-      destroy:
-        success: "Gebruiker succesvol verwijderd"
-        cannot_delete_self: "Je kunt jezelf niet verwijderen"
