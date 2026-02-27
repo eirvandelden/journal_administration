@@ -47,7 +47,7 @@ class TodoTest < ActiveSupport::TestCase
   end
 
   test "empty? returns true when no uncategorized transactions or untouched accounts" do
-    Transaction.where(category_id: nil).delete_all
+    Transaction.where(category_id: nil).destroy_all
     Account.update_all(updated_at: Time.current)
     todo = Todo.new
 

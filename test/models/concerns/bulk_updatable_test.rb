@@ -71,23 +71,17 @@ class BulkUpdatableTest < ActiveSupport::TestCase
       creditor: account
     )
 
-    default_transaction = Transaction.create!(
-      type: "Debit",
-      amount: 10.00,
-      booked_at: Time.current,
-      interest_at: Time.current,
+    default_transaction = create_transaction_with_mutations(
       debitor: accounts(:checking),
       creditor: account,
+      amount: 10.00,
       category: default_category
     )
 
-    manually_categorized_transaction = Transaction.create!(
-      type: "Debit",
-      amount: 12.00,
-      booked_at: Time.current,
-      interest_at: Time.current,
+    manually_categorized_transaction = create_transaction_with_mutations(
       debitor: accounts(:checking),
       creditor: account,
+      amount: 12.00,
       category: manual_category
     )
 
@@ -97,5 +91,19 @@ class BulkUpdatableTest < ActiveSupport::TestCase
     assert_equal default_category.id, uncategorized_transaction.reload.category_id
     assert_equal default_category.id, default_transaction.reload.category_id
     assert_equal manual_category.id, manually_categorized_transaction.reload.category_id
+  end
+
+  private
+
+  def create_transaction_with_mutations(debitor:, creditor:, amount:, category:)
+    transaction = Transaction.new(
+      booked_at: Time.current,
+      interest_at: Time.current,
+      category: category
+    )
+    transaction.mutations.build(account: debitor, amount: -amount)
+    transaction.mutations.build(account: creditor, amount: amount)
+    transaction.save!
+    transaction
   end
 end
