@@ -1,0 +1,76 @@
+# credit_grocery: checking pays Albert Heijn €50
+credit_grocery_our:
+  journal_entry: credit_grocery
+  account: checking
+  amount: -50.00
+
+credit_grocery_theirs:
+  journal_entry: credit_grocery
+  account: albert_heijn
+  amount: 50.00
+
+# debit_salary: employer pays €3000 into checking
+debit_salary_our:
+  journal_entry: debit_salary
+  account: checking
+  amount: 3000.00
+
+debit_salary_theirs:
+  journal_entry: debit_salary
+  account: employer
+  amount: -3000.00
+
+# transfer_savings: checking transfers €500 to savings
+transfer_savings_checking:
+  journal_entry: transfer_savings
+  account: checking
+  amount: -500.00
+
+transfer_savings_savings:
+  journal_entry: transfer_savings
+  account: savings
+  amount: 500.00
+
+# uncategorized_credit: checking pays unknown €25
+uncategorized_credit_our:
+  journal_entry: uncategorized_credit
+  account: checking
+  amount: -25.00
+
+uncategorized_credit_theirs:
+  journal_entry: uncategorized_credit
+  account: unknown
+  amount: 25.00
+
+# uncategorized_debit: employer pays €75 into checking
+uncategorized_debit_our:
+  journal_entry: uncategorized_debit
+  account: checking
+  amount: 75.00
+
+uncategorized_debit_theirs:
+  journal_entry: uncategorized_debit
+  account: employer
+  amount: -75.00
+
+# credit_albert_heijn_default_category: checking pays Albert Heijn €10
+credit_albert_heijn_default_category_our:
+  journal_entry: credit_albert_heijn_default_category
+  account: checking
+  amount: -10.00
+
+credit_albert_heijn_default_category_theirs:
+  journal_entry: credit_albert_heijn_default_category
+  account: albert_heijn
+  amount: 10.00
+
+# credit_albert_heijn_manual_category: checking pays Albert Heijn €12
+credit_albert_heijn_manual_category_our:
+  journal_entry: credit_albert_heijn_manual_category
+  account: checking
+  amount: -12.00
+
+credit_albert_heijn_manual_category_theirs:
+  journal_entry: credit_albert_heijn_manual_category
+  account: albert_heijn
+  amount: 12.00

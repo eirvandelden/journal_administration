@@ -30,13 +30,15 @@ class AccountTest < ActiveSupport::TestCase
 
   # -- associations -----------------------------------------------------------
 
-  test "belongs_to category (optional)" do
-    assert_equal categories(:groceries), accounts(:checking).category
-  end
+  class BelongsToAssociationsTest < AccountTest
+    test "belongs_to category (optional)" do
+      assert_equal categories(:groceries), accounts(:checking).category
+    end
 
-  test "category can be nil" do
-    assert_nil accounts(:savings).category
-    assert accounts(:savings).valid?
+    test "category can be nil" do
+      assert_nil accounts(:savings).category
+      assert accounts(:savings).valid?
+    end
   end
 
   # -- to_s -------------------------------------------------------------------

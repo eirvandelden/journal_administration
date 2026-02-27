@@ -5,6 +5,7 @@
 Abonnementen
 Afval
 bankieren
+Betaalautomaat
 Boodschappen
 bruiloft
 Cadeautjes
@@ -24,6 +25,7 @@ Etiennes
 Extraatjes
 Feest
 Foodmarkt
+Gezamenlijke
 Geleend
 Groei
 Groter

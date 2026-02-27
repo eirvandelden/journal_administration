@@ -12,7 +12,8 @@ class Account < ApplicationRecord
 
   # @!attribute [rw] owner
   #   @return [String] The account owner (samen, etienne, michelle, serena, cosimo, chiara)
-  enum :owner, { samen: 0, etienne: 1, michelle: 2, serena: 3, cosimo: 4, chiara: 5 }
+  enum :owner,        { samen: 0, etienne: 1, michelle: 2, serena: 3, cosimo: 4, chiara: 5 }
+  enum :account_type, { asset: 0, liability: 1, expense: 2, income: 3 }
 
   belongs_to :category, optional: true
 

@@ -1,71 +1,73 @@
-# Represents a financial transaction between accounts
+# Represents a double-entry journal entry.
 #
-# Transactions are single-table inheritance with three types: Credit, Debit, Transfer.
-# The type is automatically determined by which accounts are family-owned accounts.
+# A transaction owns two or more mutations whose signed amounts must sum to zero.
 class Transaction < ApplicationRecord
-  include Accountable
   include Categorizable
   include Importable
 
-  TYPES = %w[Credit Debit Transfer].freeze
+  scope :ordered, -> { order(booked_at: :desc) }
 
-  default_scope { order(booked_at: :desc) }
-
-  belongs_to :debitor, class_name: "Account", foreign_key: "debitor_account_id", optional: true
-  belongs_to :creditor, class_name: "Account", foreign_key: "creditor_account_id", optional: true
+  has_many :mutations, foreign_key: :transaction_id, inverse_of: :journal_entry, dependent: :destroy
   belongs_to :category, optional: true
-  has_many :chattels, foreign_key: :purchase_transaction_id
+  has_many :chattels, foreign_key: :purchase_transaction_id, dependent: :restrict_with_error
 
-  before_validation :determine_debit_credit_or_transfer_type
+  validates :booked_at, presence: true
+  validate  :mutations_sum_to_zero
 
-  validates :type, inclusion: { in: TYPES, message: "%{value} is not a valid type" }, presence: true
-  validate :check_transfer_type_through_account_owners
-
-  # Returns an emoji representation of the transaction type
+  # Returns the account that receives money (positive mutation).
   #
-  # @return [String] emoji icon (e.g., "⬇️ 🟥" for Credit)
+  # @return [Account, nil]
+  def creditor
+    mutations.find { |m| m.amount > 0 }&.account
+  end
+
+  # Returns the account that sends money (negative mutation).
+  #
+  # @return [Account, nil]
+  def debitor
+    mutations.find { |m| m.amount < 0 }&.account
+  end
+
+  # Returns the absolute transaction amount as the sum of positive mutations.
+  #
+  # @return [BigDecimal]
+  def amount
+    mutations.map(&:amount).select(&:positive?).sum
+  end
+
+  # Returns an icon that indicates transfer, incoming, or outgoing flow.
+  #
+  # @return [String]
   def type_icon
-    case self.type
-    when "Credit"
-      "⬇️ 🟥"
-    when "Debit"
-      "⬆️ 🟩"
-    when "Transfer"
-      "🔄 ◻️"
+    if mutations.all? { |m| m.account&.owner.present? }
+      "🔄 ◻️"  # Transfer
+    elsif mutations.any? { |m| m.amount > 0 && m.account&.owner.present? }
+      "⬇️ 🟥"  # Credit
+    else
+      "⬆️ 🟩"  # Debit
     end
+  end
+
+  # Returns mutations linked to family-owned accounts.
+  #
+  # @return [ActiveRecord::Relation<Mutation>]
+  def our_mutations
+    mutations.joins(:account).where.not(accounts: { owner: nil })
   end
 
   private
 
-  # Determines transaction type based on account ownership
-  #
-  # Sets the type to Transfer if both accounts are family-owned,
-  # Credit if creditor is family-owned, or Debit if debitor is family-owned.
+  # Enforces double-entry balance rules.
   #
   # @return [void]
-  def determine_debit_credit_or_transfer_type
-    # is debitor_account owned by us? This is a Debit Transaction!
-    # is creditor_account owned by us? This is a Credit Transaction!
-    # are both owned by the same owner? This is a Transfer Transaction! (Or a Debit + Credit Transaction)
-    return if type.present?
-    return self.type = "Transfer" if debitor_is_us? && creditor_is_us?
-    return self.type = "Credit" if creditor_is_us?
-    self.type        = "Debit" if debitor_is_us?
-  end
-
-  def check_transfer_type_through_account_owners
-    if type == "Transfer"
-      unless debitor_is_us? && creditor_is_us?
-        errors.add(:type, "must be Transfer only if both debitor and creditor are family accounts")
-      end
-    elsif type == "Debit"
-      unless debitor_is_us?
-        errors.add(:type, "must be Debit only if debitor is a family account")
-      end
-    elsif type == "Credit"
-      unless creditor_is_us?
-        errors.add(:type, "must be Credit only if creditor is a family account")
-      end
+  def mutations_sum_to_zero
+    if mutations.size < 2
+      errors.add(:mutations, :too_short, count: 2)
+      return
     end
+
+    return if mutations.map(&:amount).sum.zero?
+
+    errors.add(:mutations, :invalid)
   end
 end

@@ -1,6 +1,8 @@
 ---
 en:
   accounts:
+    errors:
+      missing_category: Account must have a category
     index:
       account_number: Account number
       category: Category
@@ -125,6 +127,13 @@ en:
   categories:
     main: Categories
     new: New Category
+  chattels:
+    create:
+      success: Chattel was successfully created.
+    destroy:
+      success: Chattel was successfully destroyed.
+    update:
+      success: Chattel was successfully updated.
   date:
     abbr_day_names:
     - Sun
@@ -364,6 +373,10 @@ en:
       upload_heading: Upload new CSV
       upload_submit: Upload
   transactions:
+    create:
+      success: Transaction was successfully created.
+    destroy:
+      success: Transaction was successfully destroyed.
     imports:
       create:
         file_too_large: File too large. Maximum size is 5MB.
@@ -374,6 +387,13 @@ en:
     index:
       new_transaction: New Transaction
       upload: Upload
+    show:
+      account: Account
+      all_transactions: All transactions
+      amount: Amount
+      consolidatable: Consolidatable
+      edit: Edit
+      mutations: Mutations
     table:
       amount: Amount
       booked_at: Booked at date
@@ -384,4 +404,6 @@ en:
       note: Note
       show: Show
       type: Type
+    update:
+      success: Transaction was successfully updated.
   warrantied: Warrantied

@@ -3,12 +3,14 @@ checking:
   account_number: NL54INGB0671255150
   name: Gezamenlijke Rekening
   owner: samen
+  account_type: asset
   category: groceries
 
 savings:
   account_number: NL00INGB0123456789
   name: Spaarrekening
   owner: etienne
+  account_type: asset
 
 # External accounts (no owner)
 albert_heijn:
