@@ -12,7 +12,6 @@ it:
       new_account: Nuovo conto
       owner: Proprietario
       show: Mostra
-      title: Conti
       update_transactions: Aggiorna transazioni
     show:
       account_number: 'Numero conto:'
@@ -79,7 +78,6 @@ it:
       dashboard: Dashboard
       faultline: Faultline
       users: Utenti
-    title: Amministrazione
     users:
       create:
         success: Utente creato con successo
@@ -352,6 +350,19 @@ it:
       long: "%d %B %Y %H:%M"
       short: "%d %b %H:%M"
     pm: pm
+  todos:
+    index:
+      account: Conto
+      actions: Azioni
+      date: Data
+      description: Descrizione
+      edit: Modifica
+      empty: Nulla da fare. Tutte le transazioni sono categorizzate e tutti i conti sono aggiornati.
+      kind: Tipo
+      transaction: Transazione
+      update_transactions: Aggiorna transazioni
+      upload_heading: Carica un nuovo CSV
+      upload_submit: Carica
   transactions:
     imports:
       create:
