@@ -1,4 +1,6 @@
+# ING import domain namespace.
 module Importing
+  # ING-specific import structures.
   module ING
     # Represents a single row from an ING bank semicolon-delimited CSV export
     #

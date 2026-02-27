@@ -1,3 +1,6 @@
+# Represents a double-entry journal entry.
+#
+# A transaction owns two or more mutations whose signed amounts must sum to zero.
 class Transaction < ApplicationRecord
   include Categorizable
   include Importable
@@ -11,22 +14,30 @@ class Transaction < ApplicationRecord
   validates :booked_at, presence: true
   validate  :mutations_sum_to_zero
 
-  # Returns the account that receives money (positive-amount mutation)
+  # Returns the account that receives money (positive mutation).
+  #
+  # @return [Account, nil]
   def creditor
     mutations.find { |m| m.amount > 0 }&.account
   end
 
-  # Returns the account that sends money (negative-amount mutation)
+  # Returns the account that sends money (negative mutation).
+  #
+  # @return [Account, nil]
   def debitor
     mutations.find { |m| m.amount < 0 }&.account
   end
 
-  # Returns the absolute transfer amount (sum of positive mutations)
+  # Returns the absolute transaction amount as the sum of positive mutations.
+  #
+  # @return [BigDecimal]
   def amount
     mutations.map(&:amount).select(&:positive?).sum
   end
 
-  # Returns an emoji representation of the transaction type derived from account ownership
+  # Returns an icon that indicates transfer, incoming, or outgoing flow.
+  #
+  # @return [String]
   def type_icon
     if mutations.all? { |m| m.account&.owner.present? }
       "🔄 ◻️"  # Transfer
@@ -37,13 +48,18 @@ class Transaction < ApplicationRecord
     end
   end
 
-  # Returns mutations for family-owned accounts
+  # Returns mutations linked to family-owned accounts.
+  #
+  # @return [ActiveRecord::Relation<Mutation>]
   def our_mutations
     mutations.joins(:account).where.not(accounts: { owner: nil })
   end
 
   private
 
+  # Enforces double-entry balance rules.
+  #
+  # @return [void]
   def mutations_sum_to_zero
     if mutations.size < 2
       errors.add(:mutations, :too_short, count: 2)

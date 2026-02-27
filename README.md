@@ -27,6 +27,35 @@ This application uses **double-entry bookkeeping**.
 | Expenses:Groceries (Albert Heijn) | +50.00 |
 | **Sum** | **0.00** ✓ |
 
+## Conventions
+
+### Debit and credit (owner perspective)
+
+In this app, administration is always from the account owner's point of view:
+
+- **Debit** means money goes **to us** (incoming)
+- **Credit** means money goes **from us** (outgoing)
+
+This wording is used consistently in dashboard calculations, comments, fixtures, and tests.
+
+### Fixtures and naming
+
+- Fixture names should match the owner-perspective semantics above.
+- `debit_*` fixtures represent incoming transactions.
+- `credit_*` fixtures represent outgoing transactions.
+- ING test rows keep real-world mutation labels (for example `Betaalautomaat`) where possible.
+
+### Test organization (Minitest)
+
+Group tests by behavior using nested test classes, similar to RSpec contexts.
+Examples: `BelongsToAssociationsTest`, `ValidationsTest`, `ScopesTest`.
+
+### Documentation and translation rules
+
+- Public Ruby code is documented with concise YARD comments.
+- Controller actions include `@action` and `@route` tags.
+- User-facing text is never hardcoded; use i18n keys in views, controllers, models, jobs, and mailers.
+
 ## Configuration
 
 To setup a whitelist of urls, define `ENV["HOSTS"]` as a comma separated list.

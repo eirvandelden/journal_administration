@@ -5,7 +5,7 @@
   <%= form_for @transaction do |f| %>
     <% if @transaction.errors.any? %>
       <div id="error_explanation">
-        <h2><%= "#{pluralize(@transaction.errors.count, 'error')} prohibited this transaction from being saved:" %></h2>
+        <h2><%= t("errors.template.header", count: @transaction.errors.count, model: @transaction.model_name.human) %></h2>
         <ul>
           <% @transaction.errors.full_messages.each do |message| %>
             <li><%= message %></li>
@@ -55,7 +55,7 @@
 
     <% unless disabled %>
       <div class="actions">
-        <%= f.submit 'Save' %>
+        <%= f.submit %>
       </div>
     <% end %>
   <% end %>

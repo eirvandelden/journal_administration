@@ -17,7 +17,7 @@ module BulkUpdatable
   # @return [Integer] Number of transactions updated
   # @raise [MissingCategoryError] If the account has no default category
   def update_uncategorized_transactions!
-    raise MissingCategoryError, "Account must have a category" if category.blank?
+    raise MissingCategoryError, I18n.t("accounts.errors.missing_category") if category.blank?
 
     Transaction.where(id: updatable_transaction_ids).update_all(category_id: category_id)
   end

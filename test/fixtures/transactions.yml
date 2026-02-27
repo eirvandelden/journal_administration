@@ -1,10 +1,10 @@
-debit_grocery:
+credit_grocery:
   booked_at: <%= 1.week.ago.to_fs(:db) %>
   interest_at: <%= 1.week.ago.to_fs(:db) %>
   category: supermarket
   note: Groceries at AH
 
-credit_salary:
+debit_salary:
   booked_at: <%= 2.weeks.ago.to_fs(:db) %>
   interest_at: <%= 2.weeks.ago.to_fs(:db) %>
   category: salary
@@ -16,12 +16,24 @@ transfer_savings:
   category: transfer
   note: Transfer to savings
 
-uncategorized:
+uncategorized_credit:
   booked_at: <%= 1.day.ago.to_fs(:db) %>
   interest_at: <%= 1.day.ago.to_fs(:db) %>
   note: Uncategorized transaction
 
-uncategorized_credit:
+uncategorized_debit:
   booked_at: <%= 1.day.ago.to_fs(:db) %>
   interest_at: <%= 1.day.ago.to_fs(:db) %>
-  note: Uncategorized credit transaction
+  note: Uncategorized debit transaction
+
+credit_albert_heijn_default_category:
+  booked_at: <%= 5.years.ago.to_fs(:db) %>
+  interest_at: <%= 5.years.ago.to_fs(:db) %>
+  category: supermarket
+  note: Categorized outgoing transaction to Albert Heijn with default category
+
+credit_albert_heijn_manual_category:
+  booked_at: <%= 5.years.ago.to_fs(:db) %>
+  interest_at: <%= 5.years.ago.to_fs(:db) %>
+  category: rent
+  note: Categorized outgoing transaction to Albert Heijn with manual category

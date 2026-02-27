@@ -1,6 +1,8 @@
 ---
 it:
   accounts:
+    errors:
+      missing_category: Il conto deve avere una categoria
     index:
       account_number: Numero conto
       category: Categoria
@@ -125,6 +127,13 @@ it:
   categories:
     main: Categorie
     new: Nuova categoria
+  chattels:
+    create:
+      success: Bene creato con successo.
+    destroy:
+      success: Bene eliminato con successo.
+    update:
+      success: Bene aggiornato con successo.
   date:
     abbr_day_names:
     - dom
@@ -364,6 +373,10 @@ it:
       upload_heading: Carica un nuovo CSV
       upload_submit: Carica
   transactions:
+    create:
+      success: Transazione creata con successo.
+    destroy:
+      success: Transazione eliminata con successo.
     imports:
       create:
         file_too_large: File troppo grande. La dimensione massima è 5MB.
@@ -374,6 +387,13 @@ it:
     index:
       new_transaction: Nuova transazione
       upload: Carica
+    show:
+      account: Conto
+      all_transactions: Tutte le transazioni
+      amount: Importo
+      consolidatable: Consolidabile
+      edit: Modifica
+      mutations: Movimenti
     table:
       amount: Importo
       booked_at: Data registrazione
@@ -384,4 +404,6 @@ it:
       note: Nota
       show: Mostra
       type: Tipo
+    update:
+      success: Transazione aggiornata con successo.
   warrantied: In garanzia

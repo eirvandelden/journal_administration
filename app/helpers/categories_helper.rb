@@ -1,27 +1,43 @@
 module CategoriesHelper
-  # Builds grouped options for category selection as specified:
-  # - First, a nameless optgroup containing only parent categories (parent_category_id: nil)
-  # - Then, for each parent (alphabetically), an optgroup labeled with the parent's name
-  #   containing only that parent's children (alphabetically) with labels as the child name
-  # Returns an HTML-safe string suitable for use in f.select grouped options.
+  # Builds grouped options for category selection.
+  #
+  # The first optgroup (without a label) contains parent categories. Each
+  # following optgroup contains the children of one parent category.
+  #
+  # @param selected [Integer, String, nil] The selected category id
+  # @return [ActiveSupport::SafeBuffer]
   def grouped_category_options(selected: nil)
-    parents = Category.groups.includes(:secondaries).order(Arel.sql('LOWER(name) ASC'))
+    grouped_options_for_select(category_option_groups, selected)
+  end
 
-    groups = []
+  private
 
-    # First nameless group with parent categories
-    parent_options = parents.map { |p| [ p.name, p.id ] }
-    groups << [ "", parent_options ] if parent_options.any?
+  def category_option_groups
+    parents = sorted_parent_categories
+    [ parent_category_group(parents), *child_category_groups(parents) ].compact
+  end
 
-    # Then one group per parent with its children
-    parents.each do |parent|
-      children = parent.secondaries.sort_by { |c| c.name.downcase }
-      next if children.empty?
+  def sorted_parent_categories
+    Category.groups.includes(:secondaries).order(Arel.sql("LOWER(name) ASC"))
+  end
 
-      child_options = children.map { |c| [ c.name, c.id ] }
-      groups << [ parent.name, child_options ]
+  def parent_category_group(parents)
+    parent_options = parents.map { |parent| [ parent.name, parent.id ] }
+    return if parent_options.empty?
+
+    [ "", parent_options ]
+  end
+
+  def child_category_groups(parents)
+    parents.filter_map do |parent|
+      child_options = sorted_child_options(parent)
+      next if child_options.empty?
+
+      [ parent.name, child_options ]
     end
+  end
 
-    grouped_options_for_select(groups, selected)
+  def sorted_child_options(parent)
+    parent.secondaries.sort_by { |child| child.name.downcase }.map { |child| [ child.name, child.id ] }
   end
 end

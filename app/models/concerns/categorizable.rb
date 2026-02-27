@@ -1,3 +1,4 @@
+# Assigns transaction categories from mutation participants.
 module Categorizable
   extend ActiveSupport::Concern
 
