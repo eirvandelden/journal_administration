@@ -7,33 +7,35 @@ class Transaction < ApplicationRecord
   include Linkable
 
   scope :ordered, -> { order(booked_at: :desc) }
+  scope :for_index, -> { includes(:category, mutations: :account).order(interest_at: :desc) }
 
   has_many :mutations, foreign_key: :transaction_id, inverse_of: :journal_entry, dependent: :destroy
   belongs_to :category, optional: true
   has_many :chattels, foreign_key: :purchase_transaction_id, dependent: :restrict_with_error
 
   validates :booked_at, presence: true
-  validate  :mutations_sum_to_zero
+  validates_associated :mutations
+  validate :mutations_sum_to_zero
 
   # Returns the account that receives money (positive mutation).
   #
   # @return [Account, nil]
   def creditor
-    mutations.find { |m| m.amount > 0 }&.account
+    mutations.find { |mutation| mutation.amount.to_d.positive? }&.account
   end
 
   # Returns the account that sends money (negative mutation).
   #
   # @return [Account, nil]
   def debitor
-    mutations.find { |m| m.amount < 0 }&.account
+    mutations.find { |mutation| mutation.amount.to_d.negative? }&.account
   end
 
   # Returns the absolute transaction amount as the sum of positive mutations.
   #
   # @return [BigDecimal]
   def amount
-    mutations.map(&:amount).select(&:positive?).sum
+    mutations.sum { |mutation| mutation.amount.to_d.positive? ? mutation.amount.to_d : 0 }
   end
 
   # Returns an icon that indicates transfer, incoming, or outgoing flow.
@@ -42,7 +44,7 @@ class Transaction < ApplicationRecord
   def type_icon
     if mutations.all? { |m| m.account&.owner.present? }
       "🔄 ◻️"  # Transfer
-    elsif mutations.any? { |m| m.amount > 0 && m.account&.owner.present? }
+    elsif mutations.any? { |m| m.amount.to_d.positive? && m.account&.owner.present? }
       "⬇️ 🟥"  # Credit
     else
       "⬆️ 🟩"  # Debit
@@ -58,16 +60,15 @@ class Transaction < ApplicationRecord
 
   private
 
-  # Enforces double-entry balance rules.
-  #
-  # @return [void]
   def mutations_sum_to_zero
     if mutations.size < 2
       errors.add(:mutations, :too_short, count: 2)
       return
     end
 
-    return if mutations.map(&:amount).sum.zero?
+    return if mutations.any? { |mutation| mutation.amount.nil? }
+
+    return if mutations.sum { |mutation| mutation.amount.to_d }.zero?
 
     errors.add(:mutations, :invalid)
   end
