@@ -91,16 +91,10 @@ class ChattelsController < ApplicationController
   end
 
   private
-    # Loads the current chattel from the route id.
-    #
-    # @return [void]
     def set_chattel
       @chattel = Chattel.find(params[:id])
     end
 
-    # Whitelists chattel params from the request payload.
-    #
-    # @return [ActionController::Parameters]
     def chattel_params
       params.require(:chattel).permit(:name, :kind, :model_number, :serial_number, :purchase_transaction_id, :purchased_at,
 :warranty_expires_at, :left_possession_at, :purchase_price, :notes)

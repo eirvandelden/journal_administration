@@ -8,7 +8,7 @@ class TransactionsController < ApplicationController
   # @route /transactions
   # @return [void]
   def index
-    transactions = Transaction.ordered
+    transactions = Transaction.for_index
     transactions = transactions.where(category: nil) if params[:filter] == "no_category"
 
     @transactions = set_page_and_extract_portion_from transactions.order(interest_at: :desc), per_page: [20]

@@ -23,8 +23,7 @@ class MigrateTransactionsToMutations < ActiveRecord::Migration[8.1]
   def migrate_legacy_transaction(legacy_transaction)
     return log_skipped_transaction(legacy_transaction) if invalid_legacy_transaction?(legacy_transaction)
 
-    transaction = create_transaction_from(legacy_transaction)
-    create_mutations_for(transaction, legacy_transaction)
+    transaction = create_transaction_with_mutations_from(legacy_transaction)
     repoint_chattels(legacy_transaction, transaction)
   end
 
@@ -32,15 +31,18 @@ class MigrateTransactionsToMutations < ActiveRecord::Migration[8.1]
     Rails.logger.warn("Skipping legacy transaction #{legacy_transaction.id}: missing required bookkeeping fields")
   end
 
-  def create_transaction_from(legacy_transaction)
-    Transaction.create!(transaction_attributes_for(legacy_transaction))
+  def create_transaction_with_mutations_from(legacy_transaction)
+    transaction = Transaction.new(transaction_attributes_for(legacy_transaction))
+    build_mutations_for(transaction, legacy_transaction)
+    transaction.save!
+    transaction
   end
 
-  def create_mutations_for(transaction, legacy_transaction)
+  def build_mutations_for(transaction, legacy_transaction)
     # Debitor account: money leaves → negative amount
-    transaction.mutations.create!(account_id: legacy_transaction.debitor_account_id, amount: -legacy_transaction.amount)
+    transaction.mutations.build(account_id: legacy_transaction.debitor_account_id, amount: -legacy_transaction.amount)
     # Creditor account: money arrives → positive amount
-    transaction.mutations.create!(account_id: legacy_transaction.creditor_account_id, amount: legacy_transaction.amount)
+    transaction.mutations.build(account_id: legacy_transaction.creditor_account_id, amount: legacy_transaction.amount)
   end
 
   def repoint_chattels(legacy_transaction, transaction)
@@ -57,7 +59,8 @@ class MigrateTransactionsToMutations < ActiveRecord::Migration[8.1]
   def invalid_legacy_transaction?(legacy_transaction)
     legacy_transaction.debitor_account_id.blank? ||
       legacy_transaction.creditor_account_id.blank? ||
-      legacy_transaction.amount.blank?
+      legacy_transaction.amount.blank? ||
+      legacy_transaction.booked_at.blank?
   end
 
   def base_transaction_attributes_for(legacy_transaction)
