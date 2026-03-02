@@ -17,7 +17,7 @@ module Importable
     def build_from_import(row, our_account:, their_account:)
       update_counterparty_name(their_account, row)
       our_amount, their_amount = mutation_amounts_for(row)
-      return nil if duplicate_family_transfer?(row, our_account, their_account, our_amount)
+      return nil if duplicate_family_transfer?(row, our_account, their_account, our_amount, their_amount)
       build_transaction(row, our_account, their_account, our_amount, their_amount)
     end
 
@@ -33,12 +33,16 @@ module Importable
       [ row.amount, -row.amount ]
     end
 
-    def duplicate_family_transfer?(row, our_account, their_account, our_amount)
+    def duplicate_family_transfer?(row, our_account, their_account, our_amount, their_amount)
       return false unless their_account&.owner.present?
 
-      Mutation.joins(:journal_entry)
-              .where(account: our_account, amount: our_amount)
-              .where(transactions: { booked_at: row.date })
+      candidate_transaction_ids = Mutation.joins(:journal_entry)
+                                        .where(account: our_account, amount: our_amount)
+                                        .where(transactions: { booked_at: row.date })
+                                        .select(:transaction_id)
+
+      Mutation.where(transaction_id: candidate_transaction_ids)
+              .where(account: their_account, amount: their_amount)
               .exists?
     end
 

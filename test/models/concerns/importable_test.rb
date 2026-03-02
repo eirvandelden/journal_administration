@@ -77,6 +77,29 @@ class ImportableTest < ActiveSupport::TestCase
     assert_not_nil txn
   end
 
+  test "build_from_import does not deduplicate different family transfers with same date and amount" do
+    existing_txn = Transaction.new(booked_at: Date.new(2024, 1, 15))
+    existing_txn.mutations.build(account: accounts(:checking), amount: -500)
+    existing_txn.mutations.build(account: accounts(:savings), amount: 500)
+    existing_txn.save!
+
+    second_family_account = Account.create!(
+      account_number: "NL00TEST0000000002",
+      name: "Second Family Account",
+      owner: :michelle,
+      account_type: :asset
+    )
+    row = ing_row(direction: "Af", amount: 500, date: DateTime.new(2024, 1, 15), description: "Second transfer")
+
+    txn = Transaction.build_from_import(
+      row,
+      our_account: accounts(:checking),
+      their_account: second_family_account
+    )
+
+    assert_not_nil txn
+  end
+
   test "build_from_import handles nil counterparty account without raising" do
     row = ing_row(direction: "Af", amount: 25.50)
 

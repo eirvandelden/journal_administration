@@ -56,6 +56,16 @@ class TransactionTest < ActiveSupport::TestCase
       assert_not transaction.valid?
       assert transaction.errors[:mutations].any?
     end
+
+    test "invalid when mutation amounts are missing without raising" do
+      transaction = Transaction.new(booked_at: Time.current)
+      transaction.mutations.build(account: accounts(:checking), amount: nil)
+      transaction.mutations.build(account: accounts(:albert_heijn), amount: nil)
+
+      assert_nothing_raised { assert_not transaction.valid? }
+      assert_includes transaction.mutations.first.errors[:amount], "can't be blank"
+      assert_includes transaction.mutations.second.errors[:amount], "can't be blank"
+    end
   end
 
   class AccessorsTest < TransactionTest
@@ -99,6 +109,14 @@ class TransactionTest < ActiveSupport::TestCase
 
       assert mutations_for_family_accounts.all? { |mutation| mutation.account.owner.present? }
       assert_equal 1, mutations_for_family_accounts.count
+    end
+
+    test "for_index preloads category and mutation accounts for transaction list rendering" do
+      transactions_for_index = Transaction.for_index.limit(5).to_a
+
+      assert transactions_for_index.all? { |transaction| transaction.association(:category).loaded? }
+      assert transactions_for_index.all? { |transaction| transaction.association(:mutations).loaded? }
+      assert transactions_for_index.flat_map(&:mutations).all? { |mutation| mutation.association(:account).loaded? }
     end
   end
 
