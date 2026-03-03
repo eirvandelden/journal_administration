@@ -3,13 +3,13 @@
 <% content_for :header do %>
   <nav>
     <%= link_to users_path, class: "btn" do %>
-      ←
+      <span aria-hidden="true">←</span>
       <span class="for-screen-reader">Go back</span>
     <% end %>
 
     <div class="breadcrumbs">
       <%= link_to users_path, class: "btn borderless txt-small flex-item-no-shrink" do %>
-        👥
+        <span aria-hidden="true">👥</span>
         <span class="for-screen-reader">Manage people</span>
       <% end %>
       <span class="flex-item-no-shrink">▸</span>
@@ -25,7 +25,7 @@
       <%= translation_button(:user_name) %>
       <label class="flex align-center gap input input--actor">
         <%= form.text_field :name, class: "input full-width", autocomplete: "name", placeholder: "Name", autofocus: true, required: true, data: { "1p-ignore": true } %>
-        👤
+        <span aria-hidden="true">👤</span>
       </label>
     </div>
     <div class="flex align-center gap">
@@ -48,11 +48,11 @@
               User.locales.keys.map { |l| [t(".locale_#{l}"), l] },
               {},
               class: "input full-width" %>
-        🌐
+        <span aria-hidden="true">🌐</span>
       </label>
     </div>
     <button type="submit" class="btn btn--reversed center">
-      ✓
+      <span aria-hidden="true">✓</span>
       <span class="for-screen-reader">Save changes</span>
     </button>
   <% end %>
@@ -64,7 +64,7 @@
 
 <div class="panel margin-block-double shadow center">
   <%= button_to session_path, method: :delete, class: "btn center" do %>
-    🚪
+    <span aria-hidden="true">🚪</span>
     <span class="for-screen-reader">Sign out</span>
   <% end %>
 </div>

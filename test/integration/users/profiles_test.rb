@@ -34,6 +34,16 @@ class Users::ProfilesTest < ActionDispatch::IntegrationTest
     assert_equal original_digest, @member.reload.password_digest
   end
 
+  test "update with invalid locale keeps existing locale" do
+    sign_in_as(@member)
+    original_locale = @member.locale
+
+    patch user_profile_path(@member), params: { user: { locale: "unknown" } }
+
+    assert_redirected_to user_profile_path(@member)
+    assert_equal original_locale, @member.reload.locale
+  end
+
   test "another user cannot access the edit form" do
     sign_in_as(@other)
     get edit_user_profile_path(@member)
