@@ -9,10 +9,12 @@ en:
       edit: Edit
       id: Id
       name: Name
-      new_account: New Account
+      new_account: "➕ New Account"
       owner: Owner
       show: Show
       update_transactions: Update Transactions
+    new:
+      title: "➕ New account"
     show:
       account_number: 'Account number:'
       category: 'Category:'
@@ -74,16 +76,16 @@ en:
         total_users: Total Users
         view: View
     nav:
-      back_to_site: Back to Site
-      dashboard: Dashboard
-      faultline: Faultline
-      users: Users
+      back_to_site: "🌐 Back to Site"
+      dashboard: "📊 Dashboard"
+      faultline: "🥷 Faultline"
+      users: "👥 Users"
     users:
       create:
-        success: User created successfully
+        success: "✅ User created successfully"
       destroy:
-        cannot_delete_self: You cannot delete yourself
-        success: User deleted successfully
+        cannot_delete_self: "🚫 You cannot delete yourself"
+        success: "✅ User deleted successfully"
       edit:
         submit: Update User
         title: Edit User
@@ -119,12 +121,37 @@ en:
         role: Role
         title: User Details
       update:
-        success: User updated successfully
+        success: "✅ User updated successfully"
   balance:
-    profit_or_loss: Profit/Loss
+    category_name: Category Name
+    credit: "🔴 Credit"
+    debit: "🟢 Debit"
+    profit_or_loss: "📊 Profit/Loss"
+    total_amount: "💰 Total amount"
+    totals: "🧮 Totals"
   categories:
+    index:
+      id: Id
+      name: Name
+      new_category: "➕ New Category"
+      parent: Parent
     main: Categories
-    new: New Category
+    new:
+      title: "➕ New category"
+  chattels:
+    edit:
+      title: Editing chattel
+    index:
+      new_chattel: "➕ New Chattel"
+    new:
+      title: "➕ New chattel"
+  common:
+    back: "↩️ Back"
+    confirm_destroy: "⚠️ Are you sure?"
+    destroy: "🔥 Destroy"
+    edit: "✏️ Edit"
+    save: "💾 Save"
+    show: "👁️"
   date:
     abbr_day_names:
     - Sun
@@ -227,7 +254,7 @@ en:
       second: Seconds
       year: Year
   errors:
-    admin_required: You must be an administrator to access this page.
+    admin_required: "🚫 You must be an administrator to access this page."
     format: "%{attribute} %{message}"
     messages:
       accepted: must be accepted
@@ -280,9 +307,9 @@ en:
       create: Create %{model}
       submit: Save %{model}
       update: Update %{model}
-  home: Thuis
-  journal: Journaal
-  left: Left
+  home: "🏠 Thuis"
+  journal: "📔 Journaal"
+  left: "📤 Left"
   number:
     currency:
       format:
@@ -336,7 +363,7 @@ en:
     precision:
       format:
         delimiter: ''
-  out_of_warranty: Out of warranty
+  out_of_warranty: "⚠️ Out of warranty"
   pagination:
     next: Next
     previous: Previous
@@ -360,23 +387,27 @@ en:
       date: Date
       description: Description
       edit: Edit
-      empty: Nothing to do. All transactions are categorized and all accounts are up to date.
+      empty: "🎉 Nothing to do. All transactions are categorized and all accounts are up to date."
       kind: Kind
       transaction: Transaction
       update_transactions: Update Transactions
-      upload_heading: Upload new CSV
+      upload_heading: "📥 Upload new CSV"
       upload_submit: Upload
   transactions:
     imports:
       create:
-        file_too_large: File too large. Maximum size is 5MB.
-        import_complete: Import complete.
-        import_failed: "%{count} transactions failed to import"
-        invalid_file_type: Invalid file type. Please upload a CSV file.
-        no_file: Please select a CSV file to upload.
+        file_too_large: "⚠️ File too large. Maximum size is 5MB."
+        import_complete: "✅ Import complete."
+        import_failed: "❌ %{count} transactions failed to import"
+        invalid_file_type: "⚠️ Invalid file type. Please upload a CSV file."
+        no_file: "⚠️ Please select a CSV file to upload."
     index:
-      new_transaction: New Transaction
+      all_transactions: "📋 All transactions"
+      consolidatable: "🔍 Consolidatable"
+      new_transaction: "➕ New Transaction"
       upload: Upload
+    new:
+      title: "➕ New transaction"
     table:
       amount: Amount
       booked_at: Booked at date
@@ -396,4 +427,4 @@ en:
         locale_nl: "🇳🇱 Nederlands"
       update:
         success: Profile updated
-  warrantied: Warrantied
+  warrantied: "🛡️ Warrantied"

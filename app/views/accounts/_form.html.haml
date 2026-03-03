@@ -1,7 +1,7 @@
 = form_for @account do |f|
   - if @account.errors.any?
     #error_explanation
-      %h2= "#{pluralize(@account.errors.count, "error")} prohibited this account from being saved:"
+      %h2= t('errors.template.header', count: @account.errors.count, model: Account.model_name.human.downcase)
       %ul
         - @account.errors.full_messages.each do |message|
           %li= message
@@ -22,4 +22,4 @@
     = f.label :category_id
     = f.collection_select :category_id, Category.all.order(:name), :id, :name, { include_blank: true }
   .actions
-    = f.submit 'Save'
+    = f.submit t('common.save')
