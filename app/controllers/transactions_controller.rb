@@ -9,7 +9,7 @@ class TransactionsController < ApplicationController
     transactions = Transaction.for_index
     transactions = transactions.where(category: nil) if params[:filter] == "no_category"
 
-    @transactions = set_page_and_extract_portion_from transactions.order(interest_at: :desc), per_page: [20]
+    @transactions = set_page_and_extract_portion_from transactions.order(interest_at: :desc), per_page: [ 20 ]
   end
 
   # Displays a single transaction
