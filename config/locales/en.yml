@@ -10,6 +10,7 @@ en:
       external_accounts: External Accounts
       id: Id
       name: Name
+      external_accounts: External Accounts
       new_account: "➕ New Account"
       own_accounts: Family Accounts
       owner: Owner
