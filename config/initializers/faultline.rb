@@ -44,11 +44,10 @@ Faultline.configure do |config|
   # Return true if the user should have access to the dashboard
   # IMPORTANT: Configure this before deploying to production!
   config.authenticate_with = lambda do |request|
-    raw = request.cookies[:session_token]
-    next false unless raw
-    token = Rails.application.message_verifier("signed cookie").verify(raw)
+    token = request.cookie_jar.signed[:session_token]
+    next false unless token
     Session.find_by(token: token)&.user&.can_administer?
-  rescue ActiveSupport::MessageVerifier::InvalidSignature
+  rescue => e
     false
   end
 
