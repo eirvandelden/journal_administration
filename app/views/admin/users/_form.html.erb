@@ -20,6 +20,9 @@
     <label for="user_role"><%= t(".role") %></label>
     <%= form.select :role, User.roles.keys.map { |r| [r, r] }, {}, required: true %>
 
+    <label for="user_locale"><%= t(".locale") %></label>
+    <%= form.select :locale, locale_options_for_select, {}, required: true %>
+
     <label for="user_password"><%= t(".password") %></label>
     <%= form.password_field :password, required: user.new_record? %>
 

@@ -92,6 +92,7 @@ it:
       form:
         cancel: Annulla
         email: Email
+        locale: Lingua
         name: Nome
         password: Password
         password_confirmation: Conferma password
@@ -151,7 +152,7 @@ it:
     destroy: "🔥 Elimina"
     edit: "✏️ Modifica"
     save: "💾 Salva"
-    show: "👁️"
+    show: "👁️ Mostra"
   date:
     abbr_day_names:
     - dom
@@ -309,7 +310,16 @@ it:
       update: Aggiorna %{model}
   home: "🏠 Home"
   journal: "📔 Registro"
+  language_names:
+    en: English
+    it: Italiano
+    nl: Nederlands
   left: "📤 Usciti"
+  main_nav:
+    accounts: "🏦 %{model}"
+    categories: "🏷️ %{model}"
+    chattels: "📦 %{model}"
+    todo: "✅ %{model}"
   number:
     currency:
       format:
@@ -380,6 +390,10 @@ it:
       long: "%d %B %Y %H:%M"
       short: "%d %b %H:%M"
     pm: pm
+  users:
+    profiles:
+      edit:
+        language: Lingua
   todos:
     index:
       account: Conto

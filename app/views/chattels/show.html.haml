@@ -17,10 +17,10 @@
   = @chattel.purchase_transaction
 %p
   %b= "#{Chattel.human_attribute_name(:purchased_at)}:"
-  = l @chattel.purchased_at, format: :short
+  = l(@chattel.purchased_at, format: :short) if @chattel.purchased_at.present?
 %p
   %b= "#{Chattel.human_attribute_name(:warranty_expires_at)}:"
-  = l @chattel.warranty_expires_at, format: :short
+  = l(@chattel.warranty_expires_at, format: :short) if @chattel.warranty_expires_at.present?
 %p
   %b= "#{Chattel.human_attribute_name(:left_possession_at)}:"
   = l @chattel.left_possession_at, format: :short if @chattel.left_possession_at

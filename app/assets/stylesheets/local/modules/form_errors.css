@@ -1,8 +1,19 @@
 /* Rails form error styling - adapt to MVPA.css structure */
 .field_with_errors {
-  padding: 2px;
-  background-color: var(--color-danger, red);
-  display: table;
+  display: block;
+  width: 100%;
+  padding: 0;
+  background: transparent;
+}
+
+.field_with_errors > label {
+  color: var(--color-danger, #c00);
+}
+
+.field_with_errors > input,
+.field_with_errors > textarea,
+.field_with_errors > select {
+  border-color: var(--color-danger, #c00);
 }
 
 #error_explanation {

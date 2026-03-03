@@ -3,57 +3,46 @@ require "application_system_test_case"
 class ChattelsTest < ApplicationSystemTestCase
   setup do
     @chattel = chattels(:one)
+    @user = users(:member)
+    @locale = @user.locale.to_sym
+    sign_in_as(@user)
   end
 
   test "visiting the index" do
     visit chattels_url
-    assert_selector "h1", text: "Chattels"
+    assert_link I18n.t("chattels.index.new_chattel", locale: @locale)
   end
 
   test "should create chattel" do
     visit chattels_url
-    click_on "New chattel"
+    click_on I18n.t("chattels.index.new_chattel", locale: @locale)
 
-    fill_in "Kind", with: @chattel.kind
-    fill_in "Left posession at", with: @chattel.left_possession_at
-    fill_in "Model number", with: @chattel.model_number
-    fill_in "Name", with: @chattel.name
-    fill_in "Notes", with: @chattel.notes
-    fill_in "Purchase price", with: @chattel.purchase_price
-    fill_in "Purchase transaction", with: @chattel.purchase_transaction_id
-    fill_in "Purchased at", with: @chattel.purchased_at
-    fill_in "Serial number", with: @chattel.serial_number
-    fill_in "Warranty expires at", with: @chattel.warranty_expires_at
-    click_on "Create Chattel"
+    fill_in "chattel_name", with: "System Test Chattel"
+    click_on I18n.t("common.save", locale: @locale)
 
     assert_text "Chattel was successfully created"
-    click_on "Back"
+    click_on I18n.t("common.back", locale: @locale)
   end
 
   test "should update Chattel" do
     visit chattel_url(@chattel)
-    click_on "Edit this chattel", match: :first
+    click_on I18n.t("common.edit", locale: @locale), match: :first
 
-    fill_in "Kind", with: @chattel.kind
-    fill_in "Left posession at", with: @chattel.left_possession_at.to_s
-    fill_in "Model number", with: @chattel.model_number
-    fill_in "Name", with: @chattel.name
-    fill_in "Notes", with: @chattel.notes
-    fill_in "Purchase price", with: @chattel.purchase_price
-    fill_in "Purchase transaction", with: @chattel.purchase_transaction_id
-    fill_in "Purchased at", with: @chattel.purchased_at.to_s
-    fill_in "Serial number", with: @chattel.serial_number
-    fill_in "Warranty expires at", with: @chattel.warranty_expires_at.to_s
-    click_on "Update Chattel"
+    fill_in "chattel_name", with: "#{@chattel.name} updated"
+    click_on I18n.t("common.save", locale: @locale)
 
     assert_text "Chattel was successfully updated"
-    click_on "Back"
+    click_on I18n.t("common.back", locale: @locale)
   end
 
   test "should destroy Chattel" do
-    visit chattel_url(@chattel)
-    click_on "Destroy this chattel", match: :first
+    visit chattels_url
 
-    assert_text "Chattel was successfully destroyed"
+    assert_difference("Chattel.count", -1) do
+      accept_confirm do
+        click_on I18n.t("common.destroy", locale: @locale), match: :first
+      end
+      assert_text "Chattel was successfully destroyed"
+    end
   end
 end
