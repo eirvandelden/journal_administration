@@ -9,7 +9,9 @@ it:
       edit: Modifica
       id: Id
       name: Nome
+      external_accounts: Conti esterni
       new_account: "➕ Nuovo conto"
+      own_accounts: Conti di famiglia
       owner: Proprietario
       show: Mostra
       update_transactions: Aggiorna transazioni
