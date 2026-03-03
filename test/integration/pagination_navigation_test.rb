@@ -59,22 +59,23 @@ class PaginationNavigationTest < ActionDispatch::IntegrationTest
     end
 
     def create_uncategorized_transactions(count)
-      debitor = accounts(:checking)
-      creditor = accounts(:unknown)
+      outgoing_account = accounts(:checking)
+      incoming_account = accounts(:unknown)
 
       count.times do |index|
-        Transaction.create!(uncategorized_transaction_attributes(index, debitor:, creditor:))
+        create_uncategorized_transaction(index, outgoing_account:, incoming_account:)
       end
     end
 
-    def uncategorized_transaction_attributes(index, debitor:, creditor:)
-      {
-        amount: index + 1,
+    def create_uncategorized_transaction(index, outgoing_account:, incoming_account:)
+      transaction = Transaction.new(
         booked_at: index.minutes.ago,
         interest_at: index.minutes.ago,
-        debitor: debitor,
-        creditor: creditor,
         note: "Pagination transaction #{index}"
-      }
+      )
+      amount = index + 1
+      transaction.mutations.build(account: outgoing_account, amount: -amount)
+      transaction.mutations.build(account: incoming_account, amount: amount)
+      transaction.save!
     end
 end

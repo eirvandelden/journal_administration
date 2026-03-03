@@ -142,16 +142,16 @@ nl:
     new:
       title: "➕ Nieuwe categorie"
   chattels:
+    create:
+      success: Bezitting is succesvol aangemaakt.
+    destroy:
+      success: Bezitting is succesvol verwijderd.
     edit:
       title: Bezitting bewerken
     index:
       new_chattel: "➕ Nieuwe bezitting"
     new:
       title: "➕ Nieuwe bezitting"
-    create:
-      success: Bezitting is succesvol aangemaakt.
-    destroy:
-      success: Bezitting is succesvol verwijderd.
     update:
       success: Bezitting is succesvol bijgewerkt.
   common:

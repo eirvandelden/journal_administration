@@ -142,16 +142,16 @@ it:
     new:
       title: "➕ Nuova categoria"
   chattels:
+    create:
+      success: Bene creato con successo.
+    destroy:
+      success: Bene eliminato con successo.
     edit:
       title: Modifica bene
     index:
       new_chattel: "➕ Nuovo bene"
     new:
       title: "➕ Nuovo bene"
-    create:
-      success: Bene creato con successo.
-    destroy:
-      success: Bene eliminato con successo.
     update:
       success: Bene aggiornato con successo.
   common:

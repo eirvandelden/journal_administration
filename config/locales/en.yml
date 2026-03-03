@@ -142,16 +142,16 @@ en:
     new:
       title: "➕ New category"
   chattels:
+    create:
+      success: Chattel was successfully created.
+    destroy:
+      success: Chattel was successfully destroyed.
     edit:
       title: Editing chattel
     index:
       new_chattel: "➕ New Chattel"
     new:
       title: "➕ New chattel"
-    create:
-      success: Chattel was successfully created.
-    destroy:
-      success: Chattel was successfully destroyed.
     update:
       success: Chattel was successfully updated.
   common:
