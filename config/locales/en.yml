@@ -390,10 +390,6 @@ en:
       long: "%B %d, %Y %H:%M"
       short: "%d %b %H:%M"
     pm: pm
-  users:
-    profiles:
-      edit:
-        language: Language
   todos:
     index:
       account: Account

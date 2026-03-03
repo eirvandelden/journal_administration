@@ -66,6 +66,35 @@ class Admin::UsersTest < ActionDispatch::IntegrationTest
     assert_equal "member", @member.reload.role
   end
 
+  test "admin update with invalid locale does not raise and keeps existing locale" do
+    sign_in_as(@admin)
+    original_locale = @member.locale
+
+    patch admin_user_path(@member), params: { user: { locale: "not-a-locale" } }
+
+    assert_redirected_to admin_user_path(@member)
+    assert_equal original_locale, @member.reload.locale
+  end
+
+  test "admin create with invalid locale falls back to default locale" do
+    sign_in_as(@admin)
+
+    assert_difference("User.count", 1) do
+      post admin_users_path,
+           params: { user: {
+             name: "Locale Fallback",
+             email_address: "locale-fallback@example.com",
+             role: "member",
+             locale: "not-a-locale",
+             password: "password123",
+             password_confirmation: "password123"
+           } }
+    end
+
+    created_user = User.order(:id).last
+    assert_equal User.new.locale, created_user.locale
+  end
+
   test "admin cannot delete themselves" do
     sign_in_as(@admin)
 
