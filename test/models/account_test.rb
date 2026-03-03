@@ -1,6 +1,24 @@
 require "test_helper"
 
 class AccountTest < ActiveSupport::TestCase
+  # -- scopes -----------------------------------------------------------------
+
+  test "own scope returns accounts with an owner" do
+    own = Account.own
+    assert_includes own, accounts(:checking)
+    assert_includes own, accounts(:savings)
+    assert_not_includes own, accounts(:albert_heijn)
+    assert_not_includes own, accounts(:employer)
+  end
+
+  test "external scope returns accounts without an owner" do
+    external = Account.external
+    assert_includes external, accounts(:albert_heijn)
+    assert_includes external, accounts(:employer)
+    assert_not_includes external, accounts(:checking)
+    assert_not_includes external, accounts(:savings)
+  end
+
   # -- owner enum -------------------------------------------------------------
 
   test "owner enum defines all family members" do

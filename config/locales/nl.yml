@@ -9,7 +9,9 @@ nl:
       edit: Bewerken
       id: Id
       name: Naam
+      external_accounts: Externe rekeningen
       new_account: "➕ Nieuwe rekening"
+      own_accounts: Familierekeningen
       owner: Eigenaar
       show: Tonen
       update_transactions: Transacties bijwerken

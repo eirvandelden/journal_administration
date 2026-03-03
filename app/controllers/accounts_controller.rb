@@ -6,7 +6,10 @@ class AccountsController < ApplicationController
   #
   # @return [void]
   def index
-    @records = set_page_and_extract_portion_from Account.all, per_page: [50]
+    @own_page      = GearedPagination::Recordset.new(Account.own,      per_page: [ 50 ]).page(params[:own_page])
+    @own_accounts  = @own_page.records
+    @external_page     = GearedPagination::Recordset.new(Account.external, per_page: [ 50 ]).page(params[:external_page])
+    @external_accounts = @external_page.records
   end
 
   # Displays a single account
