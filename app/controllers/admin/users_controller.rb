@@ -2,7 +2,7 @@ class Admin::UsersController < Admin::BaseController
   before_action :set_user, only: [ :show, :edit, :update, :destroy ]
 
   def index
-    @users = set_page_and_extract_portion_from User.order(created_at: :desc), per_page: [20]
+    @users = set_page_and_extract_portion_from User.order(created_at: :desc), per_page: [ 20 ]
   end
 
   def show
@@ -55,12 +55,14 @@ class Admin::UsersController < Admin::BaseController
   def create_user_params
     user_params.tap do |permitted|
       permitted[:role] = normalize_role(permitted[:role], fallback: "member")
+      permitted[:locale] = normalize_locale(permitted[:locale], fallback: User.new.locale)
     end
   end
 
   def update_user_params
     user_params.tap do |permitted|
       permitted[:role] = normalize_role(permitted[:role], fallback: @user.role)
+      permitted[:locale] = normalize_locale(permitted[:locale], fallback: @user.locale)
 
       if permitted[:password].blank? && permitted[:password_confirmation].blank?
         permitted.delete(:password)
@@ -71,5 +73,9 @@ class Admin::UsersController < Admin::BaseController
 
   def normalize_role(role, fallback:)
     role.presence_in(User.roles.keys) || fallback
+  end
+
+  def normalize_locale(locale, fallback:)
+    locale.presence_in(User.locales.keys) || fallback
   end
 end
