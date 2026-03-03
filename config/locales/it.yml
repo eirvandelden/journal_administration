@@ -388,9 +388,9 @@ it:
     profiles:
       edit:
         locale: Lingua
-        locale_en: "🇬🇧 Inglese"
+        locale_en: "🇬🇧 English"
         locale_it: "🇮🇹 Italiano"
-        locale_nl: "🇳🇱 Olandese"
+        locale_nl: "🇳🇱 Nederlands"
       update:
         success: Profilo aggiornato
   warrantied: In garanzia
