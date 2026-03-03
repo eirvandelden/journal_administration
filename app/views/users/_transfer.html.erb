@@ -17,31 +17,21 @@
   </label>
 
   <div class="flex align-center gap">
-    <div data-controller="dialog" class="flex-inline">
-      <%= tag.button class: "btn", data: { action: "dialog#open" } do %>
-        📷
-        <span class="for-screen-reader">Show auto-login QR code</span>
-      <% end %>
-
-      <dialog class="dialog panel shadow" data-dialog-target="dialog">
-        <%= qr_code_image(url) %>
-
-        <form method="dialog" class="flex justify-center">
-          <button class="btn panel__close" title="Close (esc)">
-            ✕
-            <span class="for-screen-reader">Close (esc)</span>
-          </button>
-        </form>
-      </dialog>
-    </div>
-
-    <%= button_to_copy_to_clipboard(url) do %>
-      📋
+    <%= tag.button type: "button", class: "btn", data: { controller: "clipboard", action: "clipboard#copy", clipboard_text_value: url } do %>
+      <span aria-hidden="true">📋</span>
       <span class="for-screen-reader">Copy auto-login link</span>
     <% end %>
 
-    <%= web_share_button(url, "Your sign-in link", "This is your own private sign-in URL, DO NOT SHARE IT. Use it to sign-in on another device or if you get locked out.") do %>
-      📤
+    <%= tag.button type: "button",
+                   class: "btn",
+                   data: {
+                     controller: "web-share",
+                     action: "web-share#share",
+                     web_share_url_value: url,
+                     web_share_title_value: "Your sign-in link",
+                     web_share_text_value: "This is your own private sign-in URL, DO NOT SHARE IT. Use it to sign-in on another device or if you get locked out."
+                   } do %>
+      <span aria-hidden="true">📤</span>
       <span class="for-screen-reader">Share auto-login link</span>
     <% end %>
   </div>
