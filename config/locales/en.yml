@@ -337,6 +337,9 @@ en:
       format:
         delimiter: ''
   out_of_warranty: Out of warranty
+  pagination:
+    next: Next
+    previous: Previous
   show: Show
   support:
     array:

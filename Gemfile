@@ -35,7 +35,7 @@ gem "csv"
 gem "data_migrate"                # Migrate data alongside schema
 gem "flutie"                      # Flutie provides some utility view helpers for use with Rails applications.
 gem "jbuilder" # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem "pagy", "~> 9.3" # The Ultimate Pagination Ruby Gem
+gem "geared_pagination", "~> 1.2"
 gem "symbol-fstring", require: "fstring/all" # Performance improvement
 gem "thruster"
 

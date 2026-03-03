@@ -2,7 +2,7 @@ class Admin::UsersController < Admin::BaseController
   before_action :set_user, only: [ :show, :edit, :update, :destroy ]
 
   def index
-    @pagy, @users = pagy(User.order(created_at: :desc), items: 20)
+    @users = set_page_and_extract_portion_from User.order(created_at: :desc), per_page: [20]
   end
 
   def show

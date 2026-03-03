@@ -337,6 +337,9 @@ it:
       format:
         delimiter: ''
   out_of_warranty: Fuori garanzia
+  pagination:
+    next: Successivo
+    previous: Precedente
   show: Mostra
   support:
     array:

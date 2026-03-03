@@ -1,0 +1,10 @@
+<% if page.number > 1 || !page.last? %>
+  <nav class="pagination">
+    <% if page.number > 1 %>
+      <%= link_to t("pagination.previous"), url_for(page: page.number - 1), rel: "prev" %>
+    <% end %>
+    <% unless page.last? %>
+      <%= link_to t("pagination.next"), url_for(page: page.next_param), rel: "next" %>
+    <% end %>
+  </nav>
+<% end %>
