@@ -1,40 +1,44 @@
-= form_for @chattel do |f|
-  - if @chattel.errors.any?
-    #error_explanation
-      %h2= t('errors.template.header', count: @chattel.errors.count, model: Chattel.model_name.human.downcase)
-      %ul
-        - @chattel.errors.full_messages.each do |message|
-          %li= message
+- disabled ||= nil
+%section
+  = form_for @chattel do |f|
+    - if @chattel.errors.any?
+      #error_explanation
+        %h2= t('errors.template.header', count: @chattel.errors.count, model: Chattel.model_name.human.downcase)
+        %ul
+          - @chattel.errors.full_messages.each do |message|
+            %li= message
 
-  .field
-    = f.label :name
-    = f.text_field :name
-  .field
-    = f.label :kind
-    = f.text_field :kind
-  .field
-    = f.label :model_number
-    = f.text_field :model_number
-  .field
-    = f.label :serial_number
-    = f.text_field :serial_number
-  .field
-    = f.label :purchase_transaction_id
-    = f.number_field :purchase_transaction_id
-  .field
-    = f.label :purchased_at
-    = f.date_field :purchased_at
-  .field
-    = f.label :warranty_expires_at
-    = f.date_field :warranty_expires_at
-  .field
-    = f.label :left_possession_at
-    = f.date_field :left_possession_at
-  .field
-    = f.label :purchase_price
-    = f.text_field :purchase_price
-  .field
-    = f.label :notes
-    = f.text_area :notes
-  .actions
-    = f.submit t('common.save')
+    - unless disabled
+      .actions
+        = f.submit t('common.save')
+
+    .field
+      = f.label :name
+      = f.text_field :name, disabled: disabled
+    .field
+      = f.label :kind
+      = f.text_field :kind, disabled: disabled
+    .field
+      = f.label :model_number
+      = f.text_field :model_number, disabled: disabled
+    .field
+      = f.label :serial_number
+      = f.text_field :serial_number, disabled: disabled
+    .field
+      = f.label :purchase_transaction_id
+      = f.number_field :purchase_transaction_id, disabled: disabled
+    .field
+      = f.label :purchased_at
+      = f.date_field :purchased_at, disabled: disabled
+    .field
+      = f.label :warranty_expires_at
+      = f.date_field :warranty_expires_at, disabled: disabled
+    .field
+      = f.label :left_possession_at
+      = f.date_field :left_possession_at, disabled: disabled
+    .field
+      = f.label :purchase_price
+      = f.text_field :purchase_price, disabled: disabled
+    .field
+      = f.label :notes
+      = f.text_area :notes, disabled: disabled

@@ -1,7 +1,8 @@
-%h1= t('.title')
+%header
+  %h1= @chattel.name
+  %nav
+    = link_to @chattel do
+      %b= t('common.show')
+    = button_to t('common.destroy'), @chattel, method: :delete, data: { turbo_confirm: t('common.confirm_destroy') }
 
 = render 'form'
-
-= link_to t('common.show'), @chattel
-\|
-= link_to t('common.back'), chattels_path
