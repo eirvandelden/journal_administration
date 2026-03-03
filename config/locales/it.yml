@@ -384,4 +384,13 @@ it:
       note: Nota
       show: Mostra
       type: Tipo
+  users:
+    profiles:
+      edit:
+        locale: Lingua
+        locale_en: "🇬🇧 Inglese"
+        locale_it: "🇮🇹 Italiano"
+        locale_nl: "🇳🇱 Olandese"
+      update:
+        success: Profilo aggiornato
   warrantied: In garanzia

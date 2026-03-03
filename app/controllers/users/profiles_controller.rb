@@ -23,13 +23,18 @@ class Users::ProfilesController < ApplicationController
   #
   # @return [void]
   def update
-    @user.update!(user_params)
-    redirect_to users_url
+    if @user.update(user_params)
+      redirect_to user_profile_path(@user), notice: t(".success")
+    else
+      render :edit, status: :unprocessable_entity
+    end
   end
 
   private
 
   def user_params
-    params.require(:user).permit(:name, :email_address, :password)
+    params.require(:user).permit(:name, :email_address, :password, :locale).tap do |permitted|
+      permitted.delete(:password) if permitted[:password].blank?
+    end
   end
 end

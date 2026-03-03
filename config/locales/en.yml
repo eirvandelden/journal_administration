@@ -384,4 +384,13 @@ en:
       note: Note
       show: Show
       type: Type
+  users:
+    profiles:
+      edit:
+        locale: Language
+        locale_en: "🇬🇧 English"
+        locale_it: "🇮🇹 Italian"
+        locale_nl: "🇳🇱 Dutch"
+      update:
+        success: Profile updated
   warrantied: Warrantied
