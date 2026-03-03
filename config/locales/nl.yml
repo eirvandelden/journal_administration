@@ -388,8 +388,8 @@ nl:
     profiles:
       edit:
         locale: Taal
-        locale_en: "🇬🇧 Engels"
-        locale_it: "🇮🇹 Italiaans"
+        locale_en: "🇬🇧 English"
+        locale_it: "🇮🇹 Italiano"
         locale_nl: "🇳🇱 Nederlands"
       update:
         success: Profiel bijgewerkt

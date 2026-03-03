@@ -389,8 +389,8 @@ en:
       edit:
         locale: Language
         locale_en: "🇬🇧 English"
-        locale_it: "🇮🇹 Italian"
-        locale_nl: "🇳🇱 Dutch"
+        locale_it: "🇮🇹 Italiano"
+        locale_nl: "🇳🇱 Nederlands"
       update:
         success: Profile updated
   warrantied: Warrantied
