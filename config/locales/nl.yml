@@ -92,6 +92,7 @@ nl:
       form:
         cancel: Annuleren
         email: E-mail
+        locale: Taal
         name: Naam
         password: Wachtwoord
         password_confirmation: Wachtwoord bevestigen
@@ -151,7 +152,7 @@ nl:
     destroy: "🔥 Verwijderen"
     edit: "✏️ Bewerken"
     save: "💾 Opslaan"
-    show: "👁️"
+    show: "👁️ Tonen"
   date:
     abbr_day_names:
     - zo
@@ -309,7 +310,16 @@ nl:
       update: "%{model} bijwerken"
   home: "🏠 Thuis"
   journal: "📔 Journaal"
+  language_names:
+    en: English
+    it: Italiano
+    nl: Nederlands
   left: "📤 Verlaten"
+  main_nav:
+    accounts: "🏦 %{model}"
+    categories: "🏷️ %{model}"
+    chattels: "📦 %{model}"
+    todo: "✅ %{model}"
   number:
     currency:
       format:
@@ -380,6 +390,10 @@ nl:
       long: "%d %B %Y %H:%M"
       short: "%d %b %H:%M"
     pm: "'s middags"
+  users:
+    profiles:
+      edit:
+        language: Taal
   todos:
     index:
       account: Rekening

@@ -11,5 +11,5 @@
 = render partial: 'form'
 
 %section
-  = link_to @transaction, method: :delete, data: { confirm: t('common.confirm_destroy') } do
+  = link_to @transaction, data: { turbo_method: :delete, turbo_confirm: t('common.confirm_destroy') } do
     %b= t('common.destroy')

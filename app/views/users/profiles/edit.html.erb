@@ -44,11 +44,8 @@
     </div>
     <div class="flex align-center gap">
       <label class="flex align-center gap input input--actor">
-        <%= form.select :locale,
-              User.locales.keys.map { |l| [t(".locale_#{l}"), l] },
-              {},
-              class: "input full-width" %>
-        <span aria-hidden="true">🌐</span>
+        <%= form.select :locale, locale_options_for_select, {}, class: "input full-width", aria: { label: t(".language") } %>
+        <%= image_tag "globe.svg", aria: { hidden: "true" }, size: 30, class: "colorize--black" %>
       </label>
     </div>
     <button type="submit" class="btn btn--reversed center">
