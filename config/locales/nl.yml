@@ -384,4 +384,13 @@ nl:
       note: Opmerking
       show: Tonen
       type: Type
+  users:
+    profiles:
+      edit:
+        locale: Taal
+        locale_en: "🇬🇧 Engels"
+        locale_it: "🇮🇹 Italiaans"
+        locale_nl: "🇳🇱 Nederlands"
+      update:
+        success: Profiel bijgewerkt
   warrantied: Warrantied
