@@ -1,10 +1,13 @@
-<% if page.number > 1 || !page.last? %>
+<% show_previous = page.number > 1 %>
+<% show_next = page.before_last? %>
+
+<% if show_previous || show_next %>
   <nav class="pagination">
-    <% if page.number > 1 %>
-      <%= link_to t("pagination.previous"), url_for(page: page.number - 1), rel: "prev" %>
+    <% if show_previous %>
+      <%= link_to t("pagination.previous"), url_for(request.query_parameters.merge(page: page.number - 1)), rel: "prev" %>
     <% end %>
-    <% unless page.last? %>
-      <%= link_to t("pagination.next"), url_for(page: page.next_param), rel: "next" %>
+    <% if show_next %>
+      <%= link_to t("pagination.next"), url_for(request.query_parameters.merge(page: page.next_param)), rel: "next" %>
     <% end %>
   </nav>
 <% end %>
