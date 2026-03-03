@@ -6,9 +6,9 @@ class AccountsController < ApplicationController
   #
   # @return [void]
   def index
-    @own_page      = GearedPagination::Recordset.new(Account.own,      per_page: [ 50 ]).page(params[:own_page])
-    @own_accounts  = @own_page.records
-    @external_page     = GearedPagination::Recordset.new(Account.external, per_page: [ 50 ]).page(params[:external_page])
+    @own_page = GearedPagination::Recordset.new(Account.own.order(:id), per_page: [ 50 ]).page(params[:own_page])
+    @own_accounts = @own_page.records
+    @external_page = GearedPagination::Recordset.new(Account.external.order(:id), per_page: [ 50 ]).page(params[:external_page])
     @external_accounts = @external_page.records
   end
 
