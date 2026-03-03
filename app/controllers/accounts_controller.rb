@@ -6,7 +6,7 @@ class AccountsController < ApplicationController
   #
   # @return [void]
   def index
-    @pagy, @records = pagy Account.all
+    @records = set_page_and_extract_portion_from Account.all, per_page: [50]
   end
 
   # Displays a single account

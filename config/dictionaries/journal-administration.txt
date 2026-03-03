@@ -1,4 +1,3 @@
-~pagy
 Bedrag
 Belastingdienst
 beschrijving

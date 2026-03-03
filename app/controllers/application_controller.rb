@@ -1,6 +1,5 @@
 class ApplicationController < ActionController::Base
   include Authentication, Authorization, VersionHeaders
-  include Pagy::Backend
 
   protect_from_forgery with: :exception
   around_action :switch_locale
