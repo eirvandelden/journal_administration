@@ -11,7 +11,7 @@ module CategoriesHelper
 
     # First nameless group with parent categories
     parent_options = parents.map { |p| [ p.name, p.id ] }
-    groups << [ I18n.t("categories.main"), parent_options ] if parent_options.any?
+    groups << [ "", parent_options ] if parent_options.any?
 
     # Then one group per parent with its children
     parents.each do |parent|

@@ -1,15 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html data-theme="selenized_light" data-color-scheme="system">
   <head>
     <title>JournalAdministration</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <%= stylesheet_link_tag 'base/_index.css', media: 'all', 'data-turbo-track': 'reload' %>
-    <%= stylesheet_link_tag 'layout/_index.css', media: 'all', 'data-turbo-track': 'reload' %>
-    <%= stylesheet_link_tag 'modules/_index.css', media: 'all', 'data-turbo-track': 'reload' %>
-    <%= stylesheet_link_tag 'state/_index.css', media: 'all', 'data-turbo-track': 'reload' %>
-    <%= stylesheet_link_tag 'theme/_index.css', media: 'all', 'data-turbo-track': 'reload' %>
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbo-track': 'reload' %>
 
     <%= javascript_importmap_tags %>
   </head>
@@ -31,13 +27,14 @@
           <li>
             <%= link_to t('journal'), transactions_path %>
             <ul>
-              <li><%= link_to 'All transactions', transactions_path %></li>
-              <li><%= link_to 'Consolidatable', transactions_path(filter: :no_category) %></li>
+              <li><%= link_to t('transactions.index.all_transactions'), transactions_path %></li>
+              <li><%= link_to t('transactions.index.consolidatable'), transactions_path(filter: :no_category) %></li>
             </ul>
           </li>
-          <li><%= link_to Account.model_name.human, accounts_path %></li>
-          <li><%= link_to Category.model_name.human, categories_path %></li>
-          <li><%= link_to Chattel.model_name.human, chattels_path %></li>
+          <li><%= link_to t('main_nav.accounts', model: Account.model_name.human), accounts_path %></li>
+          <li><%= link_to t('main_nav.categories', model: Category.model_name.human), categories_path %></li>
+          <li><%= link_to t('main_nav.chattels', model: Chattel.model_name.human), chattels_path %></li>
+          <li><%= link_to t('main_nav.todo', model: Todo.model_name.human), todo_path %></li>
         </ul>
       </nav>
       <%= yield(:secondary_nav) %>

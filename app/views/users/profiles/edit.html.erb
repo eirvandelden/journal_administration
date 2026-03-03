@@ -3,15 +3,13 @@
 <% content_for :header do %>
   <nav>
     <%= link_to users_path, class: "btn" do %>
-      <%= image_tag "arrow-left.svg", aria: { hidden: true }, size: 24 %>
+      <span aria-hidden="true">←</span>
       <span class="for-screen-reader">Go back</span>
     <% end %>
 
     <div class="breadcrumbs">
-      <%= render "books/index_link" %>
-      <span class="flex-item-no-shrink">▸</span>
       <%= link_to users_path, class: "btn borderless txt-small flex-item-no-shrink" do %>
-        <%= image_tag "people.svg", aria: { label: "People" }, size: 19, class: "colorize--black", alt: "People" %>
+        <span aria-hidden="true">👥</span>
         <span class="for-screen-reader">Manage people</span>
       <% end %>
       <span class="flex-item-no-shrink">▸</span>
@@ -27,7 +25,7 @@
       <%= translation_button(:user_name) %>
       <label class="flex align-center gap input input--actor">
         <%= form.text_field :name, class: "input full-width", autocomplete: "name", placeholder: "Name", autofocus: true, required: true, data: { "1p-ignore": true } %>
-        <%= image_tag "person.svg", aria: { hidden: "true" }, size: 30, class: "colorize--black" %>
+        <span aria-hidden="true">👤</span>
       </label>
     </div>
     <div class="flex align-center gap">
@@ -44,8 +42,14 @@
         <%= image_tag "password.svg", aria: { hidden: "true" }, size: 30, class: "colorize--black" %>
       </label>
     </div>
+    <div class="flex align-center gap">
+      <label class="flex align-center gap input input--actor">
+        <%= form.select :locale, locale_options_for_select, {}, class: "input full-width", aria: { label: t(".locale") } %>
+        <%= image_tag "globe.svg", aria: { hidden: "true" }, size: 30, class: "colorize--black" %>
+      </label>
+    </div>
     <button type="submit" class="btn btn--reversed center">
-      <%= image_tag "check.svg", aria: { hidden: true }, size: 24 %>
+      <span aria-hidden="true">✓</span>
       <span class="for-screen-reader">Save changes</span>
     </button>
   <% end %>
@@ -57,7 +61,7 @@
 
 <div class="panel margin-block-double shadow center">
   <%= button_to session_path, method: :delete, class: "btn center" do %>
-    <%= image_tag "logout.svg", aria: { hidden: true }, size: 24 %>
+    <span aria-hidden="true">🚪</span>
     <span class="for-screen-reader">Sign out</span>
   <% end %>
 </div>

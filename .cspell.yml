@@ -2,6 +2,9 @@ version: "0.2"
 language: en
 words:
   # Add project-specific terms, acronyms, or Railsisms here
+  - Osaasy
+  - O'Saasy
+  - MVPA
   - Rakefile
   - ActiveRecord
   - ActiveSupport
@@ -14,6 +17,10 @@ words:
   - FactoryBot
   - Rubygems
   - Gemfile
+  - Recordset
+  - Pagy
+  - NLOWN
+  - NLEXT
 ignorePaths:
   - app/assets
   - bin/**

@@ -1,9 +1,0 @@
-nav.pagy {
-  a {
-    padding: .2rem 0;
-  }
-  a[aria-disabled] {
-      text-decoration: none;
-    }
-  }
-}

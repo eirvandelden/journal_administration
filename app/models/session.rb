@@ -5,7 +5,10 @@ class Session < ApplicationRecord
 
   belongs_to :user
 
-  before_create { self.last_active_at ||= Time.now }
+  validates :token, presence: true, uniqueness: true
+  validates :last_active_at, presence: true
+
+  before_validation { self.last_active_at ||= Time.now }
 
   def self.start!(user_agent:, ip_address:)
     create! user_agent: user_agent, ip_address: ip_address

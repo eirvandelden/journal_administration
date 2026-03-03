@@ -1,0 +1,40 @@
+/* Rails form error styling - adapt to MVPA.css structure */
+.field_with_errors {
+  display: block;
+  width: 100%;
+  padding: 0;
+  background: transparent;
+}
+
+.field_with_errors > label {
+  color: var(--color-danger, #c00);
+}
+
+.field_with_errors > input,
+.field_with_errors > textarea,
+.field_with_errors > select {
+  border-color: var(--color-danger, #c00);
+}
+
+#error_explanation {
+  width: 450px;
+  border: 2px solid var(--color-danger, red);
+  padding: 7px 7px 0;
+  margin-bottom: 20px;
+  background-color: var(--color-bg-secondary, #f0f0f0);
+}
+
+#error_explanation h2 {
+  text-align: left;
+  font-weight: bold;
+  padding: 5px 5px 5px 15px;
+  font-size: 12px;
+  margin: -7px -7px 0;
+  background-color: var(--color-danger, #c00);
+  color: var(--color-bg, #fff);
+}
+
+#error_explanation ul li {
+  font-size: 12px;
+  list-style: square;
+}
