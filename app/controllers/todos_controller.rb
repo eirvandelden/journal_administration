@@ -7,6 +7,7 @@ class TodosController < ApplicationController
 
   Page = Struct.new(:number, :total_pages) do
     def last?      = number >= total_pages
+    def before_last? = number < total_pages
     def next_param = number + 1
   end
 
@@ -14,15 +15,21 @@ class TodosController < ApplicationController
   #
   # @return [void]
   def index
-    todo      = Todo.new
-    all_items = todo.items
-
-    total_pages = [(all_items.size.to_f / PER_PAGE).ceil, 1].max
-    page_number = [[params[:page].to_i, 1].max, total_pages].min
-
+    todo = Todo.new
     @show_upload_form = todo.show_upload_form?
     @empty            = todo.empty?
-    @page             = Page.new(page_number, total_pages)
-    @items            = all_items[(@page.number - 1) * PER_PAGE, PER_PAGE] || []
+    @items            = paginated_items(todo.items)
   end
+
+  private
+    def paginated_items(items)
+      @page = build_page(total_items: items.size)
+      items.slice((@page.number - 1) * PER_PAGE, PER_PAGE) || []
+    end
+
+    def build_page(total_items:)
+      total_pages = [ (total_items.to_f / PER_PAGE).ceil, 1 ].max
+      page_number = [ [ params[:page].to_i, 1 ].max, total_pages ].min
+      Page.new(page_number, total_pages)
+    end
 end
