@@ -3,13 +3,13 @@
 <table>
   <thead>
     <tr>
-      <th>Name</th>
-      <th>Kind</th>
-      <th>Model number</th>
-      <th>Purchased at</th>
-      <th>Warranty expires at</th>
-      <th>Left posession at</th>
-      <th>Purchase price</th>
+      <th><%= Chattel.human_attribute_name(:name) %></th>
+      <th><%= Chattel.human_attribute_name(:kind) %></th>
+      <th><%= Chattel.human_attribute_name(:model_number) %></th>
+      <th><%= Chattel.human_attribute_name(:purchased_at) %></th>
+      <th><%= Chattel.human_attribute_name(:warranty_expires_at) %></th>
+      <th><%= Chattel.human_attribute_name(:left_possession_at) %></th>
+      <th><%= Chattel.human_attribute_name(:purchase_price) %></th>
       <th></th>
       <th></th>
     </tr>
@@ -25,8 +25,8 @@
         <td><%= l(chattel.warranty_expires_at.to_date) if chattel.warranty_expires_at.present? %></td>
         <td><%= l(chattel.left_possession_at.to_date) if chattel.left_possession_at.present? %></td>
         <td><%= number_to_currency(chattel.purchase_price) %></td>
-        <td><%= link_to 'Edit', edit_chattel_path(chattel) %></td>
-        <td><%= link_to 'Destroy', chattel, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to t('common.edit'), edit_chattel_path(chattel) %></td>
+        <td><%= link_to t('common.destroy'), chattel, method: :delete, data: { confirm: t('common.confirm_destroy') } %></td>
       </tr>
     <% end %>
   </tbody>

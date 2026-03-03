@@ -9,10 +9,12 @@ nl:
       edit: Bewerken
       id: Id
       name: Naam
-      new_account: Nieuwe rekening
+      new_account: "➕ Nieuwe rekening"
       owner: Eigenaar
       show: Tonen
       update_transactions: Transacties bijwerken
+    new:
+      title: "➕ Nieuwe rekening"
     show:
       account_number: 'Rekeningnummer:'
       category: 'Categorie:'
@@ -74,16 +76,16 @@ nl:
         total_users: Totaal gebruikers
         view: Bekijken
     nav:
-      back_to_site: Terug naar site
-      dashboard: Dashboard
-      faultline: Faultline
-      users: Gebruikers
+      back_to_site: "🌐 Terug naar site"
+      dashboard: "📊 Dashboard"
+      faultline: "🥷 Faultline"
+      users: "👥 Gebruikers"
     users:
       create:
-        success: Gebruiker succesvol aangemaakt
+        success: "✅ Gebruiker succesvol aangemaakt"
       destroy:
-        cannot_delete_self: Je kunt jezelf niet verwijderen
-        success: Gebruiker succesvol verwijderd
+        cannot_delete_self: "🚫 Je kunt jezelf niet verwijderen"
+        success: "✅ Gebruiker succesvol verwijderd"
       edit:
         submit: Gebruiker bijwerken
         title: Gebruiker bewerken
@@ -119,12 +121,37 @@ nl:
         role: Rol
         title: Gebruikersdetails
       update:
-        success: Gebruiker succesvol bijgewerkt
+        success: "✅ Gebruiker succesvol bijgewerkt"
   balance:
-    profit_or_loss: Winst/Verlies
+    category_name: Categorienaam
+    credit: "🔴 Credit"
+    debit: "🟢 Debet"
+    profit_or_loss: "📊 Winst/Verlies"
+    total_amount: "💰 Totaalbedrag"
+    totals: "🧮 Totalen"
   categories:
+    index:
+      id: Id
+      name: Naam
+      new_category: "➕ Nieuwe categorie"
+      parent: Bovenliggend
     main: Hoofdcategoriëen
-    new: Nieuwe categorie
+    new:
+      title: "➕ Nieuwe categorie"
+  chattels:
+    edit:
+      title: Bezitting bewerken
+    index:
+      new_chattel: "➕ Nieuwe bezitting"
+    new:
+      title: "➕ Nieuwe bezitting"
+  common:
+    back: "↩️ Terug"
+    confirm_destroy: "⚠️ Weet je het zeker?"
+    destroy: "🔥 Verwijderen"
+    edit: "✏️ Bewerken"
+    save: "💾 Opslaan"
+    show: "👁️"
   date:
     abbr_day_names:
     - zo
@@ -227,7 +254,7 @@ nl:
       second: seconde
       year: jaar
   errors:
-    admin_required: Je moet een beheerder zijn om toegang te krijgen tot deze pagina.
+    admin_required: "🚫 Je moet een beheerder zijn om toegang te krijgen tot deze pagina."
     format: "%{attribute} %{message}"
     messages:
       accepted: moet worden geaccepteerd
@@ -280,9 +307,9 @@ nl:
       create: "%{model} toevoegen"
       submit: "%{model} opslaan"
       update: "%{model} bijwerken"
-  home: Thuis
-  journal: Journaal
-  left: Verlaten
+  home: "🏠 Thuis"
+  journal: "📔 Journaal"
+  left: "📤 Verlaten"
   number:
     currency:
       format:
@@ -336,7 +363,7 @@ nl:
     precision:
       format:
         delimiter: ''
-  out_of_warranty: Out of warranty
+  out_of_warranty: "⚠️ Out of warranty"
   pagination:
     next: Volgende
     previous: Vorige
@@ -360,23 +387,27 @@ nl:
       date: Datum
       description: Omschrijving
       edit: Bewerken
-      empty: Niets te doen. Alle transacties zijn gecategoriseerd en alle rekeningen zijn bijgewerkt.
+      empty: "🎉 Niets te doen. Alle transacties zijn gecategoriseerd en alle rekeningen zijn bijgewerkt."
       kind: Soort
       transaction: Transactie
       update_transactions: Transacties bijwerken
-      upload_heading: Nieuw CSV uploaden
+      upload_heading: "📥 Nieuw CSV uploaden"
       upload_submit: Uploaden
   transactions:
     imports:
       create:
-        file_too_large: Bestand te groot. Maximum grootte is 5MB.
-        import_complete: Import voltooid.
-        import_failed: "%{count} transacties konden niet worden geïmporteerd"
-        invalid_file_type: Ongeldig bestandstype. Upload een CSV-bestand.
-        no_file: Selecteer een CSV-bestand om te uploaden.
+        file_too_large: "⚠️ Bestand te groot. Maximum grootte is 5MB."
+        import_complete: "✅ Import voltooid."
+        import_failed: "❌ %{count} transacties konden niet worden geïmporteerd"
+        invalid_file_type: "⚠️ Ongeldig bestandstype. Upload een CSV-bestand."
+        no_file: "⚠️ Selecteer een CSV-bestand om te uploaden."
     index:
-      new_transaction: Nieuwe transactie
+      all_transactions: "📋 Alle transacties"
+      consolidatable: "🔍 Te consolideren"
+      new_transaction: "➕ Nieuwe transactie"
       upload: Uploaden
+    new:
+      title: "➕ Nieuwe transactie"
     table:
       amount: Bedrag
       booked_at: Boekingsdatum
@@ -396,4 +427,4 @@ nl:
         locale_nl: "🇳🇱 Nederlands"
       update:
         success: Profiel bijgewerkt
-  warrantied: Warrantied
+  warrantied: "🛡️ Warrantied"

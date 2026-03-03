@@ -9,10 +9,12 @@ it:
       edit: Modifica
       id: Id
       name: Nome
-      new_account: Nuovo conto
+      new_account: "➕ Nuovo conto"
       owner: Proprietario
       show: Mostra
       update_transactions: Aggiorna transazioni
+    new:
+      title: "➕ Nuovo conto"
     show:
       account_number: 'Numero conto:'
       category: 'Categoria:'
@@ -74,16 +76,16 @@ it:
         total_users: Utenti totali
         view: Mostra
     nav:
-      back_to_site: Torna al sito
-      dashboard: Dashboard
-      faultline: Faultline
-      users: Utenti
+      back_to_site: "🌐 Torna al sito"
+      dashboard: "📊 Dashboard"
+      faultline: "🥷 Faultline"
+      users: "👥 Utenti"
     users:
       create:
-        success: Utente creato con successo
+        success: "✅ Utente creato con successo"
       destroy:
-        cannot_delete_self: Non puoi eliminare te stesso
-        success: Utente eliminato con successo
+        cannot_delete_self: "🚫 Non puoi eliminare te stesso"
+        success: "✅ Utente eliminato con successo"
       edit:
         submit: Aggiorna utente
         title: Modifica utente
@@ -119,12 +121,37 @@ it:
         role: Ruolo
         title: Dettagli utente
       update:
-        success: Utente aggiornato con successo
+        success: "✅ Utente aggiornato con successo"
   balance:
-    profit_or_loss: Profitto/Perdita
+    category_name: Nome categoria
+    credit: "🔴 Credito"
+    debit: "🟢 Debito"
+    profit_or_loss: "📊 Profitto/Perdita"
+    total_amount: "💰 Importo totale"
+    totals: "🧮 Totali"
   categories:
+    index:
+      id: Id
+      name: Nome
+      new_category: "➕ Nuova categoria"
+      parent: Categoria madre
     main: Categorie
-    new: Nuova categoria
+    new:
+      title: "➕ Nuova categoria"
+  chattels:
+    edit:
+      title: Modifica bene
+    index:
+      new_chattel: "➕ Nuovo bene"
+    new:
+      title: "➕ Nuovo bene"
+  common:
+    back: "↩️ Indietro"
+    confirm_destroy: "⚠️ Sei sicuro?"
+    destroy: "🔥 Elimina"
+    edit: "✏️ Modifica"
+    save: "💾 Salva"
+    show: "👁️"
   date:
     abbr_day_names:
     - dom
@@ -227,7 +254,7 @@ it:
       second: Secondo
       year: Anno
   errors:
-    admin_required: Accesso amministratore richiesto
+    admin_required: "🚫 Accesso amministratore richiesto"
     format: "%{attribute} %{message}"
     messages:
       accepted: deve essere accettata
@@ -280,9 +307,9 @@ it:
       create: Crea %{model}
       submit: Invia %{model}
       update: Aggiorna %{model}
-  home: Home
-  journal: Registro
-  left: Usciti
+  home: "🏠 Home"
+  journal: "📔 Registro"
+  left: "📤 Usciti"
   number:
     currency:
       format:
@@ -336,7 +363,7 @@ it:
     precision:
       format:
         delimiter: ''
-  out_of_warranty: Fuori garanzia
+  out_of_warranty: "⚠️ Fuori garanzia"
   pagination:
     next: Successivo
     previous: Precedente
@@ -360,23 +387,27 @@ it:
       date: Data
       description: Descrizione
       edit: Modifica
-      empty: Nulla da fare. Tutte le transazioni sono categorizzate e tutti i conti sono aggiornati.
+      empty: "🎉 Nulla da fare. Tutte le transazioni sono categorizzate e tutti i conti sono aggiornati."
       kind: Tipo
       transaction: Transazione
       update_transactions: Aggiorna transazioni
-      upload_heading: Carica un nuovo CSV
+      upload_heading: "📥 Carica un nuovo CSV"
       upload_submit: Carica
   transactions:
     imports:
       create:
-        file_too_large: File troppo grande. La dimensione massima è 5MB.
-        import_complete: Importazione completata.
-        import_failed: "%{count} transazioni non sono state importate"
-        invalid_file_type: Tipo di file non valido. Carica un file CSV.
-        no_file: Seleziona un file CSV da caricare.
+        file_too_large: "⚠️ File troppo grande. La dimensione massima è 5MB."
+        import_complete: "✅ Importazione completata."
+        import_failed: "❌ %{count} transazioni non sono state importate"
+        invalid_file_type: "⚠️ Tipo di file non valido. Carica un file CSV."
+        no_file: "⚠️ Seleziona un file CSV da caricare."
     index:
-      new_transaction: Nuova transazione
+      all_transactions: "📋 Tutte le transazioni"
+      consolidatable: "🔍 Da consolidare"
+      new_transaction: "➕ Nuova transazione"
       upload: Carica
+    new:
+      title: "➕ Nuova transazione"
     table:
       amount: Importo
       booked_at: Data registrazione
@@ -396,4 +427,4 @@ it:
         locale_nl: "🇳🇱 Nederlands"
       update:
         success: Profilo aggiornato
-  warrantied: In garanzia
+  warrantied: "🛡️ In garanzia"

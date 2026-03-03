@@ -1,7 +1,7 @@
-%h1 Editing chattel
+%h1= t('.title')
 
 = render 'form'
 
-= link_to 'Show', @chattel
+= link_to t('common.show'), @chattel
 \|
-= link_to 'Back', chattels_path
+= link_to t('common.back'), chattels_path

@@ -1,14 +1,14 @@
 <table class="debit_credit">
   <thead>
     <tr>
-      <th colspan="2">Debit</th>
-      <th colspan="2">Credit</th>
+      <th colspan="2"><%= t('balance.debit') %></th>
+      <th colspan="2"><%= t('balance.credit') %></th>
     </tr>
     <tr>
-      <th>Category Name</th>
-      <th>Total amount</th>
-      <th>Category Name</th>
-      <th>Total amount</th>
+      <th><%= t('balance.category_name') %></th>
+      <th><%= t('balance.total_amount') %></th>
+      <th><%= t('balance.category_name') %></th>
+      <th><%= t('balance.total_amount') %></th>
     </tr>
   </thead>
   <tbody>
@@ -31,9 +31,9 @@
   </tbody>
   <tfoot>
     <tr>
-      <td>Totalen</td>
+      <td><%= t('balance.totals') %></td>
       <td class="amount"><%= number_to_currency debit_total %></td>
-      <td>Totalen</td>
+      <td><%= t('balance.totals') %></td>
       <td class="amount"><%= number_to_currency credit_total %></td>
     </tr>
   </tfoot>

@@ -3,7 +3,7 @@
   = form_for @category do |f|
     - if @category.errors.any?
       #error_explanation
-        %h2= "#{pluralize(@category.errors.count, "error")} prohibited this category from being saved:"
+        %h2= t('errors.template.header', count: @category.errors.count, model: Category.model_name.human.downcase)
         %ul
           - @category.errors.full_messages.each do |message|
             %li= message
@@ -19,4 +19,4 @@
 
     - unless disabled
       .actions
-        = f.submit 'Save'
+        = f.submit t('common.save')

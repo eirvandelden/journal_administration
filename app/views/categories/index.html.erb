@@ -2,9 +2,9 @@
   <thead>
     <tr>
       <th></th>
-      <th>Id</th>
-      <th>Name</th>
-      <th>Parent</th>
+      <th><%= t('.id') %></th>
+      <th><%= t('.name') %></th>
+      <th><%= t('.parent') %></th>
     </tr>
   </thead>
   <tbody>
@@ -27,5 +27,5 @@
 </table>
 
 <section>
-  <%= link_to t("categories.new"), new_category_path %>
+  <%= link_to t('.new_category'), new_category_path %>
 </section>

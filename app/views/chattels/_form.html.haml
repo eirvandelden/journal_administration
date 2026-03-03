@@ -1,7 +1,7 @@
 = form_for @chattel do |f|
   - if @chattel.errors.any?
     #error_explanation
-      %h2= "#{pluralize(@chattel.errors.count, "error")} prohibited this chattel from being saved:"
+      %h2= t('errors.template.header', count: @chattel.errors.count, model: Chattel.model_name.human.downcase)
       %ul
         - @chattel.errors.full_messages.each do |message|
           %li= message
@@ -37,4 +37,4 @@
     = f.label :notes
     = f.text_area :notes
   .actions
-    = f.submit 'Save'
+    = f.submit t('common.save')
