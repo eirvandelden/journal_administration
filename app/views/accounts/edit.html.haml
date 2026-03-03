@@ -1,5 +1,6 @@
-%h1
-  = @account.name
-  = link_to @account do
-    %b= t('common.show')
+%header
+  %h1= @account.name
+  %nav
+    = link_to @account do
+      %b= t('common.show')
 = render 'form'

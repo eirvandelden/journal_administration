@@ -1,9 +1,11 @@
-<h1>
-  <%= @account.name %>
-  <%= link_to edit_account_path(@account) do %>
-    <b><%= t('.edit') %></b>
-  <% end %>
-</h1>
+<header>
+  <h1><%= @account.name %></h1>
+  <nav>
+    <%= link_to edit_account_path(@account) do %>
+      <b><%= t('.edit') %></b>
+    <% end %>
+  </nav>
+</header>
 
 <p>
   <b><%= t('.id') %></b>

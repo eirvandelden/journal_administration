@@ -1,8 +1,8 @@
-%h1
-  = @category.name
-  = link_to @category do
-    %b= t('common.show')
-  = link_to @category, data: { turbo_method: :delete, turbo_confirm: t('common.confirm_destroy') } do
-    %b= t('common.destroy')
+%header
+  %h1= @category.name
+  %nav
+    = link_to @category do
+      %b= t('common.show')
+    = button_to t('common.destroy'), @category, method: :delete, data: { turbo_confirm: t('common.confirm_destroy') }
 
 = render 'form'

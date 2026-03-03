@@ -14,6 +14,12 @@
       </div>
     <% end %>
 
+    <% unless disabled %>
+      <div class="actions">
+        <%= f.submit t('common.save') %>
+      </div>
+    <% end %>
+
     <%= f.label :id %>
     <%= f.text_field :id, disabled: :disabled %>
 
@@ -56,10 +62,5 @@
       <%= f.text_field :original_tag, disabled: true %>
     <% end %>
 
-    <% unless disabled %>
-      <div class="actions">
-        <%= f.submit t('common.save') %>
-      </div>
-    <% end %>
   <% end %>
 </section>

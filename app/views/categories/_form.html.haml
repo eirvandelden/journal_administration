@@ -8,6 +8,10 @@
           - @category.errors.full_messages.each do |message|
             %li= message
 
+    - unless disabled
+      .actions
+        = f.submit t('common.save')
+
     = f.label :name
     = f.text_field :name, disabled: disabled
 
@@ -16,7 +20,3 @@
 
     = f.label :parent_category
     = f.grouped_collection_select :parent_category_id, Category.groups, :children, :name, :id, :name, { include_blank: true }
-
-    - unless disabled
-      .actions
-        = f.submit t('common.save')
