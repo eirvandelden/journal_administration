@@ -1,8 +1,0 @@
-%header
-  %h1= @category.name
-  %nav
-    = link_to edit_category_path(@category) do
-      %b= t('common.edit')
-
-%article
-  = render partial: 'form', locals: { disabled: :disabled }

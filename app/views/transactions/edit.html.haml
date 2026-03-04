@@ -1,9 +1,0 @@
-%header
-  %h1= "#{@transaction.creditor} ➡️ #{@transaction.debitor}"
-  %nav
-    = link_to @transaction do
-      %b= t('common.show')
-    = button_to t('common.destroy'), @transaction, method: :delete, data: { turbo_confirm: t('common.confirm_destroy') }
-
-%article
-  = render partial: 'form'

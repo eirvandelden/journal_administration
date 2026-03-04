@@ -1,0 +1,7 @@
+{
+  "name": "little-rock",
+  "private": true,
+  "devDependencies": {
+    "@herb-tools/linter": "^0.8.0"
+  }
+}

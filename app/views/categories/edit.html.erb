@@ -1,0 +1,12 @@
+<header>
+  <h1><%= @category.name %></h1>
+  <nav>
+    <%= link_to @category do %>
+      <b><%= t('common.show') %></b>
+    <% end %>
+    <%= button_to t('common.destroy'), @category, method: :delete, data: { turbo_confirm: t('common.confirm_destroy') } %>
+  </nav>
+</header>
+<article>
+  <%= render 'form' %>
+</article>

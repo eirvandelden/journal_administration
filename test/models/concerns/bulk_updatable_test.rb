@@ -54,13 +54,13 @@ class BulkUpdatableTest < ActiveSupport::TestCase
   end
 
   test "update_uncategorized_transactions! keeps manual categories for the updated account" do
-    account = Account.create!(
-      account_number: "NL99TEST9999999999",
-      name: "Bulk Update Test Account",
-      category: categories(:supermarket)
-    )
     default_category = categories(:supermarket)
     manual_category = categories(:rent)
+    account = Account.create!(
+      account_number: "NL11TEST9999999999",
+      name: "Fixture Independent External Account",
+      category: default_category
+    )
 
     uncategorized_transaction = Transaction.create!(
       type: "Debit",
