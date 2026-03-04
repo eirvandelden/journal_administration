@@ -14,8 +14,9 @@
       <nav data-controller="nav" data-action="click->nav#click">
         <ul>
           <li>
+            <%= link_to t('home'), dashboard_index_path %>
             <details>
-              <summary><%= link_to t('home'), dashboard_index_path %></summary>
+              <summary><%= t("main_nav.dashboard_filters") %></summary>
               <ul>
                 <li><%= link_to t("filters.month_to_date"), dashboard_index_path(filter: :month_to_date) %></li>
                 <li><%= link_to t("filters.last_month"), dashboard_index_path(filter: :last_month) %></li>
@@ -26,8 +27,9 @@
             </details>
           </li>
           <li>
+            <%= link_to t('journal'), transactions_path %>
             <details>
-              <summary><%= link_to t('journal'), transactions_path %></summary>
+              <summary><%= t("main_nav.journal_views") %></summary>
               <ul>
                 <li><%= link_to t('transactions.index.all_transactions'), transactions_path %></li>
                 <li><%= link_to t('transactions.index.consolidatable'), transactions_path(filter: :no_category) %></li>
