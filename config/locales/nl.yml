@@ -14,7 +14,6 @@ nl:
       external_accounts: Externe rekeningen
       id: Id
       name: Naam
-      external_accounts: Externe rekeningen
       new_account: "➕ Nieuwe rekening"
       own_accounts: Familierekeningen
       owner: Eigenaar
@@ -406,6 +405,8 @@ nl:
   pagination:
     next: Volgende
     previous: Vorige
+  sessions:
+    rejection: "🚫 Te veel aanvragen of ongeautoriseerd."
   show: Tonen
   support:
     array:
@@ -432,8 +433,6 @@ nl:
       update_transactions: Transacties bijwerken
       upload_heading: "📥 Nieuw CSV uploaden"
       upload_submit: Uploaden
-  sessions:
-    rejection: "🚫 Te veel aanvragen of ongeautoriseerd."
   transactions:
     create:
       success: "✅ Transactie succesvol aangemaakt."
@@ -453,8 +452,6 @@ nl:
       upload: Uploaden
     new:
       title: "➕ Nieuwe transactie"
-    update:
-      success: "✅ Transactie succesvol bijgewerkt."
     table:
       amount: Bedrag
       booked_at: Boekingsdatum
@@ -465,6 +462,8 @@ nl:
       note: Opmerking
       show: Tonen
       type: Type
+    update:
+      success: "✅ Transactie succesvol bijgewerkt."
   users:
     profiles:
       edit:

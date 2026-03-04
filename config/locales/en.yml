@@ -14,7 +14,6 @@ en:
       external_accounts: External Accounts
       id: Id
       name: Name
-      external_accounts: External Accounts
       new_account: "➕ New Account"
       own_accounts: Family Accounts
       owner: Owner
@@ -406,6 +405,8 @@ en:
   pagination:
     next: Next
     previous: Previous
+  sessions:
+    rejection: "🚫 Too many requests or unauthorized."
   show: Show
   support:
     array:
@@ -432,8 +433,6 @@ en:
       update_transactions: Update Transactions
       upload_heading: "📥 Upload new CSV"
       upload_submit: Upload
-  sessions:
-    rejection: "🚫 Too many requests or unauthorized."
   transactions:
     create:
       success: "✅ Transaction was successfully created."
@@ -453,8 +452,6 @@ en:
       upload: Upload
     new:
       title: "➕ New transaction"
-    update:
-      success: "✅ Transaction was successfully updated."
     table:
       amount: Amount
       booked_at: Booked at date
@@ -465,6 +462,8 @@ en:
       note: Note
       show: Show
       type: Type
+    update:
+      success: "✅ Transaction was successfully updated."
   users:
     profiles:
       edit:

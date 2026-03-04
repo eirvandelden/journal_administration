@@ -14,7 +14,6 @@ it:
       external_accounts: Conti esterni
       id: Id
       name: Nome
-      external_accounts: Conti esterni
       new_account: "➕ Nuovo conto"
       own_accounts: Conti di famiglia
       owner: Proprietario
@@ -406,6 +405,8 @@ it:
   pagination:
     next: Successivo
     previous: Precedente
+  sessions:
+    rejection: "🚫 Troppe richieste o non autorizzato."
   show: Mostra
   support:
     array:
@@ -432,8 +433,6 @@ it:
       update_transactions: Aggiorna transazioni
       upload_heading: "📥 Carica un nuovo CSV"
       upload_submit: Carica
-  sessions:
-    rejection: "🚫 Troppe richieste o non autorizzato."
   transactions:
     create:
       success: "✅ Transazione creata con successo."
@@ -453,8 +452,6 @@ it:
       upload: Carica
     new:
       title: "➕ Nuova transazione"
-    update:
-      success: "✅ Transazione aggiornata con successo."
     table:
       amount: Importo
       booked_at: Data registrazione
@@ -465,6 +462,8 @@ it:
       note: Nota
       show: Mostra
       type: Tipo
+    update:
+      success: "✅ Transazione aggiornata con successo."
   users:
     profiles:
       edit:
