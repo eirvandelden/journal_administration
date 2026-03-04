@@ -3,7 +3,7 @@
 # Provides convenient factory methods to create common date ranges like last month,
 # year-to-date, etc. Used primarily by Dashboard for temporal analysis.
 class DateRange
-  FILTERS = %w[last_month three_months year_to_date last_year current_month].freeze
+  FILTERS = %w[last_month three_months year_to_date last_year current_month month_to_date].freeze
 
   # @return [Time] The start date of the range (inclusive)
   attr_reader :start_date
@@ -30,6 +30,9 @@ class DateRange
     when "last_year"
       new(Time.current.last_year.beginning_of_year,
           Time.current.last_year.end_of_year)
+    when "month_to_date"
+      new(Time.current.beginning_of_month,
+          Time.current)
     else
       new(Time.current.beginning_of_month,
           Time.current.end_of_month)

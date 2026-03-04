@@ -1,8 +1,8 @@
 debit_grocery:
   type: Debit
   amount: 50.00
-  booked_at: <%= 1.week.ago.to_fs(:db) %>
-  interest_at: <%= 1.week.ago.to_fs(:db) %>
+  booked_at: <%= (Time.current.beginning_of_month + 1.hour).to_fs(:db) %>
+  interest_at: <%= (Time.current.beginning_of_month + 1.hour).to_fs(:db) %>
   debitor: checking
   creditor: albert_heijn
   category: supermarket
@@ -11,8 +11,8 @@ debit_grocery:
 credit_salary:
   type: Credit
   amount: 3000.00
-  booked_at: <%= 2.weeks.ago.to_fs(:db) %>
-  interest_at: <%= 2.weeks.ago.to_fs(:db) %>
+  booked_at: <%= (Time.current.beginning_of_month + 1.hour).to_fs(:db) %>
+  interest_at: <%= (Time.current.beginning_of_month + 1.hour).to_fs(:db) %>
   debitor: employer
   creditor: checking
   category: salary
