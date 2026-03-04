@@ -18,7 +18,7 @@ pre-push:
       run: npx herb-lint app/views/
       fail_text: "herb-lint failed on full view scan"
     herb-analyze:
-      run: bundle exec herb analyze app/views/
+      run: bundle exec herb analyze app/views/ --non-interactive
       fail_text: "herb analyze failed"
     i18n-normalized:
       run: bundle exec ruby ./bin/check_i18n_normalized

@@ -1,5 +1,4 @@
-<%# Ensure disabled local has a default value when not provided %>
-<% disabled = local_assigns.key?(:disabled) ? local_assigns[:disabled] : nil %>
+<%# locals: (disabled: nil) %>
 
 <section>
   <%= form_for @transaction do |f| %>

@@ -1,3 +1,4 @@
+<%# locals: (user:, url:, submit_label:, cancel_path:) %>
 <%= form_with model: user, url: url do |form| %>
   <% if user.errors.any? %>
     <aside role="alert">
