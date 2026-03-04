@@ -30,8 +30,8 @@
         <% debitor = transaction.debitor %>
         <td><%= debitor ? link_to(debitor.name || debitor.account_number, account_path(debitor)) : "" %></td>
         <td><%= number_to_currency transaction&.amount %></td>
-        <td><%= l transaction&.booked_at %></td>
-        <td><%= l transaction&.interest_at %></td>
+        <td><%= transaction.booked_at ? l(transaction.booked_at.to_date) : '' %></td>
+        <td><%= transaction.interest_at ? l(transaction.interest_at.to_date) : '' %></td>
         <td><%= transaction&.category&.to_s %></td>
         <td><%= transaction&.note&.truncate(20) %></td>
       </tr>

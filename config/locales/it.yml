@@ -1,6 +1,10 @@
 ---
 it:
   accounts:
+    create:
+      success: "✅ Conto creato con successo."
+    destroy:
+      success: "✅ Conto eliminato con successo."
     index:
       account_number: Numero conto
       category: Categoria
@@ -25,6 +29,12 @@ it:
       name: 'Nome:'
       owner: 'Proprietario:'
       update_transactions: Aggiorna transazioni
+    transactions_bulk:
+      update:
+        no_category: "⚠️ Il conto non ha una categoria"
+        success: "✅ %{count} transazioni aggiornate alla categoria %{category}."
+    update:
+      success: "✅ Conto aggiornato con successo."
   activerecord:
     attributes:
       account:
@@ -133,6 +143,10 @@ it:
     total_amount: "💰 Importo totale"
     totals: "🧮 Totali"
   categories:
+    create:
+      success: "✅ Categoria creata con successo."
+    destroy:
+      success: "✅ Categoria eliminata con successo."
     index:
       id: Id
       name: Nome
@@ -141,13 +155,21 @@ it:
     main: Categorie
     new:
       title: "➕ Nuova categoria"
+    update:
+      success: "✅ Categoria aggiornata con successo."
   chattels:
+    create:
+      success: "✅ Bene creato con successo."
+    destroy:
+      success: "✅ Bene eliminato con successo."
     edit:
       title: Modifica bene
     index:
       new_chattel: "➕ Nuovo bene"
     new:
       title: "➕ Nuovo bene"
+    update:
+      success: "✅ Bene aggiornato con successo."
   common:
     back: "↩️ Indietro"
     confirm_destroy: "⚠️ Sei sicuro?"
@@ -383,6 +405,8 @@ it:
   pagination:
     next: Successivo
     previous: Precedente
+  sessions:
+    rejection: "🚫 Troppe richieste o non autorizzato."
   show: Mostra
   support:
     array:
@@ -410,6 +434,10 @@ it:
       upload_heading: "📥 Carica un nuovo CSV"
       upload_submit: Carica
   transactions:
+    create:
+      success: "✅ Transazione creata con successo."
+    destroy:
+      success: "✅ Transazione eliminata con successo."
     imports:
       create:
         file_too_large: "⚠️ File troppo grande. La dimensione massima è 5MB."
@@ -434,6 +462,8 @@ it:
       note: Nota
       show: Mostra
       type: Tipo
+    update:
+      success: "✅ Transazione aggiornata con successo."
   users:
     profiles:
       edit:
