@@ -7,10 +7,10 @@ class Accounts::TransactionsBulkController < ApplicationController
   # @return [void]
   def update
     updated_count = @account.update_uncategorized_transactions!
-    flash[:notice] = "#{updated_count} transactions updated to category #{@account.category.name}."
+    flash[:notice] = t("accounts.transactions_bulk.update.success", count: updated_count, category: @account.category.name)
     redirect_back fallback_location: accounts_url
   rescue BulkUpdatable::MissingCategoryError
-    redirect_back fallback_location: accounts_url, alert: "Account has no category"
+    redirect_back fallback_location: accounts_url, alert: t("accounts.transactions_bulk.update.no_category")
   end
 
   private

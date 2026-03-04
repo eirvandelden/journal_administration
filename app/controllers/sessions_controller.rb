@@ -48,7 +48,7 @@ class SessionsController < ApplicationController
   end
 
   def render_rejection(status)
-    flash[:alert] = "Too many requests or unauthorized."
+    flash[:alert] = t("sessions.rejection")
     render :new, status: status
   end
 end
