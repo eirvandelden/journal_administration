@@ -1,3 +1,4 @@
+<%# locals: (user:) %>
 <div class="flex align-center gap-half pad-inline txt-medium--responsive">
   <strong class="overflow-ellipsis txt-medium--responsive"><%= link_to user.name, user.current? ? edit_user_profile_path(user) : user_profile_path(user) %></strong>
   <hr class="flex-item-grow margin-none" aria-hidden="true">
