@@ -1,0 +1,10 @@
+pre-commit:
+  commands:
+    erb_lint:
+      tags: erb_lint
+      run: npx herb-lint app/views/ --fail-level error
+
+pre-push:
+  commands:
+    tests:
+      run: bundle exec rails test
