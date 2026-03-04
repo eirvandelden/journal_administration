@@ -1,20 +1,16 @@
-# Provides financial dashboard data for an account over a date range
+# Provides financial dashboard data over a date range
 #
-# Dashboard aggregates transactions by category, calculates totals, and determines
-# profit/loss. Uses efficient database queries to avoid N+1 problems.
+# Aggregates all family transactions by category, calculates totals, and determines
+# profit/loss. Uses STI types (Debit/Credit) to identify family transactions without
+# requiring a specific account.
 class Dashboard
-  # @return [Account] The account being analyzed
-  attr_reader :account
-
   # @return [DateRange] The date range for the dashboard
   attr_reader :date_range
 
-  # Initializes a new dashboard for an account
+  # Initializes a new dashboard
   #
-  # @param account [Account] The account to analyze
   # @param filter [String, nil] Date range filter (e.g., "last_month", "year_to_date")
-  def initialize(account:, filter: nil)
-    @account = account
+  def initialize(filter: nil)
     @date_range = DateRange.from_filter(filter)
   end
 
@@ -67,9 +63,7 @@ class Dashboard
   end
 
   def grouped_transactions_for(transaction_class)
-    account_scope = transaction_class.where(debitor_account_id: account.id)
-                                     .or(transaction_class.where(creditor_account_id: account.id))
-    scope = account_scope.where(booked_at: date_range.to_range)
+    scope = transaction_class.where(booked_at: date_range.to_range)
 
     transactions = scope.where.not(category_id: transfer_category_id)
                        .or(scope.where(category_id: nil))
