@@ -320,10 +320,12 @@ en:
   left: "📤 Left"
   main_nav:
     accounts: "🏦 %{model}"
+    admin: "🥷 Admin"
     categories: "🏷️ %{model}"
     chattels: "📦 %{model}"
     dashboard_filters: "🔎 Filters"
     journal_views: "📚 Views"
+    profile: "👤 Profile"
     todo: "✅ %{model}"
   number:
     currency:

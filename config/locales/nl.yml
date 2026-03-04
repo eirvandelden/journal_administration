@@ -320,10 +320,12 @@ nl:
   left: "📤 Verlaten"
   main_nav:
     accounts: "🏦 %{model}"
+    admin: "🥷 Beheer"
     categories: "🏷️ %{model}"
     chattels: "📦 %{model}"
     dashboard_filters: "🔎 Filters"
     journal_views: "📚 Weergaven"
+    profile: "👤 Profiel"
     todo: "✅ %{model}"
   number:
     currency:

@@ -320,10 +320,12 @@ it:
   left: "📤 Usciti"
   main_nav:
     accounts: "🏦 %{model}"
+    admin: "🥷 Amministrazione"
     categories: "🏷️ %{model}"
     chattels: "📦 %{model}"
     dashboard_filters: "🔎 Filtri"
     journal_views: "📚 Viste"
+    profile: "👤 Profilo"
     todo: "✅ %{model}"
   number:
     currency:

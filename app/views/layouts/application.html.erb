@@ -40,6 +40,12 @@
           <li><%= link_to t('main_nav.categories', model: Category.model_name.human), categories_path %></li>
           <li><%= link_to t('main_nav.chattels', model: Chattel.model_name.human), chattels_path %></li>
           <li><%= link_to t('main_nav.todo', model: Todo.model_name.human), todo_path %></li>
+          <% if signed_in? %>
+            <li><%= link_to t("main_nav.profile"), edit_user_profile_path(Current.user) %></li>
+          <% end %>
+          <% if Current.user&.can_administer? %>
+            <li><%= link_to t("main_nav.admin"), admin_root_path %></li>
+          <% end %>
         </ul>
       </nav>
     </header>
