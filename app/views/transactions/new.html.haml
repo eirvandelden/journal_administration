@@ -1,7 +1,7 @@
-= content_for(:secondary_nav) do
-  %nav.secondary
-    %ul
-      %li= link_to t('common.back'), :back
+%header
+  %h1= t('.title')
+  %nav
+    = link_to t('common.back'), transactions_path
 
-%h1= t('.title')
-= render 'form'
+%article
+  = render 'form'

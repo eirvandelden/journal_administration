@@ -7,9 +7,9 @@ it:
       confirm_destroy: Sei sicuro?
       destroy: Elimina
       edit: Modifica
+      external_accounts: Conti esterni
       id: Id
       name: Nome
-      external_accounts: Conti esterni
       new_account: "➕ Nuovo conto"
       own_accounts: Conti di famiglia
       owner: Proprietario
@@ -321,6 +321,8 @@ it:
     accounts: "🏦 %{model}"
     categories: "🏷️ %{model}"
     chattels: "📦 %{model}"
+    dashboard_filters: "🔎 Filtri"
+    journal_views: "📚 Viste"
     todo: "✅ %{model}"
   number:
     currency:
