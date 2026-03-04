@@ -7,6 +7,7 @@
   </nav>
 </header>
 
+<article>
 <p>
   <b><%= t('.id') %></b>
   <%= @account.id %>
@@ -29,3 +30,4 @@
 </p>
 
 <%= button_to t('.update_transactions'), account_transactions_bulk_path(@account), method: :patch %>
+</article>

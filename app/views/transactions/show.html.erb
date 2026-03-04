@@ -1,12 +1,3 @@
-<% content_for(:secondary_nav) do %>
-  <nav class="secondary">
-    <ul>
-      <li><%= link_to t('transactions.index.all_transactions'), transactions_path %></li>
-      <li><%= link_to t('transactions.index.consolidatable'), transactions_path(filter: :no_category) %></li>
-    </ul>
-  </nav>
-<% end %>
-
 <header>
   <h1><%= "#{@transaction.creditor} ➡️ #{@transaction.debitor}" %></h1>
   <nav>
@@ -16,6 +7,7 @@
   </nav>
 </header>
 
+<article>
 <dl>
   <dt><%= t('transactions.table.type') %></dt>
   <dd><%= @transaction.type_icon %> <%= @transaction.type %></dd>
@@ -56,3 +48,4 @@
     <dd><%= @transaction.original_tag %></dd>
   </dl>
 <% end %>
+</article>
