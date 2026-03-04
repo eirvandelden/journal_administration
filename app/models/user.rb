@@ -1,6 +1,6 @@
 # Represents an authenticated application user.
 class User < ApplicationRecord
-  include Role, Transferable
+  include Role
 
   has_many :sessions, dependent: :destroy
   has_secure_password validations: false

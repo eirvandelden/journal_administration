@@ -2,6 +2,7 @@
 #
 # Handles login (new/create) and logout (destroy) with rate limiting and email-based authentication.
 class SessionsController < ApplicationController
+  layout "login"
   allow_unauthenticated_access only: %i[new create]
   rate_limit to: 10, within: 3.minutes, only: :create, with: -> { render_rejection :too_many_requests }
 
@@ -47,7 +48,7 @@ class SessionsController < ApplicationController
   end
 
   def render_rejection(status)
-    flash[:alert] = "Too many requests or unauthorized."
+    flash[:alert] = t("sessions.rejection")
     render :new, status: status
   end
 end

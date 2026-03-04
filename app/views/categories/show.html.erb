@@ -1,0 +1,11 @@
+<header>
+  <h1><%= @category.name %></h1>
+  <nav>
+    <%= link_to edit_category_path(@category) do %>
+      <b><%= t('common.edit') %></b>
+    <% end %>
+  </nav>
+</header>
+<article>
+  <%= render partial: 'form', locals: { disabled: :disabled } %>
+</article>

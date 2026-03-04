@@ -50,7 +50,7 @@ class ChattelsController < ApplicationController
 
     respond_to do |format|
       if @chattel.save
-        format.html { redirect_to @chattel, notice: t(".success") }
+        format.html { redirect_to @chattel, notice: t("chattels.create.success") }
         format.json { render :show, status: :created, location: @chattel }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -67,7 +67,7 @@ class ChattelsController < ApplicationController
   def update
     respond_to do |format|
       if @chattel.update(chattel_params)
-        format.html { redirect_to @chattel, notice: t(".success") }
+        format.html { redirect_to @chattel, notice: t("chattels.update.success") }
         format.json { render :show, status: :ok, location: @chattel }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -85,7 +85,7 @@ class ChattelsController < ApplicationController
     @chattel.destroy!
 
     respond_to do |format|
-      format.html { redirect_to chattels_path, status: :see_other, notice: t(".success") }
+      format.html { redirect_to chattels_path, status: :see_other, notice: t("chattels.destroy.success") }
       format.json { head :no_content }
     end
   end

@@ -4,4 +4,3 @@ inherit_gem:
 
 inherit_from:
   - .rubocop_todo.yml
-  - ~/.rubocop.yml

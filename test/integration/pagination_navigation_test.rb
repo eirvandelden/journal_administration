@@ -10,12 +10,12 @@ class PaginationNavigationTest < ActionDispatch::IntegrationTest
 
     get accounts_path
     assert_response :success
-    assert_select "nav.pagination a[rel='next'][href*='page=2']", 2
+    assert_select "nav.pagination a[rel='next'][href*='own_page=2']", 2
     assert_select "nav.pagination a[rel='prev']", 0
 
-    get accounts_path, params: { page: 2 }
+    get accounts_path, params: { own_page: 2 }
     assert_response :success
-    assert_select "nav.pagination a[rel='prev'][href*='page=1']", 2
+    assert_select "nav.pagination a[rel='prev'][href*='own_page=1']", 2
     assert_select "nav.pagination a[rel='next']", 0
   end
 

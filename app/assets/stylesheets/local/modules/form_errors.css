@@ -6,6 +6,19 @@
   background: transparent;
 }
 
+fieldset .field_with_errors {
+  display: contents;
+}
+
+input:disabled,
+textarea:disabled,
+select:disabled {
+  background-color: var(--color-bg);
+  color: var(--color-fg-subtle, var(--color-fg));
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .field_with_errors > label {
   color: var(--color-danger, #c00);
 }

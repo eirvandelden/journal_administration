@@ -1,0 +1,37 @@
+<%= form_for @account do |f| %>
+  <% if @account.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= t('errors.template.header', count: @account.errors.count, model: Account.model_name.human.downcase) %></h2>
+      <ul>
+        <% @account.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= f.submit t('common.save') %>
+  </div>
+
+  <div class="field">
+    <%= f.label :id %>
+    <%= f.text_field :id, disabled: :disabled %>
+  </div>
+  <div class="field">
+    <%= f.label :account_number %>
+    <%= f.text_field :account_number %>
+  </div>
+  <div class="field">
+    <%= f.label :name %>
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :owner %>
+    <%= f.collection_select :owner, Account.owners, :first, :first, { include_blank: true } %>
+  </div>
+  <div class="field">
+    <%= f.label :category_id %>
+    <%= f.collection_select :category_id, Category.all.order(:name), :id, :name, { include_blank: true } %>
+  </div>
+<% end %>

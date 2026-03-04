@@ -20,7 +20,6 @@ gem "puma" # Use Puma as the app server
 # TODO: SolidJobs
 
 # Front-end
-gem "haml-rails"                  # Awesome templating engine
 gem "importmap-rails"
 gem "mvpa-css", github: "eirvandelden/mvpa.css"
 gem "propshaft"
@@ -53,6 +52,7 @@ group :development do
   gem "i18n-tasks"
 
   # Linting and formatting
+  gem "herb", require: false                  # HTML-aware ERB analysis
   gem "rubocop-capybara", require: false
   gem "rubocop-minitest", require: false
   gem "rubocop-obsession", require: false

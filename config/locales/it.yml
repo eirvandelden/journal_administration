@@ -1,6 +1,10 @@
 ---
 it:
   accounts:
+    create:
+      success: "✅ Conto creato con successo."
+    destroy:
+      success: "✅ Conto eliminato con successo."
     errors:
       missing_category: Il conto deve avere una categoria
     index:
@@ -9,9 +13,11 @@ it:
       confirm_destroy: Sei sicuro?
       destroy: Elimina
       edit: Modifica
+      external_accounts: Conti esterni
       id: Id
       name: Nome
       new_account: "➕ Nuovo conto"
+      own_accounts: Conti di famiglia
       owner: Proprietario
       show: Mostra
       update_transactions: Aggiorna transazioni
@@ -25,6 +31,12 @@ it:
       name: 'Nome:'
       owner: 'Proprietario:'
       update_transactions: Aggiorna transazioni
+    transactions_bulk:
+      update:
+        no_category: "⚠️ Il conto non ha una categoria"
+        success: "✅ %{count} transazioni aggiornate alla categoria %{category}."
+    update:
+      success: "✅ Conto aggiornato con successo."
   activerecord:
     attributes:
       account:
@@ -133,6 +145,10 @@ it:
     total_amount: "💰 Importo totale"
     totals: "🧮 Totali"
   categories:
+    create:
+      success: "✅ Categoria creata con successo."
+    destroy:
+      success: "✅ Categoria eliminata con successo."
     index:
       id: Id
       name: Nome
@@ -141,11 +157,13 @@ it:
     main: Categorie
     new:
       title: "➕ Nuova categoria"
+    update:
+      success: "✅ Categoria aggiornata con successo."
   chattels:
     create:
-      success: Bene creato con successo.
+      success: "✅ Bene creato con successo."
     destroy:
-      success: Bene eliminato con successo.
+      success: "✅ Bene eliminato con successo."
     edit:
       title: Modifica bene
     index:
@@ -153,7 +171,7 @@ it:
     new:
       title: "➕ Nuovo bene"
     update:
-      success: Bene aggiornato con successo.
+      success: "✅ Bene aggiornato con successo."
   common:
     back: "↩️ Indietro"
     confirm_destroy: "⚠️ Sei sicuro?"
@@ -325,8 +343,12 @@ it:
   left: "📤 Usciti"
   main_nav:
     accounts: "🏦 %{model}"
+    admin: "🥷 Amministrazione"
     categories: "🏷️ %{model}"
     chattels: "📦 %{model}"
+    dashboard_filters: "🔎 Filtri"
+    journal_views: "📚 Viste"
+    profile: "👤 Profilo"
     todo: "✅ %{model}"
   number:
     currency:
@@ -385,6 +407,8 @@ it:
   pagination:
     next: Successivo
     previous: Precedente
+  sessions:
+    rejection: "🚫 Troppe richieste o non autorizzato."
   show: Mostra
   support:
     array:
@@ -413,9 +437,9 @@ it:
       upload_submit: Carica
   transactions:
     create:
-      success: Transazione creata con successo.
+      success: "✅ Transazione creata con successo."
     destroy:
-      success: Transazione eliminata con successo.
+      success: "✅ Transazione eliminata con successo."
     imports:
       create:
         file_too_large: "⚠️ File troppo grande. La dimensione massima è 5MB."
@@ -448,7 +472,7 @@ it:
       show: Mostra
       type: Tipo
     update:
-      success: Transazione aggiornata con successo.
+      success: "✅ Transazione aggiornata con successo."
   users:
     profiles:
       edit:

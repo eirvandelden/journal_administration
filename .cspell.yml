@@ -17,6 +17,10 @@ words:
   - FactoryBot
   - Rubygems
   - Gemfile
+  - Recordset
+  - Pagy
+  - NLOWN
+  - NLEXT
 ignorePaths:
   - app/assets
   - bin/**

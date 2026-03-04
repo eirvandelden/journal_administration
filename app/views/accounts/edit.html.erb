@@ -1,0 +1,11 @@
+<header>
+  <h1><%= @account.name %></h1>
+  <nav>
+    <%= link_to @account do %>
+      <b><%= t('common.show') %></b>
+    <% end %>
+  </nav>
+</header>
+<article>
+  <%= render 'form' %>
+</article>

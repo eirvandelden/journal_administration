@@ -15,6 +15,9 @@ class Account < ApplicationRecord
   enum :owner,        { samen: 0, etienne: 1, michelle: 2, serena: 3, cosimo: 4, chiara: 5 }
   enum :account_type, { asset: 0, liability: 1, expense: 2, income: 3 }
 
+  scope :own,      -> { where.not(owner: nil) }
+  scope :external, -> { where(owner: nil) }
+
   belongs_to :category, optional: true
 
   validates :account_number, uniqueness: true, allow_blank: true

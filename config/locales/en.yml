@@ -1,6 +1,10 @@
 ---
 en:
   accounts:
+    create:
+      success: "✅ Account was successfully created."
+    destroy:
+      success: "✅ Account was successfully destroyed."
     errors:
       missing_category: Account must have a category
     index:
@@ -9,9 +13,11 @@ en:
       confirm_destroy: Are you sure?
       destroy: Destroy
       edit: Edit
+      external_accounts: External Accounts
       id: Id
       name: Name
       new_account: "➕ New Account"
+      own_accounts: Family Accounts
       owner: Owner
       show: Show
       update_transactions: Update Transactions
@@ -25,6 +31,12 @@ en:
       name: 'Name:'
       owner: 'Owner:'
       update_transactions: Update Transactions
+    transactions_bulk:
+      update:
+        no_category: "⚠️ Account has no category"
+        success: "✅ %{count} transactions updated to category %{category}."
+    update:
+      success: "✅ Account was successfully updated."
   activerecord:
     attributes:
       account:
@@ -133,6 +145,10 @@ en:
     total_amount: "💰 Total amount"
     totals: "🧮 Totals"
   categories:
+    create:
+      success: "✅ Category was successfully created."
+    destroy:
+      success: "✅ Category was successfully destroyed."
     index:
       id: Id
       name: Name
@@ -141,11 +157,13 @@ en:
     main: Categories
     new:
       title: "➕ New category"
+    update:
+      success: "✅ Category was successfully updated."
   chattels:
     create:
-      success: Chattel was successfully created.
+      success: "✅ Chattel was successfully created."
     destroy:
-      success: Chattel was successfully destroyed.
+      success: "✅ Chattel was successfully destroyed."
     edit:
       title: Editing chattel
     index:
@@ -153,7 +171,7 @@ en:
     new:
       title: "➕ New chattel"
     update:
-      success: Chattel was successfully updated.
+      success: "✅ Chattel was successfully updated."
   common:
     back: "↩️ Back"
     confirm_destroy: "⚠️ Are you sure?"
@@ -325,8 +343,12 @@ en:
   left: "📤 Left"
   main_nav:
     accounts: "🏦 %{model}"
+    admin: "🥷 Admin"
     categories: "🏷️ %{model}"
     chattels: "📦 %{model}"
+    dashboard_filters: "🔎 Filters"
+    journal_views: "📚 Views"
+    profile: "👤 Profile"
     todo: "✅ %{model}"
   number:
     currency:
@@ -385,6 +407,8 @@ en:
   pagination:
     next: Next
     previous: Previous
+  sessions:
+    rejection: "🚫 Too many requests or unauthorized."
   show: Show
   support:
     array:
@@ -413,9 +437,9 @@ en:
       upload_submit: Upload
   transactions:
     create:
-      success: Transaction was successfully created.
+      success: "✅ Transaction was successfully created."
     destroy:
-      success: Transaction was successfully destroyed.
+      success: "✅ Transaction was successfully destroyed."
     imports:
       create:
         file_too_large: "⚠️ File too large. Maximum size is 5MB."
@@ -448,7 +472,7 @@ en:
       show: Show
       type: Type
     update:
-      success: Transaction was successfully updated.
+      success: "✅ Transaction was successfully updated."
   users:
     profiles:
       edit:

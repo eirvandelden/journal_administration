@@ -8,4 +8,5 @@ stylesheet
 deactivated
 httponly
 kamal
+rescuable
 SMACCS

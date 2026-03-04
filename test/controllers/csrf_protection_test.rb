@@ -9,7 +9,7 @@ class CsrfProtectionTest < ActionDispatch::IntegrationTest
 
     # Attempt to create a transaction without CSRF token
     # show_exceptions = :rescuable catches InvalidAuthenticityToken and renders 422
-    post transactions_path, params: { transaction: { amount: 100 } }
+    post transactions_path, params: { transaction: { booked_at: Date.current } }
     assert_response :unprocessable_entity
   end
 

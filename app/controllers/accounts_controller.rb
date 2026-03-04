@@ -6,7 +6,10 @@ class AccountsController < ApplicationController
   #
   # @return [void]
   def index
-    @records = set_page_and_extract_portion_from Account.all, per_page: [50]
+    @own_page = GearedPagination::Recordset.new(Account.own.order(:id), per_page: [ 50 ]).page(params[:own_page])
+    @own_accounts = @own_page.records
+    @external_page = GearedPagination::Recordset.new(Account.external.order(:id), per_page: [ 50 ]).page(params[:external_page])
+    @external_accounts = @external_page.records
   end
 
   # Displays a single account
@@ -34,7 +37,7 @@ class AccountsController < ApplicationController
 
     respond_to do |format|
       if @account.save
-        format.html { redirect_to @account, notice: "Account was successfully created." }
+        format.html { redirect_to @account, notice: t("accounts.create.success") }
         format.json { render :show, status: :created, location: @account }
       else
         format.html { render :new }
@@ -49,7 +52,7 @@ class AccountsController < ApplicationController
   def update
     respond_to do |format|
       if @account.update(account_params)
-        format.html { redirect_to @account, notice: "Account was successfully updated." }
+        format.html { redirect_to @account, notice: t("accounts.update.success") }
         format.json { render :show, status: :ok, location: @account }
       else
         format.html { render :edit }
@@ -64,7 +67,7 @@ class AccountsController < ApplicationController
   def destroy
     @account.destroy
     respond_to do |format|
-      format.html { redirect_to accounts_url, notice: "Account was successfully destroyed." }
+      format.html { redirect_to accounts_url, notice: t("accounts.destroy.success") }
       format.json { head :no_content }
     end
   end
