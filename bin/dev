@@ -1,5 +1,2 @@
-#!/usr/bin/env sh
-
-echo "Starting JournalAdministration on http://localhost:3000"
-
-exec ./bin/rails server -p 3000
+#!/usr/bin/env ruby
+exec "./bin/rails", "server", *ARGV
