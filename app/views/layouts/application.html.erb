@@ -11,25 +11,28 @@
   </head>
   <body>
     <header>
-      <nav>
+      <nav data-controller="nav" data-action="click->nav#click">
         <ul>
           <li>
-            <%= link_to t('home'), dashboard_index_path %>
-            <ul>
-              <li><%= link_to t("filters.month_to_date"), dashboard_index_path(filter: :month_to_date) %></li>
-              <li><%= link_to t("filters.last_month"), dashboard_index_path(filter: :last_month) %></li>
-              <li><%= link_to t("filters.three_months"), dashboard_index_path(filter: :three_months) %></li>
-              <li><%= link_to t("filters.year_to_date"), dashboard_index_path(filter: :year_to_date) %></li>
-              <li><%= link_to t("filters.last_year"), dashboard_index_path(filter: :last_year) %></li>
-            </ul>
-
+            <details>
+              <summary><%= link_to t('home'), dashboard_index_path %></summary>
+              <ul>
+                <li><%= link_to t("filters.month_to_date"), dashboard_index_path(filter: :month_to_date) %></li>
+                <li><%= link_to t("filters.last_month"), dashboard_index_path(filter: :last_month) %></li>
+                <li><%= link_to t("filters.three_months"), dashboard_index_path(filter: :three_months) %></li>
+                <li><%= link_to t("filters.year_to_date"), dashboard_index_path(filter: :year_to_date) %></li>
+                <li><%= link_to t("filters.last_year"), dashboard_index_path(filter: :last_year) %></li>
+              </ul>
+            </details>
           </li>
           <li>
-            <%= link_to t('journal'), transactions_path %>
-            <ul>
-              <li><%= link_to t('transactions.index.all_transactions'), transactions_path %></li>
-              <li><%= link_to t('transactions.index.consolidatable'), transactions_path(filter: :no_category) %></li>
-            </ul>
+            <details>
+              <summary><%= link_to t('journal'), transactions_path %></summary>
+              <ul>
+                <li><%= link_to t('transactions.index.all_transactions'), transactions_path %></li>
+                <li><%= link_to t('transactions.index.consolidatable'), transactions_path(filter: :no_category) %></li>
+              </ul>
+            </details>
           </li>
           <li><%= link_to t('main_nav.accounts', model: Account.model_name.human), accounts_path %></li>
           <li><%= link_to t('main_nav.categories', model: Category.model_name.human), categories_path %></li>
@@ -37,19 +40,14 @@
           <li><%= link_to t('main_nav.todo', model: Todo.model_name.human), todo_path %></li>
         </ul>
       </nav>
-      <%= yield(:secondary_nav) %>
     </header>
-    <hr>
     <main>
-      <article>
-        <% flash.each do |key, value| %>
-          <aside>
-            <p class="flash <%= key.to_s.gsub(/[^a-z_-]/, '') %>"><%= value %></p>
-          </aside>
-        <% end %>
-
+      <% flash.each do |key, value| %>
+        <aside>
+          <p class="flash <%= key.to_s.gsub(/[^a-z_-]/, '') %>"><%= value %></p>
+        </aside>
+      <% end %>
       <%= yield %>
-      </article>
     </main>
   </body>
 </html>

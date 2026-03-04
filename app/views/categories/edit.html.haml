@@ -5,4 +5,5 @@
       %b= t('common.show')
     = button_to t('common.destroy'), @category, method: :delete, data: { turbo_confirm: t('common.confirm_destroy') }
 
-= render 'form'
+%article
+  = render 'form'

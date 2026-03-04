@@ -4,4 +4,5 @@
     = link_to edit_chattel_path(@chattel) do
       %b= t('common.edit')
 
-= render partial: 'form', locals: { disabled: :disabled }
+%article
+  = render partial: 'form', locals: { disabled: :disabled }

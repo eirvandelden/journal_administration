@@ -1,8 +1,3 @@
-= content_for(:secondary_nav) do
-  %nav.secondary
-    %ul
-      %li= link_to t('transactions.index.all_transactions'), transactions_path
-      %li= link_to t('transactions.index.consolidatable'), transactions_path(filter: :no_category)
 %header
   %h1= "#{@transaction.creditor} ➡️ #{@transaction.debitor}"
   %nav
@@ -10,4 +5,5 @@
       %b= t('common.show')
     = button_to t('common.destroy'), @transaction, method: :delete, data: { turbo_confirm: t('common.confirm_destroy') }
 
-= render partial: 'form'
+%article
+  = render partial: 'form'
