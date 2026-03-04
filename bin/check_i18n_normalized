@@ -1,0 +1,16 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "i18n/tasks"
+
+i18n = I18n::Tasks::BaseTask.new
+non_normalized = i18n.non_normalized_paths
+
+if non_normalized.any?
+  warn "Locale files are not normalized:"
+  non_normalized.each { |path| warn "  #{path}" }
+  warn "Run: bundle exec i18n-tasks normalize"
+  exit 1
+end
+
+puts "Locale files are normalized."

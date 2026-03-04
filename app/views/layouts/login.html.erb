@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html data-theme="selenized_light" data-color-scheme="system">
+  <head>
+    <title>JournalAdministration</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbo-track': 'reload' %>
+
+    <%= javascript_importmap_tags %>
+  </head>
+  <body class="<%= body_class %>">
+    <main>
+      <div id="flash">
+        <% flash.each do |key, value| %>
+          <div class="flash <%= key %>"><%= value %></div>
+        <% end %>
+      </div>
+      <%= yield %>
+    </main>
+  </body>
+</html>
