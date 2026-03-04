@@ -14,52 +14,50 @@
       </div>
     <% end %>
 
+    <fieldset>
+      <%= f.label :id %>
+      <%= f.text_field :id, disabled: :disabled %>
+
+      <%= f.label :debitor %>
+      <%= f.text_field :debitor, disabled: :disabled %>
+
+      <%= f.label :creditor %>
+      <%= f.text_field :creditor, disabled: :disabled %>
+
+      <%= f.label :amount %>
+      <%= f.text_field :amount, disabled: disabled %>
+
+      <%= f.label :category_id %>
+      <%= f.select :category_id, grouped_category_options(selected: f.object.category_id), { include_blank: true }, { disabled: disabled } %>
+
+      <%= f.label :note %>
+      <%= f.text_area :note, disabled: disabled %>
+
+      <%= f.label :booked_at %>
+      <%= f.date_field :booked_at, disabled: disabled %>
+
+      <%= f.label :interest_at %>
+      <%= f.date_field :interest_at, disabled: disabled %>
+
+      <%= f.label :type %>
+      <%= f.collection_select(:type, Transaction::TYPES, :to_s, :to_s, {}, { disabled: disabled }) %>
+
+      <% if Current.user.can_administer? %>
+        <%= f.label :original_note %>
+        <%= f.text_area :original_note, disabled: true %>
+
+        <%= f.label :original_balance_after_mutation %>
+        <%= f.text_field :original_balance_after_mutation, disabled: true %>
+
+        <%= f.label :original_tag %>
+        <%= f.text_field :original_tag, disabled: true %>
+      <% end %>
+    </fieldset>
+
     <% unless disabled %>
       <div class="actions">
         <%= f.submit t('common.save') %>
       </div>
-    <% end %>
-
-    <%= f.label :id %>
-    <%= f.text_field :id, disabled: :disabled %>
-
-    <%= f.label :debitor %>
-    <%= f.text_field :debitor, disabled: :disabled %>
-
-    <%= f.label :creditor %>
-    <%= f.text_field :creditor, disabled: :disabled %>
-
-    <%= f.label :amount %>
-    <%= f.text_field :amount, disabled: disabled %>
-
-    <%= f.label :category_id %>
-    <%= f.select :category_id, grouped_category_options(selected: f.object.category_id), { include_blank: true }, { disabled: disabled } %>
-
-    <%= f.label :note %>
-    <%= f.text_area :note, disabled: disabled %>
-
-    <div class="field">
-      <%= f.label :booked_at %>
-      <%= f.datetime_select :booked_at, {}, { disabled: disabled } %>
-    </div>
-
-    <div class="field">
-      <%= f.label :interest_at %>
-      <%= f.datetime_select :interest_at, {}, { disabled: disabled } %>
-    </div>
-
-    <%= f.label :type %>
-    <%= f.collection_select(:type, Transaction::TYPES, :to_s, :to_s, {}, { disabled: disabled }) %>
-
-    <% if Current.user.can_administer? %>
-      <%= f.label :original_note %>
-      <%= f.text_area :original_note, disabled: true %>
-
-      <%= f.label :original_balance_after_mutation %>
-      <%= f.text_field :original_balance_after_mutation, disabled: true %>
-
-      <%= f.label :original_tag %>
-      <%= f.text_field :original_tag, disabled: true %>
     <% end %>
 
   <% end %>
