@@ -21,6 +21,11 @@ supermarket:
   direction: debit
   parent_category: groceries
 
+bakery:
+  name: Bakery
+  direction: debit
+  parent_category: groceries
+
 rent:
   name: Rent
   direction: debit

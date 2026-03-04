@@ -22,14 +22,14 @@ class Dashboard
   #
   # @return [Hash{Category => Float}] Categories mapped to debit amounts
   def debit_transactions
-    @debit_transactions ||= grouped_transactions_for(Debit, :debitor_account_id)
+    @debit_transactions ||= grouped_transactions_for(Debit)
   end
 
   # Returns credit transactions grouped by category with totals
   #
   # @return [Hash{Category => Float}] Categories mapped to credit amounts
   def credit_transactions
-    @credit_transactions ||= grouped_transactions_for(Credit, :creditor_account_id)
+    @credit_transactions ||= grouped_transactions_for(Credit)
   end
 
   # Calculates total debit amount
@@ -66,9 +66,10 @@ class Dashboard
     @transfer_category_id ||= Category.find_by(name: "Transfer")&.id
   end
 
-  def grouped_transactions_for(transaction_class, account_column)
-    scope = transaction_class.where(account_column => account.id,
-                                    booked_at: date_range.to_range)
+  def grouped_transactions_for(transaction_class)
+    account_scope = transaction_class.where(debitor_account_id: account.id)
+                                     .or(transaction_class.where(creditor_account_id: account.id))
+    scope = account_scope.where(booked_at: date_range.to_range)
 
     transactions = scope.where.not(category_id: transfer_category_id)
                        .or(scope.where(category_id: nil))
