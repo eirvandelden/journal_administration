@@ -7,6 +7,7 @@ nl:
       confirm_destroy: Weet je het zeker?
       destroy: Verwijderen
       edit: Bewerken
+      external_accounts: Externe rekeningen
       id: Id
       name: Naam
       external_accounts: Externe rekeningen
@@ -321,6 +322,8 @@ nl:
     accounts: "🏦 %{model}"
     categories: "🏷️ %{model}"
     chattels: "📦 %{model}"
+    dashboard_filters: "🔎 Filters"
+    journal_views: "📚 Weergaven"
     todo: "✅ %{model}"
   number:
     currency:

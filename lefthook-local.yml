@@ -1,0 +1,6 @@
+pre-commit:
+  exclude_tags:
+    - erb_lint
+  commands:
+    erb_lint:
+      skip: true

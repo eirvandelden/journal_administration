@@ -7,6 +7,7 @@ en:
       confirm_destroy: Are you sure?
       destroy: Destroy
       edit: Edit
+      external_accounts: External Accounts
       id: Id
       name: Name
       external_accounts: External Accounts
@@ -321,6 +322,8 @@ en:
     accounts: "🏦 %{model}"
     categories: "🏷️ %{model}"
     chattels: "📦 %{model}"
+    dashboard_filters: "🔎 Filters"
+    journal_views: "📚 Views"
     todo: "✅ %{model}"
   number:
     currency:

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html data-theme="selenized_light" data-color-scheme="system">
+  <head>
+    <title>JournalAdministration</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbo-track': 'reload' %>
+
+    <%= javascript_importmap_tags %>
+  </head>
+  <body>
+    <main>
+      <% flash.each do |key, value| %>
+        <aside>
+          <p role="<%= key.to_s == 'alert' || key.to_s == 'error' ? 'alert' : 'status' %>"><%= value %></p>
+        </aside>
+      <% end %>
+      <%= yield %>
+    </main>
+  </body>
+</html>

@@ -1,6 +1,1 @@
-<% content_for(:secondary_nav) do %>
-  <nav class="secondary">
-  </nav>
-<% end %>
-
 <%= render partial: 'balance', locals: { debits: @debit_transactions, credits: @credit_transactions, debit_total: @debit_total, credit_total: @credit_total, profit_or_loss: @profit_or_loss } %>

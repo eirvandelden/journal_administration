@@ -1,10 +1,13 @@
-<h1>
-  <%= @account.name %>
-  <%= link_to edit_account_path(@account) do %>
-    <b><%= t('.edit') %></b>
-  <% end %>
-</h1>
+<header>
+  <h1><%= @account.name %></h1>
+  <nav>
+    <%= link_to edit_account_path(@account) do %>
+      <b><%= t('.edit') %></b>
+    <% end %>
+  </nav>
+</header>
 
+<article>
 <p>
   <b><%= t('.id') %></b>
   <%= @account.id %>
@@ -27,3 +30,4 @@
 </p>
 
 <%= button_to t('.update_transactions'), account_transactions_bulk_path(@account), method: :patch %>
+</article>
