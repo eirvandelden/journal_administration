@@ -55,7 +55,6 @@ jobs:
           RAILS_ENV: test
       - run: bundle exec rails test
       - run: bundle exec rails test:system
-        continue-on-error: true
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
