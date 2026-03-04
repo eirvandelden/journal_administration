@@ -66,10 +66,11 @@ class DashboardTest < ActiveSupport::TestCase
            "Expected all credit transaction keys to be parent (root) categories"
   end
 
-  test "debit_transactions aggregates child category amounts into parent" do
+  test "debit_transactions aggregates multiple child category amounts into parent" do
     dashboard = Dashboard.new(account: accounts(:checking), filter: "year_to_date")
 
-    assert_equal transactions(:debit_grocery).amount, dashboard.debit_transactions[categories(:groceries)]
+    expected_total = transactions(:debit_grocery).amount + transactions(:debit_bakery).amount
+    assert_equal expected_total, dashboard.debit_transactions[categories(:groceries)]
   end
 
   test "credit_transactions aggregates child category amounts into parent" do

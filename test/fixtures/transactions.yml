@@ -8,6 +8,16 @@ debit_grocery:
   category: supermarket
   note: Groceries at AH
 
+debit_bakery:
+  type: Debit
+  amount: 12.50
+  booked_at: <%= (Time.current.beginning_of_month + 2.hours).to_fs(:db) %>
+  interest_at: <%= (Time.current.beginning_of_month + 2.hours).to_fs(:db) %>
+  debitor: checking
+  creditor: unknown
+  category: bakery
+  note: Bakery purchase
+
 credit_salary:
   type: Credit
   amount: 3000.00
