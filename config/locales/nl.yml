@@ -1,6 +1,10 @@
 ---
 nl:
   accounts:
+    create:
+      success: "✅ Rekening succesvol aangemaakt."
+    destroy:
+      success: "✅ Rekening succesvol verwijderd."
     index:
       account_number: Rekeningnummer
       category: Categorie
@@ -25,6 +29,12 @@ nl:
       name: 'Naam:'
       owner: 'Eigenaar:'
       update_transactions: Transacties bijwerken
+    transactions_bulk:
+      update:
+        no_category: "⚠️ Rekening heeft geen categorie"
+        success: "✅ %{count} transacties bijgewerkt naar categorie %{category}."
+    update:
+      success: "✅ Rekening succesvol bijgewerkt."
   activerecord:
     attributes:
       account:
@@ -133,6 +143,10 @@ nl:
     total_amount: "💰 Totaalbedrag"
     totals: "🧮 Totalen"
   categories:
+    create:
+      success: "✅ Categorie succesvol aangemaakt."
+    destroy:
+      success: "✅ Categorie succesvol verwijderd."
     index:
       id: Id
       name: Naam
@@ -141,13 +155,21 @@ nl:
     main: Hoofdcategoriëen
     new:
       title: "➕ Nieuwe categorie"
+    update:
+      success: "✅ Categorie succesvol bijgewerkt."
   chattels:
+    create:
+      success: "✅ Bezitting succesvol aangemaakt."
+    destroy:
+      success: "✅ Bezitting succesvol verwijderd."
     edit:
       title: Bezitting bewerken
     index:
       new_chattel: "➕ Nieuwe bezitting"
     new:
       title: "➕ Nieuwe bezitting"
+    update:
+      success: "✅ Bezitting succesvol bijgewerkt."
   common:
     back: "↩️ Terug"
     confirm_destroy: "⚠️ Weet je het zeker?"
@@ -319,10 +341,12 @@ nl:
   left: "📤 Verlaten"
   main_nav:
     accounts: "🏦 %{model}"
+    admin: "🥷 Beheer"
     categories: "🏷️ %{model}"
     chattels: "📦 %{model}"
     dashboard_filters: "🔎 Filters"
     journal_views: "📚 Weergaven"
+    profile: "👤 Profiel"
     todo: "✅ %{model}"
   number:
     currency:
@@ -377,10 +401,12 @@ nl:
     precision:
       format:
         delimiter: ''
-  out_of_warranty: "⚠️ Out of warranty"
+  out_of_warranty: "⚠️ Buiten garantie"
   pagination:
     next: Volgende
     previous: Vorige
+  sessions:
+    rejection: "🚫 Te veel aanvragen of ongeautoriseerd."
   show: Tonen
   support:
     array:
@@ -408,6 +434,10 @@ nl:
       upload_heading: "📥 Nieuw CSV uploaden"
       upload_submit: Uploaden
   transactions:
+    create:
+      success: "✅ Transactie succesvol aangemaakt."
+    destroy:
+      success: "✅ Transactie succesvol verwijderd."
     imports:
       create:
         file_too_large: "⚠️ Bestand te groot. Maximum grootte is 5MB."
@@ -432,6 +462,8 @@ nl:
       note: Opmerking
       show: Tonen
       type: Type
+    update:
+      success: "✅ Transactie succesvol bijgewerkt."
   users:
     profiles:
       edit:
@@ -441,4 +473,4 @@ nl:
         locale_nl: "🇳🇱 Nederlands"
       update:
         success: Profiel bijgewerkt
-  warrantied: "🛡️ Warrantied"
+  warrantied: "🛡️ Onder garantie"
