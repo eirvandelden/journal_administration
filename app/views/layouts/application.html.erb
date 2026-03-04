@@ -50,7 +50,7 @@
     <main>
       <% flash.each do |key, value| %>
         <aside>
-          <p class="flash <%= key.to_s.gsub(/[^a-z_-]/, '') %>"><%= value %></p>
+          <p role="<%= key.to_s == 'alert' || key.to_s == 'error' ? 'alert' : 'status' %>"><%= value %></p>
         </aside>
       <% end %>
       <%= yield %>
