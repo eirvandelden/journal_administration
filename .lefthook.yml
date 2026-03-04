@@ -17,9 +17,11 @@ pre-push:
     herb-lint-full:
       run: npx herb-lint app/views/
       fail_text: "herb-lint failed on full view scan"
+      skip: true # TODO: herb-lint npm package not available
     herb-analyze:
       run: bundle exec herb analyze app/views/
       fail_text: "herb analyze failed"
+      skip: true # TODO: herb 0.8.10 incompatible with Ruby 4
     i18n-normalized:
       run: bundle exec ruby ./bin/check_i18n_normalized
       fail_text: "Locale files must be normalized. Run: bundle exec i18n-tasks normalize"
