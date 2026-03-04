@@ -8,20 +8,15 @@
     <div class="flex align-center gap">
       <label class="flex align-center gap input input--actor txt-large">
         <%= form.email_field :email_address, required: true, class: "input full-width", autofocus: true, autocomplete: "username", placeholder: "Enter your email address", value: params[:email_address] %>
-        <%= image_tag "email.svg", aria: { hidden: "true" }, size: 30, class: "colorize--black" %>
       </label>
     </div>
 
     <div class="flex align-center gap">
       <label class="flex align-center gap input input--actor txt-large">
         <%= form.password_field :password, required: true, class: "input full-width", autocomplete: "current-password", placeholder: "Enter your password", maxlength: 72 %>
-        <%= image_tag "password.svg", aria: { hidden: "true" }, size: 30, class: "colorize--black" %>
       </label>
     </div>
-    <button type="submit" id="log_in" class="btn btn--reversed center">
-      <%= image_tag "arrow-right.svg", aria: { hidden: true }, size: 24 %>
-      <span class="for-screen-reader">Sign in</span>
-    </button>
+    <button type="submit" id="log_in" class="btn btn--reversed center">Sign in</button>
   <% end %>
 </div>
 
