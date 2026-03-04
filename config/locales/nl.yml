@@ -319,13 +319,13 @@ nl:
   left: "📤 Verlaten"
   main_nav:
     accounts: "🏦 %{model}"
+    admin: "🥷 Beheer"
     categories: "🏷️ %{model}"
     chattels: "📦 %{model}"
     dashboard_filters: "🔎 Filters"
     journal_views: "📚 Weergaven"
-    todo: "✅ %{model}"
     profile: "👤 Profiel"
-    admin: "🥷 Beheer"
+    todo: "✅ %{model}"
   number:
     currency:
       format:
