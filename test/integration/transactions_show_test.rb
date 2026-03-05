@@ -2,8 +2,8 @@ require "test_helper"
 
 class TransactionsShowTest < ActionDispatch::IntegrationTest
   setup do
-    @transaction = transactions(:debit_grocery)
-    @uncategorized = transactions(:uncategorized)
+    @transaction = transactions(:credit_grocery)
+    @uncategorized = transactions(:uncategorized_credit)
     @admin = users(:admin)
     @member = users(:member)
   end

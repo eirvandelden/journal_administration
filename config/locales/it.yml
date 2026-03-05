@@ -5,6 +5,8 @@ it:
       success: "✅ Conto creato con successo."
     destroy:
       success: "✅ Conto eliminato con successo."
+    errors:
+      missing_category: Il conto deve avere una categoria
     index:
       account_number: Numero conto
       category: Categoria
@@ -14,7 +16,6 @@ it:
       external_accounts: Conti esterni
       id: Id
       name: Nome
-      external_accounts: Conti esterni
       new_account: "➕ Nuovo conto"
       own_accounts: Conti di famiglia
       owner: Proprietario
@@ -455,6 +456,10 @@ it:
       title: "➕ Nuova transazione"
     recent:
       heading: Transazioni recenti
+    show:
+      account: Conto
+      amount: Importo
+      mutations: Variazioni
     table:
       amount: Importo
       booked_at: Data registrazione

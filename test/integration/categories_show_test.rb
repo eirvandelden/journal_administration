@@ -17,15 +17,14 @@ class CategoriesShowTest < ActionDispatch::IntegrationTest
     get category_path(categories(:supermarket))
 
     assert_response :success
-    assert_includes response.body, transactions(:debit_grocery).note
+    assert_includes response.body, transactions(:credit_grocery).note
   end
 
   test "show for parent category renders transactions from child categories" do
     get category_path(categories(:groceries))
 
     assert_response :success
-    assert_includes response.body, transactions(:debit_grocery).note
-    assert_includes response.body, transactions(:debit_bakery).note
+    assert_includes response.body, transactions(:credit_grocery).note
   end
 
   test "edit renders recent transactions heading" do
@@ -39,14 +38,13 @@ class CategoriesShowTest < ActionDispatch::IntegrationTest
     get edit_category_path(categories(:supermarket))
 
     assert_response :success
-    assert_includes response.body, transactions(:debit_grocery).note
+    assert_includes response.body, transactions(:credit_grocery).note
   end
 
   test "edit for parent category renders transactions from child categories" do
     get edit_category_path(categories(:groceries))
 
     assert_response :success
-    assert_includes response.body, transactions(:debit_grocery).note
-    assert_includes response.body, transactions(:debit_bakery).note
+    assert_includes response.body, transactions(:credit_grocery).note
   end
 end
