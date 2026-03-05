@@ -452,6 +452,8 @@ it:
       upload: Carica
     new:
       title: "➕ Nuova transazione"
+    recent:
+      heading: Transazioni recenti
     table:
       amount: Importo
       booked_at: Data registrazione

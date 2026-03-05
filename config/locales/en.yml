@@ -452,6 +452,8 @@ en:
       upload: Upload
     new:
       title: "➕ New transaction"
+    recent:
+      heading: Recent transactions
     table:
       amount: Amount
       booked_at: Booked at date

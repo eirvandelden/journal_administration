@@ -57,6 +57,97 @@ class AccountTest < ActiveSupport::TestCase
     assert accounts(:savings).valid?
   end
 
+  # -- recent_transactions ----------------------------------------------------
+
+  test "recent_transactions returns transactions where account is debitor" do
+    result = accounts(:checking).recent_transactions
+
+    assert_includes result, transactions(:debit_grocery)
+  end
+
+  test "recent_transactions returns transactions where account is creditor" do
+    result = accounts(:checking).recent_transactions
+
+    assert_includes result, transactions(:credit_salary)
+  end
+
+  test "recent_transactions respects the limit parameter" do
+    result = accounts(:checking).recent_transactions(limit: 2)
+
+    assert_equal 2, result.count
+  end
+
+  test "recent_transactions defaults to a limit of ten" do
+    11.times do |index|
+      Transaction.create!(
+        amount: 10 + index,
+        booked_at: 20.days.from_now + index.minutes,
+        interest_at: 20.days.from_now + index.minutes,
+        debitor: accounts(:checking),
+        creditor: accounts(:albert_heijn),
+        category: categories(:supermarket)
+      )
+    end
+
+    assert_equal 10, accounts(:checking).recent_transactions.count
+  end
+
+  test "recent_transactions are ordered by booked_at descending" do
+    older = Transaction.create!(
+      amount: 20,
+      booked_at: 30.days.from_now,
+      interest_at: 30.days.from_now,
+      debitor: accounts(:checking),
+      creditor: accounts(:albert_heijn),
+      category: categories(:supermarket)
+    )
+    newer = Transaction.create!(
+      amount: 30,
+      booked_at: 31.days.from_now,
+      interest_at: 31.days.from_now,
+      debitor: accounts(:checking),
+      creditor: accounts(:albert_heijn),
+      category: categories(:supermarket)
+    )
+
+    result_ids = accounts(:checking).recent_transactions(limit: 2).pluck(:id)
+
+    assert_equal [ newer.id, older.id ], result_ids
+  end
+
+  test "recent_transactions break booked_at ties with newest record first" do
+    timestamp = 60.days.from_now
+
+    first = Transaction.create!(
+      amount: 60,
+      booked_at: timestamp,
+      interest_at: timestamp,
+      debitor: accounts(:checking),
+      creditor: accounts(:albert_heijn),
+      category: categories(:supermarket)
+    )
+    second = Transaction.create!(
+      amount: 70,
+      booked_at: timestamp,
+      interest_at: timestamp,
+      debitor: accounts(:checking),
+      creditor: accounts(:albert_heijn),
+      category: categories(:supermarket)
+    )
+
+    result_ids = accounts(:checking).recent_transactions(limit: 2).pluck(:id)
+
+    assert_equal [ second.id, first.id ], result_ids
+  end
+
+  test "recent_transactions preloads associations used by the view" do
+    relation = accounts(:checking).recent_transactions
+
+    assert_includes relation.includes_values, :creditor
+    assert_includes relation.includes_values, :debitor
+    assert_includes relation.includes_values, :category
+  end
+
   # -- to_s -------------------------------------------------------------------
 
   test "to_s returns name when present" do

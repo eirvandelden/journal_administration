@@ -452,6 +452,8 @@ nl:
       upload: Uploaden
     new:
       title: "➕ Nieuwe transactie"
+    recent:
+      heading: Recente transacties
     table:
       amount: Bedrag
       booked_at: Boekingsdatum
