@@ -88,6 +88,8 @@ class Dashboard
   end
 
   def scoped_mutations_for(direction)
+    return Mutation.none unless account
+
     scope = Mutation.where(account_id: account.id)
     amount = Mutation.arel_table[:amount]
     condition = (direction == :debit) ? amount.gt(0) : amount.lt(0)

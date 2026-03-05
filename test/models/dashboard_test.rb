@@ -14,6 +14,16 @@ class DashboardTest < ActiveSupport::TestCase
 
       assert_equal Time.current.last_year.beginning_of_year.to_date, dashboard.date_range.start_date.to_date
     end
+
+    test "handles nil account by returning empty totals" do
+      dashboard = Dashboard.new(account: nil, filter: "year_to_date")
+
+      assert_equal({}, dashboard.debit_transactions)
+      assert_equal({}, dashboard.credit_transactions)
+      assert_equal 0, dashboard.debit_total
+      assert_equal 0, dashboard.credit_sub_total
+      assert_equal 0, dashboard.credit_total
+    end
   end
 
   class GroupingTest < DashboardTest
