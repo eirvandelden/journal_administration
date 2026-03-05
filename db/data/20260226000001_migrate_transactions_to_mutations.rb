@@ -21,10 +21,18 @@ class MigrateTransactionsToMutations < ActiveRecord::Migration[8.1]
   private
 
   def migrate_legacy_transaction(legacy_transaction)
-    return log_skipped_transaction(legacy_transaction) if invalid_legacy_transaction?(legacy_transaction)
+    if invalid_legacy_transaction?(legacy_transaction)
+      handle_skipped_transaction(legacy_transaction)
+      return
+    end
 
     transaction = create_transaction_with_mutations_from(legacy_transaction)
     repoint_chattels(legacy_transaction, transaction)
+  end
+
+  def handle_skipped_transaction(legacy_transaction)
+    clear_chattel_purchase_links_for(legacy_transaction)
+    log_skipped_transaction(legacy_transaction)
   end
 
   def log_skipped_transaction(legacy_transaction)
@@ -47,6 +55,10 @@ class MigrateTransactionsToMutations < ActiveRecord::Migration[8.1]
 
   def repoint_chattels(legacy_transaction, transaction)
     Chattel.where(purchase_transaction_id: legacy_transaction.id).update_all(purchase_transaction_id: transaction.id)
+  end
+
+  def clear_chattel_purchase_links_for(legacy_transaction)
+    Chattel.where(purchase_transaction_id: legacy_transaction.id).update_all(purchase_transaction_id: nil)
   end
 
   def transaction_attributes_for(legacy_transaction)

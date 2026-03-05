@@ -45,7 +45,7 @@ module Resolvable
     private
 
     def family_account_numbers
-      @family_account_numbers ||= where.not(owner: nil).where.not(account_number: [ nil, "" ]).pluck(:account_number)
+      where.not(owner: nil).where.not(account_number: [ nil, "" ]).pluck(:account_number)
     end
   end
 end

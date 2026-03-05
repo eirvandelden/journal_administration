@@ -33,10 +33,20 @@ class MigrateTransactionsToMutationsTest < ActiveSupport::TestCase
     assert_equal 0, transaction.mutations.sum(:amount)
   end
 
+  test "migrate_legacy_transaction clears chattel links for skipped legacy rows" do
+    migration = MigrateTransactionsToMutations.new
+    legacy_id = chattels(:one).purchase_transaction_id
+    legacy_transaction = build_legacy_transaction(id: legacy_id, booked_at: nil)
+
+    migration.send(:migrate_legacy_transaction, legacy_transaction)
+
+    assert_nil chattels(:one).reload.purchase_transaction_id
+  end
+
   private
 
-  def build_legacy_transaction
-    LegacyTransaction.new(**legacy_transaction_attributes)
+  def build_legacy_transaction(overrides = {})
+    LegacyTransaction.new(**legacy_transaction_attributes.merge(overrides))
   end
 
   def legacy_transaction_attributes
