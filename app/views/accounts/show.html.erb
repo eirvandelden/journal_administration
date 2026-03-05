@@ -31,3 +31,7 @@
 
 <%= button_to t('.update_transactions'), account_transactions_bulk_path(@account), method: :patch %>
 </article>
+
+<article>
+  <%= render "shared/recent_transactions", transactions: @account.recent_transactions %>
+</article>

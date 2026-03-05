@@ -9,3 +9,7 @@
 <article>
   <%= render 'form' %>
 </article>
+
+<article>
+  <%= render "shared/recent_transactions", transactions: @account.recent_transactions %>
+</article>

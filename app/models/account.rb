@@ -21,6 +21,18 @@ class Account < ApplicationRecord
 
   validates :account_number, uniqueness: true, allow_blank: true
 
+  # Returns the 10 most recent transactions involving this account as debitor or creditor
+  #
+  # @param limit [Integer] Maximum number of transactions to return
+  # @return [ActiveRecord::Relation] Transactions ordered by most recent first
+  def recent_transactions(limit: 10)
+    Transaction
+      .includes(:creditor, :debitor, :category)
+      .where("debitor_account_id = :id OR creditor_account_id = :id", id: id)
+      .order(booked_at: :desc, id: :desc)
+      .limit(limit)
+  end
+
   # Returns human-readable string representation of the account
   #
   # @return [String] Account name if present, otherwise account number
