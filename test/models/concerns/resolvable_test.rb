@@ -40,4 +40,15 @@ class ResolvableTest < ActiveSupport::TestCase
 
     assert_equal "Albert Heijn B.V.", account.name
   end
+
+  test "resolve_from_description reflects newly created family accounts" do
+    account_number = "NL9900012345678901234"
+    description = "Payment via #{account_number}"
+
+    assert_nil Account.resolve_from_description(description)
+
+    account = Account.create!(owner: :samen, account_number:)
+
+    assert_equal account, Account.resolve_from_description(description)
+  end
 end
