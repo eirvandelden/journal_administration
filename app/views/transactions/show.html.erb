@@ -7,14 +7,57 @@
   </nav>
 <% end %>
 
-<h1>
-  <%= "#{@transaction.creditor} ➡️ #{@transaction.debitor}" %>
-  <%= link_to edit_transaction_path(@transaction) do %>
-    <b><%= t('common.edit') %></b>
-  <% end %>
-</h1>
+<header>
+  <h1><%= "#{@transaction.creditor} ➡️ #{@transaction.debitor}" %></h1>
+  <nav>
+    <%= link_to edit_transaction_path(@transaction) do %>
+      <b><%= t('common.edit') %></b>
+    <% end %>
+  </nav>
+</header>
 
-<%= render partial: 'form', locals: { disabled: :disabled } %>
+<article>
+  <dl>
+    <dt><%= t('transactions.table.type') %></dt>
+    <dd><%= @transaction.type_icon %></dd>
+
+    <dt><%= t('transactions.table.creditor') %></dt>
+    <% creditor = @transaction.creditor %>
+    <dd><%= creditor ? link_to(creditor.to_s, account_path(creditor)) : '-' %></dd>
+
+    <dt><%= t('transactions.table.debitor') %></dt>
+    <% debitor = @transaction.debitor %>
+    <dd><%= debitor ? link_to(debitor.to_s, account_path(debitor)) : '-' %></dd>
+
+    <dt><%= t('transactions.table.amount') %></dt>
+    <dd><%= number_to_currency(@transaction.amount) %></dd>
+
+    <dt><%= t('transactions.table.category') %></dt>
+    <dd><%= @transaction.category&.name || '-' %></dd>
+
+    <dt><%= t('transactions.table.booked_at') %></dt>
+    <dd><%= @transaction.booked_at ? l(@transaction.booked_at.to_date) : '-' %></dd>
+
+    <dt><%= t('transactions.table.interest_date') %></dt>
+    <dd><%= @transaction.interest_at ? l(@transaction.interest_at.to_date) : '-' %></dd>
+
+    <dt><%= t('transactions.table.note') %></dt>
+    <dd><%= @transaction.note %></dd>
+  </dl>
+
+  <% if Current.user.can_administer? %>
+    <dl>
+      <dt><%= Transaction.human_attribute_name(:original_note) %></dt>
+      <dd><%= @transaction.original_note %></dd>
+
+      <dt><%= Transaction.human_attribute_name(:original_balance_after_mutation) %></dt>
+      <dd><%= @transaction.original_balance_after_mutation %></dd>
+
+      <dt><%= Transaction.human_attribute_name(:original_tag) %></dt>
+      <dd><%= @transaction.original_tag %></dd>
+    </dl>
+  <% end %>
+</article>
 
 <h2><%= t(".mutations") %></h2>
 

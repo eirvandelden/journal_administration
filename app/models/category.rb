@@ -20,16 +20,16 @@ class Category < ApplicationRecord
 
   validates :direction, presence: true
 
-  # Returns the most recent transactions for this category and its children
+  # Returns recent transactions for this category and its children.
   #
-  # @param limit [Integer] Maximum number of transactions to return
-  # @return [ActiveRecord::Relation] Transactions ordered by most recent first
+  # @param limit [Integer]
+  # @return [ActiveRecord::Relation<Transaction>]
   def recent_transactions(limit: 10)
-    Transaction
-      .where(category_id: children.select(:id))
-      .includes(:creditor, :debitor, :category)
-      .order(booked_at: :desc, id: :desc)
-      .limit(limit)
+    Transaction.where(category_id: children.select(:id))
+               .includes(:category, mutations: :account)
+               .order(booked_at: :desc, id: :desc)
+               .distinct
+               .limit(limit)
   end
 
   # Returns all children of this category plus itself

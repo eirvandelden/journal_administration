@@ -5,6 +5,8 @@ en:
       success: "✅ Account was successfully created."
     destroy:
       success: "✅ Account was successfully destroyed."
+    errors:
+      missing_category: Account must have a category
     index:
       account_number: Account number
       category: Category
@@ -14,7 +16,6 @@ en:
       external_accounts: External Accounts
       id: Id
       name: Name
-      external_accounts: External Accounts
       new_account: "➕ New Account"
       own_accounts: Family Accounts
       owner: Owner
@@ -478,6 +479,10 @@ en:
       title: "➕ New transaction"
     recent:
       heading: Recent transactions
+    show:
+      account: Account
+      amount: Amount
+      mutations: Mutations
     table:
       amount: Amount
       booked_at: Booked at date

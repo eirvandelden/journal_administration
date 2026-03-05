@@ -69,7 +69,14 @@ class Dashboard
   def grouped_transactions_for(direction)
     transactions = grouped_amounts_for(direction)
     categories = indexed_categories_for(transactions.keys.compact)
-    Category.sort_by_hierarchy(transactions.transform_keys { |category_id| categories[category_id] })
+    transactions_by_category = transactions.transform_keys { |category_id| categories[category_id] }
+
+    transactions_by_parent = transactions_by_category.each_with_object({}) do |(category, amount), result|
+      parent = category&.parent_category || category
+      result[parent] = (result[parent] || 0) + amount
+    end
+
+    Category.sort_by_hierarchy(transactions_by_parent)
   end
 
   def grouped_amounts_for(direction)

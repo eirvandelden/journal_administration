@@ -27,17 +27,17 @@ class DashboardTest < ActiveSupport::TestCase
   end
 
   class GroupingTest < DashboardTest
-    test "debit_transactions groups debit values by category and keeps uncategorized totals" do
+    test "debit_transactions groups debit values by parent category and keeps uncategorized totals" do
       dashboard = year_to_date_dashboard
 
-      assert_equal 3000, dashboard.debit_transactions[categories(:salary)]
+      assert_equal 3000, dashboard.debit_transactions[categories(:income)]
       assert_equal 75, dashboard.debit_transactions[nil]
     end
 
-    test "credit_transactions groups credit values by category" do
+    test "credit_transactions groups credit values by parent category" do
       dashboard = year_to_date_dashboard
 
-      assert_equal 50, dashboard.credit_transactions[categories(:supermarket)]
+      assert_equal 50, dashboard.credit_transactions[categories(:groceries)]
       assert_equal 25, dashboard.credit_transactions[nil]
     end
   end

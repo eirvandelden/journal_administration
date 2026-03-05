@@ -65,20 +65,28 @@ class CategoryTest < ActiveSupport::TestCase
   test "recent_transactions returns transactions for the category" do
     result = categories(:supermarket).recent_transactions
 
-    assert_includes result, transactions(:debit_grocery)
+    assert_includes result, transactions(:credit_grocery)
   end
 
   test "recent_transactions excludes transactions for other categories" do
     result = categories(:supermarket).recent_transactions
 
-    assert_not_includes result, transactions(:credit_salary)
+    assert_not_includes result, transactions(:debit_salary)
   end
 
   test "recent_transactions for a parent category includes child category transactions" do
+    bakery_transaction = create_double_entry_transaction(
+      booked_at: 1.day.from_now,
+      category: categories(:bakery),
+      primary_account: accounts(:checking),
+      counterparty_account: accounts(:albert_heijn),
+      primary_amount: -18
+    )
+
     result = categories(:groceries).recent_transactions
 
-    assert_includes result, transactions(:debit_grocery)
-    assert_includes result, transactions(:debit_bakery)
+    assert_includes result, transactions(:credit_grocery)
+    assert_includes result, bakery_transaction
   end
 
   test "recent_transactions respects the limit parameter" do
@@ -89,13 +97,12 @@ class CategoryTest < ActiveSupport::TestCase
 
   test "recent_transactions defaults to a limit of ten" do
     11.times do |index|
-      Transaction.create!(
-        amount: 10 + index,
+      create_double_entry_transaction(
         booked_at: 40.days.from_now + index.minutes,
-        interest_at: 40.days.from_now + index.minutes,
-        debitor: accounts(:checking),
-        creditor: accounts(:albert_heijn),
-        category: categories(:supermarket)
+        category: categories(:supermarket),
+        primary_account: accounts(:checking),
+        counterparty_account: accounts(:albert_heijn),
+        primary_amount: -(10 + index)
       )
     end
 
@@ -103,21 +110,19 @@ class CategoryTest < ActiveSupport::TestCase
   end
 
   test "recent_transactions are ordered by booked_at descending" do
-    older = Transaction.create!(
-      amount: 40,
+    older = create_double_entry_transaction(
       booked_at: 50.days.from_now,
-      interest_at: 50.days.from_now,
-      debitor: accounts(:checking),
-      creditor: accounts(:albert_heijn),
-      category: categories(:supermarket)
+      category: categories(:supermarket),
+      primary_account: accounts(:checking),
+      counterparty_account: accounts(:albert_heijn),
+      primary_amount: -40
     )
-    newer = Transaction.create!(
-      amount: 50,
+    newer = create_double_entry_transaction(
       booked_at: 51.days.from_now,
-      interest_at: 51.days.from_now,
-      debitor: accounts(:checking),
-      creditor: accounts(:albert_heijn),
-      category: categories(:supermarket)
+      category: categories(:supermarket),
+      primary_account: accounts(:checking),
+      counterparty_account: accounts(:albert_heijn),
+      primary_amount: -50
     )
 
     result_ids = categories(:supermarket).recent_transactions(limit: 2).pluck(:id)
@@ -128,21 +133,19 @@ class CategoryTest < ActiveSupport::TestCase
   test "recent_transactions break booked_at ties with newest record first" do
     timestamp = 70.days.from_now
 
-    first = Transaction.create!(
-      amount: 60,
+    first = create_double_entry_transaction(
       booked_at: timestamp,
-      interest_at: timestamp,
-      debitor: accounts(:checking),
-      creditor: accounts(:albert_heijn),
-      category: categories(:supermarket)
+      category: categories(:supermarket),
+      primary_account: accounts(:checking),
+      counterparty_account: accounts(:albert_heijn),
+      primary_amount: -60
     )
-    second = Transaction.create!(
-      amount: 70,
+    second = create_double_entry_transaction(
       booked_at: timestamp,
-      interest_at: timestamp,
-      debitor: accounts(:checking),
-      creditor: accounts(:albert_heijn),
-      category: categories(:supermarket)
+      category: categories(:supermarket),
+      primary_account: accounts(:checking),
+      counterparty_account: accounts(:albert_heijn),
+      primary_amount: -70
     )
 
     result_ids = categories(:supermarket).recent_transactions(limit: 2).pluck(:id)
@@ -153,9 +156,8 @@ class CategoryTest < ActiveSupport::TestCase
   test "recent_transactions preloads associations used by the view" do
     relation = categories(:supermarket).recent_transactions
 
-    assert_includes relation.includes_values, :creditor
-    assert_includes relation.includes_values, :debitor
     assert_includes relation.includes_values, :category
+    assert_includes relation.includes_values, { mutations: :account }
   end
 
   # -- to_s -------------------------------------------------------------------
@@ -188,5 +190,15 @@ class CategoryTest < ActiveSupport::TestCase
     names = Category.all.map(&:name)
 
     assert_equal names.sort, names
+  end
+
+  private
+
+  def create_double_entry_transaction(booked_at:, category:, primary_account:, counterparty_account:, primary_amount:)
+    transaction = Transaction.new(booked_at: booked_at, interest_at: booked_at, category: category)
+    transaction.mutations.build(account: primary_account, amount: primary_amount)
+    transaction.mutations.build(account: counterparty_account, amount: -primary_amount)
+    transaction.save!
+    transaction
   end
 end
