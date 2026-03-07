@@ -6,10 +6,10 @@ class TransactionsController < ApplicationController
   #
   # @return [void]
   def index
-    transactions = Transaction.all
+    transactions = Transaction.for_index
     transactions = transactions.where(category: nil) if params[:filter] == "no_category"
 
-    @transactions = set_page_and_extract_portion_from transactions.order(interest_at: :desc), per_page: [20]
+    @transactions = set_page_and_extract_portion_from transactions.order(interest_at: :desc), per_page: [ 20 ]
   end
 
   # Displays a single transaction
@@ -79,8 +79,11 @@ class TransactionsController < ApplicationController
   end
 
   def transaction_params
-    key = (params.keys & %w[debit credit transfer transaction])[0]
-    params.require(key).permit(:id, :debit_account_id, :credit_account_id, :amount, :booked_at, :interest_at,
-  :category_id, :note, :type)
+    params.require(:transaction).permit(
+      :booked_at,
+      :interest_at,
+      :category_id,
+      :note
+    )
   end
 end

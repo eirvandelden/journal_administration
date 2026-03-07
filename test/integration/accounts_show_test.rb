@@ -17,7 +17,7 @@ class AccountsShowTest < ActionDispatch::IntegrationTest
     get account_path(accounts(:checking))
 
     assert_response :success
-    assert_includes response.body, transactions(:debit_grocery).note
+    assert_includes response.body, transactions(:credit_grocery).note
   end
 
   test "edit renders recent transactions heading" do
@@ -31,6 +31,6 @@ class AccountsShowTest < ActionDispatch::IntegrationTest
     get edit_account_path(accounts(:checking))
 
     assert_response :success
-    assert_includes response.body, transactions(:credit_salary).note
+    assert_includes response.body, transactions(:debit_salary).note
   end
 end

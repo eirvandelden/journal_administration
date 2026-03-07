@@ -5,6 +5,8 @@ nl:
       success: "✅ Rekening succesvol aangemaakt."
     destroy:
       success: "✅ Rekening succesvol verwijderd."
+    errors:
+      missing_category: Rekening moet een categorie hebben
     index:
       account_number: Rekeningnummer
       category: Categorie
@@ -454,6 +456,10 @@ nl:
       title: "➕ Nieuwe transactie"
     recent:
       heading: Recente transacties
+    show:
+      account: Rekening
+      amount: Bedrag
+      mutations: Mutaties
     table:
       amount: Bedrag
       booked_at: Boekingsdatum

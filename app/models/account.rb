@@ -12,7 +12,8 @@ class Account < ApplicationRecord
 
   # @!attribute [rw] owner
   #   @return [String] The account owner (samen, etienne, michelle, serena, cosimo, chiara)
-  enum :owner, { samen: 0, etienne: 1, michelle: 2, serena: 3, cosimo: 4, chiara: 5 }
+  enum :owner,        { samen: 0, etienne: 1, michelle: 2, serena: 3, cosimo: 4, chiara: 5 }
+  enum :account_type, { asset: 0, liability: 1, expense: 2, income: 3 }
 
   scope :own,      -> { where.not(owner: nil) }
   scope :external, -> { where(owner: nil) }
@@ -21,16 +22,17 @@ class Account < ApplicationRecord
 
   validates :account_number, uniqueness: true, allow_blank: true
 
-  # Returns the 10 most recent transactions involving this account as debitor or creditor
+  # Returns recent transactions involving this account.
   #
-  # @param limit [Integer] Maximum number of transactions to return
-  # @return [ActiveRecord::Relation] Transactions ordered by most recent first
+  # @param limit [Integer]
+  # @return [ActiveRecord::Relation<Transaction>]
   def recent_transactions(limit: 10)
-    Transaction
-      .includes(:creditor, :debitor, :category)
-      .where("debitor_account_id = :id OR creditor_account_id = :id", id: id)
-      .order(booked_at: :desc, id: :desc)
-      .limit(limit)
+    Transaction.joins(:mutations)
+               .where(mutations: { account_id: id })
+               .includes(:category, mutations: :account)
+               .order(booked_at: :desc, id: :desc)
+               .distinct
+               .limit(limit)
   end
 
   # Returns human-readable string representation of the account

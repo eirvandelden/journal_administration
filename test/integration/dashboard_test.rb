@@ -20,6 +20,9 @@ class MainDashboardTest < ActionDispatch::IntegrationTest
   end
 
   test "dashboard with month_to_date filter shows transactions grouped by parent category" do
+    transactions(:credit_grocery).update!(booked_at: Time.current, interest_at: Time.current)
+    transactions(:debit_salary).update!(booked_at: Time.current, interest_at: Time.current)
+
     get dashboard_index_url, params: { filter: "month_to_date" }
 
     assert_response :success

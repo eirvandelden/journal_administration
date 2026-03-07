@@ -77,12 +77,10 @@ class ChattelsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
     def set_chattel
       @chattel = Chattel.find(params[:id])
     end
 
-    # Only allow a list of trusted parameters through.
     def chattel_params
       params.require(:chattel).permit(:name, :kind, :model_number, :serial_number, :purchase_transaction_id, :purchased_at,
 :warranty_expires_at, :left_possession_at, :purchase_price, :notes)
