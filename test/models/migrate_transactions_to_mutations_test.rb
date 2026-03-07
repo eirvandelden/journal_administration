@@ -43,6 +43,12 @@ class MigrateTransactionsToMutationsTest < ActiveSupport::TestCase
     assert_nil chattels(:one).reload.purchase_transaction_id
   end
 
+  test "up does not raise when legacy_transactions table is absent" do
+    migration = MigrateTransactionsToMutations.new
+
+    assert_nothing_raised { migration.up }
+  end
+
   private
 
   def build_legacy_transaction(overrides = {})

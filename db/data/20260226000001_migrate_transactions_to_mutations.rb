@@ -6,12 +6,13 @@ class MigrateTransactionsToMutations < ActiveRecord::Migration[8.1]
   end
 
   def up
+    set_family_account_type_defaults and return unless table_exists?(:legacy_transactions)
+
     ActiveRecord::Base.transaction do
       LegacyTransaction.find_each { |legacy_transaction| migrate_legacy_transaction(legacy_transaction) }
     end
 
-    # Set account_type for family-owned accounts
-    Account.where.not(owner: nil).update_all(account_type: Account.account_types[:asset])
+    set_family_account_type_defaults
   end
 
   def down
@@ -19,6 +20,10 @@ class MigrateTransactionsToMutations < ActiveRecord::Migration[8.1]
   end
 
   private
+
+  def set_family_account_type_defaults
+    Account.where.not(owner: nil).where(account_type: nil).update_all(account_type: Account.account_types[:asset])
+  end
 
   def migrate_legacy_transaction(legacy_transaction)
     if invalid_legacy_transaction?(legacy_transaction)
