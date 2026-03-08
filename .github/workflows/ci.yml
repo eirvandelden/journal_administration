@@ -11,10 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: spinel-coop/setup-rv@v1
+      - uses: appraisal-rb/setup-ruby-flash@v1
         with:
-          ruby-version: current
-          install-gems: true
+          bundler-cache: true
       - run: bundle exec brakeman --no-pager --ignore-config config/brakeman.ignore
 
   lint_ruby:
@@ -22,10 +21,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: spinel-coop/setup-rv@v1
+      - uses: appraisal-rb/setup-ruby-flash@v1
         with:
-          ruby-version: current
-          install-gems: true
+          bundler-cache: true
       - run: bundle exec rubocop --parallel --format github
       - run: bundle exec ruby ./bin/check_i18n_normalized
 
@@ -46,10 +44,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: spinel-coop/setup-rv@v1
+      - uses: appraisal-rb/setup-ruby-flash@v1
         with:
-          ruby-version: current
-          install-gems: true
+          bundler-cache: true
       - run: bundle exec rails db:setup
         env:
           RAILS_ENV: test
