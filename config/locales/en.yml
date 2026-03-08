@@ -415,6 +415,9 @@ en:
     previous: Previous
   sessions:
     rejection: "🚫 Too many requests or unauthorized."
+    transfers:
+      show:
+        submit: Continue
   show: Show
   support:
     array:
@@ -495,4 +498,11 @@ en:
         locale_nl: "🇳🇱 Nederlands"
       update:
         success: Profile updated
+    transfer:
+      copy: Copy sign-in link
+      other_title: Share to get them back into their account
+      self_title: Link to automatically log in on another device
+      share: Share sign-in link
+      share_text: This private sign-in URL can be used to sign in on another device or recover access.
+      share_title: Your sign-in link
   warrantied: "🛡️ Warrantied"

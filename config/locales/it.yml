@@ -415,6 +415,9 @@ it:
     previous: Precedente
   sessions:
     rejection: "🚫 Troppe richieste o non autorizzato."
+    transfers:
+      show:
+        submit: Continua
   show: Mostra
   support:
     array:
@@ -495,4 +498,11 @@ it:
         locale_nl: "🇳🇱 Nederlands"
       update:
         success: Profilo aggiornato
+    transfer:
+      copy: Copia link di accesso
+      other_title: Condividi per farli rientrare nel loro account
+      self_title: Link per accedere automaticamente da un altro dispositivo
+      share: Condividi link di accesso
+      share_text: Questo link privato di accesso puo essere usato per accedere da un altro dispositivo o recuperare l'accesso.
+      share_title: Il tuo link di accesso
   warrantied: "🛡️ In garanzia"

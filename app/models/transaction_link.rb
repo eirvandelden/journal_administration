@@ -6,7 +6,7 @@ class TransactionLink < ApplicationRecord
   belongs_to :source, class_name: "Transaction", foreign_key: :source_transaction_id
   belongs_to :transfer, class_name: "Transaction"
 
-  validates :transfer_id, uniqueness: { scope: :source_transaction_id }
+  validates :transfer_id, uniqueness: true
   validate :transfer_must_be_transfer_type
   validate :source_must_not_be_transfer_type
 

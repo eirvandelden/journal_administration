@@ -9,7 +9,11 @@ Rails.application.routes.draw do
   resources :chattels
   root "dashboard#index"
 
-  resource :session, only: %i[ new create destroy ]
+  resource :session, only: %i[ new create destroy ] do
+    scope module: "sessions" do
+      resources :transfers, only: %i[ show update ]
+    end
+  end
 
   resources :users do
     scope module: "users" do

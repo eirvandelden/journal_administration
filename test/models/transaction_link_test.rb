@@ -61,4 +61,16 @@ class TransactionLinkTest < ActiveSupport::TestCase
     assert_not duplicate.valid?
     assert_includes duplicate.errors[:transfer_id], "has already been taken"
   end
+
+  test "transfer already linked to another source is invalid" do
+    existing = transaction_links(:grocery_to_transfer)
+
+    duplicate = TransactionLink.new(
+      source: transactions(:uncategorized),
+      transfer: existing.transfer
+    )
+
+    assert_not duplicate.valid?
+    assert_includes duplicate.errors[:transfer_id], "has already been taken"
+  end
 end
