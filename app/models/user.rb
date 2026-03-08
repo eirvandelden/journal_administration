@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  include Role
+  include Role, Transferable
 
   has_many :sessions, dependent: :destroy
   has_secure_password validations: false

@@ -34,6 +34,18 @@ class LinkableTest < ActiveSupport::TestCase
     assert_not_includes suggestions, transactions(:transfer_for_grocery)
   end
 
+  test "suggested_transfers excludes transfers linked to another source" do
+    debit = transactions(:debit_grocery).dup
+    debit.note = "Another grocery run"
+    debit.booked_at = transactions(:debit_grocery).booked_at + 1.day
+    debit.interest_at = debit.booked_at
+    debit.save!
+
+    suggestions = debit.suggested_transfers
+
+    assert_not_includes suggestions, transactions(:transfer_for_grocery)
+  end
+
   test "suggested_transfers excludes transfers outside the date window" do
     debit = transactions(:debit_grocery)
     debit.transaction_links.destroy_all

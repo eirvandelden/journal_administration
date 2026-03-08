@@ -1,0 +1,3 @@
+<%= form_with url: session_transfer_path(params[:id]), method: :put, data: { controller: "auto-submit" } do |form| %>
+  <noscript><%= form.submit t("sessions.transfers.show.submit") %></noscript>
+<% end %>

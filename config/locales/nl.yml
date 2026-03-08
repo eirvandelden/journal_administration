@@ -415,6 +415,9 @@ nl:
     previous: Vorige
   sessions:
     rejection: "🚫 Te veel aanvragen of ongeautoriseerd."
+    transfers:
+      show:
+        submit: Doorgaan
   show: Tonen
   support:
     array:
@@ -495,4 +498,11 @@ nl:
         locale_nl: "🇳🇱 Nederlands"
       update:
         success: Profiel bijgewerkt
+    transfer:
+      copy: Aanmeldlink kopieren
+      other_title: Deel om ze terug in hun account te krijgen
+      self_title: Link om automatisch in te loggen op een ander apparaat
+      share: Aanmeldlink delen
+      share_text: Deze prive-aanmeldlink kan worden gebruikt om op een ander apparaat in te loggen of toegang te herstellen.
+      share_title: Jouw aanmeldlink
   warrantied: "🛡️ Onder garantie"

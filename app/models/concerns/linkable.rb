@@ -24,6 +24,7 @@ module Linkable
 
     Transaction.unscoped
       .where(type: "Transfer")
+      .where.missing(:reverse_transaction_links)
       .where(amount: amount)
       .where(booked_at: (booked_at - 5.days)..(booked_at + 5.days))
       .where.not(id: linked_transfer_ids)

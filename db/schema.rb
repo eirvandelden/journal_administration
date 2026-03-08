@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_08_081613) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_08_163000) do
   create_table "accounts", force: :cascade do |t|
     t.string "account_number"
     t.integer "category_id"
@@ -149,9 +149,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_08_081613) do
     t.integer "source_transaction_id", null: false
     t.integer "transfer_id", null: false
     t.datetime "updated_at", null: false
-    t.index ["source_transaction_id", "transfer_id"], name: "idx_on_source_transaction_id_transfer_id_d63dd0fc41", unique: true
     t.index ["source_transaction_id"], name: "index_transaction_links_on_source_transaction_id"
-    t.index ["transfer_id"], name: "index_transaction_links_on_transfer_id"
+    t.index ["transfer_id"], name: "index_transaction_links_on_transfer_id", unique: true
   end
 
   create_table "transactions", force: :cascade do |t|
