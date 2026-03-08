@@ -10,6 +10,13 @@
   <%= render partial: 'form' %>
 </article>
 
+<% unless @transaction.type == "Transfer" %>
+  <%= turbo_frame_tag "transaction_links" do %>
+    <%= render "transaction_links/balance_table", transaction: @transaction %>
+    <%= render "transaction_links/suggestions", transaction: @transaction %>
+  <% end %>
+<% end %>
+
 <div class="actions">
   <%= button_to t('common.destroy'), @transaction, method: :delete, class: "button-danger", data: { turbo_confirm: t('common.confirm_destroy') } %>
 </div>

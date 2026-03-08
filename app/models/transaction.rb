@@ -6,6 +6,7 @@ class Transaction < ApplicationRecord
   include Accountable
   include Categorizable
   include Importable
+  include Linkable
 
   TYPES = %w[Credit Debit Transfer].freeze
 

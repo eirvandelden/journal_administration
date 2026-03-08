@@ -67,11 +67,19 @@ en:
         restrict_dependent_destroy:
           has_many: Cannot delete record because dependent %{record} exist
           has_one: Cannot delete record because a dependent %{record} exists
+      models:
+        transaction_link:
+          attributes:
+            source:
+              must_not_be_transfer: must not be a Transfer transaction
+            transfer:
+              must_be_transfer: must be a Transfer transaction
     models:
       account: Account
       category: Category
       chattel: Chattel
       transaction: Transaction
+      transaction_link: Transaction Link
   admin:
     dashboard:
       index:
@@ -433,6 +441,18 @@ en:
       update_transactions: Update Transactions
       upload_heading: "📥 Upload new CSV"
       upload_submit: Upload
+  transaction_links:
+    balance_table:
+      amount: Amount
+      balance: Balance
+      description: Description
+    link: Link
+    suggestions:
+      amount: Amount
+      date: Date
+      description: Description
+      title: Suggested transfers
+    unlink: Unlink
   transactions:
     create:
       success: "✅ Transaction was successfully created."

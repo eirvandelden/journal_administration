@@ -67,11 +67,19 @@ nl:
         restrict_dependent_destroy:
           has_many: Kan item niet verwijderen omdat afhankelijke %{record} bestaan
           has_one: Kan item niet verwijderen omdat %{record} afhankelijk is
+      models:
+        transaction_link:
+          attributes:
+            source:
+              must_not_be_transfer: mag geen overboeking zijn
+            transfer:
+              must_be_transfer: moet een overboeking zijn
     models:
       account: Rekening
       category: Categorie
       chattel: Bezitting
       transaction: Transactie
+      transaction_link: Transactiekoppeling
   admin:
     dashboard:
       index:
@@ -433,6 +441,18 @@ nl:
       update_transactions: Transacties bijwerken
       upload_heading: "📥 Nieuw CSV uploaden"
       upload_submit: Uploaden
+  transaction_links:
+    balance_table:
+      amount: Bedrag
+      balance: Saldo
+      description: Omschrijving
+    link: Koppelen
+    suggestions:
+      amount: Bedrag
+      date: Datum
+      description: Omschrijving
+      title: Voorgestelde overboekingen
+    unlink: Ontkoppelen
   transactions:
     create:
       success: "✅ Transactie succesvol aangemaakt."
