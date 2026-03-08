@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_19_095660) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_08_081613) do
   create_table "accounts", force: :cascade do |t|
     t.string "account_number"
     t.integer "category_id"
@@ -144,6 +144,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_19_095660) do
     t.index ["user_id"], name: "index_sessions_on_user_id"
   end
 
+  create_table "transaction_links", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "source_transaction_id", null: false
+    t.integer "transfer_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["source_transaction_id", "transfer_id"], name: "idx_on_source_transaction_id_transfer_id_d63dd0fc41", unique: true
+    t.index ["source_transaction_id"], name: "index_transaction_links_on_source_transaction_id"
+    t.index ["transfer_id"], name: "index_transaction_links_on_transfer_id"
+  end
+
   create_table "transactions", force: :cascade do |t|
     t.decimal "amount", precision: 10, scale: 2
     t.datetime "booked_at", precision: nil
@@ -181,5 +191,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_19_095660) do
   add_foreign_key "faultline_error_occurrences", "faultline_error_groups", column: "error_group_id"
   add_foreign_key "faultline_request_profiles", "faultline_request_traces", column: "request_trace_id", on_delete: :cascade
   add_foreign_key "sessions", "users"
+  add_foreign_key "transaction_links", "transactions", column: "source_transaction_id"
+  add_foreign_key "transaction_links", "transactions", column: "transfer_id"
   add_foreign_key "transactions", "categories"
 end

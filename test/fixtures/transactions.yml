@@ -38,6 +38,16 @@ transfer_savings:
   category: transfer
   note: Transfer to savings
 
+transfer_for_grocery:
+  type: Transfer
+  amount: 50.00
+  booked_at: <%= (Time.current.beginning_of_month + 2.hours).to_fs(:db) %>
+  interest_at: <%= (Time.current.beginning_of_month + 2.hours).to_fs(:db) %>
+  debitor: savings
+  creditor: checking
+  category: transfer
+  note: Transfer from savings for groceries
+
 uncategorized:
   type: Debit
   amount: 25.00
