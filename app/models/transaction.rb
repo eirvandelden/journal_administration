@@ -8,6 +8,7 @@ class Transaction < ApplicationRecord
 
   scope :ordered, -> { order(booked_at: :desc) }
   scope :for_index, -> { includes(:category, mutations: :account).order(interest_at: :desc) }
+  scope :transfers, -> { joins(:category).where(categories: { name: "Transfer" }) }
 
   has_many :mutations, foreign_key: :transaction_id, inverse_of: :journal_entry, dependent: :destroy
   belongs_to :category, optional: true
@@ -36,6 +37,13 @@ class Transaction < ApplicationRecord
   # @return [BigDecimal]
   def amount
     mutations.sum { |mutation| mutation.amount.to_d.positive? ? mutation.amount.to_d : 0 }
+  end
+
+  # Returns whether this transaction is an internal transfer between family accounts.
+  #
+  # @return [Boolean]
+  def transfer?
+    category&.name == "Transfer"
   end
 
   # Returns an icon that indicates transfer, incoming, or outgoing flow.

@@ -3,7 +3,7 @@ require "test_helper"
 class TransactionLinksTest < ActionDispatch::IntegrationTest
   setup do
     @member = users(:member)
-    @debit = transactions(:debit_grocery)
+    @debit = transactions(:credit_grocery)
     @transfer = transactions(:transfer_for_grocery)
     sign_in_as(@member)
   end

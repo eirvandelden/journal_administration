@@ -1,3 +1,14 @@
+# transfer_for_grocery: savings transfers €50 to checking
+transfer_for_grocery_savings:
+  journal_entry: transfer_for_grocery
+  account: savings
+  amount: -50.00
+
+transfer_for_grocery_checking:
+  journal_entry: transfer_for_grocery
+  account: checking
+  amount: 50.00
+
 # credit_grocery: checking pays Albert Heijn €50
 credit_grocery_our:
   journal_entry: credit_grocery

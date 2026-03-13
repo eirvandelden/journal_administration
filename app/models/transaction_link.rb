@@ -15,7 +15,7 @@ class TransactionLink < ApplicationRecord
   def transfer_must_be_transfer_type
     return if transfer.blank?
 
-    unless transfer.type == "Transfer"
+    unless transfer.transfer?
       errors.add(:transfer, :must_be_transfer)
     end
   end
@@ -23,7 +23,7 @@ class TransactionLink < ApplicationRecord
   def source_must_not_be_transfer_type
     return if source.blank?
 
-    if source.type == "Transfer"
+    if source.transfer?
       errors.add(:source, :must_not_be_transfer)
     end
   end
