@@ -18,24 +18,27 @@ module Linkable
   #
   # Matches on same amount within a ±5 day window, excluding already-linked ones.
   #
-  # @return [ActiveRecord::Relation<Transaction>]
+  # @return [Array<Transaction>]
   def suggested_transfers
-    return Transaction.none if type == "Transfer"
+    return Transaction.none if transfer?
 
     Transaction.unscoped
-      .where(type: "Transfer")
+      .transfers
       .where.missing(:reverse_transaction_links)
-      .where(amount: amount)
       .where(booked_at: (booked_at - 5.days)..(booked_at + 5.days))
       .where.not(id: linked_transfer_ids)
       .order(booked_at: :desc)
+      .select { |t| t.amount == amount }
   end
 
   # Remaining amount not yet covered by linked transfers
   #
   # @return [BigDecimal] 0 when fully covered, positive when underpull
   def link_balance
-    amount - linked_transfers.sum(:amount)
+    amount - linked_transfers
+      .joins(:mutations)
+      .where("mutations.amount > 0")
+      .sum("mutations.amount")
   end
 
   # Whether linked transfers fully cover this transaction's amount

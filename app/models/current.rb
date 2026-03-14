@@ -1,3 +1,4 @@
+# Stores request-scoped context shared across the app.
 class Current < ActiveSupport::CurrentAttributes
   attribute :user
 

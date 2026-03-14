@@ -33,6 +33,22 @@ class PaginationNavigationTest < ActionDispatch::IntegrationTest
     assert_select "nav.pagination a[rel='next']", 0
   end
 
+  test "transactions index renders when transaction interest_at is nil" do
+    transaction = Transaction.new(
+      booked_at: Time.current,
+      interest_at: nil,
+      note: "Nil interest date transaction"
+    )
+    transaction.mutations.build(account: accounts(:checking), amount: -10)
+    transaction.mutations.build(account: accounts(:unknown), amount: 10)
+    transaction.save!
+
+    get transactions_path
+
+    assert_response :success
+    assert_select "table.transactions"
+  end
+
   test "todo pagination is clamped and hides next on the last page" do
     create_uncategorized_transactions(21)
 
@@ -59,22 +75,23 @@ class PaginationNavigationTest < ActionDispatch::IntegrationTest
     end
 
     def create_uncategorized_transactions(count)
-      debitor = accounts(:checking)
-      creditor = accounts(:unknown)
+      outgoing_account = accounts(:checking)
+      incoming_account = accounts(:unknown)
 
       count.times do |index|
-        Transaction.create!(uncategorized_transaction_attributes(index, debitor:, creditor:))
+        create_uncategorized_transaction(index, outgoing_account:, incoming_account:)
       end
     end
 
-    def uncategorized_transaction_attributes(index, debitor:, creditor:)
-      {
-        amount: index + 1,
+    def create_uncategorized_transaction(index, outgoing_account:, incoming_account:)
+      transaction = Transaction.new(
         booked_at: index.minutes.ago,
         interest_at: index.minutes.ago,
-        debitor: debitor,
-        creditor: creditor,
         note: "Pagination transaction #{index}"
-      }
+      )
+      amount = index + 1
+      transaction.mutations.build(account: outgoing_account, amount: -amount)
+      transaction.mutations.build(account: incoming_account, amount: amount)
+      transaction.save!
     end
 end

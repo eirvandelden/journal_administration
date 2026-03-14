@@ -5,6 +5,8 @@ en:
       success: "✅ Account was successfully created."
     destroy:
       success: "✅ Account was successfully destroyed."
+    errors:
+      missing_category: Account must have a category
     index:
       account_number: Account number
       category: Category
@@ -68,6 +70,10 @@ en:
           has_many: Cannot delete record because dependent %{record} exist
           has_one: Cannot delete record because a dependent %{record} exists
       models:
+        transaction:
+          attributes:
+            category:
+              must_remain_transfer: must stay in the Transfer category for internal transfers
         transaction_link:
           attributes:
             source:
@@ -461,6 +467,8 @@ en:
       success: "✅ Transaction was successfully created."
     destroy:
       success: "✅ Transaction was successfully destroyed."
+    form:
+      transfer_category_locked: Internal transfers always stay in the Transfer category.
     imports:
       create:
         file_too_large: "⚠️ File too large. Maximum size is 5MB."
@@ -477,6 +485,10 @@ en:
       title: "➕ New transaction"
     recent:
       heading: Recent transactions
+    show:
+      account: Account
+      amount: Amount
+      mutations: Mutations
     table:
       amount: Amount
       booked_at: Booked at date

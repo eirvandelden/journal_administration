@@ -1,35 +1,33 @@
 require "test_helper"
 
 class CategorizableTest < ActiveSupport::TestCase
-  test "assign_category_from_type assigns Transfer category for Transfer type" do
-    transaction = Transaction.new(type: "Transfer")
+  test "assign_category_from_mutations assigns external account's category" do
+    txn = Transaction.new(booked_at: Time.current)
+    txn.mutations.build(account: accounts(:checking),    amount: -50)
+    txn.mutations.build(account: accounts(:albert_heijn), amount:  50)
 
-    transaction.assign_category_from_type
+    txn.assign_category_from_mutations
 
-    assert_equal categories(:transfer), transaction.category
+    assert_equal accounts(:albert_heijn).category, txn.category
   end
 
-  test "assign_category_from_type assigns debitor category for Credit type" do
-    transaction = Transaction.new(type: "Credit", debitor: accounts(:albert_heijn))
+  test "assign_category_from_mutations assigns Transfer category when both accounts are family-owned" do
+    txn = Transaction.new(booked_at: Time.current)
+    txn.mutations.build(account: accounts(:checking), amount: -100)
+    txn.mutations.build(account: accounts(:savings),  amount:  100)
 
-    transaction.assign_category_from_type
+    txn.assign_category_from_mutations
 
-    assert_equal accounts(:albert_heijn).category, transaction.category
+    assert_equal categories(:transfer), txn.category
   end
 
-  test "assign_category_from_type assigns creditor category for Debit type" do
-    transaction = Transaction.new(type: "Debit", creditor: accounts(:albert_heijn))
+  test "assign_category_from_mutations assigns nil when external account has no category" do
+    txn = Transaction.new(booked_at: Time.current)
+    txn.mutations.build(account: accounts(:checking), amount: -25)
+    txn.mutations.build(account: accounts(:unknown),  amount:  25)
 
-    transaction.assign_category_from_type
+    txn.assign_category_from_mutations
 
-    assert_equal accounts(:albert_heijn).category, transaction.category
-  end
-
-  test "assign_category_from_type assigns nil when debitor has no category" do
-    transaction = Transaction.new(type: "Credit", debitor: accounts(:unknown))
-
-    transaction.assign_category_from_type
-
-    assert_nil transaction.category
+    assert_nil txn.category
   end
 end

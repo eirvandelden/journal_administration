@@ -4,6 +4,7 @@ class TodoTest < ActiveSupport::TestCase
   test "show_upload_form? returns true when no transactions exist" do
     Chattel.update_all(purchase_transaction_id: nil)
     TransactionLink.delete_all
+    Mutation.delete_all
     Transaction.delete_all
     todo = Todo.new
 
@@ -47,7 +48,7 @@ class TodoTest < ActiveSupport::TestCase
   end
 
   test "empty? returns true when no uncategorized transactions or untouched accounts" do
-    Transaction.where(category_id: nil).delete_all
+    Transaction.where(category_id: nil).destroy_all
     Account.update_all(updated_at: Time.current)
     todo = Todo.new
 

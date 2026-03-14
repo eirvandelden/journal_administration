@@ -10,7 +10,7 @@
   <%= render partial: 'form' %>
 </article>
 
-<% unless @transaction.type == "Transfer" %>
+<% unless @transaction.transfer? %>
   <%= turbo_frame_tag "transaction_links" do %>
     <%= render "transaction_links/balance_table", transaction: @transaction %>
     <%= render "transaction_links/suggestions", transaction: @transaction %>

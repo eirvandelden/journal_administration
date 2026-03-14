@@ -32,7 +32,7 @@ Rails.application.routes.draw do
   resources :transfer, controller: "transactions", type: "Transaction"
   resources :accounts do
     scope module: "accounts" do
-      resource :transactions_bulk, only: [ :update ]
+      resource :transactions_bulk, only: [ :update ], controller: :transactions_bulk
     end
   end
   resources :categories

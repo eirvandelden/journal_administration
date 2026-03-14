@@ -13,6 +13,7 @@
 ActiveRecord::Schema[8.1].define(version: 2026_03_08_163000) do
   create_table "accounts", force: :cascade do |t|
     t.string "account_number"
+    t.integer "account_type"
     t.integer "category_id"
     t.datetime "created_at", null: false
     t.string "name"
@@ -46,6 +47,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_08_163000) do
     t.datetime "updated_at", null: false
     t.datetime "warranty_expires_at"
     t.index ["purchase_transaction_id"], name: "index_chattels_on_purchase_transaction_id"
+  end
+
+  create_table "data_migrations", primary_key: "version", id: :string, force: :cascade do |t|
   end
 
   create_table "faultline_error_contexts", force: :cascade do |t|
@@ -132,6 +136,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_08_163000) do
     t.index ["endpoint"], name: "index_faultline_request_traces_on_endpoint"
   end
 
+  create_table "mutations", force: :cascade do |t|
+    t.integer "account_id", null: false
+    t.decimal "amount", precision: 10, scale: 2, null: false
+    t.datetime "created_at", null: false
+    t.integer "transaction_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_mutations_on_account_id"
+    t.index ["transaction_id"], name: "index_mutations_on_transaction_id"
+  end
+
   create_table "sessions", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
     t.string "ip_address"
@@ -154,21 +168,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_08_163000) do
   end
 
   create_table "transactions", force: :cascade do |t|
-    t.decimal "amount", precision: 10, scale: 2
     t.datetime "booked_at", precision: nil
     t.integer "category_id"
     t.datetime "created_at", null: false
-    t.bigint "creditor_account_id"
-    t.bigint "debitor_account_id"
     t.datetime "interest_at", precision: nil
     t.text "note"
     t.decimal "original_balance_after_mutation"
     t.text "original_note"
     t.string "original_tag"
-    t.string "type"
     t.datetime "updated_at", null: false
     t.index ["category_id"], name: "index_transactions_on_category_id"
-    t.index ["id"], name: "index_transactions_on_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -189,6 +198,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_08_163000) do
   add_foreign_key "faultline_error_contexts", "faultline_error_occurrences", column: "error_occurrence_id"
   add_foreign_key "faultline_error_occurrences", "faultline_error_groups", column: "error_group_id"
   add_foreign_key "faultline_request_profiles", "faultline_request_traces", column: "request_trace_id", on_delete: :cascade
+  add_foreign_key "mutations", "accounts"
+  add_foreign_key "mutations", "transactions"
   add_foreign_key "sessions", "users"
   add_foreign_key "transaction_links", "transactions", column: "source_transaction_id"
   add_foreign_key "transaction_links", "transactions", column: "transfer_id"

@@ -6,7 +6,7 @@ class TransactionLinkTest < ActiveSupport::TestCase
   test "belongs to source transaction" do
     link = transaction_links(:grocery_to_transfer)
 
-    assert_equal transactions(:debit_grocery), link.source
+    assert_equal transactions(:credit_grocery), link.source
   end
 
   test "belongs to transfer transaction" do
@@ -19,7 +19,7 @@ class TransactionLinkTest < ActiveSupport::TestCase
 
   test "valid with a non-Transfer source and a Transfer transfer" do
     link = TransactionLink.new(
-      source: transactions(:credit_salary),
+      source: transactions(:debit_salary),
       transfer: transactions(:transfer_savings)
     )
 
@@ -28,8 +28,8 @@ class TransactionLinkTest < ActiveSupport::TestCase
 
   test "invalid when transfer is not a Transfer type" do
     link = TransactionLink.new(
-      source: transactions(:debit_grocery),
-      transfer: transactions(:credit_salary)
+      source: transactions(:credit_grocery),
+      transfer: transactions(:debit_salary)
     )
 
     assert_not link.valid?
@@ -66,7 +66,7 @@ class TransactionLinkTest < ActiveSupport::TestCase
     existing = transaction_links(:grocery_to_transfer)
 
     duplicate = TransactionLink.new(
-      source: transactions(:uncategorized),
+      source: transactions(:uncategorized_credit),
       transfer: existing.transfer
     )
 
