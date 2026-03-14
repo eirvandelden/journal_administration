@@ -11,6 +11,7 @@ class TransactionSplitsController < ApplicationController
 
     respond_to do |format|
       if @transaction_split.save
+        @transaction.ensure_remainder_split
         format.turbo_stream
         format.html { redirect_to edit_transaction_path(@transaction) }
       else
@@ -29,6 +30,7 @@ class TransactionSplitsController < ApplicationController
 
     respond_to do |format|
       if @transaction_split.update(split_params)
+        @transaction.ensure_remainder_split
         format.turbo_stream
         format.html { redirect_to edit_transaction_path(@transaction) }
       else
@@ -45,6 +47,7 @@ class TransactionSplitsController < ApplicationController
   def destroy
     @transaction_split = @transaction.transaction_splits.find(params[:id])
     @transaction_split.destroy
+    @transaction.ensure_remainder_split
 
     respond_to do |format|
       format.turbo_stream

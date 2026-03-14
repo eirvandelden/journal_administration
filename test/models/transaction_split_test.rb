@@ -32,6 +32,19 @@ class TransactionSplitTest < ActiveSupport::TestCase
 
       assert split.valid?
     end
+
+    test "database rejects non-positive amounts" do
+      assert_raises ActiveRecord::StatementInvalid do
+        TransactionSplit.insert_all!([
+          {
+            transaction_id: transactions(:uncategorized).id,
+            amount: 0,
+            created_at: Time.current,
+            updated_at: Time.current
+          }
+        ])
+      end
+    end
   end
 
   class Associations < ActiveSupport::TestCase

@@ -28,6 +28,13 @@ class CategoriesShowTest < ActionDispatch::IntegrationTest
     assert_includes response.body, transactions(:debit_bakery).note
   end
 
+  test "show renders split amount and split category for split transactions" do
+    get category_path(categories(:bakery))
+
+    assert_response :success
+    assert_match split_row_pattern_for(amount: 10, category: categories(:bakery), note: transactions(:debit_grocery).note), response.body
+  end
+
   test "edit renders recent transactions heading" do
     get edit_category_path(categories(:supermarket))
 
@@ -76,5 +83,15 @@ class CategoriesShowTest < ActionDispatch::IntegrationTest
       assert_select "option", text: categories(:rent).name, count: 0
       assert_select "option", text: categories(:salary).name, count: 0
     end
+  end
+
+  private
+
+  def split_row_pattern_for(amount:, category:, note:)
+    formatted_amount = Regexp.escape(ApplicationController.helpers.number_to_currency(amount))
+    formatted_category = Regexp.escape(category.name)
+    formatted_note = Regexp.escape(note)
+
+    %r{<td>#{formatted_amount}</td>\s*<td>.*?</td>\s*<td>#{formatted_category}</td>\s*<td>#{formatted_note}</td>}m
   end
 end

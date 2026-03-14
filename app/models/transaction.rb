@@ -51,6 +51,8 @@ class Transaction < ApplicationRecord
   has_many :chattels, foreign_key: :purchase_transaction_id
   has_one_attached :proof_of_purchase
 
+  scope :uncategorized, -> { where(Transaction.send(:uncategorized_clause)) }
+
   before_validation :determine_debit_credit_or_transfer_type
 
   validates :type, inclusion: { in: TYPES, message: "%{value} is not a valid type" }, presence: true
@@ -88,6 +90,26 @@ class Transaction < ApplicationRecord
     nil
   end
   private_class_method :parse_filter_date
+
+  def self.uncategorized_clause
+    <<~SQL.squish
+      transactions.category_id IS NULL
+      OR EXISTS (
+        SELECT 1
+        FROM transaction_splits
+        WHERE transaction_splits.transaction_id = transactions.id
+          AND transaction_splits.category_id IS NULL
+      )
+      OR EXISTS (
+        SELECT 1
+        FROM transaction_splits
+        WHERE transaction_splits.transaction_id = transactions.id
+        GROUP BY transaction_splits.transaction_id
+        HAVING transactions.amount > SUM(transaction_splits.amount)
+      )
+    SQL
+  end
+  private_class_method :uncategorized_clause
 
   # Determines transaction type based on account ownership
   #

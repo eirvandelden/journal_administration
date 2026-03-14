@@ -7,14 +7,18 @@ class TransactionSplitsTest < ActionDispatch::IntegrationTest
       @debit = transactions(:uncategorized)
     end
 
-    test "adds a split to the transaction" do
-      assert_difference "TransactionSplit.count", 1 do
+    test "adds a split and remainder to the transaction" do
+      assert_difference "TransactionSplit.count", 2 do
         post transaction_transaction_splits_url(@debit),
           params: { transaction_split: { category_id: categories(:supermarket).id, amount: 10.00, note: "Test" } }
       end
 
       assert_response :redirect
       assert_redirected_to edit_transaction_url(@debit)
+
+      remainder = @debit.transaction_splits.find_by(remainder: true)
+      assert remainder
+      assert_equal 15.00, remainder.amount
     end
 
     test "via turbo stream re-renders splits frame" do
@@ -90,13 +94,16 @@ class TransactionSplitsTest < ActionDispatch::IntegrationTest
       @transaction = transactions(:debit_grocery)
     end
 
-    test "removes the split" do
-      assert_difference "TransactionSplit.count", -1 do
-        delete transaction_transaction_split_url(@transaction, @split)
-      end
+    test "removes the split and adjusts remainder" do
+      delete transaction_transaction_split_url(@transaction, @split)
 
       assert_response :redirect
       assert_redirected_to edit_transaction_url(@transaction)
+      assert_not @transaction.transaction_splits.exists?(id: @split.id)
+
+      remainder = @transaction.transaction_splits.find_by(remainder: true)
+      assert remainder
+      assert_equal 40.00, remainder.amount
     end
 
     test "via turbo stream re-renders splits frame" do
@@ -104,6 +111,54 @@ class TransactionSplitsTest < ActionDispatch::IntegrationTest
         headers: { "Accept" => "text/vnd.turbo-stream.html" }
 
       assert_response :success
+    end
+  end
+
+  class RemainderManagement < ActionDispatch::IntegrationTest
+    setup do
+      sign_in_as(users(:member))
+      @debit = transactions(:uncategorized)
+    end
+
+    test "creating a split auto-creates a remainder split" do
+      post transaction_transaction_splits_url(@debit),
+        params: { transaction_split: { category_id: categories(:supermarket).id, amount: 10.00 } }
+
+      remainder = @debit.transaction_splits.find_by(remainder: true)
+      assert remainder
+      assert_equal 15.00, remainder.amount
+    end
+
+    test "updating a split adjusts the remainder" do
+      post transaction_transaction_splits_url(@debit),
+        params: { transaction_split: { category_id: categories(:supermarket).id, amount: 10.00 } }
+
+      explicit_split = @debit.transaction_splits.find_by(remainder: false)
+      patch transaction_transaction_split_url(@debit, explicit_split),
+        params: { transaction_split: { amount: 20.00 } }
+
+      remainder = @debit.transaction_splits.reload.find_by(remainder: true)
+      assert remainder
+      assert_equal 5.00, remainder.amount
+    end
+
+    test "deleting last explicit split removes remainder too" do
+      post transaction_transaction_splits_url(@debit),
+        params: { transaction_split: { category_id: categories(:supermarket).id, amount: 10.00 } }
+
+      explicit_split = @debit.transaction_splits.find_by(remainder: false)
+      delete transaction_transaction_split_url(@debit, explicit_split)
+
+      assert_not @debit.reload.split?
+    end
+
+    test "creating a split that covers full amount creates no remainder" do
+      assert_difference "TransactionSplit.count", 1 do
+        post transaction_transaction_splits_url(@debit),
+          params: { transaction_split: { category_id: categories(:supermarket).id, amount: 25.00 } }
+      end
+
+      assert_nil @debit.transaction_splits.find_by(remainder: true)
     end
   end
 

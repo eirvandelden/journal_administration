@@ -15,6 +15,7 @@ class TransactionSplit < ApplicationRecord
 
   def amount_does_not_exceed_balance
     return unless amount.present? && financial_transaction.present?
+    return if remainder?
 
     available = financial_transaction.split_balance
     available += amount_was.to_d if persisted?

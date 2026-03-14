@@ -11,7 +11,7 @@
       </tr>
     </thead>
     <tbody>
-      <% transaction.transaction_splits.select(&:persisted?).each do |split| %>
+      <% transaction.transaction_splits.where(remainder: false).select(&:persisted?).each do |split| %>
         <tr>
           <td><%= split.category&.to_s %></td>
           <td><%= number_to_currency(split.amount) %></td>
@@ -22,6 +22,15 @@
                   method: :delete,
                   class: "button-danger" %>
           </td>
+        </tr>
+      <% end %>
+      <% remainder = transaction.transaction_splits.find_by(remainder: true) %>
+      <% if remainder %>
+        <tr>
+          <td><em><%= remainder.category&.to_s || t("transaction_splits.table.remainder_label") %></em></td>
+          <td><em><%= number_to_currency(remainder.amount) %></em></td>
+          <td><em><%= t("transaction_splits.table.remainder_label") %></em></td>
+          <td></td>
         </tr>
       <% end %>
     </tbody>

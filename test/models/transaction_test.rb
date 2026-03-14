@@ -325,4 +325,60 @@ class TransactionSplittableTest < ActiveSupport::TestCase
   test "fully_split? returns false when split_balance is not zero" do
     assert_not transactions(:debit_grocery).fully_split?
   end
+
+  class RemainderSplit < ActiveSupport::TestCase
+    test "ensure_remainder_split creates remainder when splits exist" do
+      transaction = transactions(:uncategorized)
+      transaction.transaction_splits.create!(amount: 10.00, category: categories(:supermarket))
+
+      transaction.ensure_remainder_split
+
+      remainder = transaction.transaction_splits.find_by(remainder: true)
+      assert remainder
+      assert_equal 15.00, remainder.amount
+      assert_nil remainder.category
+    end
+
+    test "ensure_remainder_split uses transaction category for remainder" do
+      transaction = transactions(:debit_grocery)
+      transaction.ensure_remainder_split
+
+      remainder = transaction.transaction_splits.find_by(remainder: true)
+      assert remainder
+      assert_equal transaction.category, remainder.category
+    end
+
+    test "ensure_remainder_split updates existing remainder amount" do
+      transaction = transactions(:uncategorized)
+      transaction.transaction_splits.create!(amount: 10.00, category: categories(:supermarket))
+      transaction.ensure_remainder_split
+
+      transaction.transaction_splits.create!(amount: 5.00, category: categories(:bakery))
+      transaction.ensure_remainder_split
+
+      remainders = transaction.transaction_splits.where(remainder: true)
+      assert_equal 1, remainders.count
+      assert_equal 10.00, remainders.first.amount
+    end
+
+    test "ensure_remainder_split removes remainder when fully covered by explicit splits" do
+      transaction = transactions(:uncategorized)
+      transaction.transaction_splits.create!(amount: 25.00, category: categories(:supermarket))
+      transaction.ensure_remainder_split
+
+      remainders = transaction.transaction_splits.where(remainder: true)
+      assert_equal 0, remainders.count
+    end
+
+    test "ensure_remainder_split removes remainder when no explicit splits exist" do
+      transaction = transactions(:uncategorized)
+      transaction.transaction_splits.create!(amount: 10.00, category: categories(:supermarket))
+      transaction.ensure_remainder_split
+
+      transaction.transaction_splits.where(remainder: false).destroy_all
+      transaction.ensure_remainder_split
+
+      assert_equal 0, transaction.transaction_splits.count
+    end
+  end
 end

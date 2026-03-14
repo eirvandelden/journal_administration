@@ -534,6 +534,7 @@ en:
       balance: Remaining
       category: Category
       note: Note
+      remainder_label: Remainder
     update:
       success: "✅ Split updated."
   transactions:

@@ -534,6 +534,7 @@ it:
       balance: Rimanente
       category: Categoria
       note: Nota
+      remainder_label: Resto
     update:
       success: "✅ Divisione aggiornata."
   transactions:
