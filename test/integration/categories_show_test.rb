@@ -49,4 +49,32 @@ class CategoriesShowTest < ActionDispatch::IntegrationTest
     assert_includes response.body, transactions(:debit_grocery).note
     assert_includes response.body, transactions(:debit_bakery).note
   end
+
+  test "new renders successfully" do
+    get new_category_path
+
+    assert_response :success
+  end
+
+  test "new parent_category select contains only root categories" do
+    get new_category_path
+
+    assert_select "select[name='category[parent_category_id]']" do
+      assert_select "option", text: categories(:groceries).name
+      assert_select "option", text: categories(:housing).name
+      assert_select "option", text: categories(:income).name
+      assert_select "option", text: categories(:transfer).name
+    end
+  end
+
+  test "new parent_category select does not contain child categories" do
+    get new_category_path
+
+    assert_select "select[name='category[parent_category_id]']" do
+      assert_select "option", text: categories(:supermarket).name, count: 0
+      assert_select "option", text: categories(:bakery).name, count: 0
+      assert_select "option", text: categories(:rent).name, count: 0
+      assert_select "option", text: categories(:salary).name, count: 0
+    end
+  end
 end
