@@ -343,12 +343,6 @@ en:
       header:
         one: "%{count} error prohibited this %{model} from being saved"
         other: "%{count} errors prohibited this %{model} from being saved"
-  filters:
-    last_month: Last Month
-    last_year: Last Year
-    month_to_date: Month to Date
-    three_months: Last 3 Months
-    year_to_date: Year to Date
   helpers:
     select:
       prompt: Please select
@@ -368,14 +362,12 @@ en:
     admin: "🥷 Admin"
     categories: "🏷️ %{model}"
     chattels: "📦 %{model}"
-    dashboard_filters: "🔎 Filters"
     profile: "👤 Profile"
     todo: "✅ %{model}"
     todo_all: All
     todo_consolidatable_accounts: Consolidatable accounts
     todo_consolidatable_transactions: Consolidatable transactions
     todo_upload: Upload new transactions
-    todo_views: "📚 Views"
   number:
     currency:
       format:

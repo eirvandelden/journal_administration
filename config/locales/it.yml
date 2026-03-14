@@ -343,12 +343,6 @@ it:
       header:
         one: 'Non posso salvare questo %{model}: %{count} errore'
         other: 'Non posso salvare questo %{model}: %{count} errori.'
-  filters:
-    last_month: Mese scorso
-    last_year: Anno scorso
-    month_to_date: Mese corrente
-    three_months: Ultimi 3 mesi
-    year_to_date: Anno corrente
   helpers:
     select:
       prompt: Seleziona...
@@ -368,14 +362,12 @@ it:
     admin: "🥷 Amministrazione"
     categories: "🏷️ %{model}"
     chattels: "📦 %{model}"
-    dashboard_filters: "🔎 Filtri"
     profile: "👤 Profilo"
     todo: "✅ %{model}"
     todo_all: Tutti
     todo_consolidatable_accounts: Conti da consolidare
     todo_consolidatable_transactions: Transazioni da consolidare
     todo_upload: Carica nuove transazioni
-    todo_views: "📚 Viste"
   number:
     currency:
       format:

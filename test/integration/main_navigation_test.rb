@@ -14,6 +14,8 @@ class MainNavigationTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "header nav > ul > li > a[href='#{dashboard_index_path}']", text: I18n.t("home")
     assert_select "header nav > ul > li > a[href='#{transactions_path}']", text: I18n.t("journal")
+    assert_select "header nav summary", text: I18n.t("main_nav.dashboard_filters"), count: 0
+    assert_select "header nav summary", text: I18n.t("main_nav.todo", model: Todo.model_name.human), count: 1
     assert_select "header nav summary a", count: 0
   end
 
