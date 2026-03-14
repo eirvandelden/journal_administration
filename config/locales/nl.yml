@@ -65,6 +65,7 @@ nl:
         proof_of_purchase: Aankoopbewijs
     errors:
       messages:
+        must_be_pdf: moet een PDF-document zijn
         record_invalid: 'Validatie mislukt: %{errors}'
         restrict_dependent_destroy:
           has_many: Kan item niet verwijderen omdat afhankelijke %{record} bestaan
