@@ -124,12 +124,11 @@ class DashboardTest < ActiveSupport::TestCase
       assert labels.all? { |l| l.is_a?(String) }
     end
 
-    test "maps nil category key to dash" do
+    test "maps nil category key to translated uncategorized label" do
       dashboard = Dashboard.new(filter: "year_to_date")
 
-      # The uncategorized key (nil) should produce "-"
       nil_index = dashboard.debit_transactions.keys.index(nil)
-      assert_equal "-", dashboard.chart_labels[nil_index] if nil_index
+      assert_equal I18n.t("common.uncategorized"), dashboard.chart_labels[nil_index] if nil_index
     end
   end
 

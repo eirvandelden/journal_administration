@@ -188,6 +188,7 @@ it:
     remove: Rimuovi
     save: "💾 Salva"
     show: "👁️ Mostra"
+    uncategorized: Senza categoria
   dashboard:
     charts:
       spending_by_category: Spese per categoria

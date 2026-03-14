@@ -27,7 +27,7 @@
   <dd><%= number_to_currency(@transaction.amount) %></dd>
 
   <dt><%= t('transactions.table.category') %></dt>
-  <dd><%= @transaction.category&.name || '-' %></dd>
+  <dd><%= @transaction.category&.name || t("common.uncategorized") %></dd>
 
   <dt><%= t('transactions.table.booked_at') %></dt>
   <dd><%= @transaction.booked_at ? l(@transaction.booked_at.to_date) : '-' %></dd>

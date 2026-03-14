@@ -188,6 +188,7 @@ nl:
     remove: Verwijderen
     save: "💾 Opslaan"
     show: "👁️ Tonen"
+    uncategorized: Ongecategoriseerd
   dashboard:
     charts:
       spending_by_category: Uitgaven per categorie
