@@ -16,6 +16,23 @@ class ChattelsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "new pre-fills purchase_transaction_id from query param" do
+    transaction = transactions(:debit_grocery)
+
+    get new_chattel_url(purchase_transaction_id: transaction.id)
+
+    assert_response :success
+    assert_select "input[name='chattel[purchase_transaction_id]'][value='#{transaction.id}']"
+  end
+
+  test "index renders proof-of-purchase column" do
+    sign_in_as users(:member)
+    get chattels_url
+
+    assert_response :success
+    assert_select "th", text: I18n.t("chattels.index.proof_of_purchase", locale: :en)
+  end
+
   test "should create chattel" do
     assert_difference("Chattel.count") do
       post chattels_url,

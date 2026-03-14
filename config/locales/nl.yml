@@ -54,6 +54,7 @@ nl:
         purchase_transaction: Transactie
         purchased_at: Aankoopdatum
         serial_number: Serienummer
+        warranty_document: Garantiedocument
         warranty_expires_at: Garantie tot
       transaction:
         account: Rekening
@@ -61,6 +62,7 @@ nl:
         category: Categorie
         date: Datum
         description: Omschrijving
+        proof_of_purchase: Aankoopbewijs
     errors:
       messages:
         record_invalid: 'Validatie mislukt: %{errors}'
@@ -173,9 +175,16 @@ nl:
     edit:
       title: Bezitting bewerken
     index:
+      has_proof: "🧾"
       new_chattel: "➕ Nieuwe bezitting"
+      no_proof: "-"
+      proof_of_purchase: Bewijs
     new:
       title: "➕ Nieuwe bezitting"
+    show:
+      no_warranty: Geen garantiedocument beschikbaar.
+      view_warranty: Garantiedocument bekijken
+      warranty_proof: Garantie
     update:
       success: "✅ Bezitting succesvol bijgewerkt."
   common:
@@ -504,6 +513,10 @@ nl:
       heading: Recente transacties
     show:
       unconsolidated: "⚠️ Vereist categorisering"
+      new_chattel: "➕ Nieuwe bezitting"
+      no_proof_of_purchase: Geen aankoopbewijs geüpload.
+      proof_of_purchase: Aankoopbewijs
+      view_proof_of_purchase: Aankoopbewijs bekijken
     table:
       amount: Bedrag
       booked_at: Boekingsdatum

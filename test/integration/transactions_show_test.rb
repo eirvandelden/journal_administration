@@ -65,4 +65,23 @@ class TransactionsShowTest < ActionDispatch::IntegrationTest
     assert_select "dd", text: /1200\.5/, count: 0
     assert_select "dd", text: "ORIG-TAG", count: 0
   end
+
+  test "show page has new chattel link pre-filled with transaction id" do
+    sign_in_as(@member)
+
+    get transaction_url(@transaction)
+
+    assert_response :success
+    assert_select "a[href=?]", new_chattel_path(purchase_transaction_id: @transaction.id)
+  end
+
+  test "show page displays proof-of-purchase section" do
+    sign_in_as(@member)
+
+    get transaction_url(@transaction)
+
+    assert_response :success
+    assert_select "h2", text: I18n.t("transactions.show.proof_of_purchase")
+    assert_select "p", text: I18n.t("transactions.show.no_proof_of_purchase")
+  end
 end

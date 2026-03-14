@@ -94,4 +94,73 @@ class ChattelTest < ActiveSupport::TestCase
   test "active? returns false when left_possession_at is set" do
     assert_not chattels(:two).active?
   end
+
+  class WhenNoDocumentsAttached < ActiveSupport::TestCase
+    fixtures :chattels, :transactions, :accounts, :categories
+
+    test "warranty_proof returns nil when chattel has no documents and no linked transaction" do
+      chattel = Chattel.new(name: "Test")
+
+      assert_nil chattel.warranty_proof
+    end
+
+    test "proof_of_purchase? returns false" do
+      chattel = Chattel.new(name: "Test")
+
+      assert_not chattel.proof_of_purchase?
+    end
+  end
+
+  class WhenChattelHasOwnWarrantyDocument < ActiveSupport::TestCase
+    fixtures :chattels, :transactions, :accounts, :categories
+
+    test "warranty_proof returns the chattel's own warranty_document" do
+      chattel = chattels(:one)
+      chattel.warranty_document.attach(
+        io: StringIO.new("pdf content"),
+        filename: "warranty.pdf",
+        content_type: "application/pdf"
+      )
+
+      assert_equal chattel.warranty_document, chattel.warranty_proof
+    end
+
+    test "proof_of_purchase? returns true" do
+      chattel = chattels(:one)
+      chattel.warranty_document.attach(
+        io: StringIO.new("pdf content"),
+        filename: "warranty.pdf",
+        content_type: "application/pdf"
+      )
+
+      assert chattel.proof_of_purchase?
+    end
+  end
+
+  class WhenOnlyTransactionHasProofOfPurchase < ActiveSupport::TestCase
+    fixtures :chattels, :transactions, :accounts, :categories
+
+    test "warranty_proof falls back to the purchase transaction's proof_of_purchase" do
+      chattel = chattels(:one)
+      transaction = chattel.purchase_transaction
+      transaction.proof_of_purchase.attach(
+        io: StringIO.new("pdf content"),
+        filename: "receipt.pdf",
+        content_type: "application/pdf"
+      )
+
+      assert_equal transaction.proof_of_purchase, chattel.warranty_proof
+    end
+
+    test "proof_of_purchase? returns true" do
+      chattel = chattels(:one)
+      chattel.purchase_transaction.proof_of_purchase.attach(
+        io: StringIO.new("pdf content"),
+        filename: "receipt.pdf",
+        content_type: "application/pdf"
+      )
+
+      assert chattel.proof_of_purchase?
+    end
+  end
 end

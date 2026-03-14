@@ -143,4 +143,20 @@ class TransactionTest < ActiveSupport::TestCase
   test "has_many chattels" do
     assert_includes transactions(:debit_grocery).chattels, chattels(:one)
   end
+
+  class WhenProofOfPurchaseAttached < ActiveSupport::TestCase
+    fixtures :transactions, :accounts, :categories, :chattels
+
+    test "proof_of_purchase can be attached and retrieved" do
+      transaction = transactions(:debit_grocery)
+      transaction.proof_of_purchase.attach(
+        io: StringIO.new("pdf content"),
+        filename: "receipt.pdf",
+        content_type: "application/pdf"
+      )
+
+      assert transaction.proof_of_purchase.attached?
+      assert_equal "receipt.pdf", transaction.proof_of_purchase.filename.to_s
+    end
+  end
 end

@@ -58,5 +58,8 @@
       <%= f.label :notes %>
       <%= f.text_area :notes, disabled: disabled %>
     </div>
+
+    <%= f.label :warranty_document %>
+    <%= f.file_field :warranty_document, accept: "application/pdf", disabled: disabled %>
   <% end %>
 </section>
