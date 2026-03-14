@@ -369,9 +369,13 @@ en:
     categories: "🏷️ %{model}"
     chattels: "📦 %{model}"
     dashboard_filters: "🔎 Filters"
-    journal_views: "📚 Views"
     profile: "👤 Profile"
     todo: "✅ %{model}"
+    todo_all: All
+    todo_consolidatable_accounts: Consolidatable accounts
+    todo_consolidatable_transactions: Consolidatable transactions
+    todo_upload: Upload new transactions
+    todo_views: "📚 Views"
   number:
     currency:
       format:
@@ -458,8 +462,6 @@ en:
       kind: Kind
       transaction: Transaction
       update_transactions: Update Transactions
-      upload_heading: "📥 Upload new CSV"
-      upload_submit: Upload
   transaction_links:
     balance_table:
       amount: Amount
@@ -484,11 +486,11 @@ en:
         import_failed: "❌ %{count} transactions failed to import"
         invalid_file_type: "⚠️ Invalid file type. Please upload a CSV file."
         no_file: "⚠️ Please select a CSV file to upload."
+      new:
+        heading: "📥 Upload new CSV"
+        submit: Upload
     index:
-      all_transactions: "📋 All transactions"
-      consolidatable: "🔍 Consolidatable"
       new_transaction: "➕ New Transaction"
-      upload: Upload
     new:
       title: "➕ New transaction"
     recent:

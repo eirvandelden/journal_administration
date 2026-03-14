@@ -1,29 +1,6 @@
 require "test_helper"
 
 class TodoTest < ActiveSupport::TestCase
-  test "show_upload_form? returns true when no transactions exist" do
-    Chattel.update_all(purchase_transaction_id: nil)
-    TransactionLink.delete_all
-    Transaction.delete_all
-    todo = Todo.new
-
-    assert todo.show_upload_form?
-  end
-
-  test "show_upload_form? returns true when latest transaction is older than threshold" do
-    Transaction.update_all(booked_at: 14.days.ago)
-    todo = Todo.new
-
-    assert todo.show_upload_form?
-  end
-
-  test "show_upload_form? returns false when latest transaction is recent" do
-    Transaction.update_all(booked_at: 1.day.ago)
-    todo = Todo.new
-
-    assert_not todo.show_upload_form?
-  end
-
   test "items includes uncategorized transactions" do
     todo = Todo.new
 

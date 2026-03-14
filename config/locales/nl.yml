@@ -369,9 +369,13 @@ nl:
     categories: "🏷️ %{model}"
     chattels: "📦 %{model}"
     dashboard_filters: "🔎 Filters"
-    journal_views: "📚 Weergaven"
     profile: "👤 Profiel"
     todo: "✅ %{model}"
+    todo_all: Alle
+    todo_consolidatable_accounts: Te consolideren rekeningen
+    todo_consolidatable_transactions: Te consolideren transacties
+    todo_upload: Nieuwe transacties uploaden
+    todo_views: "📚 Weergaven"
   number:
     currency:
       format:
@@ -458,8 +462,6 @@ nl:
       kind: Soort
       transaction: Transactie
       update_transactions: Transacties bijwerken
-      upload_heading: "📥 Nieuw CSV uploaden"
-      upload_submit: Uploaden
   transaction_links:
     balance_table:
       amount: Bedrag
@@ -484,11 +486,11 @@ nl:
         import_failed: "❌ %{count} transacties konden niet worden geïmporteerd"
         invalid_file_type: "⚠️ Ongeldig bestandstype. Upload een CSV-bestand."
         no_file: "⚠️ Selecteer een CSV-bestand om te uploaden."
+      new:
+        heading: "📥 Nieuw CSV uploaden"
+        submit: Uploaden
     index:
-      all_transactions: "📋 Alle transacties"
-      consolidatable: "🔍 Te consolideren"
       new_transaction: "➕ Nieuwe transactie"
-      upload: Uploaden
     new:
       title: "➕ Nieuwe transactie"
     recent:

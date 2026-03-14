@@ -1,0 +1,7 @@
+<section class="upload">
+  <h2><%= t('.heading') %></h2>
+  <%= form_with local: true, url: transactions_imports_path, multipart: true do |form| %>
+    <%= form.file_field :csv %>
+    <%= form.submit t('.submit') %>
+  <% end %>
+</section>
