@@ -59,6 +59,15 @@ class CategoriesIndexTest < ActionDispatch::IntegrationTest
     get categories_path
 
     assert_response :success
-    assert_select "th", text: I18n.t("categories.index.root_categories"), count: 0
+
+    header_rows = Nokogiri::HTML5(response.body).css("table.categories thead tr")
+
+    header_rows.each do |row|
+      assert_equal [
+        "",
+        I18n.t("categories.index.id"),
+        I18n.t("categories.index.name")
+      ], row.css("th").map { |cell| cell.text.strip }
+    end
   end
 end
