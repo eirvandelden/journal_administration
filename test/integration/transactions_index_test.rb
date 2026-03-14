@@ -93,6 +93,21 @@ class TransactionsIndexTest < ActionDispatch::IntegrationTest
     assert_match %r{<td>#{formatted_amount}</td>\s*<td>.*?</td>\s*<td>.*?</td>\s*<td>#{formatted_note}</td>}m, response.body
   end
 
+  test "no_category filter keeps showing a nil-category remainder split as uncategorized" do
+    transaction = transactions(:uncategorized)
+    transaction.transaction_splits.create!(amount: 10.00, category: categories(:supermarket))
+    transaction.ensure_remainder_split
+
+    get transactions_path(filter: :no_category)
+
+    assert_response :success
+
+    formatted_amount = Regexp.escape(ApplicationController.helpers.number_to_currency(15))
+    formatted_note = Regexp.escape(transaction.note.truncate(20))
+
+    assert_match %r{<td>#{formatted_amount}</td>\s*<td>.*?</td>\s*<td>.*?</td>\s*<td>#{formatted_note}</td>}m, response.body
+  end
+
   class SplitSubRows < ActionDispatch::IntegrationTest
     setup do
       sign_in_as(users(:member))

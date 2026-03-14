@@ -87,6 +87,21 @@ class CategoryTest < ActiveSupport::TestCase
     assert_includes result, transactions(:debit_grocery)
   end
 
+  test "recent_transactions ignore the parent category once a transaction is split" do
+    transaction = Transaction.create!(
+      amount: 50,
+      booked_at: Time.current,
+      interest_at: Time.current,
+      debitor: accounts(:checking),
+      creditor: accounts(:albert_heijn),
+      category: categories(:supermarket)
+    )
+    transaction.transaction_splits.create!(amount: 50, category: categories(:bakery))
+
+    assert_not_includes categories(:supermarket).recent_transactions.ids, transaction.id
+    assert_includes categories(:bakery).recent_transactions.ids, transaction.id
+  end
+
   test "recent_transactions respects the limit parameter" do
     result = categories(:supermarket).recent_transactions(limit: 0)
 

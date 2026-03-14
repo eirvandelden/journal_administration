@@ -299,6 +299,13 @@ class TransactionTest < ActiveSupport::TestCase
 end
 
 class TransactionSplittableTest < ActiveSupport::TestCase
+  test "uncategorized scope excludes fully allocated split transactions" do
+    transaction = transactions(:uncategorized)
+    transaction.transaction_splits.create!(amount: transaction.amount, category: categories(:supermarket))
+
+    assert_not Transaction.uncategorized.exists?(transaction.id)
+  end
+
   test "split? returns false when no splits exist" do
     assert_not transactions(:uncategorized).split?
   end
@@ -326,8 +333,23 @@ class TransactionSplittableTest < ActiveSupport::TestCase
     assert_not transactions(:debit_grocery).fully_split?
   end
 
-  test "uncategorized_amount returns only the uncategorized remainder" do
+  test "uncategorized_amount returns only the untracked uncategorized remainder" do
     assert_equal 10.00, transactions(:debit_grocery).uncategorized_amount
+  end
+
+  test "uncategorized_amount includes a nil-category remainder split" do
+    transaction = transactions(:uncategorized)
+    transaction.transaction_splits.create!(amount: 10.00, category: categories(:supermarket))
+    transaction.ensure_remainder_split
+
+    assert_equal 15.00, transaction.reload.uncategorized_amount
+  end
+
+  test "amount_for uses split rows including the remainder row" do
+    transaction = transactions(:debit_grocery)
+    transaction.ensure_remainder_split
+
+    assert_equal 40.00, transaction.amount_for(category: categories(:supermarket))
   end
 
   class RemainderSplit < ActiveSupport::TestCase

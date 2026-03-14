@@ -29,10 +29,13 @@ class Category < ApplicationRecord
   # @return [ActiveRecord::Relation] Transactions ordered by most recent first
   def recent_transactions(limit: 10)
     matching_category_ids = children.select(:id)
+    unsplit_transaction_ids = Transaction.where(category_id: matching_category_ids)
+                                       .where.missing(:transaction_splits)
+                                       .select(:id)
     split_transaction_ids = TransactionSplit.where(category_id: matching_category_ids).select(:transaction_id)
 
     Transaction
-      .where(category_id: matching_category_ids)
+      .where(id: unsplit_transaction_ids)
       .or(Transaction.where(id: split_transaction_ids))
       .distinct
       .includes(:creditor, :debitor, :category, transaction_splits: :category)
