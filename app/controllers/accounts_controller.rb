@@ -71,12 +71,20 @@ class AccountsController < ApplicationController
 
   # Deletes an account
   #
+  # @action DELETE
+  # @route /accounts/:id
   # @return [void]
   def destroy
-    @account.destroy
-    respond_to do |format|
-      format.html { redirect_to accounts_url, notice: t("accounts.destroy.success") }
-      format.json { head :no_content }
+    if @account.destroy
+      respond_to do |format|
+        format.html { redirect_to accounts_url, notice: t("accounts.destroy.success") }
+        format.json { head :no_content }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to @account, alert: @account.errors.full_messages.to_sentence }
+        format.json { render json: @account.errors, status: :unprocessable_entity }
+      end
     end
   end
 

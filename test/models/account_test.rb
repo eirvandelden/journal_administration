@@ -167,4 +167,42 @@ class AccountTest < ActiveSupport::TestCase
 
     assert_equal "NL00TEST0000000001", account.to_s
   end
+
+  class WhenDestroying < ActiveSupport::TestCase
+    test "can be destroyed when it has no transactions" do
+      assert accounts(:jumbo).destroy
+    end
+
+    test "cannot be destroyed when it has debitor transactions" do
+      account = Account.create!(name: "Debitor Account", owner: :samen)
+      Transaction.create!(
+        amount: 10,
+        booked_at: Time.current,
+        interest_at: Time.current,
+        debitor: account,
+        creditor: accounts(:albert_heijn),
+        category: categories(:supermarket)
+      )
+
+      assert_not account.destroy
+      assert_includes account.errors[:base],
+        I18n.t("activerecord.errors.models.account.attributes.base.has_transactions")
+    end
+
+    test "cannot be destroyed when it has creditor transactions" do
+      account = Account.create!(name: "Creditor Account", owner: :samen)
+      Transaction.create!(
+        amount: 10,
+        booked_at: Time.current,
+        interest_at: Time.current,
+        debitor: accounts(:albert_heijn),
+        creditor: account,
+        category: categories(:supermarket)
+      )
+
+      assert_not account.destroy
+      assert_includes account.errors[:base],
+        I18n.t("activerecord.errors.models.account.attributes.base.has_transactions")
+    end
+  end
 end

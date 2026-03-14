@@ -81,6 +81,10 @@ en:
           has_many: Cannot delete record because dependent %{record} exist
           has_one: Cannot delete record because a dependent %{record} exists
       models:
+        account:
+          attributes:
+            base:
+              has_transactions: cannot be deleted because it has associated transactions
         account_alias:
           attributes:
             account:

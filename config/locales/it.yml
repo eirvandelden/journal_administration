@@ -81,6 +81,10 @@ it:
           has_many: Il record non può essere cancellato perchè esistono %{record} dipendenti
           has_one: Il record non può essere cancellato perchè esiste un %{record} dipendente
       models:
+        account:
+          attributes:
+            base:
+              has_transactions: non può essere eliminato perché ha transazioni associate
         account_alias:
           attributes:
             account:
