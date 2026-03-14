@@ -35,7 +35,7 @@ module Linkable
   #
   # @return [BigDecimal] 0 when fully covered, positive when underpull
   def link_balance
-    amount - linked_transfers.sum(:amount)
+    amount - covered_amount
   end
 
   # Whether linked transfers fully cover this transaction's amount
@@ -49,6 +49,14 @@ module Linkable
   #
   # @return [Boolean]
   def linked?
-    transaction_links.any?
+    transaction_links.exists? || reverse_transaction_links.exists?
+  end
+
+  private
+
+  def covered_amount
+    return linked_sources.sum(:amount) if type == "Transfer"
+
+    linked_transfers.sum(:amount)
   end
 end
