@@ -177,7 +177,8 @@ nl:
       id: Id
       name: Naam
       new_category: "➕ Nieuwe categorie"
-      parent: Bovenliggend
+      root_categories: Hoofd categorieën
+      show: Toon
     main: Hoofdcategoriëen
     new:
       title: "➕ Nieuwe categorie"

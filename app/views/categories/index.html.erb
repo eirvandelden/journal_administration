@@ -1,30 +1,27 @@
-<table class="categories">
-  <thead>
-    <tr>
-      <th></th>
-      <th><%= t('.id') %></th>
-      <th><%= t('.name') %></th>
-      <th><%= t('.parent') %></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @categories.group_by(&:parent_category_id).each do |parent_id, categories| %>
-      <% if categories.any? %>
+<% @category_groups.each do |parent, categories| %>
+  <section>
+    <h2><%= parent&.name || t('.root_categories') %></h2>
+
+    <table class="categories">
+      <thead>
         <tr>
-          <td colspan="4" style="font-weight: bold;"><%= categories.first.parent_category&.name || t("categories.main") %></td>
+          <th></th>
+          <th><%= t('.id') %></th>
+          <th><%= t('.name') %></th>
         </tr>
-      <% end %>
-      <% categories.each do |category| %>
-        <tr>
-          <td><%= link_to t("show"), category %></td>
-          <td><%= category.id %></td>
-          <td><%= category.name %></td>
-          <td><%= category.parent_category&.name %></td>
-        </tr>
-      <% end %>
-    <% end %>
-  </tbody>
-</table>
+      </thead>
+      <tbody>
+        <% categories.each do |category| %>
+          <tr>
+            <td><%= link_to t('.show'), category %></td>
+            <td><%= category.id %></td>
+            <td><%= category.name %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </section>
+<% end %>
 
 <section>
   <%= link_to t('.new_category'), new_category_path %>

@@ -177,7 +177,8 @@ en:
       id: Id
       name: Name
       new_category: "➕ New Category"
-      parent: Parent
+      root_categories: Root categories
+      show: Show
     main: Categories
     new:
       title: "➕ New category"

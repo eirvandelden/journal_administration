@@ -2,11 +2,13 @@
 class CategoriesController < ApplicationController
   before_action :set_category, only: %i[show edit update destroy]
 
-  # Lists all categories with parent categories included
+  # Lists all categories grouped by parent category.
   #
   # @return [void]
   def index
-    @categories = Category.includes(:parent_category).order("parent_category_id, name")
+    @category_groups = Category.includes(:parent_category)
+                                .order(Arel.sql("parent_category_id ASC NULLS FIRST, name ASC"))
+                                .group_by(&:parent_category)
   end
 
   # Displays a single category
