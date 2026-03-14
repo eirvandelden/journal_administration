@@ -102,6 +102,18 @@ class TransactionTest < ActiveSupport::TestCase
     assert_equal "\u{1F504} \u25FB\uFE0F", transactions(:transfer_savings).type_icon
   end
 
+  # -- consolidatable? --------------------------------------------------------
+
+  class Consolidatable < ActiveSupport::TestCase
+    test "returns true when category is nil" do
+      assert transactions(:uncategorized).consolidatable?
+    end
+
+    test "returns false when category is present" do
+      assert_not transactions(:debit_grocery).consolidatable?
+    end
+  end
+
   # -- default scope ----------------------------------------------------------
 
   test "default scope orders transactions by booked_at descending" do

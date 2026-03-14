@@ -498,6 +498,8 @@ nl:
       title: "➕ Nieuwe transactie"
     recent:
       heading: Recente transacties
+    show:
+      unconsolidated: "⚠️ Vereist categorisering"
     table:
       amount: Bedrag
       booked_at: Boekingsdatum

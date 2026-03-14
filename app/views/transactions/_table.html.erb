@@ -18,7 +18,7 @@
 
   <tbody>
     <% transactions.each do |transaction| %>
-      <tr>
+      <tr class="<%= 'unconsolidated' if transaction.consolidatable? %>">
         <td>
           <%= link_to transaction do %>
             <b><%= t('.show') %></b>

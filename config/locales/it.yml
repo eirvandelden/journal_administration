@@ -498,6 +498,8 @@ it:
       title: "➕ Nuova transazione"
     recent:
       heading: Transazioni recenti
+    show:
+      unconsolidated: "⚠️ Richiede categorizzazione"
     table:
       amount: Importo
       booked_at: Data registrazione

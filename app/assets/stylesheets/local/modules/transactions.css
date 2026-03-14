@@ -1,0 +1,13 @@
+/* Unconsolidated (uncategorised) transaction rows */
+tr.unconsolidated {
+  background-color: var(--color-orange-light, #fef3e2);
+}
+
+/* Inline notification tag on show page */
+mark.unconsolidated {
+  background-color: var(--color-orange, #e67e22);
+  color: white;
+  padding: .15rem .4rem;
+  border-radius: .25rem;
+  font-size: .85em;
+}
