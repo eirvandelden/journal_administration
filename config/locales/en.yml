@@ -86,6 +86,10 @@ en:
               must_be_external: must belong to an external account
             pattern:
               invalid_like_characters: must not contain %% or _ characters
+        transaction:
+          attributes:
+            amount:
+              must_cover_splits: must cover the total of the explicit splits
         transaction_link:
           attributes:
             source:

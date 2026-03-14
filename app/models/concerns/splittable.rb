@@ -7,6 +7,8 @@ module Splittable
 
   included do
     has_many :transaction_splits, dependent: :destroy
+    validate :amount_must_cover_explicit_splits
+    after_save :sync_remainder_split, if: :remainder_split_needs_sync?
   end
 
   # Explicit user-defined splits, excluding the synthetic remainder row.
@@ -83,6 +85,13 @@ module Splittable
 
   private
 
+  def amount_must_cover_explicit_splits
+    return unless amount.present? && split?
+    return if explicit_transaction_splits.sum(:amount) <= amount
+
+    errors.add(:amount, :must_cover_splits)
+  end
+
   def uncategorized_splits_amount = transaction_splits.where(category_id: nil).sum(:amount)
 
   def untracked_uncategorized_amount
@@ -97,4 +106,10 @@ module Splittable
 
     transaction_splits.where(category_id: category.recent_transaction_category_ids)
   end
+
+  def remainder_split_needs_sync?
+    split? && (saved_change_to_amount? || saved_change_to_category_id?)
+  end
+
+  def sync_remainder_split = ensure_remainder_split
 end

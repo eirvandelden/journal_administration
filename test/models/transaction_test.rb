@@ -415,4 +415,32 @@ class TransactionSplittableTest < ActiveSupport::TestCase
       assert_equal 0, transaction.transaction_splits.count
     end
   end
+
+  class TransactionUpdates < ActiveSupport::TestCase
+    test "updating the amount adjusts the remainder split" do
+      transaction = transactions(:debit_grocery)
+      transaction.ensure_remainder_split
+
+      transaction.update!(amount: 60.00)
+
+      assert_equal 20.00, transaction.reload.transaction_splits.find_by(remainder: true).amount
+    end
+
+    test "updating the category adjusts the remainder split category" do
+      transaction = transactions(:debit_grocery)
+      transaction.ensure_remainder_split
+
+      transaction.update!(category: categories(:bakery))
+
+      assert_equal categories(:bakery), transaction.reload.transaction_splits.find_by(remainder: true).category
+    end
+
+    test "amount must cover explicit split amounts" do
+      transaction = transactions(:debit_grocery)
+
+      assert_not transaction.update(amount: 35.00)
+      assert_includes transaction.errors[:amount],
+                      I18n.t("activerecord.errors.models.transaction.attributes.amount.must_cover_splits")
+    end
+  end
 end
