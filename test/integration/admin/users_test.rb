@@ -12,6 +12,7 @@ class Admin::UsersTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select "td", text: @member.email_address
+    assert_select "#confirm-dialog"
   end
 
   test "admin can view a user" do

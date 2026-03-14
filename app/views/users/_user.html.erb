@@ -12,8 +12,8 @@
   <% end %>
 
   <%= button_to user_path(user), method: :delete, class: "btn btn--small btn--negative flex-item-no-shrink", disabled: ("disabled" if user.current? || !Current.user.can_administer?), data: {
-        turbo_confirm: t(‘.confirm_remove’), confirm_verb: t(‘common.remove’)} do %>
+        turbo_confirm: t(".confirm_remove"), confirm_verb: t("common.remove") } do %>
     <%= image_tag "minus.svg", aria: { hidden: true }, size: 24 %>
-    <span class="for-screen-reader"><%= t(‘.remove_from_account’, name: user.name) %></span>
+    <span class="for-screen-reader"><%= t(".remove_from_account", name: user.name) %></span>
   <% end %>
 </div>
