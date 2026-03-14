@@ -450,6 +450,13 @@ en:
       balance: Balance
       description: Description
     link: Link
+    search:
+      amount_placeholder: Amount
+      creditor: Creditor
+      no_results: No transfers found.
+      placeholder: "Search by description or account..."
+      submit: Search
+      title: Search for transfer
     suggestions:
       amount: Amount
       date: Date

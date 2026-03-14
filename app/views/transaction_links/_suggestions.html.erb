@@ -28,3 +28,16 @@
     </table>
   </details>
 <% end %>
+
+<details>
+  <summary><%= t("transaction_links.search.title") %></summary>
+  <%= form_with url: transaction_transaction_links_path(transaction),
+        method: :get,
+        data: { turbo_frame: "transaction_links_search" } do |f| %>
+    <%= f.search_field :query, placeholder: t("transaction_links.search.placeholder") %>
+    <%= f.number_field :amount, placeholder: t("transaction_links.search.amount_placeholder"),
+          step: "0.01", min: "0" %>
+    <%= f.submit t("transaction_links.search.submit") %>
+  <% end %>
+  <%= turbo_frame_tag "transaction_links_search" %>
+</details>
