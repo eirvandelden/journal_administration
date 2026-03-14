@@ -33,6 +33,7 @@ Rails.application.routes.draw do
   resources :accounts do
     scope module: "accounts" do
       resource :transactions_bulk, only: [ :update ]
+      resources :account_aliases, only: %i[create destroy]
     end
   end
   resources :categories

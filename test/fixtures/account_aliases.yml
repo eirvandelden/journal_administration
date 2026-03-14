@@ -1,0 +1,19 @@
+albert_heijn_ah:
+  account: albert_heijn
+  pattern: "AH "
+
+albert_heijn_ah_to_go:
+  account: albert_heijn
+  pattern: "AH to go"
+
+albert_heijn_albert_heijn:
+  account: albert_heijn
+  pattern: "Albert Heijn"
+
+jumbo_jumbo:
+  account: jumbo
+  pattern: "Jumbo "
+
+kruidvat_kruidvat:
+  account: kruidvat
+  pattern: "Kruidvat"

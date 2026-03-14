@@ -21,5 +21,13 @@ employer:
   name: Werkgever B.V.
   category: salary
 
+jumbo:
+  account_number: NL00ABNA8888888888
+  name: Jumbo B.V.
+
+kruidvat:
+  account_number: NL00ABNA7777777777
+  name: Kruidvat B.V.
+
 unknown:
   name: Unknown Account

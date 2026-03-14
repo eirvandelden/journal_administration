@@ -1,5 +1,13 @@
 ---
 nl:
+  account_aliases:
+    create:
+      success: Alias toegevoegd.
+    destroy:
+      success: Alias verwijderd.
+    form:
+      pattern_placeholder: 'bijv. Lidl '
+      submit: Alias toevoegen
   accounts:
     create:
       success: "✅ Rekening succesvol aangemaakt."
@@ -23,6 +31,7 @@ nl:
       title: "➕ Nieuwe rekening"
     show:
       account_number: 'Rekeningnummer:'
+      aliases: Herkenningspatronen
       category: 'Categorie:'
       edit: Bewerken
       id: 'Id:'
@@ -71,6 +80,10 @@ nl:
           has_many: Kan item niet verwijderen omdat afhankelijke %{record} bestaan
           has_one: Kan item niet verwijderen omdat %{record} afhankelijk is
       models:
+        account_alias:
+          attributes:
+            pattern:
+              invalid_like_characters: mag geen %% of _ tekens bevatten
         transaction_link:
           attributes:
             source:

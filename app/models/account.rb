@@ -20,6 +20,8 @@ class Account < ApplicationRecord
   scope :own,      -> { where.not(owner: nil) }
   scope :external, -> { where(owner: nil) }
 
+  has_many :account_aliases, dependent: :destroy
+
   belongs_to :category, optional: true
 
   validates :account_number, uniqueness: true, allow_blank: true
