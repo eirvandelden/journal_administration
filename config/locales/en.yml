@@ -544,12 +544,12 @@ en:
   transactions:
     create:
       success: "✅ Transaction was successfully created."
+    destroy:
+      success: "✅ Transaction was successfully destroyed."
     edit:
       edit_heading: Edit transaction
       link_heading: Link transaction
       split_heading: Split transaction
-    destroy:
-      success: "✅ Transaction was successfully destroyed."
     filters:
       account: Account
       all: All
