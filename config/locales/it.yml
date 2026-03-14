@@ -425,6 +425,17 @@ it:
   pagination:
     next: Successivo
     previous: Precedente
+  search:
+    no_results: Nessun risultato trovato
+    open: "🔍 Cerca"
+    placeholder: Cerca pagine, conti, transazioni…
+    result_types:
+      accounts: Conti
+      categories: Categorie
+      chattels: Beni
+      pages: Pagine
+      transactions: Transazioni
+    shortcut_hint: "⌘K"
   sessions:
     rejection: "🚫 Troppe richieste o non autorizzato."
     transfers:

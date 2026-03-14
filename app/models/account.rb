@@ -7,6 +7,9 @@ class Account < ApplicationRecord
   include Normalizable
   include Resolvable
   include BulkUpdatable
+  include Searchable
+
+  searchable_on :name, :account_number
 
   FAMILY_OWNERS = %w[samen etienne michelle serena cosimo chiara].freeze
 

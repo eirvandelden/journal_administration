@@ -7,6 +7,24 @@ class Transaction < ApplicationRecord
   include Categorizable
   include Importable
   include Linkable
+  include Searchable
+
+  searchable_on :note, :original_note
+
+  # Overrides the default Searchable scope to also match by amount
+  #
+  # @param query [String] The search query
+  # @return [ActiveRecord::Relation]
+  scope :search, ->(query) {
+    return none if query.blank?
+
+    sanitized = "%#{sanitize_sql_like(query.to_s.strip)}%"
+    conditions = searchable_columns.map { |col| "#{table_name}.#{col} LIKE ?" }
+    where(
+      "(#{conditions.join(' OR ')}) OR CAST(#{table_name}.amount AS TEXT) LIKE ?",
+      *conditions.map { sanitized }, sanitized
+    ).limit(10)
+  }
 
   TYPES = %w[Credit Debit Transfer].freeze
 

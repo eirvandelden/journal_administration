@@ -9,7 +9,7 @@
 
     <%= javascript_importmap_tags %>
   </head>
-  <body>
+  <body data-controller="search-dialog">
     <header>
       <nav data-controller="nav" data-action="click->nav#click">
         <ul>
@@ -28,6 +28,13 @@
                 <li><%= link_to t("main_nav.todo_upload"), new_transactions_import_path %></li>
               </ul>
             </details>
+          </li>
+          <li>
+            <button type="button"
+                    data-action="click->search-dialog#open"
+                    aria-label="<%= t('search.open') %>">
+              <%= t("search.open") %>
+            </button>
           </li>
           <% if signed_in? %>
             <li><%= link_to t("main_nav.profile"), edit_user_profile_path(Current.user) %></li>
@@ -52,6 +59,26 @@
         <button type="button" id="confirm-dialog-cancel" autofocus><%= t('common.cancel') %></button>
         <button type="button" id="confirm-dialog-accept" class="button-danger" data-default-label="<%= t('common.delete') %>"></button>
       </nav>
+    </dialog>
+    <dialog id="search-dialog"
+            data-search-dialog-target="dialog"
+            data-action="click->search-dialog#handleBackdropClick">
+      <article>
+        <form action="<%= searches_path %>"
+              method="get"
+              data-turbo-frame="search-results"
+              data-search-dialog-target="form">
+          <input type="search"
+                 name="q"
+                 placeholder="<%= t('search.placeholder') %>"
+                 autocomplete="off"
+                 data-search-dialog-target="input"
+                 data-action="input->search-dialog#debounceSearch">
+          <small class="search-shortcut"><%= t("search.shortcut_hint") %></small>
+        </form>
+        <turbo-frame id="search-results">
+        </turbo-frame>
+      </article>
     </dialog>
   </body>
 </html>
