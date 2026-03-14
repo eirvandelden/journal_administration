@@ -1,6 +1,5 @@
-<%# locals: (transactions:, page:) %>
+<%# locals: (transactions:, page:, show_uncategorized_amount: false) %>
 <%= render "transactions/filters" %>
-
 <%= render "shared/pagination", page: page %>
 
 <table class="transactions">
@@ -20,6 +19,7 @@
 
   <tbody>
     <% transactions.each do |transaction| %>
+      <% display_amount = show_uncategorized_amount ? transaction.uncategorized_amount : transaction.amount %>
       <tr class="<%= 'unconsolidated' if transaction.consolidatable? %>">
         <td>
           <%= link_to transaction do %>
@@ -31,14 +31,14 @@
         <td><%= creditor ? link_to(creditor.name || creditor.account_number, account_path(creditor)) : "" %></td>
         <% debitor = transaction.debitor %>
         <td><%= debitor ? link_to(debitor.name || debitor.account_number, account_path(debitor)) : "" %></td>
-        <td><%= number_to_currency transaction&.amount %></td>
+        <td><%= number_to_currency display_amount %></td>
         <td><%= transaction.booked_at ? l(transaction.booked_at.to_date) : '' %></td>
         <td><%= transaction.interest_at ? l(transaction.interest_at.to_date) : '' %></td>
         <td><%= transaction.category&.to_s %></td>
         <td><%= transaction&.note&.truncate(20) %></td>
       </tr>
       <% if transaction.split? %>
-        <% transaction.transaction_splits.each do |split| %>
+        <% transaction.explicit_transaction_splits.each do |split| %>
           <tr class="split-row">
             <td></td>
             <td></td>

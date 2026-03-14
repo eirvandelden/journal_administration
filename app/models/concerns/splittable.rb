@@ -9,20 +9,32 @@ module Splittable
     has_many :transaction_splits, dependent: :destroy
   end
 
+  # Explicit user-defined splits, excluding the synthetic remainder row.
+  #
+  # @return [ActiveRecord::Relation]
+  def explicit_transaction_splits = transaction_splits.where(remainder: false)
+
   # Whether this transaction has any splits
   #
   # @return [Boolean]
-  def split? = transaction_splits.any?
+  def split? = explicit_transaction_splits.any?
 
   # Remaining amount not yet allocated to explicit splits
   #
   # @return [BigDecimal]
-  def split_balance = amount - transaction_splits.where(remainder: false).sum(:amount)
+  def split_balance = amount - explicit_transaction_splits.sum(:amount)
 
   # Whether the full transaction amount is allocated to splits
   #
   # @return [Boolean]
   def fully_split? = split_balance.zero?
+
+  # The portion of the transaction that still has no category assigned.
+  #
+  # @return [BigDecimal]
+  def uncategorized_amount
+    uncategorized_splits_amount + uncategorized_remainder_amount
+  end
 
   # Auto-manages the remainder split after explicit splits change
   #
@@ -73,9 +85,16 @@ module Splittable
 
   private
 
+  def uncategorized_splits_amount = explicit_transaction_splits.where(category_id: nil).sum(:amount)
+
+  def uncategorized_remainder_amount
+    remaining = amount - transaction_splits.sum(:amount)
+    remaining.positive? ? remaining : 0
+  end
+
   def matching_splits_for(category)
     return [] if category.blank?
 
-    transaction_splits.select { |split| category.recent_transaction_category_ids.include?(split.category_id) }
+    explicit_transaction_splits.select { |split| category.recent_transaction_category_ids.include?(split.category_id) }
   end
 end

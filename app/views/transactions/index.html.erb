@@ -1,5 +1,6 @@
 <section class="transactions">
-  <%= render partial: 'table', locals: { transactions: @transactions, page: @page } %>
+  <%= render partial: "table",
+             locals: { transactions: @transactions, page: @page, show_uncategorized_amount: params[:filter] == "no_category" } %>
 </section>
 
 <section class="actions">

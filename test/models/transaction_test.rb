@@ -326,6 +326,10 @@ class TransactionSplittableTest < ActiveSupport::TestCase
     assert_not transactions(:debit_grocery).fully_split?
   end
 
+  test "uncategorized_amount returns only the uncategorized remainder" do
+    assert_equal 10.00, transactions(:debit_grocery).uncategorized_amount
+  end
+
   class RemainderSplit < ActiveSupport::TestCase
     test "ensure_remainder_split creates remainder when splits exist" do
       transaction = transactions(:uncategorized)
