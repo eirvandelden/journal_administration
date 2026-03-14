@@ -137,6 +137,20 @@ class ChattelTest < ActiveSupport::TestCase
     end
   end
 
+  class WhenWarrantyDocumentIsNotAPdf < ActiveSupport::TestCase
+    test "is invalid" do
+      chattel = Chattel.new(name: "Test")
+      chattel.warranty_document.attach(
+        io: StringIO.new("plain text"),
+        filename: "warranty.txt",
+        content_type: "text/plain"
+      )
+
+      assert_not chattel.valid?
+      assert_includes chattel.errors[:warranty_document], I18n.t("activerecord.errors.messages.must_be_pdf")
+    end
+  end
+
   class WhenOnlyTransactionHasProofOfPurchase < ActiveSupport::TestCase
     fixtures :chattels, :transactions, :accounts, :categories
 

@@ -65,6 +65,7 @@ it:
         proof_of_purchase: Prova d'acquisto
     errors:
       messages:
+        must_be_pdf: deve essere un documento PDF
         record_invalid: 'Validazione fallita: %{errors}'
         restrict_dependent_destroy:
           has_many: Il record non può essere cancellato perchè esistono %{record} dipendenti

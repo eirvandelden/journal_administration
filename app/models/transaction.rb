@@ -8,6 +8,7 @@ class Transaction < ApplicationRecord
   include Importable
   include Linkable
   include Searchable
+  include PdfAttachmentValidatable
 
   searchable_on :note, :original_note
 
@@ -39,6 +40,7 @@ class Transaction < ApplicationRecord
   before_validation :determine_debit_credit_or_transfer_type
 
   validates :type, inclusion: { in: TYPES, message: "%{value} is not a valid type" }, presence: true
+  validates_pdf_attachment_of :proof_of_purchase
   validate :check_transfer_type_through_account_owners
 
   # Returns true when the transaction has no category assigned.

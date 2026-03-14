@@ -158,5 +158,17 @@ class TransactionTest < ActiveSupport::TestCase
       assert transaction.proof_of_purchase.attached?
       assert_equal "receipt.pdf", transaction.proof_of_purchase.filename.to_s
     end
+
+    test "proof_of_purchase must be a pdf" do
+      transaction = transactions(:debit_grocery)
+      transaction.proof_of_purchase.attach(
+        io: StringIO.new("plain text"),
+        filename: "receipt.txt",
+        content_type: "text/plain"
+      )
+
+      assert_not transaction.valid?
+      assert_includes transaction.errors[:proof_of_purchase], I18n.t("activerecord.errors.messages.must_be_pdf")
+    end
   end
 end

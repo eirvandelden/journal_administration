@@ -65,6 +65,7 @@ en:
         proof_of_purchase: Proof of purchase
     errors:
       messages:
+        must_be_pdf: must be a PDF document
         record_invalid: 'Validation failed: %{errors}'
         restrict_dependent_destroy:
           has_many: Cannot delete record because dependent %{record} exist
