@@ -2,12 +2,17 @@
 class TransactionsController < ApplicationController
   before_action :set_transaction, only: %i[show edit update destroy]
 
-  # Lists all transactions with optional category filtering
+  # Lists all transactions with optional type, category, account, and date range filtering
   #
+  # @action GET
+  # @route /transactions
   # @return [void]
   def index
-    transactions = Transaction.all
-    transactions = transactions.where(category: nil) if params[:filter] == "no_category"
+    transactions = Transaction
+      .by_type(params[:type])
+      .by_category(params[:category_id])
+      .by_account(params[:account_id])
+      .in_date_range(params[:start_date], params[:end_date])
 
     @transactions = set_page_and_extract_portion_from transactions.order(interest_at: :desc), per_page: [20]
   end

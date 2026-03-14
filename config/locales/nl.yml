@@ -486,6 +486,15 @@ nl:
       success: "✅ Transactie succesvol aangemaakt."
     destroy:
       success: "✅ Transactie succesvol verwijderd."
+    filters:
+      account: Rekening
+      all: Alle
+      category: Categorie
+      clear: Filters wissen
+      external_accounts: Externe rekeningen
+      own_accounts: Familierekeningen
+      title: Transacties filteren
+      type: Type
     imports:
       create:
         file_too_large: "⚠️ Bestand te groot. Maximum grootte is 5MB."
@@ -514,6 +523,10 @@ nl:
       note: Opmerking
       show: Tonen
       type: Type
+    types:
+      credit: Credit
+      debit: Debet
+      transfer: Overboeking
     update:
       success: "✅ Transactie succesvol bijgewerkt."
   users:

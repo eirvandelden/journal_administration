@@ -102,6 +102,85 @@ class TransactionTest < ActiveSupport::TestCase
     assert_equal "\u{1F504} \u25FB\uFE0F", transactions(:transfer_savings).type_icon
   end
 
+  # -- filter scopes ----------------------------------------------------------
+
+  class FilterScopes < ActiveSupport::TestCase
+    test "by_type returns only transactions of that type" do
+      results = Transaction.by_type("Credit")
+
+      assert results.all? { |t| t.type == "Credit" }
+      assert_includes results, transactions(:credit_salary)
+      assert_not_includes results, transactions(:debit_grocery)
+    end
+
+    test "by_type with blank string returns all transactions" do
+      assert_equal Transaction.count, Transaction.by_type("").count
+    end
+
+    test "by_type with nil returns all transactions" do
+      assert_equal Transaction.count, Transaction.by_type(nil).count
+    end
+
+    test "by_category with 'none' returns only uncategorized transactions" do
+      results = Transaction.by_category("none")
+
+      assert results.all? { |t| t.category.nil? }
+      assert_includes results, transactions(:uncategorized)
+      assert_not_includes results, transactions(:debit_grocery)
+    end
+
+    test "by_category with an id returns transactions with that category" do
+      category = categories(:supermarket)
+      results = Transaction.by_category(category.id.to_s)
+
+      assert_includes results, transactions(:debit_grocery)
+      assert_not_includes results, transactions(:credit_salary)
+    end
+
+    test "by_category with blank string returns all transactions" do
+      assert_equal Transaction.count, Transaction.by_category("").count
+    end
+
+    test "by_account returns transactions where account is debitor or creditor" do
+      account = accounts(:checking)
+      results = Transaction.by_account(account.id.to_s)
+
+      assert results.all? { |t| t.debitor_account_id == account.id || t.creditor_account_id == account.id }
+      assert_includes results, transactions(:debit_grocery)
+      assert_includes results, transactions(:credit_salary)
+    end
+
+    test "by_account with blank string returns all transactions" do
+      assert_equal Transaction.count, Transaction.by_account("").count
+    end
+
+    test "by_account with nil returns all transactions" do
+      assert_equal Transaction.count, Transaction.by_account(nil).count
+    end
+
+    test "in_date_range with only from filters lower bound" do
+      from = 2.days.ago.to_date.to_s
+      results = Transaction.in_date_range(from, nil)
+
+      assert results.all? { |t| t.interest_at >= 2.days.ago.beginning_of_day }
+    end
+
+    test "in_date_range with only to filters upper bound" do
+      to = 2.days.ago.to_date.to_s
+      results = Transaction.in_date_range(nil, to)
+
+      assert results.all? { |t| t.interest_at <= 2.days.ago.end_of_day }
+    end
+
+    test "in_date_range with both bounds filters to range" do
+      from = 5.days.ago.to_date.to_s
+      to = 1.day.ago.to_date.to_s
+      results = Transaction.in_date_range(from, to)
+
+      assert results.all? { |t| t.interest_at >= 5.days.ago.beginning_of_day && t.interest_at <= 1.day.ago.end_of_day }
+    end
+  end
+
   # -- consolidatable? --------------------------------------------------------
 
   class Consolidatable < ActiveSupport::TestCase
