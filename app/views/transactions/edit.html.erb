@@ -7,7 +7,7 @@
   </nav>
 </header>
 <article>
-  <%= render partial: 'form', locals: { transaction: @transaction } %>
+  <%= render partial: "transactions/form", locals: { transaction: @transaction } %>
 </article>
 
 <% unless @transaction.type == "Transfer" %>
@@ -17,7 +17,9 @@
   <% end %>
 
   <%= turbo_frame_tag "transaction_splits" do %>
-    <%= render "transaction_splits/table", transaction: @transaction, transaction_split: TransactionSplit.new(financial_transaction: @transaction) %>
+    <%= render "transaction_splits/table",
+               transaction: @transaction,
+               transaction_split: (@transaction_split || TransactionSplit.new(financial_transaction: @transaction)) %>
   <% end %>
 <% end %>
 

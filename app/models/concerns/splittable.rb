@@ -27,7 +27,7 @@ module Splittable
   # Whether the full transaction amount is allocated to splits
   #
   # @return [Boolean]
-  def fully_split? = split_balance.zero?
+  def fully_split? = split? && (amount - transaction_splits.sum(:amount)).zero?
 
   # The portion of the transaction that still has no category assigned.
   #

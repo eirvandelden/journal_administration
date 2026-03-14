@@ -16,7 +16,7 @@ class TransactionSplitsController < ApplicationController
         format.html { redirect_to edit_transaction_path(@transaction) }
       else
         format.turbo_stream { render :create, status: :unprocessable_entity }
-        format.html { redirect_to edit_transaction_path(@transaction) }
+        format.html { render "transactions/edit", status: :unprocessable_entity }
       end
     end
   end
@@ -35,7 +35,7 @@ class TransactionSplitsController < ApplicationController
         format.html { redirect_to edit_transaction_path(@transaction) }
       else
         format.turbo_stream { render :update, status: :unprocessable_entity }
-        format.html { redirect_to edit_transaction_path(@transaction) }
+        format.html { render "transactions/edit", status: :unprocessable_entity }
       end
     end
   end
