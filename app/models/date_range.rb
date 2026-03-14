@@ -15,10 +15,14 @@ class DateRange
   #
   # @param start_date [String, Date] The start date (inclusive)
   # @param end_date [String, Date] The end date (inclusive)
-  # @return [DateRange] A new DateRange instance with the specified dates
+  # @return [DateRange, nil] A new DateRange instance with the specified dates
   def self.from_dates(start_date, end_date)
-    new(Date.parse(start_date.to_s).beginning_of_day,
-        Date.parse(end_date.to_s).end_of_day)
+    parsed_start_date = Date.parse(start_date.to_s)
+    parsed_end_date = Date.parse(end_date.to_s)
+
+    new(parsed_start_date.beginning_of_day, parsed_end_date.end_of_day)
+  rescue Date::Error
+    nil
   end
 
   # Creates a DateRange from a predefined filter

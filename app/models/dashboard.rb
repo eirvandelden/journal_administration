@@ -13,11 +13,7 @@ class Dashboard
   # @param start_date [String, Date, nil] Custom start date (overrides filter)
   # @param end_date [String, Date, nil] Custom end date (overrides filter)
   def initialize(filter: nil, start_date: nil, end_date: nil)
-    @date_range = if start_date.present? && end_date.present?
-      DateRange.from_dates(start_date, end_date)
-    else
-      DateRange.from_filter(filter)
-    end
+    @date_range = custom_date_range(start_date, end_date) || DateRange.from_filter(filter)
   end
 
   # Returns debit transactions grouped by category with totals
@@ -63,6 +59,12 @@ class Dashboard
   end
 
   private
+
+  def custom_date_range(start_date, end_date)
+    return unless start_date.present? && end_date.present?
+
+    DateRange.from_dates(start_date, end_date)
+  end
 
   def transfer_category_id
     @transfer_category_id ||= Category.find_by(name: "Transfer")&.id

@@ -69,4 +69,10 @@ class DateRangeTest < ActiveSupport::TestCase
     assert_equal start_date, range.start_date.to_date
     assert_equal end_date, range.end_date.to_date
   end
+
+  test "from_dates returns nil for invalid dates" do
+    range = DateRange.from_dates("not-a-date", "2026-03-31")
+
+    assert_nil range
+  end
 end
