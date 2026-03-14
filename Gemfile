@@ -37,6 +37,7 @@ gem "jbuilder" # Build JSON APIs with ease. Read more: https://github.com/rails/
 gem "geared_pagination", "~> 1.2"
 gem "symbol-fstring", require: "fstring/all" # Performance improvement
 gem "thruster"
+gem "bcrypt_pbkdf", ">= 1.1.2", force_ruby_platform: true # Fix an issue with bcrypt_pbkdf 1.1.2 and darwin platform
 
 group :development, :test do
   gem "debug", ">= 1.0.0"
