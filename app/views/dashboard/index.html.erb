@@ -26,7 +26,7 @@
 
 <section class="chart-section">
   <h2><%= t("dashboard.charts.spending_by_category") %></h2>
-  <%= svg_donut_chart(labels: @dashboard.chart_labels, data: @dashboard.debit_transactions.values.map(&:to_f)) %>
+  <%= svg_donut_chart(labels: @dashboard.chart_labels, data: @dashboard.credit_transactions.values.map(&:to_f)) %>
 </section>
 
 <%= render partial: "balance", locals: { dashboard: @dashboard } %>
@@ -34,7 +34,7 @@
 <section class="chart-section">
   <h2><%= t("dashboard.charts.spending_vs_average") %></h2>
   <%= svg_bar_chart(labels: @dashboard.chart_labels,
-                    data: @dashboard.debit_transactions.values.map(&:to_f),
+                    data: @dashboard.credit_transactions.values.map(&:to_f),
                     reference: @dashboard.historical_averages,
                     y_label: t("dashboard.charts.spending_vs_average")) %>
 </section>

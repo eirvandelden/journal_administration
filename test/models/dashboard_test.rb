@@ -115,10 +115,10 @@ class DashboardTest < ActiveSupport::TestCase
   end
 
   class ChartLabels < ActiveSupport::TestCase
-    test "returns an array of strings in the same order as debit_transactions" do
+    test "returns an array of strings in the same order as credit_transactions" do
       dashboard = Dashboard.new(filter: "year_to_date")
       labels = dashboard.chart_labels
-      keys = dashboard.debit_transactions.keys
+      keys = dashboard.credit_transactions.keys
 
       assert_equal keys.size, labels.size
       assert labels.all? { |l| l.is_a?(String) }
@@ -127,7 +127,7 @@ class DashboardTest < ActiveSupport::TestCase
     test "maps nil category key to translated uncategorized label" do
       dashboard = Dashboard.new(filter: "year_to_date")
 
-      nil_index = dashboard.debit_transactions.keys.index(nil)
+      nil_index = dashboard.credit_transactions.keys.index(nil)
       assert_equal I18n.t("common.uncategorized"), dashboard.chart_labels[nil_index] if nil_index
     end
   end
