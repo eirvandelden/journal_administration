@@ -1,6 +1,6 @@
-pre-commit:
-  exclude_tags:
-    - erb_lint
-  commands:
-    erb_lint:
-      skip: true
+# Developers can add local overrides here to skip checks during development
+# Example: skip herbfiles during development
+# pre-commit:
+#   commands:
+#     rubocop:
+#       skip: true

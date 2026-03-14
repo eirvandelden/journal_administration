@@ -1,10 +1,17 @@
 pre-commit:
   commands:
-    erb_lint:
-      tags: erb_lint
-      run: npx herb-lint app/views/ --fail-level error
+    rubocop:
+      tags: rubocop
+      glob: "*.rb"
+      run: bundle exec rubocop --force-exclusion {staged_files}
 
 pre-push:
   commands:
+    rubocop:
+      run: bundle exec rubocop
+    brakeman:
+      run: bundle exec brakeman --no-pager -q
+    bundler_audit:
+      run: bundle exec bundler-audit check
     tests:
       run: bundle exec rails test
