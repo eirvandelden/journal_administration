@@ -14,8 +14,7 @@ class SeedAccountAliases < ActiveRecord::Migration[8.0]
   private
 
   def seed_aliases(account_name, patterns)
-    account = Account.find_by(name: account_name)
-    return unless account
+    account = Account.find_or_create_by!(name: account_name)
 
     patterns.each do |pattern|
       account.account_aliases.find_or_create_by!(pattern: pattern)

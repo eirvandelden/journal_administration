@@ -38,6 +38,13 @@ class Account < ApplicationRecord
       .limit(limit)
   end
 
+  # Returns true when the account is not owned by a family member
+  #
+  # @return [Boolean]
+  def external?
+    owner.nil?
+  end
+
   # Returns human-readable string representation of the account
   #
   # @return [String] Account name if present, otherwise account number
