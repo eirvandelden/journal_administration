@@ -425,6 +425,17 @@ en:
   pagination:
     next: Next
     previous: Previous
+  search:
+    no_results: No results found
+    open: "🔍 Search"
+    placeholder: Search pages, accounts, transactions…
+    result_types:
+      accounts: Accounts
+      categories: Categories
+      chattels: Chattels
+      pages: Pages
+      transactions: Transactions
+    shortcut_hint: "⌘K"
   sessions:
     rejection: "🚫 Too many requests or unauthorized."
     transfers:

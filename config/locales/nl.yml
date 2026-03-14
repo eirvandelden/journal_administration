@@ -425,6 +425,17 @@ nl:
   pagination:
     next: Volgende
     previous: Vorige
+  search:
+    no_results: Geen resultaten gevonden
+    open: "🔍 Zoeken"
+    placeholder: Zoek pagina's, rekeningen, transacties…
+    result_types:
+      accounts: Rekeningen
+      categories: Categorieën
+      chattels: Bezittingen
+      pages: Pagina's
+      transactions: Transacties
+    shortcut_hint: "⌘K"
   sessions:
     rejection: "🚫 Te veel aanvragen of ongeautoriseerd."
     transfers:

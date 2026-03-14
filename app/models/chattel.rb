@@ -1,4 +1,8 @@
 class Chattel < ApplicationRecord
+  include Searchable
+
+  searchable_on :name, :kind, :model_number, :serial_number, :notes
+
   belongs_to :purchase_transaction, class_name: "Transaction", optional: true
 
   validates :name, presence: true

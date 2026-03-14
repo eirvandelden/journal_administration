@@ -4,6 +4,9 @@
 # with a parent category. The Sortable concern provides ordering by hierarchy.
 class Category < ApplicationRecord
   include Sortable
+  include Searchable
+
+  searchable_on :name
 
   # @!attribute [rw] direction
   #   @return [String] The category direction (debit or credit)
