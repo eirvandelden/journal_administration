@@ -82,6 +82,17 @@ class TransactionsIndexTest < ActionDispatch::IntegrationTest
     assert_includes response.body, transactions(:debit_grocery).note
   end
 
+  test "no_category filter shows only the remaining uncategorized amount" do
+    get transactions_path(filter: :no_category)
+
+    assert_response :success
+
+    formatted_amount = Regexp.escape(ApplicationController.helpers.number_to_currency(10))
+    formatted_note = Regexp.escape(transactions(:debit_grocery).note)
+
+    assert_match %r{<td>#{formatted_amount}</td>\s*<td>.*?</td>\s*<td>.*?</td>\s*<td>#{formatted_note}</td>}m, response.body
+  end
+
   class SplitSubRows < ActionDispatch::IntegrationTest
     setup do
       sign_in_as(users(:member))
@@ -102,6 +113,17 @@ class TransactionsIndexTest < ActionDispatch::IntegrationTest
         bakery_row = rows.detect { |r| r.text.include?(transactions(:debit_bakery).note) }
         assert bakery_row
       end
+    end
+
+    test "split sub-rows exclude the synthetic remainder split" do
+      transaction = transactions(:uncategorized)
+      transaction.transaction_splits.create!(amount: 10.00, category: categories(:supermarket))
+      transaction.ensure_remainder_split
+
+      get transactions_path
+
+      assert_response :success
+      assert_select "tr.split-row", count: 3
     end
   end
 end

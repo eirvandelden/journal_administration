@@ -84,4 +84,19 @@ class TransactionsShowTest < ActionDispatch::IntegrationTest
     assert_select "h2", text: I18n.t("transactions.show.proof_of_purchase")
     assert_select "p", text: I18n.t("transactions.show.no_proof_of_purchase")
   end
+
+  test "show counts and renders only explicit splits" do
+    @uncategorized.transaction_splits.create!(category: categories(:supermarket), amount: 10.00, note: "Food")
+    @uncategorized.ensure_remainder_split
+
+    sign_in_as(@member)
+
+    get transaction_url(@uncategorized)
+
+    assert_response :success
+    assert_select "dt", text: I18n.t("transaction_splits.split_indicator", count: 1)
+    assert_select "dd ul li", count: 1
+    assert_select "dd ul li", text: /Supermarket/
+    assert_select "dd ul li", text: /10\.00/
+  end
 end

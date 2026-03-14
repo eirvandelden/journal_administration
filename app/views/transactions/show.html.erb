@@ -31,10 +31,10 @@
   <dd><%= @transaction.category&.name || t("common.uncategorized") %></dd>
 
   <% if @transaction.split? %>
-    <dt><%= t("transaction_splits.split_indicator", count: @transaction.transaction_splits.size) %></dt>
+    <dt><%= t("transaction_splits.split_indicator", count: @transaction.explicit_transaction_splits.size) %></dt>
     <dd>
       <ul>
-        <% @transaction.transaction_splits.each do |split| %>
+        <% @transaction.explicit_transaction_splits.each do |split| %>
           <li><%= split.category&.to_s %> — <%= number_to_currency(split.amount) %><%= " (#{split.note})" if split.note.present? %></li>
         <% end %>
       </ul>

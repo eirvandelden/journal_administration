@@ -21,7 +21,7 @@
               <td><%= t('.transaction') %></td>
               <td>
                 <%= item.record.note&.truncate(40) %>
-                <%= number_to_currency item.record.amount %>
+                <%= number_to_currency item.record.uncategorized_amount %>
               </td>
               <td><%= link_to t('.edit'), edit_transaction_path(item.record) %></td>
 
