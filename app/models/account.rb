@@ -26,6 +26,8 @@ class Account < ApplicationRecord
 
   validates :account_number, uniqueness: true, allow_blank: true
 
+  before_destroy :check_no_transactions_exist
+
   # Returns the 10 most recent transactions involving this account as debitor or creditor
   #
   # @param limit [Integer] Maximum number of transactions to return
@@ -61,6 +63,13 @@ class Account < ApplicationRecord
   end
 
   private
+
+  def check_no_transactions_exist
+    return unless Transaction.where("debitor_account_id = :id OR creditor_account_id = :id", id: id).exists?
+
+    errors.add(:base, :has_transactions)
+    throw :abort
+  end
 
   # @param pattern [String]
   def absorb_transactions_for(pattern)

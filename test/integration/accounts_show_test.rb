@@ -47,4 +47,32 @@ class AccountsShowTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_includes response.body, transactions(:credit_salary).note
   end
+
+  test "show renders a destroy button" do
+    get account_path(accounts(:checking))
+
+    assert_response :success
+    assert_select "form[action='#{account_path(accounts(:checking))}']"
+  end
+
+  test "edit renders a destroy button" do
+    get edit_account_path(accounts(:checking))
+
+    assert_response :success
+    assert_select "form[action='#{account_path(accounts(:checking))}']"
+  end
+
+  test "destroy redirects to accounts index on success" do
+    delete account_path(accounts(:jumbo))
+
+    assert_redirected_to accounts_url
+    assert_equal I18n.t("accounts.destroy.success"), flash[:notice]
+  end
+
+  test "destroy redirects back with alert when account has transactions" do
+    delete account_path(accounts(:checking))
+
+    assert_redirected_to account_path(accounts(:checking))
+    assert flash[:alert].present?
+  end
 end

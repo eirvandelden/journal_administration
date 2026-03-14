@@ -81,6 +81,10 @@ nl:
           has_many: Kan item niet verwijderen omdat afhankelijke %{record} bestaan
           has_one: Kan item niet verwijderen omdat %{record} afhankelijk is
       models:
+        account:
+          attributes:
+            base:
+              has_transactions: kan niet worden verwijderd omdat er transacties aan gekoppeld zijn
         account_alias:
           attributes:
             account:
