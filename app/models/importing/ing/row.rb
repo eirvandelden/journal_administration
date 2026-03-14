@@ -35,7 +35,7 @@ module Importing
                      code:, direction:, amount:, mutation_kind:, description:,
                      original_balance:, original_tag:)
         @date = date
-        @initiator_name = Account.normalize(initiator_name)
+        @initiator_name = Account.find_by_alias(initiator_name)&.name || initiator_name
         @our_account_number = our_account_number
         @their_account_number = their_account_number
         @code = code

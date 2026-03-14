@@ -32,7 +32,7 @@ class IngSemicolonTransactionJobTest < ActiveJob::TestCase
   end
 
   test "with a valid row, if initiator_account_name is a variant, match to an existing account" do
-    ah = Account.find_or_create_by(name: "Albert Heijn B.V.")
+    ah = accounts(:albert_heijn)
 
     [
       "ALBERT HEIJN 2921 EINDHOVEN NLD",
@@ -51,7 +51,7 @@ class IngSemicolonTransactionJobTest < ActiveJob::TestCase
       assert_equal ah.id, Transaction.unscoped.last.debitor_account_id
     end
 
-    jumbo = Account.find_or_create_by(name: "Jumbo B.V.")
+    jumbo = accounts(:jumbo)
     [
       "Jumbo Foodmarkt Veghel VEGHEL",
       "Jumbo Supermarkten BV Veghel NLD",
@@ -66,7 +66,7 @@ class IngSemicolonTransactionJobTest < ActiveJob::TestCase
       assert_equal jumbo.id, Transaction.unscoped.last.debitor_account_id
     end
 
-    kruidvat = Account.find_or_create_by(name: "Kruidvat B.V.")
+    kruidvat = accounts(:kruidvat)
     [
       "Kruidvat 6939 BREUKELEN UT NLD",
       "Kruidvat 7661 EINDHOVEN NLD",

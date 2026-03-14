@@ -38,6 +38,6 @@ class ResolvableTest < ActiveSupport::TestCase
       name: "AH Amsterdam"
     )
 
-    assert_equal "Albert Heijn B.V.", account.name
+    assert_equal accounts(:albert_heijn), account
   end
 end

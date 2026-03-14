@@ -1,5 +1,13 @@
 ---
 en:
+  account_aliases:
+    create:
+      success: Alias added.
+    destroy:
+      success: Alias removed.
+    form:
+      pattern_placeholder: 'e.g. Lidl '
+      submit: Add alias
   accounts:
     create:
       success: "✅ Account was successfully created."
@@ -23,6 +31,7 @@ en:
       title: "➕ New account"
     show:
       account_number: 'Account number:'
+      aliases: Recognition patterns
       category: 'Category:'
       edit: Edit
       id: 'Id:'
@@ -71,6 +80,10 @@ en:
           has_many: Cannot delete record because dependent %{record} exist
           has_one: Cannot delete record because a dependent %{record} exists
       models:
+        account_alias:
+          attributes:
+            pattern:
+              invalid_like_characters: must not contain %% or _ characters
         transaction_link:
           attributes:
             source:

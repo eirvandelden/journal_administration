@@ -10,7 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_14_140616) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_15_000003) do
+  create_table "account_aliases", force: :cascade do |t|
+    t.integer "account_id", null: false
+    t.datetime "created_at", null: false
+    t.string "pattern", null: false
+    t.datetime "updated_at", null: false
+    t.index "LOWER(pattern)", name: "index_account_aliases_on_lower_pattern", unique: true
+    t.index ["account_id", "pattern"], name: "index_account_aliases_on_account_id_and_pattern", unique: true
+    t.index ["account_id"], name: "index_account_aliases_on_account_id"
+  end
   create_table "accounts", force: :cascade do |t|
     t.string "account_number"
     t.integer "category_id"
@@ -212,6 +221,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_14_140616) do
     t.index ["name"], name: "index_users_on_name", unique: true
   end
 
+  add_foreign_key "account_aliases", "accounts"
   add_foreign_key "accounts", "categories"
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"

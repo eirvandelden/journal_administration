@@ -33,5 +33,13 @@
 </article>
 
 <article>
+  <h2><%= t(".aliases") %></h2>
+  <ul>
+    <%= render @account.account_aliases %>
+  </ul>
+  <%= render "account_aliases/form", account: @account, account_alias: @account.account_aliases.build %>
+</article>
+
+<article>
   <%= render "shared/recent_transactions", transactions: @account.recent_transactions %>
 </article>
