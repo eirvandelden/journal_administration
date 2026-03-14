@@ -26,4 +26,22 @@ class ChattelsShowTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "a[href='#{edit_chattel_path(@chattel)}']", text: I18n.t("common.edit")
   end
+
+  test "show includes destroy button" do
+    sign_in_as(@member)
+
+    get chattel_url(@chattel)
+
+    assert_response :success
+    assert_select "form[action='#{chattel_path(@chattel)}'] button", text: I18n.t("common.destroy")
+  end
+
+  test "index does not include destroy button" do
+    sign_in_as(@member)
+
+    get chattels_url
+
+    assert_response :success
+    assert_select "button", text: I18n.t("common.destroy"), count: 0
+  end
 end

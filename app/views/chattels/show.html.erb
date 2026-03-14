@@ -12,3 +12,7 @@
 <article>
   <%= render partial: 'form', locals: { chattel: @chattel, disabled: :disabled } %>
 </article>
+<footer>
+  <%= button_to t('common.destroy'), @chattel, method: :delete, class: "button-danger",
+      data: { turbo_confirm: t('common.confirm_destroy'), confirm_verb: t('common.delete') } %>
+</footer>

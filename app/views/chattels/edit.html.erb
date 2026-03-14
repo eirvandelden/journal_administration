@@ -10,6 +10,6 @@
   <%= render 'form', chattel: @chattel %>
 </article>
 
-<div class="actions">
+<footer>
   <%= button_to t('common.destroy'), @chattel, method: :delete, class: "button-danger", data: { turbo_confirm: t('common.confirm_destroy'), confirm_verb: t('common.delete') } %>
-</div>
+</footer>
