@@ -27,7 +27,7 @@ class TransactionSplitsTest < ActionDispatch::IntegrationTest
         headers: { "Accept" => "text/vnd.turbo-stream.html" }
 
       assert_response :success
-      assert_match "transaction_splits", response.body
+      assert_includes response.body, %(<turbo-frame id="transaction_splits">)
     end
 
     test "with invalid amount returns 422" do
@@ -83,6 +83,7 @@ class TransactionSplitsTest < ActionDispatch::IntegrationTest
         headers: { "Accept" => "text/vnd.turbo-stream.html" }
 
       assert_response :success
+      assert_includes response.body, %(<turbo-frame id="transaction_splits">)
     end
 
     test "with invalid amount returns 422" do
@@ -127,6 +128,7 @@ class TransactionSplitsTest < ActionDispatch::IntegrationTest
         headers: { "Accept" => "text/vnd.turbo-stream.html" }
 
       assert_response :success
+      assert_includes response.body, %(<turbo-frame id="transaction_splits">)
     end
   end
 
@@ -195,6 +197,22 @@ class TransactionSplitsTest < ActionDispatch::IntegrationTest
 
       assert_response :success
       assert_select "turbo-frame#transaction_splits", count: 0
+    end
+
+    test "wraps splits frame in article" do
+      get edit_transaction_url(transactions(:uncategorized))
+
+      assert_response :success
+      assert_select "article turbo-frame#transaction_splits"
+    end
+
+    test "shows h2 heading for each section" do
+      get edit_transaction_url(transactions(:uncategorized))
+
+      assert_response :success
+      assert_select "h2", text: I18n.t("transactions.edit.edit_heading")
+      assert_select "h2", text: I18n.t("transactions.edit.split_heading")
+      assert_select "h2", text: I18n.t("transactions.edit.link_heading")
     end
   end
 end

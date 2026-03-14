@@ -12,11 +12,18 @@ class TransactionsIndexTest < ActionDispatch::IntegrationTest
     assert_select "tr.unconsolidated", text: /Uncategorized tra/
   end
 
-  test "index does not highlight categorized transactions" do
+  test "index highlights categorized transactions with uncategorized remainder" do
     get transactions_path
 
     assert_response :success
-    assert_select "tr.unconsolidated", text: /Groceries at AH/, count: 0
+    assert_select "tr.unconsolidated", text: /Groceries at AH/
+  end
+
+  test "index does not highlight fully categorized transactions" do
+    get transactions_path
+
+    assert_response :success
+    assert_select "tr.unconsolidated", text: /Bakery purchase/, count: 0
   end
 
   test "GET /transactions returns 200" do

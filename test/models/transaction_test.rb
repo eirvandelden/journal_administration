@@ -200,8 +200,19 @@ class TransactionTest < ActiveSupport::TestCase
       assert transactions(:uncategorized).consolidatable?
     end
 
-    test "returns false when category is present" do
-      assert_not transactions(:debit_grocery).consolidatable?
+    test "returns true when categorized transaction still has uncategorized remainder" do
+      assert transactions(:debit_grocery).consolidatable?
+    end
+
+    test "returns false when category is present and fully allocated" do
+      assert_not transactions(:debit_bakery).consolidatable?
+    end
+
+    test "returns false when uncategorized transaction is fully allocated through splits" do
+      transaction = transactions(:uncategorized)
+      transaction.transaction_splits.create!(amount: transaction.amount, category: categories(:supermarket))
+
+      assert_not transaction.reload.consolidatable?
     end
   end
 
