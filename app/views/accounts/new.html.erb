@@ -1,2 +1,9 @@
-<h1><%= t('.title') %></h1>
-<%= render 'form' %>
+<header>
+  <h1><%= t('.title') %></h1>
+  <nav>
+    <%= link_to t('common.back'), accounts_path %>
+  </nav>
+</header>
+<article>
+  <%= render 'form' %>
+</article>

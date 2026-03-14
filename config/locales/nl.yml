@@ -8,7 +8,7 @@ nl:
     index:
       account_number: Rekeningnummer
       category: Categorie
-      confirm_destroy: Weet je het zeker?
+      confirm_destroy: Dit verwijdert de rekening permanent. Dit kan niet ongedaan worden gemaakt.
       destroy: Verwijderen
       edit: Bewerken
       external_accounts: Externe rekeningen
@@ -119,7 +119,7 @@ nl:
         role: Rol
       index:
         actions: Acties
-        confirm_delete: Weet je zeker dat je deze gebruiker wilt verwijderen?
+        confirm_delete: Dit verwijdert de gebruiker en al hun gegevens permanent.
         created_at: Aangemaakt
         delete: Verwijderen
         edit: Bewerken
@@ -180,9 +180,12 @@ nl:
       success: "✅ Bezitting succesvol bijgewerkt."
   common:
     back: "↩️ Terug"
-    confirm_destroy: "⚠️ Weet je het zeker?"
+    cancel: Annuleren
+    confirm_destroy: Dit verwijdert het record permanent. Dit kan niet ongedaan worden gemaakt.
+    delete: Verwijderen
     destroy: "🔥 Verwijderen"
     edit: "✏️ Bewerken"
+    remove: Verwijderen
     save: "💾 Opslaan"
     show: "👁️ Tonen"
   date:
@@ -492,10 +495,18 @@ nl:
   users:
     profiles:
       edit:
+        email_placeholder: E-mailadres
+        go_back: Ga terug
         locale: Taal
         locale_en: "🇬🇧 English"
         locale_it: "🇮🇹 Italiano"
         locale_nl: "🇳🇱 Nederlands"
+        manage_people: Beheer mensen
+        name_placeholder: Naam
+        password_placeholder: Wachtwoord wijzigen
+        save_changes: Wijzigingen opslaan
+        sign_out: Uitloggen
+        title: Jouw instellingen
       update:
         success: Profiel bijgewerkt
     transfer:
@@ -505,4 +516,10 @@ nl:
       share: Aanmeldlink delen
       share_text: Deze prive-aanmeldlink kan worden gebruikt om op een ander apparaat in te loggen of toegang te herstellen.
       share_title: Jouw aanmeldlink
+    user:
+      confirm_remove: Dit verwijdert deze persoon permanent van de rekening. Dit kan niet ongedaan worden gemaakt.
+      remove_from_account: Verwijder %{name} van de rekening
+      role_administrator: Beheerder
+      role_label: 'Rol van %{name}: %{role}'
+      role_member: Lid
   warrantied: "🛡️ Onder garantie"

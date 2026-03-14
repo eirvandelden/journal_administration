@@ -4,9 +4,12 @@
     <%= link_to @chattel do %>
       <b><%= t('common.show') %></b>
     <% end %>
-    <%= button_to t('common.destroy'), @chattel, method: :delete, data: { turbo_confirm: t('common.confirm_destroy') } %>
   </nav>
 </header>
 <article>
   <%= render 'form' %>
 </article>
+
+<div class="actions">
+  <%= button_to t('common.destroy'), @chattel, method: :delete, class: "button-danger", data: { turbo_confirm: t('common.confirm_destroy'), confirm_verb: t('common.delete') } %>
+</div>

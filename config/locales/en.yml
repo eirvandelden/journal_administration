@@ -8,7 +8,7 @@ en:
     index:
       account_number: Account number
       category: Category
-      confirm_destroy: Are you sure?
+      confirm_destroy: This will permanently delete the account. This cannot be undone.
       destroy: Destroy
       edit: Edit
       external_accounts: External Accounts
@@ -119,7 +119,7 @@ en:
         role: Role
       index:
         actions: Actions
-        confirm_delete: Are you sure you want to delete this user?
+        confirm_delete: This will permanently delete the user and all their data.
         created_at: Created
         delete: Delete
         edit: Edit
@@ -180,9 +180,12 @@ en:
       success: "✅ Chattel was successfully updated."
   common:
     back: "↩️ Back"
-    confirm_destroy: "⚠️ Are you sure?"
+    cancel: Cancel
+    confirm_destroy: This will permanently delete the record. This cannot be undone.
+    delete: Delete
     destroy: "🔥 Destroy"
     edit: "✏️ Edit"
+    remove: Remove
     save: "💾 Save"
     show: "👁️ Show"
   date:
@@ -492,10 +495,18 @@ en:
   users:
     profiles:
       edit:
+        email_placeholder: Email address
+        go_back: Go back
         locale: Language
         locale_en: "🇬🇧 English"
         locale_it: "🇮🇹 Italiano"
         locale_nl: "🇳🇱 Nederlands"
+        manage_people: Manage people
+        name_placeholder: Name
+        password_placeholder: Change password
+        save_changes: Save changes
+        sign_out: Sign out
+        title: Your settings
       update:
         success: Profile updated
     transfer:
@@ -505,4 +516,10 @@ en:
       share: Share sign-in link
       share_text: This private sign-in URL can be used to sign in on another device or recover access.
       share_title: Your sign-in link
+    user:
+      confirm_remove: This will permanently remove this person from the account. This cannot be undone.
+      remove_from_account: Remove %{name} from the account
+      role_administrator: Administrator
+      role_label: "%{name}'s role: %{role}"
+      role_member: Member
   warrantied: "🛡️ Warrantied"
