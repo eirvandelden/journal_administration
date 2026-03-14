@@ -54,6 +54,7 @@ it:
         purchase_transaction: Transazione
         purchased_at: Data d'acquisto
         serial_number: Numero seriale
+        warranty_document: Documento di garanzia
         warranty_expires_at: Garanzia fino al
       transaction:
         account: Conto
@@ -61,6 +62,7 @@ it:
         category: Categoria
         date: Data
         description: Descrizione
+        proof_of_purchase: Prova d'acquisto
     errors:
       messages:
         record_invalid: 'Validazione fallita: %{errors}'
@@ -173,9 +175,16 @@ it:
     edit:
       title: Modifica bene
     index:
+      has_proof: "🧾"
       new_chattel: "➕ Nuovo bene"
+      no_proof: "-"
+      proof_of_purchase: Prova
     new:
       title: "➕ Nuovo bene"
+    show:
+      no_warranty: Nessun documento di garanzia disponibile.
+      view_warranty: Visualizza documento di garanzia
+      warranty_proof: Garanzia
     update:
       success: "✅ Bene aggiornato con successo."
   common:
@@ -504,6 +513,10 @@ it:
       heading: Transazioni recenti
     show:
       unconsolidated: "⚠️ Richiede categorizzazione"
+      new_chattel: "➕ Nuovo bene"
+      no_proof_of_purchase: Nessuna prova d'acquisto caricata.
+      proof_of_purchase: Prova d'acquisto
+      view_proof_of_purchase: Visualizza prova d'acquisto
     table:
       amount: Importo
       booked_at: Data registrazione

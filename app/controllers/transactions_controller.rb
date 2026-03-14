@@ -81,6 +81,6 @@ class TransactionsController < ApplicationController
   def transaction_params
     key = (params.keys & %w[debit credit transfer transaction])[0]
     params.require(key).permit(:id, :debit_account_id, :credit_account_id, :amount, :booked_at, :interest_at,
-  :category_id, :note, :type)
+  :category_id, :note, :type, :proof_of_purchase)
   end
 end

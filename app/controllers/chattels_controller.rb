@@ -8,9 +8,10 @@ class ChattelsController < ApplicationController
   #
   # @return [void]
   def index
-    @warrantied = Chattel.active.warrantied
-    @out_of_warranty = Chattel.active.out_of_warranty
-    @left = Chattel.left
+    scope = Chattel.includes(:warranty_document_attachment, purchase_transaction: :proof_of_purchase_attachment)
+    @warrantied = scope.active.warrantied
+    @out_of_warranty = scope.active.out_of_warranty
+    @left = scope.left
   end
 
   # Displays a single chattel
@@ -23,7 +24,7 @@ class ChattelsController < ApplicationController
   #
   # @return [void]
   def new
-    @chattel = Chattel.new
+    @chattel = Chattel.new(purchase_transaction_id: params[:purchase_transaction_id])
   end
 
   # Renders form for editing a chattel
@@ -85,6 +86,6 @@ class ChattelsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def chattel_params
       params.require(:chattel).permit(:name, :kind, :model_number, :serial_number, :purchase_transaction_id, :purchased_at,
-:warranty_expires_at, :left_possession_at, :purchase_price, :notes)
+:warranty_expires_at, :left_possession_at, :purchase_price, :notes, :warranty_document)
     end
 end

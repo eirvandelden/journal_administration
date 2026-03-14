@@ -4,6 +4,7 @@
     <%= link_to edit_transaction_path(@transaction) do %>
       <b><%= t('common.edit') %></b>
     <% end %>
+    <%= link_to t('transactions.show.new_chattel'), new_chattel_path(purchase_transaction_id: @transaction.id) %>
   </nav>
 </header>
 
@@ -51,4 +52,13 @@
     <dd><%= @transaction.original_tag %></dd>
   </dl>
 <% end %>
+
+<section>
+  <h2><%= t('transactions.show.proof_of_purchase') %></h2>
+  <% if @transaction.proof_of_purchase.attached? %>
+    <%= link_to t('transactions.show.view_proof_of_purchase'), rails_blob_path(@transaction.proof_of_purchase, disposition: :inline) %>
+  <% else %>
+    <p><%= t('transactions.show.no_proof_of_purchase') %></p>
+  <% end %>
+</section>
 </article>

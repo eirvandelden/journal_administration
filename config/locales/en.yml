@@ -54,6 +54,7 @@ en:
         purchase_transaction: Transaction
         purchased_at: Purchase Date
         serial_number: Serial Number
+        warranty_document: Warranty document
         warranty_expires_at: Warranty expires at
       transaction:
         account: Account
@@ -61,6 +62,7 @@ en:
         category: Category
         date: Date
         description: Description
+        proof_of_purchase: Proof of purchase
     errors:
       messages:
         record_invalid: 'Validation failed: %{errors}'
@@ -173,9 +175,16 @@ en:
     edit:
       title: Editing chattel
     index:
+      has_proof: "🧾"
       new_chattel: "➕ New Chattel"
+      no_proof: "-"
+      proof_of_purchase: Proof
     new:
       title: "➕ New chattel"
+    show:
+      no_warranty: No warranty document available.
+      view_warranty: View warranty document
+      warranty_proof: Warranty
     update:
       success: "✅ Chattel was successfully updated."
   common:
@@ -504,6 +513,10 @@ en:
       heading: Recent transactions
     show:
       unconsolidated: "⚠️ Needs categorisation"
+      new_chattel: "➕ New chattel"
+      no_proof_of_purchase: No proof of purchase uploaded.
+      proof_of_purchase: Proof of purchase
+      view_proof_of_purchase: View proof of purchase
     table:
       amount: Amount
       booked_at: Booked at date

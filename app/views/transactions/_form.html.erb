@@ -41,6 +41,9 @@
       <%= f.label :type %>
       <%= f.collection_select(:type, Transaction::TYPES, :to_s, :to_s, {}, { disabled: disabled }) %>
 
+      <%= f.label :proof_of_purchase %>
+      <%= f.file_field :proof_of_purchase, accept: "application/pdf" %>
+
       <% if Current.user.can_administer? %>
         <%= f.label :original_note %>
         <%= f.text_area :original_note, disabled: true %>

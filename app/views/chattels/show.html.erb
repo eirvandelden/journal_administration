@@ -11,6 +11,16 @@
 </header>
 <article>
   <%= render partial: 'form', locals: { chattel: @chattel, disabled: :disabled } %>
+
+  <section>
+    <h2><%= t('chattels.show.warranty_proof') %></h2>
+    <% proof = @chattel.warranty_proof %>
+    <% if proof %>
+      <%= link_to t('chattels.show.view_warranty'), rails_blob_path(proof, disposition: :inline) %>
+    <% else %>
+      <p><%= t('chattels.show.no_warranty') %></p>
+    <% end %>
+  </section>
 </article>
 <footer>
   <%= button_to t('common.destroy'), @chattel, method: :delete, class: "button-danger",
