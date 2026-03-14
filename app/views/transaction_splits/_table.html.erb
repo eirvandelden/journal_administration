@@ -1,0 +1,53 @@
+<%# locals: (transaction:) %>
+<section>
+  <table>
+    <thead>
+      <tr>
+        <th><%= t("transaction_splits.table.category") %></th>
+        <th><%= t("transaction_splits.table.amount") %></th>
+        <th><%= t("transaction_splits.table.note") %></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% transaction.transaction_splits.select(&:persisted?).each do |split| %>
+        <tr>
+          <td><%= split.category&.to_s %></td>
+          <td><%= number_to_currency(split.amount) %></td>
+          <td><%= split.note %></td>
+          <td>
+            <%= button_to t("common.remove"),
+                  transaction_transaction_split_path(transaction, split),
+                  method: :delete,
+                  class: "button-danger" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td><strong><%= t("transaction_splits.table.balance") %></strong></td>
+        <td><strong><%= number_to_currency(transaction.split_balance) %></strong></td>
+        <td></td>
+        <td></td>
+      </tr>
+    </tfoot>
+  </table>
+
+  <%= form_with url: transaction_transaction_splits_path(transaction), method: :post do |f| %>
+    <fieldset>
+      <%= f.label :category_id, t("transaction_splits.table.category") %>
+      <%= f.select :category_id, grouped_category_options(selected: nil), { include_blank: true },
+            { name: "transaction_split[category_id]" } %>
+
+      <%= f.label :amount, t("transaction_splits.table.amount") %>
+      <%= f.number_field :amount, step: "0.01", min: "0.01", name: "transaction_split[amount]" %>
+
+      <%= f.label :note, t("transaction_splits.table.note") %>
+      <%= f.text_field :note, name: "transaction_split[note]" %>
+    </fieldset>
+    <div class="actions">
+      <%= f.submit t("transaction_splits.table.add") %>
+    </div>
+  <% end %>
+</section>

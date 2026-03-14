@@ -92,6 +92,10 @@ en:
               must_not_be_transfer: must not be a Transfer transaction
             transfer:
               must_be_transfer: must be a Transfer transaction
+        transaction_split:
+          attributes:
+            amount:
+              exceeds_transaction: exceeds the remaining transaction amount
     models:
       account: Account
       category: Category
@@ -514,6 +518,22 @@ en:
       description: Description
       title: Suggested transfers
     unlink: Unlink
+  transaction_splits:
+    create:
+      success: "✅ Split added."
+    destroy:
+      success: "✅ Split removed."
+    split_indicator:
+      one: Split (1 part)
+      other: Split (%{count} parts)
+    table:
+      add: Add split
+      amount: Amount
+      balance: Remaining
+      category: Category
+      note: Note
+    update:
+      success: "✅ Split updated."
   transactions:
     create:
       success: "✅ Transaction was successfully created."

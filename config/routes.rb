@@ -23,6 +23,7 @@ Rails.application.routes.draw do
 
   resources :transactions do
     resources :transaction_links, only: %i[create destroy index]
+    resources :transaction_splits, only: %i[create update destroy]
   end
   namespace :transactions do
     resources :imports, only: %i[new create]

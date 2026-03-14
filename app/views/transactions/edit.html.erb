@@ -15,6 +15,10 @@
     <%= render "transaction_links/balance_table", transaction: @transaction %>
     <%= render "transaction_links/suggestions", transaction: @transaction %>
   <% end %>
+
+  <%= turbo_frame_tag "transaction_splits" do %>
+    <%= render "transaction_splits/table", transaction: @transaction %>
+  <% end %>
 <% end %>
 
 <div class="actions">
