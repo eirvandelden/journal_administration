@@ -513,10 +513,10 @@ en:
     recent:
       heading: Recent transactions
     show:
-      unconsolidated: "⚠️ Needs categorisation"
       new_chattel: "➕ New chattel"
       no_proof_of_purchase: No proof of purchase uploaded.
       proof_of_purchase: Proof of purchase
+      unconsolidated: "⚠️ Needs categorisation"
       view_proof_of_purchase: View proof of purchase
     table:
       amount: Amount
