@@ -66,4 +66,12 @@ class TransactionsIndexTest < ActionDispatch::IntegrationTest
     assert_select "tr.unconsolidated"
     assert_select "td", text: transactions(:debit_grocery).note, count: 0
   end
+
+  test "GET /transactions with invalid date params ignores invalid filters" do
+    get transactions_path, params: { start_date: "not-a-date" }
+
+    assert_response :success
+    assert_select "td", text: transactions(:debit_grocery).note
+    assert_select "td", text: transactions(:credit_salary).note
+  end
 end

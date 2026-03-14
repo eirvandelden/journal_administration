@@ -35,8 +35,11 @@ class Transaction < ApplicationRecord
   scope :by_account,    ->(id) { where(debitor_account_id: id).or(where(creditor_account_id: id)) if id.present? }
   scope :in_date_range, ->(from, to) {
     rel = all
-    rel = rel.where("interest_at >= ?", from.to_date.beginning_of_day) if from.present?
-    rel = rel.where("interest_at <= ?", to.to_date.end_of_day) if to.present?
+    from_date = klass.send(:parse_filter_date, from)
+    to_date = klass.send(:parse_filter_date, to)
+
+    rel = rel.where("interest_at >= ?", from_date.beginning_of_day) if from_date
+    rel = rel.where("interest_at <= ?", to_date.end_of_day) if to_date
     rel
   }
 
@@ -72,6 +75,15 @@ class Transaction < ApplicationRecord
   end
 
   private
+
+  def self.parse_filter_date(value)
+    return if value.blank?
+
+    Date.parse(value.to_s)
+  rescue Date::Error
+    nil
+  end
+  private_class_method :parse_filter_date
 
   # Determines transaction type based on account ownership
   #

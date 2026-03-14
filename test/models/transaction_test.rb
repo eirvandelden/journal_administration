@@ -179,6 +179,18 @@ class TransactionTest < ActiveSupport::TestCase
 
       assert results.all? { |t| t.interest_at >= 5.days.ago.beginning_of_day && t.interest_at <= 1.day.ago.end_of_day }
     end
+
+    test "in_date_range with invalid from ignores lower bound" do
+      results = Transaction.in_date_range("not-a-date", nil)
+
+      assert_equal Transaction.count, results.count
+    end
+
+    test "in_date_range with invalid to ignores upper bound" do
+      results = Transaction.in_date_range(nil, "not-a-date")
+
+      assert_equal Transaction.count, results.count
+    end
   end
 
   # -- consolidatable? --------------------------------------------------------
