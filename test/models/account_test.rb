@@ -19,6 +19,14 @@ class AccountTest < ActiveSupport::TestCase
     assert_not_includes external, accounts(:savings)
   end
 
+  test "external? returns true when owner is nil" do
+    assert_predicate accounts(:albert_heijn), :external?
+  end
+
+  test "external? returns false when owner is present" do
+    assert_not_predicate accounts(:checking), :external?
+  end
+
   # -- owner enum -------------------------------------------------------------
 
   test "owner enum defines all family members" do

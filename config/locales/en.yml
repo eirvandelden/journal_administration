@@ -82,6 +82,8 @@ en:
       models:
         account_alias:
           attributes:
+            account:
+              must_be_external: must belong to an external account
             pattern:
               invalid_like_characters: must not contain %% or _ characters
         transaction_link:

@@ -24,6 +24,16 @@ class AccountAliasesTest < ActionDispatch::IntegrationTest
 
       assert_redirected_to account_path(@account)
     end
+
+    test "does not create an alias for a family account" do
+      family_account = accounts(:checking)
+
+      assert_no_difference "AccountAlias.count" do
+        post account_account_aliases_path(family_account), params: { account_alias: { pattern: "Shared" } }
+      end
+
+      assert_redirected_to account_path(family_account)
+    end
   end
 
   class Destroy < AccountAliasesTest

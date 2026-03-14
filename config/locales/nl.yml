@@ -82,6 +82,8 @@ nl:
       models:
         account_alias:
           attributes:
+            account:
+              must_be_external: moet bij een externe rekening horen
             pattern:
               invalid_like_characters: mag geen %% of _ tekens bevatten
         transaction_link:

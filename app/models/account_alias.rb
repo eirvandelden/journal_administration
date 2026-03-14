@@ -8,4 +8,13 @@ class AccountAlias < ApplicationRecord
   validates :pattern, presence: true
   validates :pattern, uniqueness: { case_sensitive: false }
   validates :pattern, format: { without: /[%_]/, message: :invalid_like_characters }
+  validate :account_must_be_external
+
+  private
+
+  def account_must_be_external
+    return if account.blank? || account.external?
+
+    errors.add(:account, :must_be_external)
+  end
 end

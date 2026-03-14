@@ -13,6 +13,20 @@ class AccountsShowTest < ActionDispatch::IntegrationTest
     assert_select "h2", text: I18n.t("transactions.recent.heading")
   end
 
+  test "show does not render recognition patterns for a family account" do
+    get account_path(accounts(:checking))
+
+    assert_response :success
+    assert_select "h2", text: I18n.t("accounts.show.aliases"), count: 0
+  end
+
+  test "show renders recognition patterns for an external account" do
+    get account_path(accounts(:albert_heijn))
+
+    assert_response :success
+    assert_select "h2", text: I18n.t("accounts.show.aliases")
+  end
+
   test "show renders a transaction where account is debitor" do
     get account_path(accounts(:checking))
 
