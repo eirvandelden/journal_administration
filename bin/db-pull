@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+set -e
+
+REMOTE="root@192.168.1.101"
+REMOTE_PATH="/home/app_storage/journal_administration/storage/db/production.sqlite3"
+LOCAL_PATH="$(dirname "$0")/../storage/db/development.sqlite3"
+
+echo "Downloading production database..."
+scp "$REMOTE:$REMOTE_PATH" "$LOCAL_PATH"
+echo "Done. Replaced storage/db/development.sqlite3"
