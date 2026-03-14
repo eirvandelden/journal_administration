@@ -188,6 +188,7 @@ en:
     remove: Remove
     save: "💾 Save"
     show: "👁️ Show"
+    uncategorized: Uncategorized
   dashboard:
     charts:
       spending_by_category: Spending by category

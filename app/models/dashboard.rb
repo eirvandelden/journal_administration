@@ -46,9 +46,9 @@ class Dashboard
 
   # Returns ordered category name labels derived from debit_transactions
   #
-  # @return [Array<String>] Category names; nil category maps to "-"
+  # @return [Array<String>] Category names; nil category maps to the uncategorized label
   def chart_labels
-    debit_transactions.keys.map { |category| category&.name || "-" }
+    debit_transactions.keys.map { |category| category&.name || I18n.t("common.uncategorized") }
   end
 
   # Returns historical-average spending per category scaled to the selected period

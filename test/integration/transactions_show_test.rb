@@ -8,14 +8,14 @@ class TransactionsShowTest < ActionDispatch::IntegrationTest
     @member = users(:member)
   end
 
-  test "show renders uncategorized category as dash" do
+  test "show renders uncategorized category with translated label" do
     sign_in_as(@member)
 
     get transaction_url(@uncategorized)
 
     assert_response :success
     assert_select "dt", text: I18n.t("transactions.table.category")
-    assert_select "dd", text: "-"
+    assert_select "dd", text: I18n.t("common.uncategorized")
   end
 
   test "show renders original import fields for administrators" do
