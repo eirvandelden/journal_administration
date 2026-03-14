@@ -65,3 +65,23 @@ uncategorized_credit:
   debitor: albert_heijn
   creditor: checking
   note: Uncategorized credit transaction
+
+debit_from_ah_duplicate:
+  type: Debit
+  amount: 30.00
+  booked_at: <%= 1.day.ago.to_fs(:db) %>
+  interest_at: <%= 1.day.ago.to_fs(:db) %>
+  debitor: checking
+  creditor: albert_heijn_duplicate
+  category: rent
+  note: Grocery at AH duplicate
+
+credit_from_ah_duplicate:
+  type: Credit
+  amount: 30.00
+  booked_at: <%= 1.day.ago.to_fs(:db) %>
+  interest_at: <%= 1.day.ago.to_fs(:db) %>
+  debitor: albert_heijn_duplicate
+  creditor: checking
+  category: rent
+  note: Refund from AH duplicate
