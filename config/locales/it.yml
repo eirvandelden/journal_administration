@@ -188,6 +188,19 @@ it:
     remove: Rimuovi
     save: "💾 Salva"
     show: "👁️ Mostra"
+  dashboard:
+    filters:
+      apply: Applica
+      choose: Scegli
+      current_month: Questo mese
+      current_year: Questo anno
+      end_date: Data di fine
+      last_month: Mese scorso
+      last_year: Anno scorso
+      quick_filter: Filtro rapido
+      select: Seleziona
+      start_date: Data di inizio
+      three_months: Ultimi 3 mesi
   date:
     abbr_day_names:
     - dom

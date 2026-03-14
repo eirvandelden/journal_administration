@@ -5,14 +5,16 @@
 class DashboardController < ApplicationController
   # Displays the dashboard with categorized transactions and totals
   #
-  # Supports optional date range filtering via params[:filter] (last_month, year_to_date, etc.)
+  # Supports date range filtering via params[:start_date] and params[:end_date],
+  # or optional filter (last_month, year_to_date, etc.)
   #
   # @action GET
   # @route /dashboard
   #
   # @return [void]
   def index
-    dashboard = Dashboard.new(filter: params[:filter])
+    dashboard = Dashboard.new(start_date: params[:start_date], end_date: params[:end_date], filter: params[:filter])
+    @date_range = dashboard.date_range
 
     @debit_transactions = dashboard.debit_transactions
     @debit_total = dashboard.debit_total

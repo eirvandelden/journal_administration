@@ -11,6 +11,16 @@ class DateRange
   # @return [Time] The end date of the range (inclusive)
   attr_reader :end_date
 
+  # Creates a DateRange from custom start and end dates
+  #
+  # @param start_date [String, Date] The start date (inclusive)
+  # @param end_date [String, Date] The end date (inclusive)
+  # @return [DateRange] A new DateRange instance with the specified dates
+  def self.from_dates(start_date, end_date)
+    new(Date.parse(start_date.to_s).beginning_of_day,
+        Date.parse(end_date.to_s).end_of_day)
+  end
+
   # Creates a DateRange from a predefined filter
   #
   # @param filter [String, nil] The filter name (last_month, three_months, year_to_date, last_year, current_month)
