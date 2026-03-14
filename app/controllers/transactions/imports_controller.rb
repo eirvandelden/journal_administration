@@ -20,19 +20,19 @@ class Transactions::ImportsController < ApplicationController
     # Validate file presence
     if csv.blank?
       flash[:alert] = t('.no_file')
-      return redirect_to transactions_path
+      return redirect_to new_transactions_import_path
     end
 
     # Validate file type
     unless csv.content_type.in?(['text/csv', 'text/plain', 'application/vnd.ms-excel'])
       flash[:alert] = t('.invalid_file_type')
-      return redirect_to transactions_path
+      return redirect_to new_transactions_import_path
     end
 
     # Validate file size
     if csv.size > 5.megabytes
       flash[:alert] = t('.file_too_large')
-      return redirect_to transactions_path
+      return redirect_to new_transactions_import_path
     end
 
     # Process CSV with error tracking
