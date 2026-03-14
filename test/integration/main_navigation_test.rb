@@ -19,6 +19,16 @@ class MainNavigationTest < ActionDispatch::IntegrationTest
     assert_select "header nav summary a", count: 0
   end
 
+  test "search button is the first navigation item" do
+    sign_in_as(@member)
+
+    get dashboard_index_url
+
+    assert_response :success
+    assert_select "header nav > ul > li:first-child button[data-action='click->search-dialog#open']",
+                  text: I18n.t("search.open")
+  end
+
   test "new transaction page renders a visible back link to journal index" do
     sign_in_as(@member)
 
