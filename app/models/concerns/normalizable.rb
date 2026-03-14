@@ -21,7 +21,9 @@ module Normalizable
     # @return [Account, nil] Matching account, or nil if no alias matches
     def find_by_alias(name)
       joins(:account_aliases)
-        .find_by("LOWER(?) LIKE '%' || LOWER(account_aliases.pattern) || '%'", name)
+        .where("LOWER(?) LIKE '%' || LOWER(account_aliases.pattern) || '%'", name)
+        .order(Arel.sql("LENGTH(account_aliases.pattern) DESC"), "account_aliases.id ASC")
+        .first
     end
   end
 end
