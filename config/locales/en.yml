@@ -498,6 +498,8 @@ en:
       title: "➕ New transaction"
     recent:
       heading: Recent transactions
+    show:
+      unconsolidated: "⚠️ Needs categorisation"
     table:
       amount: Amount
       booked_at: Booked at date

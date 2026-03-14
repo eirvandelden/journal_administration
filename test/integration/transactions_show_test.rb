@@ -35,6 +35,20 @@ class TransactionsShowTest < ActionDispatch::IntegrationTest
     assert_select "dd", text: "ORIG-TAG"
   end
 
+  test "show displays unconsolidated notification for uncategorized transaction" do
+    sign_in_as(@member)
+    get transaction_url(@uncategorized)
+    assert_response :success
+    assert_select "mark.unconsolidated"
+  end
+
+  test "show does not display unconsolidated notification for categorized transaction" do
+    sign_in_as(@member)
+    get transaction_url(@transaction)
+    assert_response :success
+    assert_select "mark.unconsolidated", count: 0
+  end
+
   test "show hides original import fields for non-admin users" do
     @transaction.update!(
       original_note: "Imported original note",

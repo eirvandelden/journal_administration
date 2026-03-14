@@ -8,6 +8,9 @@
 </header>
 
 <article>
+<% if @transaction.consolidatable? %>
+  <mark class="unconsolidated"><%= t('.unconsolidated') %></mark>
+<% end %>
 <dl>
   <dt><%= t('transactions.table.type') %></dt>
   <dd><%= @transaction.type_icon %> <%= @transaction.type %></dd>

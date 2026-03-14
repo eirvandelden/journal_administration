@@ -40,6 +40,13 @@ class Transaction < ApplicationRecord
   validates :type, inclusion: { in: TYPES, message: "%{value} is not a valid type" }, presence: true
   validate :check_transfer_type_through_account_owners
 
+  # Returns true when the transaction has no category assigned.
+  #
+  # @return [Boolean]
+  def consolidatable?
+    category.nil?
+  end
+
   # Returns an emoji representation of the transaction type
   #
   # @return [String] emoji icon (e.g., "⬇️ 🟥" for Credit)

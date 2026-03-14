@@ -16,7 +16,7 @@
 
   <tbody>
     <% transactions.each do |transaction| %>
-      <tr>
+      <tr class="<%= 'unconsolidated' if transaction.consolidatable? %>">
         <td><%= transaction.type_icon %></td>
         <% creditor = transaction.creditor %>
         <td><%= creditor ? link_to(creditor.name || creditor.account_number, account_path(creditor)) : "" %></td>

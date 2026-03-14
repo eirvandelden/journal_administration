@@ -7,7 +7,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr>
+    <tr class="<%= 'unconsolidated' if transaction.consolidatable? %>">
       <td><%= transaction.note %></td>
       <td><%= number_to_currency(transaction.amount, unit: "€") %></td>
       <td></td>
