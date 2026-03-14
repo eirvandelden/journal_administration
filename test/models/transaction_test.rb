@@ -66,6 +66,20 @@ class TransactionTest < ActiveSupport::TestCase
       assert_includes transaction.mutations.first.errors[:amount], "can't be blank"
       assert_includes transaction.mutations.second.errors[:amount], "can't be blank"
     end
+
+    test "invalid when an internal transfer is given a non-transfer category" do
+      transaction = Transaction.new(
+        booked_at: Time.current,
+        interest_at: Time.current,
+        category: categories(:supermarket)
+      )
+      transaction.mutations.build(account: accounts(:checking), amount: -100)
+      transaction.mutations.build(account: accounts(:savings), amount: 100)
+
+      assert_not transaction.valid?
+      assert_includes transaction.errors[:category],
+        I18n.t("activerecord.errors.models.transaction.attributes.category.must_remain_transfer")
+    end
   end
 
   class AccessorsTest < TransactionTest
@@ -83,6 +97,13 @@ class TransactionTest < ActiveSupport::TestCase
   end
 
   class TypeIconTest < TransactionTest
+    test "transfer? returns true for family-to-family mutations regardless of category" do
+      transaction = transactions(:transfer_savings)
+      transaction.category = categories(:supermarket)
+
+      assert transaction.transfer?
+    end
+
     test "type_icon returns credit icon when family account receives money" do
       assert_equal "⬇️ 🟥", transactions(:debit_salary).type_icon
     end

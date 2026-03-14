@@ -70,6 +70,10 @@ en:
           has_many: Cannot delete record because dependent %{record} exist
           has_one: Cannot delete record because a dependent %{record} exists
       models:
+        transaction:
+          attributes:
+            category:
+              must_remain_transfer: must stay in the Transfer category for internal transfers
         transaction_link:
           attributes:
             source:
@@ -477,6 +481,8 @@ en:
       upload: Upload
     new:
       title: "➕ New transaction"
+    form:
+      transfer_category_locked: Internal transfers always stay in the Transfer category.
     recent:
       heading: Recent transactions
     show:

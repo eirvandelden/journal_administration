@@ -1,5 +1,6 @@
 <%# Ensure disabled local has a default value when not provided %>
 <% disabled = local_assigns.key?(:disabled) ? local_assigns[:disabled] : nil %>
+<% category_disabled = disabled || @transaction.transfer_category_locked? %>
 
 <section>
   <%= form_for @transaction do |f| %>
@@ -27,7 +28,10 @@
     <%= f.text_field :amount, disabled: disabled %>
 
     <%= f.label :category_id %>
-    <%= f.select :category_id, grouped_category_options(selected: f.object.category_id), { include_blank: true }, { disabled: disabled } %>
+    <%= f.select :category_id, grouped_category_options(selected: f.object.category_id), { include_blank: true }, { disabled: category_disabled } %>
+    <% if @transaction.transfer_category_locked? %>
+      <p><%= t("transactions.form.transfer_category_locked") %></p>
+    <% end %>
 
     <%= f.label :note %>
     <%= f.text_area :note, disabled: disabled %>

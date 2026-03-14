@@ -19,8 +19,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_08_163000) do
     t.string "name"
     t.integer "owner"
     t.datetime "updated_at", null: false
-    t.index [ "category_id" ], name: "index_accounts_on_category_id"
-    t.index [ "id" ], name: "index_accounts_on_id"
+    t.index ["category_id"], name: "index_accounts_on_category_id"
+    t.index ["id"], name: "index_accounts_on_id"
   end
 
   create_table "categories", force: :cascade do |t|
@@ -29,8 +29,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_08_163000) do
     t.string "name"
     t.integer "parent_category_id"
     t.datetime "updated_at", null: false
-    t.index [ "id" ], name: "index_categories_on_id"
-    t.index [ "parent_category_id" ], name: "index_categories_on_parent_category_id"
+    t.index ["id"], name: "index_categories_on_id"
+    t.index ["parent_category_id"], name: "index_categories_on_parent_category_id"
   end
 
   create_table "chattels", force: :cascade do |t|
@@ -46,7 +46,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_08_163000) do
     t.string "serial_number"
     t.datetime "updated_at", null: false
     t.datetime "warranty_expires_at"
-    t.index [ "purchase_transaction_id" ], name: "index_chattels_on_purchase_transaction_id"
+    t.index ["purchase_transaction_id"], name: "index_chattels_on_purchase_transaction_id"
+  end
+
+  create_table "data_migrations", primary_key: "version", id: :string, force: :cascade do |t|
   end
 
   create_table "faultline_error_contexts", force: :cascade do |t|
@@ -55,8 +58,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_08_163000) do
     t.string "key", null: false
     t.datetime "updated_at", null: false
     t.text "value"
-    t.index [ "error_occurrence_id", "key" ], name: "index_faultline_error_contexts_on_error_occurrence_id_and_key"
-    t.index [ "error_occurrence_id" ], name: "index_faultline_error_contexts_on_error_occurrence_id"
+    t.index ["error_occurrence_id", "key"], name: "index_faultline_error_contexts_on_error_occurrence_id_and_key"
+    t.index ["error_occurrence_id"], name: "index_faultline_error_contexts_on_error_occurrence_id"
   end
 
   create_table "faultline_error_groups", force: :cascade do |t|
@@ -74,10 +77,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_08_163000) do
     t.text "sanitized_message", null: false
     t.string "status", default: "unresolved"
     t.datetime "updated_at", null: false
-    t.index [ "exception_class" ], name: "index_faultline_error_groups_on_exception_class"
-    t.index [ "fingerprint" ], name: "index_faultline_error_groups_on_fingerprint", unique: true
-    t.index [ "last_seen_at" ], name: "index_faultline_error_groups_on_last_seen_at"
-    t.index [ "status" ], name: "index_faultline_error_groups_on_status"
+    t.index ["exception_class"], name: "index_faultline_error_groups_on_exception_class"
+    t.index ["fingerprint"], name: "index_faultline_error_groups_on_fingerprint", unique: true
+    t.index ["last_seen_at"], name: "index_faultline_error_groups_on_last_seen_at"
+    t.index ["status"], name: "index_faultline_error_groups_on_status"
   end
 
   create_table "faultline_error_occurrences", force: :cascade do |t|
@@ -100,10 +103,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_08_163000) do
     t.string "user_agent"
     t.bigint "user_id"
     t.string "user_type"
-    t.index [ "created_at" ], name: "index_faultline_error_occurrences_on_created_at"
-    t.index [ "error_group_id", "created_at" ], name: "idx_on_error_group_id_created_at_98b32c40ac"
-    t.index [ "error_group_id" ], name: "index_faultline_error_occurrences_on_error_group_id"
-    t.index [ "user_type", "user_id" ], name: "index_faultline_error_occurrences_on_user_type_and_user_id"
+    t.index ["created_at"], name: "index_faultline_error_occurrences_on_created_at"
+    t.index ["error_group_id", "created_at"], name: "idx_on_error_group_id_created_at_98b32c40ac"
+    t.index ["error_group_id"], name: "index_faultline_error_occurrences_on_error_group_id"
+    t.index ["user_type", "user_id"], name: "index_faultline_error_occurrences_on_user_type_and_user_id"
   end
 
   create_table "faultline_request_profiles", force: :cascade do |t|
@@ -113,7 +116,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_08_163000) do
     t.text "profile_data", null: false
     t.integer "request_trace_id", null: false
     t.integer "samples", default: 0
-    t.index [ "request_trace_id" ], name: "index_faultline_request_profiles_on_request_trace_id"
+    t.index ["request_trace_id"], name: "index_faultline_request_profiles_on_request_trace_id"
   end
 
   create_table "faultline_request_traces", force: :cascade do |t|
@@ -128,9 +131,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_08_163000) do
     t.json "spans"
     t.integer "status"
     t.float "view_runtime_ms"
-    t.index [ "created_at" ], name: "index_faultline_request_traces_on_created_at"
-    t.index [ "endpoint", "created_at" ], name: "index_faultline_request_traces_on_endpoint_and_created_at"
-    t.index [ "endpoint" ], name: "index_faultline_request_traces_on_endpoint"
+    t.index ["created_at"], name: "index_faultline_request_traces_on_created_at"
+    t.index ["endpoint", "created_at"], name: "index_faultline_request_traces_on_endpoint_and_created_at"
+    t.index ["endpoint"], name: "index_faultline_request_traces_on_endpoint"
   end
 
   create_table "mutations", force: :cascade do |t|
@@ -139,8 +142,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_08_163000) do
     t.datetime "created_at", null: false
     t.integer "transaction_id", null: false
     t.datetime "updated_at", null: false
-    t.index [ "account_id" ], name: "index_mutations_on_account_id"
-    t.index [ "transaction_id" ], name: "index_mutations_on_transaction_id"
+    t.index ["account_id"], name: "index_mutations_on_account_id"
+    t.index ["transaction_id"], name: "index_mutations_on_transaction_id"
   end
 
   create_table "sessions", force: :cascade do |t|
@@ -151,8 +154,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_08_163000) do
     t.datetime "updated_at", precision: nil, null: false
     t.string "user_agent"
     t.integer "user_id", null: false
-    t.index [ "token" ], name: "index_sessions_on_token", unique: true
-    t.index [ "user_id" ], name: "index_sessions_on_user_id"
+    t.index ["token"], name: "index_sessions_on_token", unique: true
+    t.index ["user_id"], name: "index_sessions_on_user_id"
   end
 
   create_table "transaction_links", force: :cascade do |t|
@@ -174,7 +177,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_08_163000) do
     t.text "original_note"
     t.string "original_tag"
     t.datetime "updated_at", null: false
-    t.index [ "category_id" ], name: "index_transactions_on_category_id"
+    t.index ["category_id"], name: "index_transactions_on_category_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -186,8 +189,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_08_163000) do
     t.string "password_digest", null: false
     t.integer "role", null: false
     t.datetime "updated_at", precision: nil, null: false
-    t.index [ "email_address" ], name: "index_users_on_email_address", unique: true
-    t.index [ "name" ], name: "index_users_on_name", unique: true
+    t.index ["email_address"], name: "index_users_on_email_address", unique: true
+    t.index ["name"], name: "index_users_on_name", unique: true
   end
 
   add_foreign_key "accounts", "categories"

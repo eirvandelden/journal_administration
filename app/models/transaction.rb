@@ -8,7 +8,8 @@ class Transaction < ApplicationRecord
 
   scope :ordered, -> { order(booked_at: :desc) }
   scope :for_index, -> { includes(:category, mutations: :account).order(interest_at: :desc) }
-  scope :transfers, -> { joins(:category).where(categories: { name: "Transfer" }) }
+  scope :with_external_accounts, -> { joins(mutations: :account).where(accounts: { owner: nil }).distinct }
+  scope :transfers, -> { where.not(id: with_external_accounts.select(:id)) }
 
   has_many :mutations, foreign_key: :transaction_id, inverse_of: :journal_entry, dependent: :destroy
   belongs_to :category, optional: true
@@ -16,6 +17,7 @@ class Transaction < ApplicationRecord
 
   validates :booked_at, presence: true
   validates_associated :mutations
+  validate :internal_transfers_keep_transfer_category
   validate :mutations_sum_to_zero
 
   # Returns the account that receives money (positive mutation).
@@ -43,14 +45,21 @@ class Transaction < ApplicationRecord
   #
   # @return [Boolean]
   def transfer?
-    category&.name == "Transfer"
+    mutations.any? && mutations.all? { |mutation| mutation.account&.owner.present? }
+  end
+
+  # Returns whether the transfer category should stay locked in the form.
+  #
+  # @return [Boolean]
+  def transfer_category_locked?
+    transfer? && category == transfer_category
   end
 
   # Returns an icon that indicates transfer, incoming, or outgoing flow.
   #
   # @return [String]
   def type_icon
-    if mutations.all? { |m| m.account&.owner.present? }
+    if transfer?
       "🔄 ◻️"  # Transfer
     elsif mutations.any? { |m| m.amount.to_d.positive? && m.account&.owner.present? }
       "⬇️ 🟥"  # Credit
@@ -68,6 +77,13 @@ class Transaction < ApplicationRecord
 
   private
 
+  def internal_transfers_keep_transfer_category
+    return unless transfer?
+    return if category == transfer_category
+
+    errors.add(:category, :must_remain_transfer)
+  end
+
   def mutations_sum_to_zero
     if mutations.size < 2
       errors.add(:mutations, :too_short, count: 2)
@@ -79,5 +95,9 @@ class Transaction < ApplicationRecord
     return if mutations.sum { |mutation| mutation.amount.to_d }.zero?
 
     errors.add(:mutations, :invalid)
+  end
+
+  def transfer_category
+    @transfer_category ||= Category.find_by(name: "Transfer")
   end
 end

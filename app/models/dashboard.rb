@@ -62,10 +62,6 @@ class Dashboard
 
   private
 
-  def transfer_category_id
-    @transfer_category_id ||= Category.find_by(name: "Transfer")&.id
-  end
-
   def grouped_transactions_for(direction)
     transactions = grouped_amounts_for(direction)
     categories = indexed_categories_for(transactions.keys.compact)
@@ -80,11 +76,10 @@ class Dashboard
   end
 
   def grouped_amounts_for(direction)
-    scope = transaction_scope_for(direction)
-    scope.where.not(category_id: transfer_category_id)
-         .or(scope.where(category_id: nil))
-         .group(:category_id)
-         .sum("ABS(mutations.amount)")
+    transaction_scope_for(direction)
+      .where(id: external_transaction_ids)
+      .group(:category_id)
+      .sum("ABS(mutations.amount)")
   end
 
   def transaction_scope_for(direction)
@@ -105,5 +100,9 @@ class Dashboard
 
   def indexed_categories_for(category_ids)
     Category.where(id: category_ids).includes(:parent_category).index_by(&:id)
+  end
+
+  def external_transaction_ids
+    @external_transaction_ids ||= Transaction.with_external_accounts.select(:id)
   end
 end

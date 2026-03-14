@@ -70,6 +70,10 @@ nl:
           has_many: Kan item niet verwijderen omdat afhankelijke %{record} bestaan
           has_one: Kan item niet verwijderen omdat %{record} afhankelijk is
       models:
+        transaction:
+          attributes:
+            category:
+              must_remain_transfer: moet voor interne overboekingen in de categorie Overboeking blijven
         transaction_link:
           attributes:
             source:
@@ -477,6 +481,8 @@ nl:
       upload: Uploaden
     new:
       title: "➕ Nieuwe transactie"
+    form:
+      transfer_category_locked: Interne overboekingen blijven altijd in de categorie Overboeking.
     recent:
       heading: Recente transacties
     show:
