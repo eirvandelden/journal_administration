@@ -34,7 +34,13 @@
         <td><%= number_to_currency transaction&.amount %></td>
         <td><%= transaction.booked_at ? l(transaction.booked_at.to_date) : '' %></td>
         <td><%= transaction.interest_at ? l(transaction.interest_at.to_date) : '' %></td>
-        <td><%= transaction&.category&.to_s %></td>
+        <td>
+          <% if transaction.split? %>
+            <%= t("transaction_splits.split_indicator", count: transaction.transaction_splits.size) %>
+          <% else %>
+            <%= transaction.category&.to_s %>
+          <% end %>
+        </td>
         <td><%= transaction&.note&.truncate(20) %></td>
       </tr>
     <% end %>

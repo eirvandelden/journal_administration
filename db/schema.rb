@@ -190,6 +190,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_15_000003) do
     t.index ["transfer_id"], name: "index_transaction_links_on_transfer_id", unique: true
   end
 
+  create_table "transaction_splits", force: :cascade do |t|
+    t.decimal "amount", precision: 10, scale: 2, null: false
+    t.integer "category_id"
+    t.datetime "created_at", null: false
+    t.text "note"
+    t.integer "transaction_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["category_id"], name: "index_transaction_splits_on_category_id"
+    t.index ["transaction_id"], name: "index_transaction_splits_on_transaction_id"
+  end
+
   create_table "transactions", force: :cascade do |t|
     t.decimal "amount", precision: 10, scale: 2
     t.datetime "booked_at", precision: nil
@@ -232,5 +243,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_15_000003) do
   add_foreign_key "sessions", "users"
   add_foreign_key "transaction_links", "transactions", column: "source_transaction_id"
   add_foreign_key "transaction_links", "transactions", column: "transfer_id"
+  add_foreign_key "transaction_splits", "categories"
+  add_foreign_key "transaction_splits", "transactions"
   add_foreign_key "transactions", "categories"
 end

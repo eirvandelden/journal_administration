@@ -92,6 +92,10 @@ nl:
               must_not_be_transfer: mag geen overboeking zijn
             transfer:
               must_be_transfer: moet een overboeking zijn
+        transaction_split:
+          attributes:
+            amount:
+              exceeds_transaction: overschrijdt het resterende transactiebedrag
     models:
       account: Rekening
       category: Categorie
@@ -514,6 +518,22 @@ nl:
       description: Omschrijving
       title: Voorgestelde overboekingen
     unlink: Ontkoppelen
+  transaction_splits:
+    create:
+      success: "✅ Splitsing toegevoegd."
+    destroy:
+      success: "✅ Splitsing verwijderd."
+    split_indicator:
+      one: Splitsing (1 deel)
+      other: Splitsing (%{count} delen)
+    table:
+      add: Splitsing toevoegen
+      amount: Bedrag
+      balance: Resterend
+      category: Categorie
+      note: Opmerking
+    update:
+      success: "✅ Splitsing bijgewerkt."
   transactions:
     create:
       success: "✅ Transactie succesvol aangemaakt."

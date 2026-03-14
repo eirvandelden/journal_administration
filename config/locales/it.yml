@@ -92,6 +92,10 @@ it:
               must_not_be_transfer: non deve essere un trasferimento
             transfer:
               must_be_transfer: deve essere un trasferimento
+        transaction_split:
+          attributes:
+            amount:
+              exceeds_transaction: supera l'importo residuo della transazione
     models:
       account: Conto
       category: Categoria
@@ -514,6 +518,22 @@ it:
       description: Descrizione
       title: Trasferimenti suggeriti
     unlink: Scollega
+  transaction_splits:
+    create:
+      success: "✅ Divisione aggiunta."
+    destroy:
+      success: "✅ Divisione rimossa."
+    split_indicator:
+      one: Divisione (1 parte)
+      other: Divisione (%{count} parti)
+    table:
+      add: Aggiungi divisione
+      amount: Importo
+      balance: Rimanente
+      category: Categoria
+      note: Nota
+    update:
+      success: "✅ Divisione aggiornata."
   transactions:
     create:
       success: "✅ Transazione creata con successo."

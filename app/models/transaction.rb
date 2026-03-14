@@ -9,6 +9,7 @@ class Transaction < ApplicationRecord
   include Linkable
   include Searchable
   include PdfAttachmentValidatable
+  include Splittable
 
   searchable_on :note, :original_note
 

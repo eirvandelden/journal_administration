@@ -297,3 +297,32 @@ class TransactionTest < ActiveSupport::TestCase
     end
   end
 end
+
+class TransactionSplittableTest < ActiveSupport::TestCase
+  test "split? returns false when no splits exist" do
+    assert_not transactions(:uncategorized).split?
+  end
+
+  test "split? returns true when splits exist" do
+    assert transactions(:debit_grocery).split?
+  end
+
+  test "split_balance equals amount minus sum of split amounts" do
+    transaction = transactions(:debit_grocery)
+    expected = transaction.amount - transaction.transaction_splits.sum(:amount)
+
+    assert_equal expected, transaction.split_balance
+  end
+
+  test "fully_split? returns true when split_balance is zero" do
+    transaction = transactions(:debit_grocery)
+    remaining = transaction.split_balance
+    transaction.transaction_splits.create!(amount: remaining)
+
+    assert transaction.fully_split?
+  end
+
+  test "fully_split? returns false when split_balance is not zero" do
+    assert_not transactions(:debit_grocery).fully_split?
+  end
+end
