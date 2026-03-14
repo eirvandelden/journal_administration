@@ -2,6 +2,40 @@
 class TransactionLinksController < ApplicationController
   before_action :set_transaction
 
+  # Searches for unlinked Transfer transactions
+  #
+  # @action GET
+  # @route /transactions/:transaction_id/transaction_links
+  def index
+    searching = params[:query].present? || params[:amount].present?
+
+    @transfers = if searching
+      scope = Transaction.unscoped
+        .where(type: "Transfer")
+        .where.missing(:reverse_transaction_links)
+        .where.not(id: @transaction.linked_transfer_ids)
+        .joins("LEFT JOIN accounts AS creditors ON creditors.id = transactions.creditor_account_id")
+        .joins("LEFT JOIN accounts AS debitors ON debitors.id = transactions.debitor_account_id")
+        .order(booked_at: :desc)
+        .limit(20)
+
+      if params[:query].present?
+        scope = scope.where(
+          "transactions.note LIKE :q OR creditors.name LIKE :q OR debitors.name LIKE :q",
+          q: "%#{params[:query]}%"
+        )
+      end
+
+      if params[:amount].present?
+        scope = scope.where(amount: params[:amount].to_d)
+      end
+
+      scope
+    else
+      Transaction.none
+    end
+  end
+
   # Links a transfer to the source transaction
   #
   # @action POST

@@ -22,7 +22,7 @@ Rails.application.routes.draw do
   end
 
   resources :transactions do
-    resources :transaction_links, only: %i[create destroy]
+    resources :transaction_links, only: %i[create destroy index]
   end
   namespace :transactions do
     resources :imports, only: %i[new create]
