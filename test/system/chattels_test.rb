@@ -35,12 +35,17 @@ class ChattelsTest < ApplicationSystemTestCase
     click_on I18n.t("common.back", locale: @locale)
   end
 
-  test "should destroy Chattel" do
+  test "index does not show destroy button" do
     visit chattels_url
+    assert_no_button I18n.t("common.destroy", locale: @locale)
+  end
+
+  test "should destroy Chattel from show page" do
+    visit chattel_url(@chattel)
 
     assert_difference("Chattel.count", -1) do
       accept_confirm do
-        click_on I18n.t("common.destroy", locale: @locale), match: :first
+        click_on I18n.t("common.destroy", locale: @locale)
       end
       assert_text "Chattel was successfully destroyed"
     end
