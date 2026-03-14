@@ -1,9 +1,12 @@
 # Provides data for the todo page
 #
 # Aggregates uncategorized transactions and untouched accounts into a single
-# date-sorted list.
+# date-sorted list, and determines whether a CSV upload prompt is needed.
 class Todo
   extend ActiveModel::Naming
+
+  # Number of days after which the CSV upload prompt is shown
+  UPLOAD_PROMPT_THRESHOLD = 13
 
   # Lightweight container for a combined todo list item
   #
@@ -14,6 +17,19 @@ class Todo
   # @!attribute [r] record
   #   @return [Transaction, Account] The underlying AR record
   Item = Struct.new(:kind, :date, :record)
+
+  # Returns whether a CSV upload form should be shown
+  #
+  # True when no transactions exist yet, or when the most recently booked
+  # transaction is older than UPLOAD_PROMPT_THRESHOLD days.
+  #
+  # @return [Boolean]
+  def show_upload_form?
+    @show_upload_form ||= begin
+      latest = Transaction.maximum(:booked_at)
+      latest.nil? || latest < UPLOAD_PROMPT_THRESHOLD.days.ago
+    end
+  end
 
   # Returns the combined, date-sorted list of uncategorized transactions and
   # untouched accounts
