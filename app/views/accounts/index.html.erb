@@ -41,8 +41,8 @@
           <td><%= account.owner %></td>
           <td><%= account.category&.name %></td>
           <td><%= link_to t('.edit'), edit_account_path(account) %></td>
-          <td><%= button_to t('.update_transactions'), account_transactions_bulk_path(account), method: :patch %></td>
-          <td><%= button_to t('.destroy'), account, method: :delete, data: { turbo_confirm: t('.confirm_destroy') } %></td>
+          <td><%= button_to t('.update_transactions'), account_transactions_bulk_path(account), method: :patch, class: "button-mutating" %></td>
+          <td><%= button_to t('.destroy'), account, method: :delete, class: "button-danger", data: { turbo_confirm: t('.confirm_destroy'), confirm_verb: t('common.delete') } %></td>
         </tr>
       <% end %>
     </tbody>
@@ -101,8 +101,8 @@
           <td><%= account.name %></td>
           <td><%= account.category&.name %></td>
           <td><%= link_to t('.edit'), edit_account_path(account) %></td>
-          <td><%= button_to t('.update_transactions'), account_transactions_bulk_path(account), method: :patch %></td>
-          <td><%= button_to t('.destroy'), account, method: :delete, data: { turbo_confirm: t('.confirm_destroy') } %></td>
+          <td><%= button_to t('.update_transactions'), account_transactions_bulk_path(account), method: :patch, class: "button-mutating" %></td>
+          <td><%= button_to t('.destroy'), account, method: :delete, class: "button-danger", data: { turbo_confirm: t('.confirm_destroy'), confirm_verb: t('common.delete') } %></td>
         </tr>
       <% end %>
     </tbody>

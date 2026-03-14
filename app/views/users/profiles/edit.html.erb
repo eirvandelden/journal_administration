@@ -1,16 +1,16 @@
-<% content_for(:title) { "Your settings" } %>
+<% content_for(:title) { t('.title') } %>
 
 <% content_for :header do %>
   <nav>
     <%= link_to users_path, class: "btn" do %>
       <span aria-hidden="true">←</span>
-      <span class="for-screen-reader">Go back</span>
+      <span class="for-screen-reader"><%= t('.go_back') %></span>
     <% end %>
 
     <div class="breadcrumbs">
       <%= link_to users_path, class: "btn borderless txt-small flex-item-no-shrink" do %>
         <span aria-hidden="true">👥</span>
-        <span class="for-screen-reader">Manage people</span>
+        <span class="for-screen-reader"><%= t('.manage_people') %></span>
       <% end %>
       <span class="flex-item-no-shrink">▸</span>
       <%= @user.name %>
@@ -24,21 +24,21 @@
     <div class="flex align-center gap margin-block-start">
       <%= translation_button(:user_name) %>
       <label class="flex align-center gap input input--actor">
-        <%= form.text_field :name, class: "input full-width", autocomplete: "name", placeholder: "Name", autofocus: true, required: true, data: { "1p-ignore": true } %>
+        <%= form.text_field :name, class: "input full-width", autocomplete: "name", placeholder: t('.name_placeholder'), autofocus: true, required: true, data: { "1p-ignore": true } %>
         <span aria-hidden="true">👤</span>
       </label>
     </div>
     <div class="flex align-center gap">
       <%= translation_button(:email_address) %>
       <label class="flex align-center gap input input--actor">
-        <%= form.email_field :email_address, class: "input full-width", autocomplete: "username", placeholder: "Email address", required: true %>
+        <%= form.email_field :email_address, class: "input full-width", autocomplete: "username", placeholder: t('.email_placeholder'), required: true %>
         <%= image_tag "email.svg", aria: { hidden: "true" }, size: 30, class: "colorize--black" %>
       </label>
     </div>
     <div class="flex align-center gap">
       <%= translation_button(:update_password) %>
       <label class="flex align-center gap input input--actor">
-        <%= form.password_field :password, class: "input full-width", autocomplete: "new-password", placeholder: "Change password", maxlength: 72 %>
+        <%= form.password_field :password, class: "input full-width", autocomplete: "new-password", placeholder: t('.password_placeholder'), maxlength: 72 %>
         <%= image_tag "password.svg", aria: { hidden: "true" }, size: 30, class: "colorize--black" %>
       </label>
     </div>
@@ -50,7 +50,7 @@
     </div>
     <button type="submit" class="btn btn--reversed center">
       <span aria-hidden="true">✓</span>
-      <span class="for-screen-reader">Save changes</span>
+      <span class="for-screen-reader"><%= t('.save_changes') %></span>
     </button>
   <% end %>
 </div>
@@ -62,6 +62,6 @@
 <div class="panel margin-block-double shadow center">
   <%= button_to session_path, method: :delete, class: "btn center" do %>
     <span aria-hidden="true">🚪</span>
-    <span class="for-screen-reader">Sign out</span>
+    <span class="for-screen-reader"><%= t('.sign_out') %></span>
   <% end %>
 </div>

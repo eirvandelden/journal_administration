@@ -57,5 +57,12 @@
       <% end %>
       <%= yield %>
     </main>
+    <dialog id="confirm-dialog">
+      <p id="confirm-dialog-message"></p>
+      <nav>
+        <button type="button" id="confirm-dialog-cancel" autofocus><%= t('common.cancel') %></button>
+        <button type="button" id="confirm-dialog-accept" class="button-danger" data-default-label="<%= t('common.delete') %>"></button>
+      </nav>
+    </dialog>
   </body>
 </html>

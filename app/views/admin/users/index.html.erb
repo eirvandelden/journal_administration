@@ -23,7 +23,7 @@
         <td>
           <%= link_to t(".view"), admin_user_path(user) %>
           <%= link_to t(".edit"), edit_admin_user_path(user) %>
-          <%= button_to t(".delete"), admin_user_path(user), method: :delete, data: { turbo_confirm: t(".confirm_delete") } unless user == Current.user %>
+          <%= button_to t(".delete"), admin_user_path(user), method: :delete, class: "button-danger", data: { turbo_confirm: t(".confirm_delete"), confirm_verb: t("common.delete") } unless user == Current.user %>
         </td>
       </tr>
     <% end %>

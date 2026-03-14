@@ -5,3 +5,17 @@ input[type="submit"] {
   padding: .2rem;
   margin: 0 .4rem;
 }
+
+.button-danger,
+button.button-danger,
+input[type="submit"].button-danger {
+  background-color: var(--color-red, #c0392b);
+  color: white;
+}
+
+.button-mutating,
+button.button-mutating,
+input[type="submit"].button-mutating {
+  background-color: var(--color-orange, #e67e22);
+  color: white;
+}

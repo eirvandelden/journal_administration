@@ -8,7 +8,7 @@ it:
     index:
       account_number: Numero conto
       category: Categoria
-      confirm_destroy: Sei sicuro?
+      confirm_destroy: Questo eliminerà il conto in modo permanente. Questa azione non può essere annullata.
       destroy: Elimina
       edit: Modifica
       external_accounts: Conti esterni
@@ -119,7 +119,7 @@ it:
         role: Ruolo
       index:
         actions: Azioni
-        confirm_delete: Sei sicuro di voler eliminare questo utente?
+        confirm_delete: Questo eliminerà l'utente e tutti i suoi dati in modo permanente.
         created_at: Creato
         delete: Elimina
         edit: Modifica
@@ -180,9 +180,12 @@ it:
       success: "✅ Bene aggiornato con successo."
   common:
     back: "↩️ Indietro"
-    confirm_destroy: "⚠️ Sei sicuro?"
+    cancel: Annulla
+    confirm_destroy: Questo eliminerà il record in modo permanente. Questa azione non può essere annullata.
+    delete: Elimina
     destroy: "🔥 Elimina"
     edit: "✏️ Modifica"
+    remove: Rimuovi
     save: "💾 Salva"
     show: "👁️ Mostra"
   date:
@@ -492,10 +495,18 @@ it:
   users:
     profiles:
       edit:
+        email_placeholder: Indirizzo email
+        go_back: Torna indietro
         locale: Lingua
         locale_en: "🇬🇧 English"
         locale_it: "🇮🇹 Italiano"
         locale_nl: "🇳🇱 Nederlands"
+        manage_people: Gestisci persone
+        name_placeholder: Nome
+        password_placeholder: Cambia password
+        save_changes: Salva modifiche
+        sign_out: Esci
+        title: Le tue impostazioni
       update:
         success: Profilo aggiornato
     transfer:
@@ -505,4 +516,10 @@ it:
       share: Condividi link di accesso
       share_text: Questo link privato di accesso puo essere usato per accedere da un altro dispositivo o recuperare l'accesso.
       share_title: Il tuo link di accesso
+    user:
+      confirm_remove: Questo rimuoverà permanentemente questa persona dall'account. Questa azione non può essere annullata.
+      remove_from_account: Rimuovi %{name} dall'account
+      role_administrator: Amministratore
+      role_label: 'Ruolo di %{name}: %{role}'
+      role_member: Membro
   warrantied: "🛡️ In garanzia"
