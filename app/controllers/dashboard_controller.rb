@@ -16,10 +16,12 @@ class DashboardController < ApplicationController
     dashboard = Dashboard.new(start_date: params[:start_date], end_date: params[:end_date], filter: params[:filter])
     @date_range = dashboard.date_range
 
-    @debit_transactions = dashboard.debit_transactions
-    @debit_total = dashboard.debit_total
+    @debit_transactions  = dashboard.debit_transactions
+    @debit_total         = dashboard.debit_total
     @credit_transactions = dashboard.credit_transactions
-    @credit_total = dashboard.credit_total
-    @profit_or_loss = dashboard.profit_or_loss
+    @credit_total        = dashboard.credit_total
+    @profit_or_loss      = dashboard.profit_or_loss
+    @chart_labels        = dashboard.chart_labels
+    @historical_averages = dashboard.historical_averages
   end
 end
