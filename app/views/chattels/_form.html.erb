@@ -1,11 +1,11 @@
-<%# locals: (disabled: nil) %>
+<%# locals: (chattel:, disabled: nil) %>
 <section>
-  <%= form_for @chattel do |f| %>
-    <% if @chattel.errors.any? %>
+  <%= form_for chattel do |f| %>
+    <% if chattel.errors.any? %>
       <div id="error_explanation">
-        <h2><%= t('errors.template.header', count: @chattel.errors.count, model: Chattel.model_name.human.downcase) %></h2>
+        <h2><%= t('errors.template.header', count: chattel.errors.count, model: Chattel.model_name.human.downcase) %></h2>
         <ul>
-          <% @chattel.errors.full_messages.each do |message| %>
+          <% chattel.errors.full_messages.each do |message| %>
             <li><%= message %></li>
           <% end %>
         </ul>

@@ -24,8 +24,9 @@
       </thead>
       <tbody>
         <% @items.each do |item| %>
-          <% if item.kind == :transaction %>
-            <tr>
+          <tr>
+            <% if item.kind == :transaction %>
+
               <td><%= l item.date, format: :short %></td>
               <td><%= t('.transaction') %></td>
               <td>
@@ -33,9 +34,9 @@
                 <%= number_to_currency item.record.amount %>
               </td>
               <td><%= link_to t('.edit'), edit_transaction_path(item.record) %></td>
-            </tr>
-          <% else %>
-            <tr>
+
+            <% else %>
+
               <td><%= l item.date, format: :short %></td>
               <td><%= t('.account') %></td>
               <td><%= item.record.to_s %></td>
@@ -43,8 +44,9 @@
                 <%= link_to t('.edit'), edit_account_path(item.record) %>
                 <%= button_to t('.update_transactions'), account_transactions_bulk_path(item.record), method: :patch %>
               </td>
-            </tr>
-          <% end %>
+
+            <% end %>
+          </tr>
         <% end %>
       </tbody>
     </table>

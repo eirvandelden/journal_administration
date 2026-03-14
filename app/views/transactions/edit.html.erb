@@ -7,7 +7,7 @@
   </nav>
 </header>
 <article>
-  <%= render partial: 'form' %>
+  <%= render partial: 'form', locals: { transaction: @transaction } %>
 </article>
 
 <% unless @transaction.type == "Transfer" %>
