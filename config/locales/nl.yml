@@ -513,10 +513,10 @@ nl:
     recent:
       heading: Recente transacties
     show:
-      unconsolidated: "⚠️ Vereist categorisering"
       new_chattel: "➕ Nieuwe bezitting"
       no_proof_of_purchase: Geen aankoopbewijs geüpload.
       proof_of_purchase: Aankoopbewijs
+      unconsolidated: "⚠️ Vereist categorisering"
       view_proof_of_purchase: Aankoopbewijs bekijken
     table:
       amount: Bedrag

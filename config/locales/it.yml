@@ -513,10 +513,10 @@ it:
     recent:
       heading: Transazioni recenti
     show:
-      unconsolidated: "⚠️ Richiede categorizzazione"
       new_chattel: "➕ Nuovo bene"
       no_proof_of_purchase: Nessuna prova d'acquisto caricata.
       proof_of_purchase: Prova d'acquisto
+      unconsolidated: "⚠️ Richiede categorizzazione"
       view_proof_of_purchase: Visualizza prova d'acquisto
     table:
       amount: Importo
