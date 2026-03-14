@@ -59,4 +59,17 @@ class AccountsIndexTest < ActionDispatch::IntegrationTest
     assert_includes response.body, external_page_1_number
     assert_not_includes response.body, external_page_2_number
   end
+
+  test "untouched filter only shows untouched accounts" do
+    accounts(:checking).update_column(:updated_at, 1.minute.from_now)
+    accounts(:albert_heijn).update_column(:updated_at, 1.minute.from_now)
+
+    get accounts_path, params: { filter: "untouched" }
+
+    assert_response :success
+    assert_select "#own-accounts-table tbody td", text: accounts(:savings).name
+    assert_select "#external-accounts-table tbody td", text: accounts(:employer).name
+    assert_select "#own-accounts-table tbody td", text: accounts(:checking).name, count: 0
+    assert_select "#external-accounts-table tbody td", text: accounts(:albert_heijn).name, count: 0
+  end
 end
