@@ -19,6 +19,16 @@ class MainDashboardTest < ActionDispatch::IntegrationTest
     assert_select "th"
   end
 
+  test "dashboard shows the spending charts" do
+    get dashboard_index_url
+
+    assert_response :success
+    assert_select "section.chart-section", count: 2
+    assert_select "h2", text: I18n.t("dashboard.charts.spending_by_category")
+    assert_select "h2", text: I18n.t("dashboard.charts.spending_vs_average")
+    assert_select "svg[role='img']", minimum: 2
+  end
+
   test "dashboard with month_to_date filter shows transactions grouped by parent category" do
     get dashboard_index_url, params: { filter: "month_to_date" }
 
