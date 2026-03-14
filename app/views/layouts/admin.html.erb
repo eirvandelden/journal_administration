@@ -14,10 +14,12 @@
   <body>
     <header>
       <nav>
-        <%= link_to t("admin.nav.dashboard"), admin_root_path %>
-        <%= link_to t("admin.nav.users"), admin_users_path %>
-        <%= link_to t("admin.nav.faultline"), faultline.root_path %>
-        <%= link_to t("admin.nav.back_to_site"), root_path %>
+        <ul>
+          <li><%= link_to t("admin.nav.dashboard"), admin_root_path %></li>
+          <li><%= link_to t("admin.nav.users"), admin_users_path %></li>
+          <li><%= link_to t("admin.nav.faultline"), faultline.root_path %></li>
+          <li><%= link_to t("admin.nav.back_to_site"), root_path %></li>
+        </ul>
       </nav>
     </header>
 
