@@ -1,6 +1,8 @@
 /* Unconsolidated (uncategorised) transaction rows */
-tr.unconsolidated {
-  background-color: var(--color-orange-light, #fef3e2);
+tr.unconsolidated,
+tr.unconsolidated > td {
+  background-color: #fde7c2;
+  background-color: color-mix(in oklch, var(--color-orange) 18%, var(--color-bg) 82%);
 }
 
 /* Inline notification tag on show page */
