@@ -40,7 +40,7 @@ default: &default
   pool: <%= ENV['RAILS_MAX_THREADS'] || 5 %>
   host: <%= ENV['DOCKER_DB_HOST'] || 'localhost' %>
   port: <%= ENV['DOCKER_DB_PORT'] || 5432 %>
-  timeout: 100
+  timeout: 10000
   default_transaction_mode: immediate
 
 development:
