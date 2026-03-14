@@ -68,7 +68,7 @@ class DashboardTest < ActiveSupport::TestCase
   test "debit_transactions aggregates multiple child category amounts into parent" do
     dashboard = Dashboard.new(filter: "year_to_date")
 
-    expected_total = transactions(:debit_grocery).amount + transactions(:debit_bakery).amount
+    expected_total = 52.50
     assert_equal expected_total, dashboard.debit_transactions[categories(:groceries)]
   end
 
@@ -91,6 +91,18 @@ class DashboardTest < ActiveSupport::TestCase
 
     assert dashboard.debit_transactions.key?(nil),
            "Expected uncategorized debit transactions to appear with nil key"
+  end
+
+  test "debit_transactions use split amounts for split transactions" do
+    dashboard = Dashboard.new(filter: "year_to_date")
+
+    assert_equal 52.50, dashboard.debit_transactions[categories(:groceries)]
+  end
+
+  test "debit_transactions keep remaining split balance uncategorized" do
+    dashboard = Dashboard.new(filter: "year_to_date")
+
+    assert_equal 35.00, dashboard.debit_transactions[nil]
   end
 
   test "month_to_date filter uses beginning of month to now" do

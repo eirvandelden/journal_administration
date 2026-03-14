@@ -96,6 +96,8 @@ en:
           attributes:
             amount:
               exceeds_transaction: exceeds the remaining transaction amount
+            financial_transaction:
+              must_not_be_transfer: must not be a Transfer transaction
     models:
       account: Account
       category: Category

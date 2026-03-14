@@ -81,6 +81,12 @@ class CategoryTest < ActiveSupport::TestCase
     assert_includes result, transactions(:debit_bakery)
   end
 
+  test "recent_transactions includes transactions assigned through splits" do
+    result = categories(:bakery).recent_transactions
+
+    assert_includes result, transactions(:debit_grocery)
+  end
+
   test "recent_transactions respects the limit parameter" do
     result = categories(:supermarket).recent_transactions(limit: 0)
 

@@ -39,6 +39,16 @@ class TransactionSplitTest < ActiveSupport::TestCase
       assert_equal transactions(:debit_grocery), transaction_splits(:split_grocery_supermarket).financial_transaction
     end
 
+    test "transfer transactions cannot be split" do
+      split = TransactionSplit.new(
+        financial_transaction: transactions(:transfer_savings),
+        amount: 10.00
+      )
+
+      assert_not split.valid?
+      assert_includes split.errors[:financial_transaction], I18n.t("activerecord.errors.models.transaction_split.attributes.financial_transaction.must_not_be_transfer")
+    end
+
     test "category is optional" do
       split = TransactionSplit.new(
         financial_transaction: transactions(:uncategorized),

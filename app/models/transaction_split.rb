@@ -9,6 +9,7 @@ class TransactionSplit < ApplicationRecord
 
   validates :amount, presence: true, numericality: { greater_than: 0 }
   validate :amount_does_not_exceed_balance
+  validate :financial_transaction_must_not_be_transfer
 
   private
 
@@ -21,5 +22,11 @@ class TransactionSplit < ApplicationRecord
     return if amount <= available
 
     errors.add(:amount, :exceeds_transaction)
+  end
+
+  def financial_transaction_must_not_be_transfer
+    return if financial_transaction.blank? || financial_transaction.type != "Transfer"
+
+    errors.add(:financial_transaction, :must_not_be_transfer)
   end
 end
