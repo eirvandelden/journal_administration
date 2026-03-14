@@ -159,7 +159,8 @@ it:
       id: Id
       name: Nome
       new_category: "➕ Nuova categoria"
-      parent: Categoria madre
+      root_categories: Categorie principali
+      show: Mostra
     main: Categorie
     new:
       title: "➕ Nuova categoria"
