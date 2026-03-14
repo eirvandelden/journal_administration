@@ -1,12 +1,12 @@
-<%# locals: (disabled: nil) %>
+<%# locals: (transaction:, disabled: nil) %>
 
 <section>
-  <%= form_for @transaction do |f| %>
-    <% if @transaction.errors.any? %>
+  <%= form_for transaction do |f| %>
+    <% if transaction.errors.any? %>
       <div id="error_explanation">
-        <h2><%= t('errors.template.header', count: @transaction.errors.count, model: Transaction.model_name.human.downcase) %></h2>
+        <h2><%= t('errors.template.header', count: transaction.errors.count, model: Transaction.model_name.human.downcase) %></h2>
         <ul>
-          <% @transaction.errors.full_messages.each do |message| %>
+          <% transaction.errors.full_messages.each do |message| %>
             <li><%= message %></li>
           <% end %>
         </ul>

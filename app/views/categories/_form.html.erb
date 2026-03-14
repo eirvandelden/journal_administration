@@ -1,11 +1,11 @@
-<%# locals: (disabled: nil) %>
+<%# locals: (category:, disabled: nil) %>
 <section>
-  <%= form_for @category do |f| %>
-    <% if @category.errors.any? %>
+  <%= form_for category do |f| %>
+    <% if category.errors.any? %>
       <div id="error_explanation">
-        <h2><%= t('errors.template.header', count: @category.errors.count, model: Category.model_name.human.downcase) %></h2>
+        <h2><%= t('errors.template.header', count: category.errors.count, model: Category.model_name.human.downcase) %></h2>
         <ul>
-          <% @category.errors.full_messages.each do |message| %>
+          <% category.errors.full_messages.each do |message| %>
             <li><%= message %></li>
           <% end %>
         </ul>
