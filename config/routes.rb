@@ -36,7 +36,7 @@ Rails.application.routes.draw do
     end
   end
   resources :categories
-  resources :searches, only: [:index]
+  resources :searches, only: [ :index ]
   get "dashboard/index"
   get "todo", to: "todos#index", as: :todo
 

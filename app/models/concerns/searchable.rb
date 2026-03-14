@@ -17,7 +17,7 @@ module Searchable
         return none if query.blank?
 
         sanitized = "%#{sanitize_sql_like(query.to_s.strip)}%"
-        conditions = columns.map { |col| "#{table_name}.#{col} LIKE ?" }
+        conditions = columns.map { |col| "#{col} LIKE ?" }
         where(conditions.join(" OR "), *conditions.map { sanitized }).limit(10)
       }
     end
