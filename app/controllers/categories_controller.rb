@@ -7,7 +7,7 @@ class CategoriesController < ApplicationController
   # @return [void]
   def index
     @category_groups = Category.includes(:parent_category)
-                                .order(Arel.sql("parent_category_id ASC NULLS FIRST, name ASC"))
+                                .reorder(Arel.sql("parent_category_id ASC NULLS FIRST, name ASC"))
                                 .group_by(&:parent_category)
   end
 
