@@ -19,9 +19,9 @@ class Transaction < ApplicationRecord
     return none if query.blank?
 
     sanitized = "%#{sanitize_sql_like(query.to_s.strip)}%"
-    conditions = searchable_columns.map { |col| "#{table_name}.#{col} LIKE ?" }
+    conditions = searchable_columns.map { |col| "#{col} LIKE ?" }
     where(
-      "(#{conditions.join(' OR ')}) OR CAST(#{table_name}.amount AS TEXT) LIKE ?",
+      "(#{conditions.join(' OR ')}) OR CAST(amount AS TEXT) LIKE ?",
       *conditions.map { sanitized }, sanitized
     ).limit(10)
   }
