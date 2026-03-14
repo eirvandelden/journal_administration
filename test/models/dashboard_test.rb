@@ -113,4 +113,39 @@ class DashboardTest < ActiveSupport::TestCase
     assert_equal Date.parse("2026-03-01"), dashboard.date_range.start_date.to_date
     assert_equal Date.parse("2026-03-31"), dashboard.date_range.end_date.to_date
   end
+
+  class ChartLabels < ActiveSupport::TestCase
+    test "returns an array of strings in the same order as debit_transactions" do
+      dashboard = Dashboard.new(filter: "year_to_date")
+      labels = dashboard.chart_labels
+      keys = dashboard.debit_transactions.keys
+
+      assert_equal keys.size, labels.size
+      assert labels.all? { |l| l.is_a?(String) }
+    end
+
+    test "maps nil category key to dash" do
+      dashboard = Dashboard.new(filter: "year_to_date")
+
+      # The uncategorized key (nil) should produce "-"
+      nil_index = dashboard.debit_transactions.keys.index(nil)
+      assert_equal "-", dashboard.chart_labels[nil_index] if nil_index
+    end
+  end
+
+  class HistoricalAverages < ActiveSupport::TestCase
+    test "returns array of same length as chart_labels" do
+      dashboard = Dashboard.new(filter: "year_to_date")
+
+      assert_equal dashboard.chart_labels.size, dashboard.historical_averages.size
+    end
+
+    test "returns zeros when no prior-year data exists" do
+      # Fixtures are booked in current month; year_to_date lookback covers the previous year
+      dashboard = Dashboard.new(filter: "year_to_date")
+
+      assert dashboard.historical_averages.all? { |v| v == 0.0 },
+             "Expected all historical averages to be zero when no prior-year transactions exist"
+    end
+  end
 end

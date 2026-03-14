@@ -189,6 +189,9 @@ en:
     save: "💾 Save"
     show: "👁️ Show"
   dashboard:
+    charts:
+      spending_by_category: Spending by category
+      spending_vs_average: Spending vs. historical average
     filters:
       apply: Apply
       choose: Choose

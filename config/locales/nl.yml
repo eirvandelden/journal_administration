@@ -189,6 +189,9 @@ nl:
     save: "💾 Opslaan"
     show: "👁️ Tonen"
   dashboard:
+    charts:
+      spending_by_category: Uitgaven per categorie
+      spending_vs_average: Uitgaven vs. historisch gemiddelde
     filters:
       apply: Toepassen
       choose: Kies

@@ -189,6 +189,9 @@ it:
     save: "💾 Salva"
     show: "👁️ Mostra"
   dashboard:
+    charts:
+      spending_by_category: Spese per categoria
+      spending_vs_average: Spese vs. media storica
     filters:
       apply: Applica
       choose: Scegli

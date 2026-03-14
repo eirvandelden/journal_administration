@@ -44,6 +44,30 @@ class Dashboard
     credit_transactions.values.sum
   end
 
+  # Returns ordered category name labels derived from debit_transactions
+  #
+  # @return [Array<String>] Category names; nil category maps to "-"
+  def chart_labels
+    debit_transactions.keys.map { |category| category&.name || "-" }
+  end
+
+  # Returns historical-average spending per category scaled to the selected period
+  #
+  # Lookback period is one year ending the day before date_range.start_date.
+  # Each average is: (sum_over_lookback / 365) × selected_days.
+  #
+  # @return [Array<Float>] Scaled averages in the same order as chart_labels
+  def historical_averages
+    lookback = lookback_date_range
+    totals = grouped_transactions_for(Debit, range: lookback)
+    selected_days = (date_range.end_date.to_date - date_range.start_date.to_date).to_i + 1
+
+    debit_transactions.keys.map do |category|
+      hist_sum = totals[category] || 0.0
+      (hist_sum / 365.0 * selected_days).round(2)
+    end
+  end
+
   # Calculates profit or loss (debit - credit)
   #
   # @return [Float] Profit if positive, loss if negative
@@ -70,8 +94,14 @@ class Dashboard
     @transfer_category_id ||= Category.find_by(name: "Transfer")&.id
   end
 
-  def grouped_transactions_for(transaction_class)
-    scope = transaction_class.where(booked_at: date_range.to_range)
+  def lookback_date_range
+    lookback_end = date_range.start_date.to_date - 1.day
+    lookback_start = lookback_end - 1.year + 1.day
+    DateRange.new(lookback_start.beginning_of_day, lookback_end.end_of_day)
+  end
+
+  def grouped_transactions_for(transaction_class, range: date_range)
+    scope = transaction_class.where(booked_at: range.to_range)
 
     transactions = scope.where.not(category_id: transfer_category_id)
                        .or(scope.where(category_id: nil))

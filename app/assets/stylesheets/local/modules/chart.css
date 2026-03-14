@@ -1,0 +1,11 @@
+.chart-section {
+  padding: 1.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  margin-block: 1.5rem;
+}
+
+.chart-section svg {
+  width: 100%;
+  height: auto;
+}
