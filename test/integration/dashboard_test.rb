@@ -72,4 +72,12 @@ class MainDashboardTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "select[data-date-filter-target='quickFilter']"
   end
+
+  test "dashboard with invalid custom dates falls back to the default range" do
+    get dashboard_index_url, params: { start_date: "not-a-date", end_date: "2026-03-31" }
+
+    assert_response :success
+    assert_select "input[name='start_date'][value='#{Time.current.beginning_of_month.to_date.iso8601}']"
+    assert_select "input[name='end_date'][value='#{Time.current.end_of_month.to_date.iso8601}']"
+  end
 end
