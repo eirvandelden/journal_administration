@@ -15,6 +15,8 @@ class Transaction < ApplicationRecord
   belongs_to :category, optional: true
   has_many :chattels, foreign_key: :purchase_transaction_id, dependent: :restrict_with_error
 
+  before_validation :assign_transfer_category_for_new_internal_transfer
+
   validates :booked_at, presence: true
   validates_associated :mutations
   validate :internal_transfers_keep_transfer_category
@@ -78,6 +80,8 @@ class Transaction < ApplicationRecord
   private
 
   def internal_transfers_keep_transfer_category
+    return if new_record?
+    return unless will_save_change_to_category_id?
     return unless transfer?
     return if category == transfer_category
 
@@ -99,5 +103,13 @@ class Transaction < ApplicationRecord
 
   def transfer_category
     @transfer_category ||= Category.find_by(name: "Transfer")
+  end
+
+  def assign_transfer_category_for_new_internal_transfer
+    return unless new_record?
+    return unless transfer?
+    return if category == transfer_category
+
+    self.category = transfer_category
   end
 end

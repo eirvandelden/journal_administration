@@ -467,6 +467,8 @@ nl:
       success: "✅ Transactie succesvol aangemaakt."
     destroy:
       success: "✅ Transactie succesvol verwijderd."
+    form:
+      transfer_category_locked: Interne overboekingen blijven altijd in de categorie Overboeking.
     imports:
       create:
         file_too_large: "⚠️ Bestand te groot. Maximum grootte is 5MB."
@@ -481,8 +483,6 @@ nl:
       upload: Uploaden
     new:
       title: "➕ Nieuwe transactie"
-    form:
-      transfer_category_locked: Interne overboekingen blijven altijd in de categorie Overboeking.
     recent:
       heading: Recente transacties
     show:

@@ -467,6 +467,8 @@ en:
       success: "✅ Transaction was successfully created."
     destroy:
       success: "✅ Transaction was successfully destroyed."
+    form:
+      transfer_category_locked: Internal transfers always stay in the Transfer category.
     imports:
       create:
         file_too_large: "⚠️ File too large. Maximum size is 5MB."
@@ -481,8 +483,6 @@ en:
       upload: Upload
     new:
       title: "➕ New transaction"
-    form:
-      transfer_category_locked: Internal transfers always stay in the Transfer category.
     recent:
       heading: Recent transactions
     show:

@@ -467,6 +467,8 @@ it:
       success: "✅ Transazione creata con successo."
     destroy:
       success: "✅ Transazione eliminata con successo."
+    form:
+      transfer_category_locked: I trasferimenti interni restano sempre nella categoria Trasferimento.
     imports:
       create:
         file_too_large: "⚠️ File troppo grande. La dimensione massima è 5MB."
@@ -481,8 +483,6 @@ it:
       upload: Carica
     new:
       title: "➕ Nuova transazione"
-    form:
-      transfer_category_locked: I trasferimenti interni restano sempre nella categoria Trasferimento.
     recent:
       heading: Transazioni recenti
     show:

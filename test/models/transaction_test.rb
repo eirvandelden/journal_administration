@@ -68,13 +68,8 @@ class TransactionTest < ActiveSupport::TestCase
     end
 
     test "invalid when an internal transfer is given a non-transfer category" do
-      transaction = Transaction.new(
-        booked_at: Time.current,
-        interest_at: Time.current,
-        category: categories(:supermarket)
-      )
-      transaction.mutations.build(account: accounts(:checking), amount: -100)
-      transaction.mutations.build(account: accounts(:savings), amount: 100)
+      transaction = transactions(:transfer_savings)
+      transaction.category = categories(:supermarket)
 
       assert_not transaction.valid?
       assert_includes transaction.errors[:category],
