@@ -96,6 +96,8 @@ nl:
           attributes:
             amount:
               exceeds_transaction: overschrijdt het resterende transactiebedrag
+            financial_transaction:
+              must_not_be_transfer: mag geen overboeking zijn
     models:
       account: Rekening
       category: Categorie

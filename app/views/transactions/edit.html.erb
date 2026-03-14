@@ -17,7 +17,7 @@
   <% end %>
 
   <%= turbo_frame_tag "transaction_splits" do %>
-    <%= render "transaction_splits/table", transaction: @transaction %>
+    <%= render "transaction_splits/table", transaction: @transaction, transaction_split: TransactionSplit.new(financial_transaction: @transaction) %>
   <% end %>
 <% end %>
 

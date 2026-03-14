@@ -96,6 +96,8 @@ it:
           attributes:
             amount:
               exceeds_transaction: supera l'importo residuo della transazione
+            financial_transaction:
+              must_not_be_transfer: non deve essere una transazione di trasferimento
     models:
       account: Conto
       category: Categoria

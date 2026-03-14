@@ -28,8 +28,13 @@ class Category < ApplicationRecord
   # @param limit [Integer] Maximum number of transactions to return
   # @return [ActiveRecord::Relation] Transactions ordered by most recent first
   def recent_transactions(limit: 10)
+    matching_category_ids = children.select(:id)
+    split_transaction_ids = TransactionSplit.where(category_id: matching_category_ids).select(:transaction_id)
+
     Transaction
-      .where(category_id: children.select(:id))
+      .where(category_id: matching_category_ids)
+      .or(Transaction.where(id: split_transaction_ids))
+      .distinct
       .includes(:creditor, :debitor, :category)
       .order(booked_at: :desc, id: :desc)
       .limit(limit)

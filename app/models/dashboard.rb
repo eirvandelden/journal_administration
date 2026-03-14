@@ -103,10 +103,8 @@ class Dashboard
   def grouped_transactions_for(transaction_class, range: date_range)
     scope = transaction_class.where(booked_at: range.to_range)
 
-    transactions = scope.where.not(category_id: transfer_category_id)
-                       .or(scope.where(category_id: nil))
-                       .group(:category_id)
-                       .sum(:amount)
+    transactions = unsplit_transactions_for(scope).merge(split_transactions_for(scope)) { |_key, left, right| left + right }
+    transactions[nil] = transactions.fetch(nil, 0) + remaining_split_balance_for(scope)
 
     category_ids = transactions.keys.compact
     categories = Category.where(id: category_ids).includes(:parent_category).index_by(&:id)
@@ -119,5 +117,29 @@ class Dashboard
     end
 
     Category.sort_by_hierarchy(transactions_by_parent)
+  end
+
+  def unsplit_transactions_for(scope)
+    scope
+      .where.missing(:transaction_splits)
+      .group(:category_id)
+      .sum(:amount)
+      .except(transfer_category_id)
+  end
+
+  def split_transactions_for(scope)
+    scope
+      .joins(:transaction_splits)
+      .group("transaction_splits.category_id")
+      .sum("transaction_splits.amount")
+      .except(transfer_category_id)
+  end
+
+  def remaining_split_balance_for(scope)
+    scope
+      .joins(:transaction_splits)
+      .group(:id, :amount)
+      .sum("transaction_splits.amount")
+      .sum { |(_id, amount), split_total| amount - split_total }
   end
 end

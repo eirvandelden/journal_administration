@@ -32,6 +32,20 @@ class TransactionSplitsTest < ActionDispatch::IntegrationTest
         headers: { "Accept" => "text/vnd.turbo-stream.html" }
 
       assert_response :unprocessable_entity
+      assert_includes response.body, I18n.t("activerecord.errors.models.transaction_split.attributes.amount.exceeds_transaction")
+    end
+
+    test "rejects transfer transactions" do
+      transfer = transactions(:transfer_savings)
+
+      assert_no_difference "TransactionSplit.count" do
+        post transaction_transaction_splits_url(transfer),
+          params: { transaction_split: { amount: 10.00 } },
+          headers: { "Accept" => "text/vnd.turbo-stream.html" }
+      end
+
+      assert_response :unprocessable_entity
+      assert_includes response.body, I18n.t("activerecord.errors.models.transaction_split.attributes.financial_transaction.must_not_be_transfer")
     end
   end
 
@@ -65,6 +79,7 @@ class TransactionSplitsTest < ActionDispatch::IntegrationTest
         headers: { "Accept" => "text/vnd.turbo-stream.html" }
 
       assert_response :unprocessable_entity
+      assert_includes response.body, I18n.t("activerecord.errors.models.transaction_split.attributes.amount.exceeds_transaction")
     end
   end
 
