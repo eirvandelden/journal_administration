@@ -44,11 +44,11 @@ class Dashboard
     credit_transactions.values.sum
   end
 
-  # Returns ordered category name labels derived from debit_transactions
+  # Returns ordered category name labels derived from credit_transactions
   #
   # @return [Array<String>] Category names; nil category maps to the uncategorized label
   def chart_labels
-    debit_transactions.keys.map { |category| category&.name || I18n.t("common.uncategorized") }
+    credit_transactions.keys.map { |category| category&.name || I18n.t("common.uncategorized") }
   end
 
   # Returns historical-average spending per category scaled to the selected period
@@ -59,10 +59,10 @@ class Dashboard
   # @return [Array<Float>] Scaled averages in the same order as chart_labels
   def historical_averages
     lookback = lookback_date_range
-    totals = grouped_transactions_for(Debit, range: lookback)
+    totals = grouped_transactions_for(Credit, range: lookback)
     selected_days = (date_range.end_date.to_date - date_range.start_date.to_date).to_i + 1
 
-    debit_transactions.keys.map do |category|
+    credit_transactions.keys.map do |category|
       hist_sum = totals[category] || 0.0
       (hist_sum / 365.0 * selected_days).round(2)
     end
