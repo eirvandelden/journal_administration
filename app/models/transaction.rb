@@ -31,6 +31,16 @@ class Transaction < ApplicationRecord
 
   default_scope { order(booked_at: :desc) }
 
+  scope :by_type,       ->(type) { where(type: type) if type.present? }
+  scope :by_category,   ->(id) { id == "none" ? where(category: nil) : where(category_id: id) if id.present? }
+  scope :by_account,    ->(id) { where(debitor_account_id: id).or(where(creditor_account_id: id)) if id.present? }
+  scope :in_date_range, ->(from, to) {
+    rel = all
+    rel = rel.where("interest_at >= ?", from.to_date.beginning_of_day) if from.present?
+    rel = rel.where("interest_at <= ?", to.to_date.end_of_day) if to.present?
+    rel
+  }
+
   belongs_to :debitor, class_name: "Account", foreign_key: "debitor_account_id", optional: true
   belongs_to :creditor, class_name: "Account", foreign_key: "creditor_account_id", optional: true
   belongs_to :category, optional: true

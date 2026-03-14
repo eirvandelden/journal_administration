@@ -496,6 +496,15 @@ en:
       success: "✅ Transaction was successfully created."
     destroy:
       success: "✅ Transaction was successfully destroyed."
+    filters:
+      account: Account
+      all: All
+      category: Category
+      clear: Clear filters
+      external_accounts: External accounts
+      own_accounts: Family accounts
+      title: Filter transactions
+      type: Type
     imports:
       create:
         file_too_large: "⚠️ File too large. Maximum size is 5MB."
@@ -528,6 +537,10 @@ en:
       note: Note
       show: Show
       type: Type
+    types:
+      credit: Credit
+      debit: Debit
+      transfer: Transfer
     update:
       success: "✅ Transaction was successfully updated."
   users:
