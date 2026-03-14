@@ -93,7 +93,14 @@ class Transaction < ApplicationRecord
 
   def self.uncategorized_clause
     <<~SQL.squish
-      transactions.category_id IS NULL
+      (
+        transactions.category_id IS NULL
+        AND NOT EXISTS (
+          SELECT 1
+          FROM transaction_splits
+          WHERE transaction_splits.transaction_id = transactions.id
+        )
+      )
       OR EXISTS (
         SELECT 1
         FROM transaction_splits

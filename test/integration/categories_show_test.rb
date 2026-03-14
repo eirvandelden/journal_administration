@@ -35,6 +35,15 @@ class CategoriesShowTest < ActionDispatch::IntegrationTest
     assert_match split_row_pattern_for(amount: 10, category: categories(:bakery), note: transactions(:debit_grocery).note), response.body
   end
 
+  test "show includes the remainder amount for the original category" do
+    transactions(:debit_grocery).ensure_remainder_split
+
+    get category_path(categories(:supermarket))
+
+    assert_response :success
+    assert_match split_row_pattern_for(amount: 40, category: categories(:supermarket), note: transactions(:debit_grocery).note), response.body
+  end
+
   test "edit renders recent transactions heading" do
     get edit_category_path(categories(:supermarket))
 

@@ -33,7 +33,7 @@ module Splittable
   #
   # @return [BigDecimal]
   def uncategorized_amount
-    uncategorized_splits_amount + uncategorized_remainder_amount
+    uncategorized_splits_amount + untracked_uncategorized_amount
   end
 
   # Auto-manages the remainder split after explicit splits change
@@ -66,10 +66,7 @@ module Splittable
   #
   # @param category [Category]
   # @return [BigDecimal]
-  def amount_for(category:)
-    matching_amount = matching_splits_for(category).sum(&:amount)
-    matching_amount.zero? ? amount : matching_amount
-  end
+  def amount_for(category:) = split? ? matching_transaction_splits_for(category).sum(:amount) : amount
 
   # Returns the category label relevant to a category page.
   #
@@ -79,22 +76,25 @@ module Splittable
   # @param category [Category]
   # @return [String, nil]
   def category_name_for(category:)
-    names = matching_splits_for(category).filter_map { |split| split.category&.to_s }.uniq
-    names.empty? ? self.category&.to_s : names.to_sentence
+    return self.category&.to_s unless split?
+
+    matching_transaction_splits_for(category).filter_map { |split| split.category&.to_s }.uniq.to_sentence.presence
   end
 
   private
 
-  def uncategorized_splits_amount = explicit_transaction_splits.where(category_id: nil).sum(:amount)
+  def uncategorized_splits_amount = transaction_splits.where(category_id: nil).sum(:amount)
 
-  def uncategorized_remainder_amount
+  def untracked_uncategorized_amount
+    return 0 unless category.blank? || split?
+
     remaining = amount - transaction_splits.sum(:amount)
     remaining.positive? ? remaining : 0
   end
 
-  def matching_splits_for(category)
-    return [] if category.blank?
+  def matching_transaction_splits_for(category)
+    return TransactionSplit.none if category.blank?
 
-    explicit_transaction_splits.select { |split| category.recent_transaction_category_ids.include?(split.category_id) }
+    transaction_splits.where(category_id: category.recent_transaction_category_ids)
   end
 end
