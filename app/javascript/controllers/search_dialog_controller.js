@@ -14,7 +14,10 @@ export default class extends Controller {
   }
 
   open() {
-    return this.inputTarget.focus() if this.dialogTarget.open
+    if (this.dialogTarget.open) {
+      this.inputTarget.focus()
+      return
+    }
 
     this.dialogTarget.showModal()
     this.inputTarget.focus()

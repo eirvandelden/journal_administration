@@ -6,6 +6,14 @@ class SearchDialogTest < ApplicationSystemTestCase
     sign_in_as(@user)
   end
 
+  test "search button opens the dialog" do
+    visit root_url
+
+    click_button I18n.t("search.open")
+
+    assert_equal true, page.evaluate_script("document.getElementById('search-dialog').open")
+  end
+
   test "keyboard shortcut does not crash when dialog is already open" do
     visit root_url
 
