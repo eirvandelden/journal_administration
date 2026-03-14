@@ -489,7 +489,7 @@ it:
       amount_placeholder: Importo
       creditor: Creditore
       no_results: Nessun trasferimento trovato.
-      placeholder: "Cerca per descrizione o conto..."
+      placeholder: Cerca per descrizione o conto...
       submit: Cerca
       title: Cerca trasferimento
     suggestions:

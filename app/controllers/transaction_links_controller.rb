@@ -20,9 +20,10 @@ class TransactionLinksController < ApplicationController
         .limit(20)
 
       if params[:query].present?
+        sanitized = "%#{Transaction.sanitize_sql_like(params[:query].strip)}%"
         scope = scope.where(
-          "transactions.note LIKE :q OR creditors.name LIKE :q OR debitors.name LIKE :q",
-          q: "%#{params[:query]}%"
+          "transactions.note LIKE ? OR creditors.name LIKE ? OR debitors.name LIKE ?",
+          sanitized, sanitized, sanitized
         )
       end
 
