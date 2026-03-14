@@ -1,13 +1,3 @@
-<% if @show_upload_form %>
-  <section class="upload">
-    <h2><%= t('.upload_heading') %></h2>
-    <%= form_tag(transactions_imports_path, multipart: true) do %>
-      <%= file_field_tag 'csv' %>
-      <%= submit_tag t('.upload_submit') %>
-    <% end %>
-  </section>
-<% end %>
-
 <section class="todo-list">
   <% if @empty %>
     <p><%= t('.empty') %></p>

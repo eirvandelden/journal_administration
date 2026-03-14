@@ -369,9 +369,13 @@ it:
     categories: "🏷️ %{model}"
     chattels: "📦 %{model}"
     dashboard_filters: "🔎 Filtri"
-    journal_views: "📚 Viste"
     profile: "👤 Profilo"
     todo: "✅ %{model}"
+    todo_all: Tutti
+    todo_consolidatable_accounts: Conti da consolidare
+    todo_consolidatable_transactions: Transazioni da consolidare
+    todo_upload: Carica nuove transazioni
+    todo_views: "📚 Viste"
   number:
     currency:
       format:
@@ -458,8 +462,6 @@ it:
       kind: Tipo
       transaction: Transazione
       update_transactions: Aggiorna transazioni
-      upload_heading: "📥 Carica un nuovo CSV"
-      upload_submit: Carica
   transaction_links:
     balance_table:
       amount: Importo
@@ -484,11 +486,11 @@ it:
         import_failed: "❌ %{count} transazioni non sono state importate"
         invalid_file_type: "⚠️ Tipo di file non valido. Carica un file CSV."
         no_file: "⚠️ Seleziona un file CSV da caricare."
+      new:
+        heading: "📥 Carica un nuovo CSV"
+        submit: Carica
     index:
-      all_transactions: "📋 Tutte le transazioni"
-      consolidatable: "🔍 Da consolidare"
       new_transaction: "➕ Nuova transazione"
-      upload: Carica
     new:
       title: "➕ Nuova transazione"
     recent:

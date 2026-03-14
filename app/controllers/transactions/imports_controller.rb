@@ -2,8 +2,17 @@ require "csv"
 
 # CSV import operations for transactions
 class Transactions::ImportsController < ApplicationController
+  # Renders the upload form
+  #
+  # @action GET
+  # @route /transactions/imports/new
+  # @return [void]
+  def new; end
+
   # Creates a new transaction import from a CSV file
   #
+  # @action POST
+  # @route /transactions/imports
   # @return [void]
   def create
     csv = imports_params[:csv]

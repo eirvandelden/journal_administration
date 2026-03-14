@@ -9,8 +9,4 @@
     <% end %>
   </aside>
 
-  <%= form_with local: true, url: transactions_imports_path, multipart: true do |form| %>
-    <%= form.file_field :csv %>
-    <%= form.submit t('.upload') %>
-  <% end %>
 </section>

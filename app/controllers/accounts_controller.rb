@@ -6,9 +6,17 @@ class AccountsController < ApplicationController
   #
   # @return [void]
   def index
-    @own_page = GearedPagination::Recordset.new(Account.own.order(:id), per_page: [ 50 ]).page(params[:own_page])
+    own_accounts = Account.own.order(:id)
+    external_accounts = Account.external.order(:id)
+
+    if params[:filter] == "untouched"
+      own_accounts = own_accounts.where("updated_at = created_at")
+      external_accounts = external_accounts.where("updated_at = created_at")
+    end
+
+    @own_page = GearedPagination::Recordset.new(own_accounts, per_page: [ 50 ]).page(params[:own_page])
     @own_accounts = @own_page.records
-    @external_page = GearedPagination::Recordset.new(Account.external.order(:id), per_page: [ 50 ]).page(params[:external_page])
+    @external_page = GearedPagination::Recordset.new(external_accounts, per_page: [ 50 ]).page(params[:external_page])
     @external_accounts = @external_page.records
   end
 

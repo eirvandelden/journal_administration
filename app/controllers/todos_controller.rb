@@ -1,7 +1,6 @@
 # Displays the consolidated todo list for outstanding data actions
 #
-# Shows uncategorized transactions, untouched accounts, and optionally a CSV
-# upload form when no recent imports have been made.
+# Shows uncategorized transactions and untouched accounts.
 class TodosController < ApplicationController
   PER_PAGE = 20
 
@@ -16,9 +15,8 @@ class TodosController < ApplicationController
   # @return [void]
   def index
     todo = Todo.new
-    @show_upload_form = todo.show_upload_form?
-    @empty            = todo.empty?
-    @items            = paginated_items(todo.items)
+    @empty = todo.empty?
+    @items = paginated_items(todo.items)
   end
 
   private

@@ -25,7 +25,7 @@ Rails.application.routes.draw do
     resources :transaction_links, only: %i[create destroy]
   end
   namespace :transactions do
-    resources :imports, only: [ :create ]
+    resources :imports, only: %i[new create]
   end
   resources :credit, controller: "transactions", type: "Transaction"
   resources :debit, controller: "transactions", type: "Transaction"
