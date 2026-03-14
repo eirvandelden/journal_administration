@@ -1,6 +1,6 @@
-# Developers can add local overrides here to skip checks during development
-# Example: skip herbfiles during development
+# Developers can add local overrides here to skip checks during development.
+# Example: skip herb linting locally
 # pre-commit:
 #   commands:
-#     rubocop:
+#     herb:
 #       skip: true
