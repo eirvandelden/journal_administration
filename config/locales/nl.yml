@@ -485,6 +485,13 @@ nl:
       balance: Saldo
       description: Omschrijving
     link: Koppelen
+    search:
+      amount_placeholder: Bedrag
+      creditor: Crediteur
+      no_results: Geen overboekingen gevonden.
+      placeholder: "Zoek op omschrijving of rekening..."
+      submit: Zoeken
+      title: Overboeking zoeken
     suggestions:
       amount: Bedrag
       date: Datum
