@@ -30,6 +30,7 @@ en:
     new:
       title: "➕ New account"
     show:
+      absorb_transactions: Absorb transactions from duplicates
       account_number: 'Account number:'
       aliases: Recognition patterns
       category: 'Category:'
@@ -505,6 +506,9 @@ en:
       kind: Kind
       transaction: Transaction
       update_transactions: Update Transactions
+  transaction_absorptions:
+    create:
+      success: Transactions absorbed from duplicate accounts.
   transaction_links:
     balance_table:
       amount: Amount

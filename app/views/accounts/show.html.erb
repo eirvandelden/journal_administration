@@ -39,6 +39,7 @@
       <%= render @account.account_aliases %>
     </ul>
     <%= render "account_aliases/form", account: @account, account_alias: @account.account_aliases.build %>
+    <%= button_to t(".absorb_transactions"), account_transaction_absorption_path(@account) %>
   </article>
 <% end %>
 

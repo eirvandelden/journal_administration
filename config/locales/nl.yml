@@ -30,6 +30,7 @@ nl:
     new:
       title: "➕ Nieuwe rekening"
     show:
+      absorb_transactions: Transacties overnemen van duplicaten
       account_number: 'Rekeningnummer:'
       aliases: Herkenningspatronen
       category: 'Categorie:'
@@ -505,6 +506,9 @@ nl:
       kind: Soort
       transaction: Transactie
       update_transactions: Transacties bijwerken
+  transaction_absorptions:
+    create:
+      success: Transacties overgenomen van dubbele rekeningen.
   transaction_links:
     balance_table:
       amount: Bedrag

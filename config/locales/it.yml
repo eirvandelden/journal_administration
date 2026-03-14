@@ -30,6 +30,7 @@ it:
     new:
       title: "➕ Nuovo conto"
     show:
+      absorb_transactions: Assorbi transazioni dai duplicati
       account_number: 'Numero conto:'
       aliases: Modelli di riconoscimento
       category: 'Categoria:'
@@ -505,6 +506,9 @@ it:
       kind: Tipo
       transaction: Transazione
       update_transactions: Aggiorna transazioni
+  transaction_absorptions:
+    create:
+      success: Transazioni assorbite dai conti duplicati.
   transaction_links:
     balance_table:
       amount: Importo

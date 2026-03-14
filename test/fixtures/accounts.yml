@@ -31,3 +31,6 @@ kruidvat:
 
 unknown:
   name: Unknown Account
+
+albert_heijn_duplicate:
+  name: "AH "

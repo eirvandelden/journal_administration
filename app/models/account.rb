@@ -53,4 +53,19 @@ class Account < ApplicationRecord
 
     account_number
   end
+
+  # Reassigns transactions from any external account whose name exactly matches
+  # one of this account's alias patterns to self.
+  def absorb_transactions_from_aliases
+    account_aliases.each { |a| absorb_transactions_for(a.pattern) }
+  end
+
+  private
+
+  # @param pattern [String]
+  def absorb_transactions_for(pattern)
+    duplicates = Account.external.where.not(id: id).where("LOWER(name) = LOWER(?)", pattern)
+    Transaction.where(debitor_account_id: duplicates).update_all(debitor_account_id: id)
+    Transaction.where(creditor_account_id: duplicates).update_all(creditor_account_id: id)
+  end
 end
