@@ -13,12 +13,12 @@
 
   <fieldset>
     <%= f.label :start_date, t("dashboard.filters.start_date") %>
-    <%= f.date_field :start_date, value: @date_range.start_date.to_date, data: { "date-filter-target": "startDate" } %>
+    <%= f.date_field :start_date, value: @dashboard.date_range.start_date.to_date, data: { "date-filter-target": "startDate" } %>
   </fieldset>
 
   <fieldset>
     <%= f.label :end_date, t("dashboard.filters.end_date") %>
-    <%= f.date_field :end_date, value: @date_range.end_date.to_date, data: { "date-filter-target": "endDate" } %>
+    <%= f.date_field :end_date, value: @dashboard.date_range.end_date.to_date, data: { "date-filter-target": "endDate" } %>
   </fieldset>
 
   <button type="submit"><%= t("dashboard.filters.apply") %></button>
@@ -26,15 +26,15 @@
 
 <section class="chart-section">
   <h2><%= t("dashboard.charts.spending_by_category") %></h2>
-  <%= svg_donut_chart(labels: @chart_labels, data: @debit_transactions.values.map(&:to_f)) %>
+  <%= svg_donut_chart(labels: @dashboard.chart_labels, data: @dashboard.debit_transactions.values.map(&:to_f)) %>
 </section>
 
-<%= render partial: 'balance', locals: { debits: @debit_transactions, credits: @credit_transactions, debit_total: @debit_total, credit_total: @credit_total, profit_or_loss: @profit_or_loss } %>
+<%= render partial: "balance", locals: { dashboard: @dashboard } %>
 
 <section class="chart-section">
   <h2><%= t("dashboard.charts.spending_vs_average") %></h2>
-  <%= svg_bar_chart(labels: @chart_labels,
-                    data: @debit_transactions.values.map(&:to_f),
-                    reference: @historical_averages,
+  <%= svg_bar_chart(labels: @dashboard.chart_labels,
+                    data: @dashboard.debit_transactions.values.map(&:to_f),
+                    reference: @dashboard.historical_averages,
                     y_label: t("dashboard.charts.spending_vs_average")) %>
 </section>
