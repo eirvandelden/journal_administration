@@ -20,6 +20,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_15_000003) do
     t.index ["account_id", "pattern"], name: "index_account_aliases_on_account_id_and_pattern", unique: true
     t.index ["account_id"], name: "index_account_aliases_on_account_id"
   end
+
   create_table "accounts", force: :cascade do |t|
     t.string "account_number"
     t.integer "category_id"
