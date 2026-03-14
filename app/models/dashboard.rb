@@ -10,8 +10,14 @@ class Dashboard
   # Initializes a new dashboard
   #
   # @param filter [String, nil] Date range filter (e.g., "last_month", "year_to_date")
-  def initialize(filter: nil)
-    @date_range = DateRange.from_filter(filter)
+  # @param start_date [String, Date, nil] Custom start date (overrides filter)
+  # @param end_date [String, Date, nil] Custom end date (overrides filter)
+  def initialize(filter: nil, start_date: nil, end_date: nil)
+    @date_range = if start_date.present? && end_date.present?
+      DateRange.from_dates(start_date, end_date)
+    else
+      DateRange.from_filter(filter)
+    end
   end
 
   # Returns debit transactions grouped by category with totals

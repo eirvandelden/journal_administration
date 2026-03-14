@@ -99,4 +99,18 @@ class DashboardTest < ActiveSupport::TestCase
     assert_equal Time.current.beginning_of_month.to_date, dashboard.date_range.start_date.to_date
     assert_in_delta Time.current, dashboard.date_range.end_date, 5.seconds
   end
+
+  test "initializes with custom start_date and end_date" do
+    dashboard = Dashboard.new(start_date: "2026-03-01", end_date: "2026-03-31")
+
+    assert_equal Date.parse("2026-03-01"), dashboard.date_range.start_date.to_date
+    assert_equal Date.parse("2026-03-31"), dashboard.date_range.end_date.to_date
+  end
+
+  test "custom start_date and end_date override filter" do
+    dashboard = Dashboard.new(filter: "last_year", start_date: "2026-03-01", end_date: "2026-03-31")
+
+    assert_equal Date.parse("2026-03-01"), dashboard.date_range.start_date.to_date
+    assert_equal Date.parse("2026-03-31"), dashboard.date_range.end_date.to_date
+  end
 end

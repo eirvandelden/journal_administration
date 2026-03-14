@@ -49,4 +49,27 @@ class MainDashboardTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "td", text: categories(:transfer).name, count: 0
   end
+
+  test "dashboard with start_date and end_date filters transactions" do
+    get dashboard_index_url, params: { start_date: "2026-01-01", end_date: "2026-12-31" }
+
+    assert_response :success
+    assert_select "table.debit_credit"
+  end
+
+  test "dashboard shows date filter form" do
+    get dashboard_index_url
+
+    assert_response :success
+    assert_select "form[data-controller='date-filter']"
+    assert_select "input[type='date'][name='start_date']"
+    assert_select "input[type='date'][name='end_date']"
+  end
+
+  test "date filter form has quick filter select" do
+    get dashboard_index_url
+
+    assert_response :success
+    assert_select "select[data-date-filter-target='quickFilter']"
+  end
 end

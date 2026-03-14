@@ -185,6 +185,19 @@ en:
     edit: "✏️ Edit"
     save: "💾 Save"
     show: "👁️ Show"
+  dashboard:
+    filters:
+      apply: Apply
+      choose: Choose
+      current_month: This month
+      current_year: This year
+      end_date: End date
+      last_month: Last month
+      last_year: Last year
+      quick_filter: Quick filter
+      select: Select
+      start_date: Start date
+      three_months: Last 3 months
   date:
     abbr_day_names:
     - Sun

@@ -185,6 +185,19 @@ nl:
     edit: "✏️ Bewerken"
     save: "💾 Opslaan"
     show: "👁️ Tonen"
+  dashboard:
+    filters:
+      apply: Toepassen
+      choose: Kies
+      current_month: Deze maand
+      current_year: Dit jaar
+      end_date: Einddatum
+      last_month: Vorige maand
+      last_year: Afgelopen jaar
+      quick_filter: Snelle filter
+      select: Selecteer
+      start_date: Startdatum
+      three_months: Afgelopen 3 maanden
   date:
     abbr_day_names:
     - zo
