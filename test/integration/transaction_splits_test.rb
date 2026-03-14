@@ -39,6 +39,14 @@ class TransactionSplitsTest < ActionDispatch::IntegrationTest
       assert_includes response.body, I18n.t("activerecord.errors.models.transaction_split.attributes.amount.exceeds_transaction")
     end
 
+    test "with invalid amount via html re-renders the form with errors" do
+      post transaction_transaction_splits_url(@debit),
+        params: { transaction_split: { amount: 999.99 } }
+
+      assert_response :unprocessable_entity
+      assert_includes response.body, I18n.t("activerecord.errors.models.transaction_split.attributes.amount.exceeds_transaction")
+    end
+
     test "rejects transfer transactions" do
       transfer = transactions(:transfer_savings)
 
@@ -81,6 +89,14 @@ class TransactionSplitsTest < ActionDispatch::IntegrationTest
       patch transaction_transaction_split_url(@transaction, @split),
         params: { transaction_split: { amount: 999.99 } },
         headers: { "Accept" => "text/vnd.turbo-stream.html" }
+
+      assert_response :unprocessable_entity
+      assert_includes response.body, I18n.t("activerecord.errors.models.transaction_split.attributes.amount.exceeds_transaction")
+    end
+
+    test "with invalid amount via html re-renders the form with errors" do
+      patch transaction_transaction_split_url(@transaction, @split),
+        params: { transaction_split: { amount: 999.99 } }
 
       assert_response :unprocessable_entity
       assert_includes response.body, I18n.t("activerecord.errors.models.transaction_split.attributes.amount.exceeds_transaction")
