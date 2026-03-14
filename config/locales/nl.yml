@@ -548,12 +548,12 @@ nl:
   transactions:
     create:
       success: "✅ Transactie succesvol aangemaakt."
+    destroy:
+      success: "✅ Transactie succesvol verwijderd."
     edit:
       edit_heading: Transactie bewerken
       link_heading: Transactie koppelen
       split_heading: Transactie splitsen
-    destroy:
-      success: "✅ Transactie succesvol verwijderd."
     filters:
       account: Rekening
       all: Alle

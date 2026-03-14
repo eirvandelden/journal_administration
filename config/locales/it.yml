@@ -548,12 +548,12 @@ it:
   transactions:
     create:
       success: "✅ Transazione creata con successo."
+    destroy:
+      success: "✅ Transazione eliminata con successo."
     edit:
       edit_heading: Modifica transazione
       link_heading: Collega transazione
       split_heading: Dividi transazione
-    destroy:
-      success: "✅ Transazione eliminata con successo."
     filters:
       account: Conto
       all: Tutte
