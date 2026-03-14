@@ -31,6 +31,39 @@ module Linkable
       .order(booked_at: :desc)
   end
 
+  # Searches for unlinked Transfer transactions by description and/or amount
+  #
+  # Returns up to 20 results ordered by date, excluding already-linked transfers.
+  # Both params are optional and combined with AND when both present.
+  #
+  # @param query [String, nil] Matches note, creditor name, or debitor name
+  # @param amount [String, nil] Exact amount match
+  # @return [ActiveRecord::Relation<Transaction>]
+  def searchable_transfers(query: nil, amount: nil)
+    return Transaction.none if query.blank? && amount.blank?
+
+    scope = Transaction.unscoped
+      .where(type: "Transfer")
+      .where.missing(:reverse_transaction_links)
+      .where.not(id: linked_transfer_ids)
+      .joins("LEFT JOIN accounts AS creditors ON creditors.id = transactions.creditor_account_id")
+      .joins("LEFT JOIN accounts AS debitors ON debitors.id = transactions.debitor_account_id")
+      .includes(:creditor)
+      .order(booked_at: :desc)
+      .limit(20)
+
+    if query.present?
+      sanitized = "%#{Transaction.sanitize_sql_like(query.strip)}%"
+      scope = scope.where(
+        "transactions.note LIKE ? OR creditors.name LIKE ? OR debitors.name LIKE ?",
+        sanitized, sanitized, sanitized
+      )
+    end
+
+    scope = scope.where(amount: amount.to_d) if amount.present?
+    scope
+  end
+
   # Remaining amount not yet covered by linked transfers
   #
   # @return [BigDecimal] 0 when fully covered, positive when underpull

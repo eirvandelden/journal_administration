@@ -7,34 +7,8 @@ class TransactionLinksController < ApplicationController
   # @action GET
   # @route /transactions/:transaction_id/transaction_links
   def index
-    searching = params[:query].present? || params[:amount].present?
-
-    @transfers = if searching
-      scope = Transaction.unscoped
-        .where(type: "Transfer")
-        .where.missing(:reverse_transaction_links)
-        .where.not(id: @transaction.linked_transfer_ids)
-        .joins("LEFT JOIN accounts AS creditors ON creditors.id = transactions.creditor_account_id")
-        .joins("LEFT JOIN accounts AS debitors ON debitors.id = transactions.debitor_account_id")
-        .order(booked_at: :desc)
-        .limit(20)
-
-      if params[:query].present?
-        sanitized = "%#{Transaction.sanitize_sql_like(params[:query].strip)}%"
-        scope = scope.where(
-          "transactions.note LIKE ? OR creditors.name LIKE ? OR debitors.name LIKE ?",
-          sanitized, sanitized, sanitized
-        )
-      end
-
-      if params[:amount].present?
-        scope = scope.where(amount: params[:amount].to_d)
-      end
-
-      scope
-    else
-      Transaction.none
-    end
+    @searched = params[:query].present? || params[:amount].present?
+    @transfers = @transaction.searchable_transfers(query: params[:query], amount: params[:amount])
   end
 
   # Links a transfer to the source transaction
