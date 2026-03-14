@@ -32,6 +32,13 @@ class TodoTest < ActiveSupport::TestCase
     assert_includes kinds, :transaction
   end
 
+  test "items includes partially split transactions with remaining uncategorized balance" do
+    todo = Todo.new
+
+    transaction_records = todo.items.select { |item| item.kind == :transaction }.map(&:record)
+    assert_includes transaction_records, transactions(:debit_grocery)
+  end
+
   test "items includes untouched accounts" do
     Account.where(name: "Unknown Account").update_all("updated_at = created_at")
     todo = Todo.new
@@ -48,6 +55,7 @@ class TodoTest < ActiveSupport::TestCase
   end
 
   test "empty? returns true when no uncategorized transactions or untouched accounts" do
+    TransactionSplit.delete_all
     Transaction.where(category_id: nil).delete_all
     Account.update_all(updated_at: Time.current)
     todo = Todo.new

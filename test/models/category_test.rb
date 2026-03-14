@@ -162,6 +162,7 @@ class CategoryTest < ActiveSupport::TestCase
     assert_includes relation.includes_values, :creditor
     assert_includes relation.includes_values, :debitor
     assert_includes relation.includes_values, :category
+    assert_includes relation.includes_values, { transaction_splits: :category }
   end
 
   # -- to_s -------------------------------------------------------------------

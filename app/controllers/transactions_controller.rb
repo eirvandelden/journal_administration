@@ -9,10 +9,12 @@ class TransactionsController < ApplicationController
   # @return [void]
   def index
     transactions = Transaction
+      .includes(:transaction_splits)
       .by_type(params[:type])
       .by_category(params[:category_id])
       .by_account(params[:account_id])
       .in_date_range(params[:start_date], params[:end_date])
+    transactions = transactions.uncategorized if params[:filter] == "no_category"
 
     @transactions = set_page_and_extract_portion_from transactions.order(interest_at: :desc), per_page: [20]
   end

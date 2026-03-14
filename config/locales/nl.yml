@@ -534,6 +534,7 @@ nl:
       balance: Resterend
       category: Categorie
       note: Opmerking
+      remainder_label: Restant
     update:
       success: "✅ Splitsing bijgewerkt."
   transactions:

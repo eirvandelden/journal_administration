@@ -18,7 +18,8 @@ class Todo
   # Returns the combined, date-sorted list of uncategorized transactions and
   # untouched accounts
   #
-  # Uncategorized transactions are those with category_id IS NULL.
+  # Uncategorized transactions are those with no category, an uncategorized
+  # split, or a remaining uncategorized split balance.
   # Untouched accounts are those where updated_at equals created_at
   # (never modified since their initial import).
   # Items are sorted newest-first by their respective dates.
@@ -38,7 +39,7 @@ class Todo
   private
 
   def transaction_items
-    Transaction.where(category_id: nil).order(booked_at: :desc)
+    Transaction.uncategorized.order(booked_at: :desc)
                .map { |t| Item.new(:transaction, t.booked_at, t) }
   end
 

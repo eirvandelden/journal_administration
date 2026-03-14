@@ -74,4 +74,34 @@ class TransactionsIndexTest < ActionDispatch::IntegrationTest
     assert_select "td", text: transactions(:debit_grocery).note
     assert_select "td", text: transactions(:credit_salary).note
   end
+
+  test "no_category filter includes partially split transactions with remaining balance" do
+    get transactions_path(filter: :no_category)
+
+    assert_response :success
+    assert_includes response.body, transactions(:debit_grocery).note
+  end
+
+  class SplitSubRows < ActionDispatch::IntegrationTest
+    setup do
+      sign_in_as(users(:member))
+    end
+
+    test "split transaction shows sub-rows for each split" do
+      get transactions_path
+
+      assert_response :success
+      assert_select "tr.split-row", minimum: 2
+    end
+
+    test "non-split transaction does not show sub-rows" do
+      get transactions_path
+
+      assert_response :success
+      assert_select "tr" do |rows|
+        bakery_row = rows.detect { |r| r.text.include?(transactions(:debit_bakery).note) }
+        assert bakery_row
+      end
+    end
+  end
 end

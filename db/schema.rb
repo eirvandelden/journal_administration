@@ -195,10 +195,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_15_000003) do
     t.integer "category_id"
     t.datetime "created_at", null: false
     t.text "note"
+    t.boolean "remainder", default: false, null: false
     t.integer "transaction_id", null: false
     t.datetime "updated_at", null: false
     t.index ["category_id"], name: "index_transaction_splits_on_category_id"
     t.index ["transaction_id"], name: "index_transaction_splits_on_transaction_id"
+    t.check_constraint "amount > 0", name: "transaction_splits_amount_positive"
   end
 
   create_table "transactions", force: :cascade do |t|

@@ -35,9 +35,18 @@ class Category < ApplicationRecord
       .where(category_id: matching_category_ids)
       .or(Transaction.where(id: split_transaction_ids))
       .distinct
-      .includes(:creditor, :debitor, :category)
+      .includes(:creditor, :debitor, :category, transaction_splits: :category)
       .order(booked_at: :desc, id: :desc)
       .limit(limit)
+  end
+
+  # Returns ids matched by this category's recent transaction views.
+  #
+  # Child categories match themselves; parent categories match all children.
+  #
+  # @return [Array<Integer>]
+  def recent_transaction_category_ids
+    @recent_transaction_category_ids ||= children.ids
   end
 
   # Returns all children of this category plus itself
