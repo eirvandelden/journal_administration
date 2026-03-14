@@ -544,6 +544,10 @@ nl:
   transactions:
     create:
       success: "✅ Transactie succesvol aangemaakt."
+    edit:
+      edit_heading: Transactie bewerken
+      link_heading: Transactie koppelen
+      split_heading: Transactie splitsen
     destroy:
       success: "✅ Transactie succesvol verwijderd."
     filters:

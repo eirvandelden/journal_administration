@@ -59,12 +59,10 @@ class Transaction < ApplicationRecord
   validates_pdf_attachment_of :proof_of_purchase
   validate :check_transfer_type_through_account_owners
 
-  # Returns true when the transaction has no category assigned.
+  # Returns true when some portion of the transaction remains uncategorized.
   #
   # @return [Boolean]
-  def consolidatable?
-    category.nil?
-  end
+  def consolidatable? = uncategorized_amount.positive?
 
   # Returns an emoji representation of the transaction type
   #
