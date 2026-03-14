@@ -2,5 +2,5 @@
   <%= render "transaction_links/search_results",
         transaction: @transaction,
         transfers: @transfers,
-        searched: params[:query].present? || params[:amount].present? %>
+        searched: @searched %>
 <% end %>

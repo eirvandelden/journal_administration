@@ -262,4 +262,38 @@ class TransactionTest < ActiveSupport::TestCase
       assert_includes transaction.errors[:proof_of_purchase], I18n.t("activerecord.errors.messages.must_be_pdf")
     end
   end
+
+  # -- searchable_transfers (from Linkable) -----------------------------------
+
+  class SearchableTransfers < TransactionTest
+    setup do
+      @transaction = transactions(:debit_grocery)
+    end
+
+    test "returns empty relation when no query or amount given" do
+      assert_empty @transaction.searchable_transfers
+    end
+
+    test "returns matching unlinked transfers for a query" do
+      results = @transaction.searchable_transfers(query: "savings")
+
+      assert_includes results, transactions(:transfer_savings)
+    end
+
+    test "excludes transfers already linked to this transaction" do
+      results = @transaction.searchable_transfers(query: "groceries")
+
+      assert_not_includes results, transactions(:transfer_for_grocery)
+    end
+
+    test "filters by amount" do
+      results = @transaction.searchable_transfers(amount: "500.00")
+
+      assert_includes results, transactions(:transfer_savings)
+    end
+
+    test "returns empty relation when nothing matches" do
+      assert_empty @transaction.searchable_transfers(query: "nonexistent")
+    end
+  end
 end
