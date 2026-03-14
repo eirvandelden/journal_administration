@@ -16,6 +16,21 @@ class CategoriesIndexTest < ActionDispatch::IntegrationTest
     assert_select "h2", text: categories(:income).name
   end
 
+  test "index renders the root section first" do
+    get categories_path
+
+    assert_response :success
+
+    headings = Nokogiri::HTML5(response.body).css("h2").map(&:text)
+
+    assert_equal [
+      I18n.t("categories.index.root_categories"),
+      categories(:groceries).name,
+      categories(:housing).name,
+      categories(:income).name
+    ], headings
+  end
+
   test "index renders root categories under the root section" do
     get categories_path
 
