@@ -16,7 +16,9 @@ module Importing
       # @param csv_row [Array<String>] A row from the ING CSV export
       # @return [Row, nil] Parsed row, or nil if the row is a header row
       def self.parse(csv_row)
-        return nil if csv_row[0] == "Datum"
+        return nil unless parseable_row?(csv_row)
+        return nil if header_row?(csv_row)
+
         new(**parsed_attributes_from(csv_row))
       rescue ArgumentError, TypeError
         nil
@@ -56,6 +58,17 @@ module Importing
       private_class_method :account_and_note_attributes_from
       private_class_method :account_attributes_from
       private_class_method :note_attributes_from
+
+      def self.parseable_row?(csv_row)
+        csv_row.is_a?(Array) && csv_row.fetch(0, nil).present? && csv_row.fetch(6, nil).present?
+      end
+
+      def self.header_row?(csv_row)
+        csv_row[0] == "Datum"
+      end
+
+      private_class_method :parseable_row?
+      private_class_method :header_row?
 
       def initialize(date:, initiator_name:, our_account_number:, their_account_number:,
                      code:, direction:, amount:, mutation_kind:, description:,

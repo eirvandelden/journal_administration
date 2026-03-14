@@ -20,6 +20,16 @@ class Importing::ING::ImportJobTest < ActiveJob::TestCase
         Importing::ING::ImportJob.perform_now(row)
       end
     end
+
+    test "ignores truncated rows without raising" do
+      row = [ "20240115" ]
+
+      assert_nothing_raised do
+        assert_no_difference "Transaction.count" do
+          Importing::ING::ImportJob.perform_now(row)
+        end
+      end
+    end
   end
 
   class TransactionCreationTest < Importing::ING::ImportJobTest
