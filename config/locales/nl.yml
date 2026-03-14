@@ -86,6 +86,10 @@ nl:
               must_be_external: moet bij een externe rekening horen
             pattern:
               invalid_like_characters: mag geen %% of _ tekens bevatten
+        transaction:
+          attributes:
+            amount:
+              must_cover_splits: moet het totaal van de expliciete splits dekken
         transaction_link:
           attributes:
             source:

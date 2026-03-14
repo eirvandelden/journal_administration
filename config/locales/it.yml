@@ -86,6 +86,10 @@ it:
               must_be_external: deve appartenere a un conto esterno
             pattern:
               invalid_like_characters: non deve contenere i caratteri %% o _
+        transaction:
+          attributes:
+            amount:
+              must_cover_splits: deve coprire il totale delle suddivisioni esplicite
         transaction_link:
           attributes:
             source:
