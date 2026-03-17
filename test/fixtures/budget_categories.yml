@@ -1,0 +1,9 @@
+active_groceries:
+  budget: active_budget
+  category: groceries
+  amount: 200.00
+
+active_income:
+  budget: active_budget
+  category: income
+  amount: 3000.00

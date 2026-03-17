@@ -24,9 +24,7 @@ class MainDashboardTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select "section.chart-section", count: 2
-    assert_select "h2", text: I18n.t("dashboard.charts.spending_by_category")
-    assert_select "h2", text: I18n.t("dashboard.charts.spending_vs_average")
-    assert_select "svg[role='img']", minimum: 2
+    assert_select "svg[role='img']", minimum: 1
   end
 
   test "dashboard with month_to_date filter shows transactions grouped by parent category" do
@@ -89,5 +87,41 @@ class MainDashboardTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "input[name='start_date'][value='#{Time.current.beginning_of_month.to_date.iso8601}']"
     assert_select "input[name='end_date'][value='#{Time.current.end_of_month.to_date.iso8601}']"
+  end
+
+  test "dashboard shows budget columns when active budget exists" do
+    get dashboard_index_url, params: { filter: "month_to_date" }
+
+    assert_response :success
+    assert_select "th", text: I18n.t("balance.budget")
+    assert_select "th", text: I18n.t("balance.target")
+    assert_select "th", text: I18n.t("balance.status")
+  end
+
+  test "dashboard shows budget chart heading when active budget exists" do
+    get dashboard_index_url, params: { filter: "month_to_date" }
+
+    assert_response :success
+    assert_select "h2", text: I18n.t("dashboard.charts.budget_vs_actual")
+  end
+
+  test "dashboard shows spending vs average chart when no active budget in date range" do
+    # Destroy the active budget fixture to simulate no active budget
+    budgets(:active_budget).destroy
+
+    get dashboard_index_url, params: { filter: "month_to_date" }
+
+    assert_response :success
+    assert_select "h2", text: I18n.t("dashboard.charts.spending_vs_average")
+  end
+
+  test "dashboard does not show budget columns when no active budget" do
+    budgets(:active_budget).destroy
+
+    get dashboard_index_url, params: { filter: "month_to_date" }
+
+    assert_response :success
+    assert_select "th", text: I18n.t("balance.budget"), count: 0
+    assert_select "th", text: I18n.t("balance.status"), count: 0
   end
 end
