@@ -159,4 +159,30 @@ class DashboardTest < ActiveSupport::TestCase
              "Expected all historical averages to be zero when no prior-year transactions exist"
     end
   end
+
+  class ActiveBudget < ActiveSupport::TestCase
+    setup do
+      BudgetCategory.delete_all
+      Budget.delete_all
+    end
+
+    test "returns nil when no active budget exists" do
+      dashboard = Dashboard.new(filter: "year_to_date")
+
+      assert_nil dashboard.active_budget
+    end
+  end
+
+  class BudgetAmounts < ActiveSupport::TestCase
+    setup do
+      BudgetCategory.delete_all
+      Budget.delete_all
+    end
+
+    test "returns empty hash when no active budget" do
+      dashboard = Dashboard.new(filter: "year_to_date")
+
+      assert_equal({}, dashboard.budget_amounts)
+    end
+  end
 end
