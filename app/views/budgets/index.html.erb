@@ -20,13 +20,15 @@
           <% end %>
         </td>
         <td>
-          <% if budget.active? %>
-            <span><%= t("budgets.index.active") %></span>
-          <% elsif budget.future? %>
-            <span><%= t("budgets.index.future") %></span>
-          <% else %>
-            <span><%= t("budgets.index.past") %></span>
-          <% end %>
+          <span>
+            <% if budget.active? %>
+              <%= t("budgets.index.active") %>
+            <% elsif budget.future? %>
+              <%= t("budgets.index.future") %>
+            <% else %>
+              <%= t("budgets.index.past") %>
+            <% end %>
+          </span>
         </td>
         <td><%= budget.budget_categories.size %></td>
         <td>

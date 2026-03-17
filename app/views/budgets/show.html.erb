@@ -6,13 +6,15 @@
   <% end %>
 </p>
 
-<% if @budget.active? %>
-  <p><strong><%= t("budgets.index.active") %></strong></p>
-<% elsif @budget.future? %>
-  <p><%= t("budgets.index.future") %></p>
-<% else %>
-  <p><%= t("budgets.index.past") %></p>
-<% end %>
+<p>
+  <% if @budget.active? %>
+    <strong><%= t("budgets.index.active") %></strong>
+  <% elsif @budget.future? %>
+    <%= t("budgets.index.future") %>
+  <% else %>
+    <%= t("budgets.index.past") %>
+  <% end %>
+</p>
 
 <% if @budget.budget_categories.any? %>
   <table>
