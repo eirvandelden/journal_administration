@@ -52,7 +52,8 @@
               <% if debit_cat && debit_budgeted %>
                 <% status = budget_status(category: debit_cat, actual: debits[debit_cat].to_f, budgeted: debit_budgeted) %>
                 <% label = budget_pct_label(actual: debits[debit_cat].to_f, budgeted: debit_budgeted) %>
-                <span class="budget-status budget-status--<%= status %>"><%= label %></span>
+                <% css_class = "budget-status budget-status--#{status}" %>
+                <span class="<%= css_class %>"><%= label %></span>
               <% end %>
             </td>
           <% end %>
@@ -65,7 +66,8 @@
               <% if credit_cat && credit_budgeted %>
                 <% status = budget_status(category: credit_cat, actual: credits[credit_cat].to_f, budgeted: credit_budgeted) %>
                 <% label = budget_pct_label(actual: credits[credit_cat].to_f, budgeted: credit_budgeted) %>
-                <span class="budget-status budget-status--<%= status %>"><%= label %></span>
+                <% css_class = "budget-status budget-status--#{status}" %>
+                <span class="<%= css_class %>"><%= label %></span>
               <% end %>
             </td>
           <% end %>

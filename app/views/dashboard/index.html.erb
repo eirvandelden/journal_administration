@@ -39,13 +39,18 @@
 
 <article>
   <section class="chart-section">
+    <h2>
+      <% if @dashboard.active_budget %>
+        <%= t("dashboard.charts.budget_vs_actual") %>
+      <% else %>
+        <%= t("dashboard.charts.spending_vs_average") %>
+      <% end %>
+    </h2>
     <% if @dashboard.active_budget %>
-      <h2><%= t("dashboard.charts.budget_vs_actual") %></h2>
       <%= svg_budget_chart(budget: @dashboard.active_budget,
                            debit_transactions: @dashboard.debit_transactions,
                            credit_transactions: @dashboard.credit_transactions) %>
     <% else %>
-      <h2><%= t("dashboard.charts.spending_vs_average") %></h2>
       <%= svg_bar_chart(labels: @dashboard.chart_labels,
                         data: @dashboard.credit_transactions.values.map(&:to_f),
                         reference: @dashboard.historical_averages,
