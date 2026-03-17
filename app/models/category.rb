@@ -13,6 +13,7 @@ class Category < ApplicationRecord
   enum :direction, { debit: 0, credit: 1 }
 
   has_many :transactions
+  has_many :budget_categories
   has_many :secondaries, class_name: "Category",
                          foreign_key: "parent_category_id"
 

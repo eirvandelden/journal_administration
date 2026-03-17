@@ -75,6 +75,24 @@ class Dashboard
     debit_total - credit_sub_total
   end
 
+  # Returns the currently active budget, if any.
+  #
+  # @return [Budget, nil]
+  def active_budget
+    @active_budget ||= Budget.active.first
+  end
+
+  # Returns budget amounts per parent category keyed by Category.
+  #
+  # @return [Hash{Category => BigDecimal}]
+  def budget_amounts
+    return {} unless active_budget
+
+    @budget_amounts ||= active_budget.budget_categories
+      .includes(:category)
+      .each_with_object({}) { |bc, h| h[bc.category] = bc.amount }
+  end
+
   # Calculates total credit including profit/loss adjustment
   #
   # @return [Float] Credit subtotal plus profit/loss

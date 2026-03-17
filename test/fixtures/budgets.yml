@@ -1,0 +1,11 @@
+active_budget:
+  starts_at: 2026-03-01 00:00:00
+  ends_at:
+
+past_budget:
+  starts_at: 2026-01-01 00:00:00
+  ends_at: 2026-01-31 23:59:59
+
+future_budget:
+  starts_at: 2026-04-01 00:00:00
+  ends_at:

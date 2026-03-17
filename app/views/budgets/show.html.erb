@@ -1,0 +1,41 @@
+<h1><%= t("budgets.show.title") %></h1>
+<p>
+  <%= l(@budget.starts_at.to_date, format: :long) %>
+  <% if @budget.ends_at %>
+    &ndash; <%= l(@budget.ends_at.to_date, format: :long) %>
+  <% end %>
+</p>
+
+<% if @budget.active? %>
+  <p><strong><%= t("budgets.index.active") %></strong></p>
+<% elsif @budget.future? %>
+  <p><%= t("budgets.index.future") %></p>
+<% else %>
+  <p><%= t("budgets.index.past") %></p>
+<% end %>
+
+<% if @budget.budget_categories.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th><%= t("budgets.form.category") %></th>
+        <th><%= t("budgets.form.amount") %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @budget.budget_categories.includes(:category).each do |bc| %>
+        <tr>
+          <td><%= bc.category.name %></td>
+          <td><%= number_to_currency(bc.amount) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p><%= t("budgets.show.no_categories") %></p>
+<% end %>
+
+<p>
+  <%= link_to t("budgets.index.edit"), edit_budget_path(@budget) %>
+  <%= link_to t("common.back"), budgets_path %>
+</p>
