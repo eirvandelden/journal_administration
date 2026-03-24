@@ -2,6 +2,11 @@ require "test_helper"
 
 class BudgetTest < ActiveSupport::TestCase
   class Validations < ActiveSupport::TestCase
+    def setup
+      BudgetCategory.delete_all
+      Budget.delete_all
+    end
+
     test "is invalid without starts_at" do
       budget = Budget.new(starts_at: nil)
       assert budget.invalid?
@@ -20,6 +25,21 @@ class BudgetTest < ActiveSupport::TestCase
     end
 
     test "is valid with starts_at and future ends_at" do
+      budget = Budget.new(starts_at: 1.month.ago, ends_at: 1.month.from_now)
+      assert budget.valid?
+    end
+
+    test "is invalid when ends_at overlaps a successor budget" do
+      Budget.create!(starts_at: 2.months.from_now)
+
+      budget = Budget.new(starts_at: 1.month.ago, ends_at: 3.months.from_now)
+      assert budget.invalid?
+      assert budget.errors[:ends_at].any?
+    end
+
+    test "is valid when ends_at is before successor starts_at" do
+      Budget.create!(starts_at: 2.months.from_now)
+
       budget = Budget.new(starts_at: 1.month.ago, ends_at: 1.month.from_now)
       assert budget.valid?
     end
@@ -46,6 +66,11 @@ class BudgetTest < ActiveSupport::TestCase
   end
 
   class Scopes < ActiveSupport::TestCase
+    def setup
+      BudgetCategory.delete_all
+      Budget.delete_all
+    end
+
     test "active scope returns budget where starts_at <= now and ends_at is nil" do
       budget = Budget.create!(starts_at: 1.month.ago)
       assert_includes Budget.active, budget
@@ -120,13 +145,30 @@ class BudgetTest < ActiveSupport::TestCase
       assert_in_delta expected_ends_at, predecessor.ends_at, 1.second
     end
 
-    test "does not close predecessor that already has an ends_at" do
+    test "does not close predecessor that already has an ends_at before the new start" do
       predecessor = Budget.create!(starts_at: 3.months.ago, ends_at: 2.months.ago)
       original_ends_at = predecessor.ends_at
 
       Budget.create!(starts_at: 1.month.from_now)
       predecessor.reload
       assert_in_delta original_ends_at, predecessor.ends_at, 1.second
+    end
+
+    test "clamps predecessor whose future ends_at overlaps the new budget start" do
+      predecessor = Budget.create!(starts_at: 2.months.ago, ends_at: 2.months.from_now)
+
+      new_budget = Budget.create!(starts_at: 1.month.from_now)
+      predecessor.reload
+
+      expected = (new_budget.starts_at.beginning_of_day - 1.day).end_of_day
+      assert_in_delta expected, predecessor.ends_at, 1.second
+    end
+
+    test "only one active budget exists after creating budget when predecessor has overlapping future ends_at" do
+      Budget.create!(starts_at: 2.months.ago, ends_at: 2.months.from_now)
+      Budget.create!(starts_at: 1.month.from_now)
+
+      assert_equal 1, Budget.active.count
     end
 
     test "re-closes predecessor when starts_at is updated" do
