@@ -21,13 +21,13 @@
 
     <section data-budget-categories-target="container">
       <%= f.fields_for :budget_categories do |bc_form| %>
-        <%= render "budget_category_fields", f: bc_form %>
+        <%= render "budgets/budget_category_fields", f: bc_form %>
       <% end %>
     </section>
 
     <template data-budget-categories-target="template">
       <%= f.fields_for :budget_categories, BudgetCategory.new, child_index: "NEW_RECORD" do |bc_form| %>
-        <%= render "budget_category_fields", f: bc_form %>
+        <%= render "budgets/budget_category_fields", f: bc_form %>
       <% end %>
     </template>
 
@@ -35,13 +35,13 @@
       <%= t("budgets.form.add_category") %>
     </button>
 
-    <% if budget.persisted? %>
-      <%= link_to t("budgets.form.suggest_amounts"), suggest_budget_path(budget),
-          data: { turbo_frame: "budget_form" } %>
-    <% end %>
-
     <%= f.submit %>
 
     <%= link_to t("budgets.form.cancel"), budget.persisted? ? budget_path(budget) : budgets_path %>
+  <% end %>
+
+  <% if budget.persisted? %>
+    <%= button_to t("budgets.form.suggest_amounts"), budget_suggestion_path(budget),
+        data: { turbo_frame: "budget_form" } %>
   <% end %>
 <% end %>

@@ -1,6 +1,6 @@
 # Manages household budgets with per-category spending allocations.
 class BudgetsController < ApplicationController
-  before_action :set_budget, only: %i[show edit update destroy suggest]
+  before_action :set_budget, only: %i[show edit update destroy]
 
   # Lists all budgets ordered by most recent first.
   #
@@ -71,16 +71,6 @@ class BudgetsController < ApplicationController
   def destroy
     @budget.destroy
     redirect_to budgets_url, notice: t("budgets.destroy.success")
-  end
-
-  # Populates budget category fields with historically suggested amounts.
-  #
-  # @action GET
-  # @route /budgets/:id/suggest
-  # @return [void]
-  def suggest
-    @budget.apply_suggestions
-    render :edit
   end
 
   private

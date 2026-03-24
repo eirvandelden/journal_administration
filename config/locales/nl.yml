@@ -101,6 +101,7 @@ nl:
           attributes:
             ends_at:
               must_be_after_starts_at: moet na de startdatum liggen
+              overlaps_successor: mag niet overlappen met het volgende budget
             starts_at:
               before_predecessor: mag niet vóór de startdatum van het vorige budget liggen
         budget_category:

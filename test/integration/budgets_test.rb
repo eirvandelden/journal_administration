@@ -69,8 +69,8 @@ class BudgetsTest < ActionDispatch::IntegrationTest
     assert_redirected_to budgets_url
   end
 
-  test "GET /budgets/:id/suggest pre-fills amounts and renders edit form" do
-    get suggest_budget_url(budgets(:active_budget))
+  test "POST /budgets/:id/suggestion pre-fills amounts and renders edit form" do
+    post budget_suggestion_url(budgets(:active_budget))
     assert_response :success
     assert_select "form"
   end
