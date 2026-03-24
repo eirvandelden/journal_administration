@@ -11,6 +11,7 @@ class Budget < ApplicationRecord
   validates :starts_at, presence: true
   validates :ends_at, comparison: { greater_than: :starts_at }, allow_nil: true
   validate :starts_at_not_before_predecessor
+  validate :ends_at_not_past_successor
 
   before_validation :normalize_dates
   after_create  :close_open_predecessor
@@ -116,10 +117,16 @@ class Budget < ApplicationRecord
     Budget.where("starts_at < ?", starts_at).order(starts_at: :desc).first
   end
 
+  def successor
+    scope = Budget.where("starts_at > ?", starts_at)
+    scope = scope.where.not(id: id) if persisted?
+    scope.order(starts_at: :asc).first
+  end
+
   def close_open_predecessor
     pred = predecessor
     return unless pred
-    return unless pred.ends_at.nil?
+    return unless pred.ends_at.nil? || pred.ends_at >= starts_at
 
     pred.update_columns(ends_at: derived_predecessor_ends_at)
   end
@@ -142,5 +149,14 @@ class Budget < ApplicationRecord
     return unless pred
 
     errors.add(:starts_at, :before_predecessor) if starts_at < pred.starts_at
+  end
+
+  def ends_at_not_past_successor
+    return unless ends_at.present?
+
+    succ = successor
+    return unless succ
+
+    errors.add(:ends_at, :overlaps_successor) if ends_at >= succ.starts_at
   end
 end

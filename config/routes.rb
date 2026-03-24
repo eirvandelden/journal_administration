@@ -39,7 +39,7 @@ Rails.application.routes.draw do
     end
   end
   resources :budgets do
-    get :suggest, on: :member
+    resource :suggestion, only: :create, module: :budgets
   end
   resources :categories
   resources :searches, only: [ :index ]
