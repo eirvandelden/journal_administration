@@ -3,6 +3,8 @@ require "test_helper"
 class BudgetCategoryTest < ActiveSupport::TestCase
   class Validations < ActiveSupport::TestCase
     def setup
+      BudgetCategory.delete_all
+      Budget.delete_all
       @budget = Budget.create!(starts_at: 1.month.ago)
     end
 

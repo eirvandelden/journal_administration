@@ -31,6 +31,7 @@ class BudgetsTest < ActionDispatch::IntegrationTest
       post budgets_url, params: {
         budget: {
           starts_at: "2025-06-01",
+          ends_at: "2025-12-31",
           budget_categories_attributes: {
             "0" => { category_id: categories(:groceries).id, amount: "300.00" }
           }
