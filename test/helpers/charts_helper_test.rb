@@ -54,6 +54,8 @@ class ChartsHelperTest < ActionView::TestCase
 
   class SvgBudgetChart < ActionView::TestCase
     def build_budget(category_amounts)
+      BudgetCategory.delete_all
+      Budget.delete_all
       budget = Budget.create!(starts_at: 1.month.ago)
       category_amounts.each do |category, amount|
         BudgetCategory.create!(budget: budget, category: category, amount: amount)
