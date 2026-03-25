@@ -152,11 +152,13 @@ class Budget < ApplicationRecord
   end
 
   def ends_at_not_past_successor
-    return unless ends_at.present?
-
     succ = successor
     return unless succ
 
-    errors.add(:ends_at, :overlaps_successor) if ends_at >= succ.starts_at
+    if ends_at.nil?
+      errors.add(:ends_at, :open_ended_with_successor)
+    elsif ends_at >= succ.starts_at
+      errors.add(:ends_at, :overlaps_successor)
+    end
   end
 end

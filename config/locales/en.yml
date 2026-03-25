@@ -101,6 +101,7 @@ en:
           attributes:
             ends_at:
               must_be_after_starts_at: must be after start date
+              open_ended_with_successor: must have an end date when a later budget exists
               overlaps_successor: must not overlap the next budget
             starts_at:
               before_predecessor: must not be before the predecessor budget's start date

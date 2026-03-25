@@ -124,4 +124,20 @@ class MainDashboardTest < ActionDispatch::IntegrationTest
     assert_select "th", text: I18n.t("balance.budget"), count: 0
     assert_select "th", text: I18n.t("balance.status"), count: 0
   end
+
+  test "dashboard shows spending_vs_average for a past range even when a current budget exists" do
+    # active_budget fixture covers 2026-03-01 onwards; selecting 2025 has no matching budget
+    get dashboard_index_url, params: { start_date: "2025-01-01", end_date: "2025-12-31" }
+
+    assert_response :success
+    assert_select "h2", text: I18n.t("dashboard.charts.spending_vs_average")
+  end
+
+  test "dashboard hides budget columns for a past range even when a current budget exists" do
+    get dashboard_index_url, params: { start_date: "2025-01-01", end_date: "2025-12-31" }
+
+    assert_response :success
+    assert_select "th", text: I18n.t("balance.budget"), count: 0
+    assert_select "th", text: I18n.t("balance.status"), count: 0
+  end
 end
