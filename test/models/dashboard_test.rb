@@ -171,6 +171,34 @@ class DashboardTest < ActiveSupport::TestCase
 
       assert_nil dashboard.active_budget
     end
+
+    test "returns nil when date range is outside all budgets" do
+      Budget.create!(starts_at: 1.month.ago, ends_at: 1.week.ago)
+
+      dashboard = Dashboard.new(start_date: "2024-01-01", end_date: "2024-01-31")
+      assert_nil dashboard.active_budget
+    end
+
+    test "returns budget overlapping the selected date range" do
+      past_budget = Budget.create!(starts_at: 3.months.ago, ends_at: 2.months.ago)
+
+      dashboard = Dashboard.new(
+        start_date: 3.months.ago.to_date.to_s,
+        end_date: 2.months.ago.to_date.to_s
+      )
+      assert_equal past_budget, dashboard.active_budget
+    end
+
+    test "returns period-specific budget, not the currently active one, for a past range" do
+      Budget.create!(starts_at: 1.month.ago, ends_at: 1.week.ago)
+      past_budget = Budget.create!(starts_at: 3.months.ago, ends_at: 2.months.ago)
+
+      dashboard = Dashboard.new(
+        start_date: 3.months.ago.to_date.to_s,
+        end_date: 2.months.ago.to_date.to_s
+      )
+      assert_equal past_budget, dashboard.active_budget
+    end
   end
 
   class BudgetAmounts < ActiveSupport::TestCase

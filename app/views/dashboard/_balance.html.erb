@@ -1,8 +1,12 @@
 <%# locals: (dashboard:) %>
 <% debits = dashboard.debit_transactions %>
 <% credits = dashboard.credit_transactions %>
-<% budget_amounts = dashboard.budget_amounts %>
 <% show_budget = dashboard.active_budget.present? %>
+<% budget_amounts = show_budget ? dashboard.budget_amounts : {} %>
+<% debit_budget_only = show_budget ? budget_amounts.keys.select { |c| c.debit? && !debits.key?(c) } : [] %>
+<% credit_budget_only = show_budget ? budget_amounts.keys.select { |c| c.credit? && !credits.key?(c) } : [] %>
+<% debit_rows = debits.keys + debit_budget_only %>
+<% credit_rows = credits.keys + credit_budget_only %>
 <table class="debit_credit">
   <thead>
     <tr>
@@ -25,7 +29,7 @@
     </tr>
   </thead>
   <tbody>
-    <% (-1..[debits.count, credits.count].max).each do |i| %>
+    <% (-1..[debit_rows.count, credit_rows.count].max).each do |i| %>
       <tr>
         <% if i < 0 %>
           <td></td>
@@ -41,10 +45,10 @@
             <td></td>
           <% end %>
         <% else %>
-          <% debit_cat = debits.count > i ? debits.keys[i] : nil %>
-          <% credit_cat = credits.count > i ? credits.keys[i] : nil %>
-          <td><%= debit_cat.blank? ? (debits.count > i ? '-' : '') : debit_cat&.full_name %></td>
-          <td class="amount"><%= (debits.count > i) ? number_to_currency(debits[debit_cat]) : '' %></td>
+          <% debit_cat = debit_rows.count > i ? debit_rows[i] : nil %>
+          <% credit_cat = credit_rows.count > i ? credit_rows[i] : nil %>
+          <td><%= debit_cat.blank? ? (debit_rows.count > i ? '-' : '') : debit_cat&.full_name %></td>
+          <td class="amount"><%= (debit_rows.count > i && debits.key?(debit_cat)) ? number_to_currency(debits[debit_cat]) : '' %></td>
           <% if show_budget %>
             <% debit_budgeted = debit_cat && budget_amounts[debit_cat] %>
             <td class="amount"><%= debit_budgeted ? number_to_currency(debit_budgeted) : '' %></td>
@@ -57,8 +61,8 @@
               <% end %>
             </td>
           <% end %>
-          <td><%= credit_cat.blank? ? (credits.count > i ? '-' : '') : credit_cat&.full_name %></td>
-          <td class="amount"><%= (credits.count > i) ? number_to_currency(credits[credit_cat]) : '' %></td>
+          <td><%= credit_cat.blank? ? (credit_rows.count > i ? '-' : '') : credit_cat&.full_name %></td>
+          <td class="amount"><%= (credit_rows.count > i && credits.key?(credit_cat)) ? number_to_currency(credits[credit_cat]) : '' %></td>
           <% if show_budget %>
             <% credit_budgeted = credit_cat && budget_amounts[credit_cat] %>
             <td class="amount"><%= credit_budgeted ? number_to_currency(credit_budgeted) : '' %></td>
