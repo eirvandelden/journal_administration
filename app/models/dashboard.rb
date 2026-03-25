@@ -75,11 +75,15 @@ class Dashboard
     debit_total - credit_sub_total
   end
 
-  # Returns the currently active budget, if any.
+  # Returns the budget overlapping the selected date range, if any.
   #
   # @return [Budget, nil]
   def active_budget
-    @active_budget ||= Budget.active.first
+    @active_budget ||= Budget
+      .where("starts_at <= ?", date_range.end_date)
+      .where("ends_at IS NULL OR ends_at >= ?", date_range.start_date)
+      .order(starts_at: :desc)
+      .first
   end
 
   # Returns budget amounts per parent category keyed by Category.

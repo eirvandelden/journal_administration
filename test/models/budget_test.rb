@@ -43,6 +43,34 @@ class BudgetTest < ActiveSupport::TestCase
       budget = Budget.new(starts_at: 1.month.ago, ends_at: 1.month.from_now)
       assert budget.valid?
     end
+
+    test "is invalid when created open-ended and a later budget exists" do
+      Budget.create!(starts_at: 2.months.from_now)
+
+      budget = Budget.new(starts_at: 1.month.ago)
+      assert budget.invalid?
+      assert budget.errors[:ends_at].any?
+    end
+
+    test "is invalid when ends_at is cleared and a successor exists" do
+      Budget.create!(starts_at: 2.months.from_now)
+      budget = Budget.create!(starts_at: 1.month.ago, ends_at: 1.month.from_now)
+
+      budget.ends_at = nil
+      assert budget.invalid?
+      assert budget.errors[:ends_at].any?
+    end
+
+    test "is invalid when starts_at is moved to before a later budget leaving ends_at nil" do
+      Budget.create!(starts_at: 2.months.from_now)
+      # Budget starts far in the future so the other budget is its predecessor, not successor
+      budget = Budget.create!(starts_at: 4.months.from_now)
+
+      # Move starts_at so the 2-months-from-now budget becomes a successor
+      budget.starts_at = 1.month.ago
+      assert budget.invalid?
+      assert budget.errors[:ends_at].any?
+    end
   end
 
   class DateNormalization < ActiveSupport::TestCase
@@ -104,12 +132,12 @@ class BudgetTest < ActiveSupport::TestCase
 
   class Predicates < ActiveSupport::TestCase
     test "active? returns true for active budget" do
-      budget = Budget.create!(starts_at: 1.month.ago)
+      budget = Budget.new(starts_at: 1.month.ago)
       assert budget.active?
     end
 
     test "active? returns false for future budget" do
-      budget = Budget.create!(starts_at: 1.month.from_now)
+      budget = Budget.new(starts_at: 1.month.from_now)
       assert_not budget.active?
     end
 
