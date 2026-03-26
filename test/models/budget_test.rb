@@ -7,6 +7,15 @@ class BudgetTest < ActiveSupport::TestCase
       Budget.delete_all
     end
 
+    test "is invalid when another budget has the same starts_at" do
+      starts_at = Time.zone.parse("2026-03-01")
+      Budget.create!(starts_at:)
+
+      budget = Budget.new(starts_at:)
+      assert budget.invalid?
+      assert budget.errors[:starts_at].any?
+    end
+
     test "is invalid without starts_at" do
       budget = Budget.new(starts_at: nil)
       assert budget.invalid?

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_17_080117) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_26_110000) do
   create_table "account_aliases", force: :cascade do |t|
     t.integer "account_id", null: false
     t.datetime "created_at", null: false
@@ -77,6 +77,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_17_080117) do
     t.datetime "ends_at"
     t.datetime "starts_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["starts_at"], name: "index_budgets_on_starts_at", unique: true
     t.check_constraint "ends_at IS NULL OR starts_at < ends_at", name: "check_budget_dates"
   end
 

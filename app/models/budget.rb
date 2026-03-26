@@ -6,9 +6,10 @@ class Budget < ApplicationRecord
   has_many :budget_categories, dependent: :destroy
   has_many :categories, through: :budget_categories
 
-  accepts_nested_attributes_for :budget_categories, allow_destroy: true
+  accepts_nested_attributes_for :budget_categories, allow_destroy: true, reject_if: :all_blank
 
   validates :starts_at, presence: true
+  validates :starts_at, uniqueness: true
   validates :ends_at, comparison: { greater_than: :starts_at }, allow_nil: true
   validate :starts_at_not_before_predecessor
   validate :ends_at_not_past_successor
