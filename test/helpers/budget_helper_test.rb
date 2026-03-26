@@ -2,48 +2,48 @@ require "test_helper"
 
 class BudgetHelperTest < ActionView::TestCase
   class BudgetStatus < ActionView::TestCase
-    test "credit: returns green when actual is under 80% of budget" do
-      assert_equal :green, budget_status(category: categories(:income), actual: 79, budgeted: 100)
+    test "debit: returns green when actual is under 80% of budget" do
+      assert_equal :green, budget_status(category: categories(:groceries), actual: 79, budgeted: 100)
     end
 
-    test "credit: returns orange when actual is exactly 80% of budget" do
-      assert_equal :orange, budget_status(category: categories(:income), actual: 80, budgeted: 100)
+    test "debit: returns orange when actual is exactly 80% of budget" do
+      assert_equal :orange, budget_status(category: categories(:groceries), actual: 80, budgeted: 100)
     end
 
-    test "credit: returns orange when actual is between 80 and 100% of budget" do
-      assert_equal :orange, budget_status(category: categories(:income), actual: 95, budgeted: 100)
+    test "debit: returns orange when actual is between 80 and 100% of budget" do
+      assert_equal :orange, budget_status(category: categories(:groceries), actual: 95, budgeted: 100)
     end
 
-    test "credit: returns orange when actual equals budget" do
-      assert_equal :orange, budget_status(category: categories(:income), actual: 100, budgeted: 100)
+    test "debit: returns orange when actual equals budget" do
+      assert_equal :orange, budget_status(category: categories(:groceries), actual: 100, budgeted: 100)
     end
 
-    test "credit: returns red when actual exceeds budget" do
-      assert_equal :red, budget_status(category: categories(:income), actual: 101, budgeted: 100)
+    test "debit: returns red when actual exceeds budget" do
+      assert_equal :red, budget_status(category: categories(:groceries), actual: 101, budgeted: 100)
     end
 
-    test "credit: returns nil when budgeted is nil" do
-      assert_nil budget_status(category: categories(:income), actual: 50, budgeted: nil)
+    test "debit: returns nil when budgeted is nil" do
+      assert_nil budget_status(category: categories(:groceries), actual: 50, budgeted: nil)
     end
 
-    test "credit: returns nil when budgeted is zero" do
-      assert_nil budget_status(category: categories(:income), actual: 50, budgeted: 0)
+    test "debit: returns nil when budgeted is zero" do
+      assert_nil budget_status(category: categories(:groceries), actual: 50, budgeted: 0)
     end
 
-    test "debit: returns green when actual meets target" do
-      assert_equal :green, budget_status(category: categories(:groceries), actual: 200, budgeted: 200)
+    test "credit: returns green when actual meets target" do
+      assert_equal :green, budget_status(category: categories(:income), actual: 200, budgeted: 200)
     end
 
-    test "debit: returns green when actual exceeds target" do
-      assert_equal :green, budget_status(category: categories(:groceries), actual: 250, budgeted: 200)
+    test "credit: returns green when actual exceeds target" do
+      assert_equal :green, budget_status(category: categories(:income), actual: 250, budgeted: 200)
     end
 
-    test "debit: returns orange when actual is between 50 and 99% of target" do
-      assert_equal :orange, budget_status(category: categories(:groceries), actual: 100, budgeted: 200)
+    test "credit: returns orange when actual is between 50 and 99% of target" do
+      assert_equal :orange, budget_status(category: categories(:income), actual: 100, budgeted: 200)
     end
 
-    test "debit: returns red when actual is under 50% of target" do
-      assert_equal :red, budget_status(category: categories(:groceries), actual: 99, budgeted: 200)
+    test "credit: returns red when actual is under 50% of target" do
+      assert_equal :red, budget_status(category: categories(:income), actual: 99, budgeted: 200)
     end
   end
 

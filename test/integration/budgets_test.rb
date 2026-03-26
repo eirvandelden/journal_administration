@@ -26,6 +26,23 @@ class BudgetsTest < ActionDispatch::IntegrationTest
     assert_redirected_to budget_url(Budget.last)
   end
 
+  test "POST /budgets ignores a blank prebuilt category row" do
+    assert_difference "Budget.count", 1 do
+      post budgets_url, params: {
+        budget: {
+          starts_at: "2025-06-01",
+          ends_at: "2025-06-30",
+          budget_categories_attributes: {
+            "0" => { category_id: "", amount: "", _destroy: "false" }
+          }
+        }
+      }
+    end
+
+    assert_equal 0, Budget.last.budget_categories.count
+    assert_redirected_to budget_url(Budget.last)
+  end
+
   test "POST /budgets with nested budget_categories creates categories" do
     assert_difference [ "Budget.count", "BudgetCategory.count" ] do
       post budgets_url, params: {
