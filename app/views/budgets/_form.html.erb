@@ -37,11 +37,14 @@
 
     <%= f.submit %>
 
-    <%= link_to t("budgets.form.cancel"), budget.persisted? ? budget_path(budget) : budgets_path %>
-  <% end %>
+    <% if budget.persisted? %>
+      <%= button_tag t("budgets.form.suggest_amounts"),
+          type: "submit",
+          formaction: budget_suggestion_path(budget),
+          formmethod: "post",
+          data: { turbo_frame: "budget_form" } %>
+    <% end %>
 
-  <% if budget.persisted? %>
-    <%= button_to t("budgets.form.suggest_amounts"), budget_suggestion_path(budget),
-        data: { turbo_frame: "budget_form" } %>
+    <%= link_to t("budgets.form.cancel"), budget.persisted? ? budget_path(budget) : budgets_path %>
   <% end %>
 <% end %>

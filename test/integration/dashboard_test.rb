@@ -140,4 +140,13 @@ class MainDashboardTest < ActionDispatch::IntegrationTest
     assert_select "th", text: I18n.t("balance.budget"), count: 0
     assert_select "th", text: I18n.t("balance.status"), count: 0
   end
+
+  test "dashboard hides budget columns when the selected range is broader than the budget period" do
+    get dashboard_index_url, params: { start_date: "2026-01-01", end_date: "2026-12-31" }
+
+    assert_response :success
+    assert_select "h2", text: I18n.t("dashboard.charts.spending_vs_average")
+    assert_select "th", text: I18n.t("balance.budget"), count: 0
+    assert_select "th", text: I18n.t("balance.status"), count: 0
+  end
 end

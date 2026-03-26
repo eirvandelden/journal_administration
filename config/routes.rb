@@ -39,7 +39,7 @@ Rails.application.routes.draw do
     end
   end
   resources :budgets do
-    resource :suggestion, only: :create, module: :budgets
+    resource :suggestion, only: %i[create update], module: :budgets
   end
   resources :categories
   resources :searches, only: [ :index ]
