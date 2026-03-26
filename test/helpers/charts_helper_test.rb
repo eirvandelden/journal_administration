@@ -78,22 +78,32 @@ class ChartsHelperTest < ActionView::TestCase
       assert_match(/<svg/, result)
     end
 
-    test "renders green bar when credit category is under 80% of budget" do
-      budget = build_budget(categories(:income) => 1000)
+    test "renders green bar when debit category is under 80% of budget" do
+      budget = build_budget(categories(:groceries) => 1000)
       result = svg_budget_chart(
         budget: budget,
-        debit_transactions: {},
-        credit_transactions: { categories(:income) => 700 }
+        debit_transactions: { categories(:groceries) => 700 },
+        credit_transactions: {}
       )
       assert_match(/green/, result)
     end
 
-    test "renders red bar when credit category exceeds budget" do
+    test "renders red bar when debit category exceeds budget" do
+      budget = build_budget(categories(:groceries) => 100)
+      result = svg_budget_chart(
+        budget: budget,
+        debit_transactions: { categories(:groceries) => 200 },
+        credit_transactions: {}
+      )
+      assert_match(/red/, result)
+    end
+
+    test "renders red bar when credit category is below 50% of target" do
       budget = build_budget(categories(:income) => 100)
       result = svg_budget_chart(
         budget: budget,
         debit_transactions: {},
-        credit_transactions: { categories(:income) => 200 }
+        credit_transactions: { categories(:income) => 40 }
       )
       assert_match(/red/, result)
     end

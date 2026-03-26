@@ -2,12 +2,12 @@
 module BudgetHelper
   # Returns the status symbol for a category row.
   #
-  # For credit categories (spending limit):
+  # For debit categories (spending limit):
   #   - :green when actual < 80% of budget
   #   - :orange when 80% <= actual <= 100% of budget
   #   - :red when actual > 100% of budget
   #
-  # For debit categories (savings target):
+  # For credit categories (income/savings target):
   #   - :green when actual >= 100% of target
   #   - :orange when 50% <= actual < 100% of target
   #   - :red when actual < 50% of target
@@ -20,7 +20,7 @@ module BudgetHelper
     return nil if budgeted.nil? || budgeted.to_f.zero?
 
     pct = actual.to_f / budgeted.to_f
-    if category.credit?
+    if category.debit?
       pct < 0.8 ? :green : pct <= 1.0 ? :orange : :red
     else
       pct >= 1.0 ? :green : pct >= 0.5 ? :orange : :red
