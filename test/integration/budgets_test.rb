@@ -76,6 +76,19 @@ class BudgetsTest < ActionDispatch::IntegrationTest
     assert_select "form"
   end
 
+  test "PATCH /budgets/:id/suggestion keeps in-progress form dates" do
+    patch budget_suggestion_url(budgets(:active_budget)), params: {
+      budget: {
+        starts_at: "2026-04-01",
+        ends_at: "2026-04-30"
+      }
+    }
+
+    assert_response :success
+    assert_select "input[name='budget[starts_at]'][value='2026-04-01']"
+    assert_select "input[name='budget[ends_at]'][value='2026-04-30']"
+  end
+
   test "DELETE /budgets/:id does not affect other budgets dates" do
     active = budgets(:active_budget)
     original_ends_at = active.ends_at

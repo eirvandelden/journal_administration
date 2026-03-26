@@ -214,6 +214,24 @@ class BudgetTest < ActiveSupport::TestCase
       assert_not_equal first_close.to_i, predecessor.ends_at.to_i
     end
 
+    test "reopens the former predecessor when starts_at moves before it" do
+      predecessor = Budget.create!(starts_at: Time.zone.parse("2026-01-01"))
+      budget = Budget.create!(
+        starts_at: Time.zone.parse("2026-03-01"),
+        ends_at: Time.zone.parse("2026-03-31")
+      )
+
+      predecessor.reload
+      assert_equal Time.zone.parse("2026-02-28 23:59:59.999999"), predecessor.ends_at
+
+      budget.update!(
+        starts_at: Time.zone.parse("2025-12-01"),
+        ends_at: Time.zone.parse("2025-12-31")
+      )
+
+      assert_nil predecessor.reload.ends_at
+    end
+
     test "destroy does not affect other budgets dates" do
       predecessor = Budget.create!(starts_at: 2.months.ago)
       new_budget = Budget.create!(starts_at: 1.month.from_now)
