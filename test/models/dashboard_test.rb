@@ -189,6 +189,14 @@ class DashboardTest < ActiveSupport::TestCase
       assert_equal past_budget, dashboard.active_budget
     end
 
+    test "returns nil when the selected range extends outside the budget period" do
+      Budget.create!(starts_at: Time.zone.parse("2026-03-01"))
+
+      dashboard = Dashboard.new(start_date: "2026-01-01", end_date: "2026-12-31")
+
+      assert_nil dashboard.active_budget
+    end
+
     test "returns period-specific budget, not the currently active one, for a past range" do
       Budget.create!(starts_at: 1.month.ago, ends_at: 1.week.ago)
       past_budget = Budget.create!(starts_at: 3.months.ago, ends_at: 2.months.ago)

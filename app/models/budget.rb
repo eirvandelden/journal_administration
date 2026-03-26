@@ -15,7 +15,7 @@ class Budget < ApplicationRecord
 
   before_validation :normalize_dates
   after_create  :close_open_predecessor
-  after_update  :reclose_predecessor, if: :saved_change_to_starts_at?
+  after_update  :reconcile_predecessors, if: :saved_change_to_starts_at?
 
   scope :active, -> {
     where("starts_at <= ?", Time.current)
@@ -131,15 +131,57 @@ class Budget < ApplicationRecord
     pred.update_columns(ends_at: derived_predecessor_ends_at)
   end
 
-  def reclose_predecessor
+  def reconcile_predecessors
+    restore_former_predecessor
+    reclose_current_predecessor
+  end
+
+  def restore_former_predecessor
+    pred = predecessor_before_last_save
+    return unless pred
+    return unless derived_boundary?(pred.ends_at, starts_at_before_last_save)
+
+    successor = successor_for(pred)
+    ends_at = successor ? derived_predecessor_ends_at_for(successor.starts_at) : nil
+    pred.update_columns(ends_at: ends_at)
+  end
+
+  def reclose_current_predecessor
     pred = predecessor
     return unless pred
+    return unless pred.ends_at.nil? || pred.ends_at >= starts_at
 
     pred.update_columns(ends_at: derived_predecessor_ends_at)
   end
 
   def derived_predecessor_ends_at
-    (starts_at.beginning_of_day - 1.day).end_of_day
+    derived_predecessor_ends_at_for(starts_at)
+  end
+
+  def derived_predecessor_ends_at_for(time)
+    (time.beginning_of_day - 1.day).end_of_day
+  end
+
+  def derived_boundary?(ends_at, start_time)
+    return false unless ends_at && start_time
+
+    ends_at.to_i == derived_predecessor_ends_at_for(start_time).to_i
+  end
+
+  def predecessor_before_last_save
+    return unless starts_at_before_last_save
+
+    Budget.where.not(id: id)
+      .where("starts_at < ?", starts_at_before_last_save)
+      .order(starts_at: :desc)
+      .first
+  end
+
+  def successor_for(budget)
+    Budget.where("starts_at > ?", budget.starts_at)
+      .where.not(id: budget.id)
+      .order(starts_at: :asc)
+      .first
   end
 
   def starts_at_not_before_predecessor
