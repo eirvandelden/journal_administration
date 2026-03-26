@@ -51,6 +51,12 @@ it:
         iban: IBAN
         name: Nome
         number: Numero
+      budget:
+        ends_at: Data di fine
+        starts_at: Data di inizio
+      budget_category:
+        amount: Importo
+        category: Categoria
       category:
         kind: Tipo
         name: Nome
@@ -91,6 +97,20 @@ it:
               must_be_external: deve appartenere a un conto esterno
             pattern:
               invalid_like_characters: non deve contenere i caratteri %% o _
+        budget:
+          attributes:
+            ends_at:
+              must_be_after_starts_at: deve essere successiva alla data di inizio
+              open_ended_with_successor: deve avere una data di fine quando esiste un budget successivo
+              overlaps_successor: non può sovrapporsi al budget successivo
+            starts_at:
+              before_predecessor: non può essere precedente alla data di inizio del budget precedente
+        budget_category:
+          attributes:
+            amount:
+              greater_than: deve essere maggiore di 0
+            category:
+              must_be_parent: deve essere una categoria principale
         transaction:
           attributes:
             amount:
@@ -177,12 +197,51 @@ it:
       update:
         success: "✅ Utente aggiornato con successo"
   balance:
+    budget: Budget
     category_name: Nome categoria
     credit: "🔴 Credito"
     debit: "🟢 Debito"
     profit_or_loss: "📊 Profitto/Perdita"
+    status: Stato
+    target: Obiettivo
     total_amount: "💰 Importo totale"
     totals: "🧮 Totali"
+  budgets:
+    create:
+      success: "✅ Budget creato con successo."
+    destroy:
+      confirm: Eliminare questo budget? Non è possibile annullare questa operazione.
+      success: "✅ Budget eliminato con successo."
+    edit:
+      title: Modifica Budget
+    form:
+      add_category: Aggiungi categoria
+      amount: Importo
+      cancel: Annulla
+      category: Categoria
+      ends_at: Data di fine (opzionale)
+      remove: Rimuovi
+      starts_at: Data di inizio
+      suggest_amounts: Suggerisci importi
+    index:
+      active: Attivo
+      categories: Categorie
+      confirm_destroy: Eliminare questo budget? Non è possibile annullare questa operazione.
+      date_range: Intervallo di date
+      delete: Elimina
+      edit: Modifica
+      future: Futuro
+      new_budget: "➕ Nuovo Budget"
+      past: Passato
+      status: Stato
+      title: Budget
+    new:
+      title: "➕ Nuovo Budget"
+    show:
+      no_categories: Nessuna categoria definita.
+      title: Budget
+    update:
+      success: "✅ Budget aggiornato con successo."
   categories:
     create:
       success: "✅ Categoria creata con successo."
@@ -232,6 +291,7 @@ it:
     uncategorized: Senza categoria
   dashboard:
     charts:
+      budget_vs_actual: Budget vs. effettivo
       spending_by_category: Spese per categoria
       spending_vs_average: Spese vs. media storica
     filters:
@@ -405,6 +465,7 @@ it:
   main_nav:
     accounts: "🏦 %{model}"
     admin: "🥷 Amministrazione"
+    budgets: "💰 %{model}"
     categories: "🏷️ %{model}"
     chattels: "📦 %{model}"
     profile: "👤 Profilo"

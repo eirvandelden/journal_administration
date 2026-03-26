@@ -75,6 +75,28 @@ class Dashboard
     debit_total - credit_sub_total
   end
 
+  # Returns the budget covering the selected date range, if any.
+  #
+  # @return [Budget, nil]
+  def active_budget
+    @active_budget ||= Budget
+      .where("starts_at <= ?", date_range.start_date)
+      .where("ends_at IS NULL OR ends_at >= ?", date_range.end_date)
+      .order(starts_at: :desc)
+      .first
+  end
+
+  # Returns budget amounts per parent category keyed by Category.
+  #
+  # @return [Hash{Category => BigDecimal}]
+  def budget_amounts
+    return {} unless active_budget
+
+    @budget_amounts ||= active_budget.budget_categories
+      .includes(:category)
+      .each_with_object({}) { |bc, h| h[bc.category] = bc.amount }
+  end
+
   # Calculates total credit including profit/loss adjustment
   #
   # @return [Float] Credit subtotal plus profit/loss

@@ -51,6 +51,12 @@ en:
         iban: IBAN
         name: Name
         number: Number
+      budget:
+        ends_at: End date
+        starts_at: Start date
+      budget_category:
+        amount: Amount
+        category: Category
       category:
         kind: Kind
         name: Name
@@ -91,6 +97,20 @@ en:
               must_be_external: must belong to an external account
             pattern:
               invalid_like_characters: must not contain %% or _ characters
+        budget:
+          attributes:
+            ends_at:
+              must_be_after_starts_at: must be after start date
+              open_ended_with_successor: must have an end date when a later budget exists
+              overlaps_successor: must not overlap the next budget
+            starts_at:
+              before_predecessor: must not be before the predecessor budget's start date
+        budget_category:
+          attributes:
+            amount:
+              greater_than: must be greater than 0
+            category:
+              must_be_parent: must be a top-level category
         transaction:
           attributes:
             amount:
@@ -177,12 +197,51 @@ en:
       update:
         success: "✅ User updated successfully"
   balance:
+    budget: Budget
     category_name: Category Name
     credit: "🔴 Credit"
     debit: "🟢 Debit"
     profit_or_loss: "📊 Profit/Loss"
+    status: Status
+    target: Target
     total_amount: "💰 Total amount"
     totals: "🧮 Totals"
+  budgets:
+    create:
+      success: "✅ Budget was successfully created."
+    destroy:
+      confirm: Delete this budget? This cannot be undone.
+      success: "✅ Budget was successfully deleted."
+    edit:
+      title: Edit Budget
+    form:
+      add_category: Add category
+      amount: Amount
+      cancel: Cancel
+      category: Category
+      ends_at: End date (optional)
+      remove: Remove
+      starts_at: Start date
+      suggest_amounts: Suggest amounts
+    index:
+      active: Active
+      categories: Categories
+      confirm_destroy: Delete this budget? This cannot be undone.
+      date_range: Date Range
+      delete: Delete
+      edit: Edit
+      future: Future
+      new_budget: "➕ New Budget"
+      past: Past
+      status: Status
+      title: Budgets
+    new:
+      title: "➕ New Budget"
+    show:
+      no_categories: No categories defined.
+      title: Budget
+    update:
+      success: "✅ Budget was successfully updated."
   categories:
     create:
       success: "✅ Category was successfully created."
@@ -232,6 +291,7 @@ en:
     uncategorized: Uncategorized
   dashboard:
     charts:
+      budget_vs_actual: Budget vs. actual
       spending_by_category: Spending by category
       spending_vs_average: Spending vs. historical average
     filters:
@@ -405,6 +465,7 @@ en:
   main_nav:
     accounts: "🏦 %{model}"
     admin: "🥷 Admin"
+    budgets: "💰 %{model}"
     categories: "🏷️ %{model}"
     chattels: "📦 %{model}"
     profile: "👤 Profile"

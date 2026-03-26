@@ -38,6 +38,9 @@ Rails.application.routes.draw do
       resources :account_aliases, only: %i[create destroy]
     end
   end
+  resources :budgets do
+    resource :suggestion, only: %i[create update], module: :budgets
+  end
   resources :categories
   resources :searches, only: [ :index ]
   get "dashboard/index"

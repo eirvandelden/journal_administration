@@ -51,6 +51,12 @@ nl:
         iban: IBAN
         name: Naam
         number: Nummer
+      budget:
+        ends_at: Einddatum
+        starts_at: Startdatum
+      budget_category:
+        amount: Bedrag
+        category: Categorie
       category:
         kind: Type
         name: Naam
@@ -91,6 +97,20 @@ nl:
               must_be_external: moet bij een externe rekening horen
             pattern:
               invalid_like_characters: mag geen %% of _ tekens bevatten
+        budget:
+          attributes:
+            ends_at:
+              must_be_after_starts_at: moet na de startdatum liggen
+              open_ended_with_successor: moet een einddatum hebben als er een later budget bestaat
+              overlaps_successor: mag niet overlappen met het volgende budget
+            starts_at:
+              before_predecessor: mag niet vóór de startdatum van het vorige budget liggen
+        budget_category:
+          attributes:
+            amount:
+              greater_than: moet groter zijn dan 0
+            category:
+              must_be_parent: moet een hoofdcategorie zijn
         transaction:
           attributes:
             amount:
@@ -177,12 +197,51 @@ nl:
       update:
         success: "✅ Gebruiker succesvol bijgewerkt"
   balance:
+    budget: Budget
     category_name: Categorienaam
     credit: "🔴 Credit"
     debit: "🟢 Debet"
     profit_or_loss: "📊 Winst/Verlies"
+    status: Status
+    target: Doel
     total_amount: "💰 Totaalbedrag"
     totals: "🧮 Totalen"
+  budgets:
+    create:
+      success: "✅ Budget is succesvol aangemaakt."
+    destroy:
+      confirm: Dit budget verwijderen? Dit kan niet ongedaan worden gemaakt.
+      success: "✅ Budget is succesvol verwijderd."
+    edit:
+      title: Budget bewerken
+    form:
+      add_category: Categorie toevoegen
+      amount: Bedrag
+      cancel: Annuleer
+      category: Categorie
+      ends_at: Einddatum (optioneel)
+      remove: Verwijder
+      starts_at: Startdatum
+      suggest_amounts: Bedragen voorstellen
+    index:
+      active: Actief
+      categories: Categorieën
+      confirm_destroy: Dit budget verwijderen? Dit kan niet ongedaan worden gemaakt.
+      date_range: Datumbereik
+      delete: Verwijder
+      edit: Bewerk
+      future: Toekomstig
+      new_budget: "➕ Nieuw Budget"
+      past: Verleden
+      status: Status
+      title: Budgetten
+    new:
+      title: "➕ Nieuw Budget"
+    show:
+      no_categories: Geen categorieën gedefinieerd.
+      title: Budget
+    update:
+      success: "✅ Budget is succesvol bijgewerkt."
   categories:
     create:
       success: "✅ Categorie succesvol aangemaakt."
@@ -232,6 +291,7 @@ nl:
     uncategorized: Ongecategoriseerd
   dashboard:
     charts:
+      budget_vs_actual: Budget vs. werkelijk
       spending_by_category: Uitgaven per categorie
       spending_vs_average: Uitgaven vs. historisch gemiddelde
     filters:
@@ -405,6 +465,7 @@ nl:
   main_nav:
     accounts: "🏦 %{model}"
     admin: "🥷 Beheer"
+    budgets: "💰 %{model}"
     categories: "🏷️ %{model}"
     chattels: "📦 %{model}"
     profile: "👤 Profiel"
