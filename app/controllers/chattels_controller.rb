@@ -4,13 +4,15 @@ class ChattelsController < ApplicationController
 
   # Lists chattels organized by warranty status
   #
-  # Separates active items into warrantied and out-of-warranty, plus items that have left possession.
+  # Separates active items into warrantied, out-of-warranty, and unknown warranty status,
+  # plus items that have left possession.
   #
   # @return [void]
   def index
     scope = Chattel.includes(:warranty_document_attachment, purchase_transaction: :proof_of_purchase_attachment)
     @warrantied = scope.active.warrantied
     @out_of_warranty = scope.active.out_of_warranty
+    @unknown_warranty = scope.unknown_warranty
     @left = scope.left
   end
 

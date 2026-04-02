@@ -467,6 +467,7 @@ en:
       format:
         delimiter: ''
   out_of_warranty: "⚠️ Out of warranty"
+  unknown_warranty: "❓ Unknown warranty status"
   pagination:
     next: Next
     previous: Previous

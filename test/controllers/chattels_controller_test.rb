@@ -33,6 +33,14 @@ class ChattelsControllerTest < ActionDispatch::IntegrationTest
     assert_select "th", text: I18n.t("chattels.index.proof_of_purchase", locale: :en)
   end
 
+  test "index renders unknown warranty section when such a chattel exists" do
+    sign_in_as users(:member)
+    get chattels_url
+
+    assert_response :success
+    assert_select "h2", text: I18n.t("unknown_warranty", locale: :en)
+  end
+
   test "should create chattel" do
     assert_difference("Chattel.count") do
       post chattels_url,

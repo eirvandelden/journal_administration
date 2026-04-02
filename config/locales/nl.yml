@@ -467,6 +467,7 @@ nl:
       format:
         delimiter: ''
   out_of_warranty: "⚠️ Buiten garantie"
+  unknown_warranty: "❓ Onbekende garantiestatus"
   pagination:
     next: Volgende
     previous: Vorige
