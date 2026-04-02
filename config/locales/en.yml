@@ -467,7 +467,6 @@ en:
       format:
         delimiter: ''
   out_of_warranty: "⚠️ Out of warranty"
-  unknown_warranty: "❓ Unknown warranty status"
   pagination:
     next: Next
     previous: Previous
@@ -606,6 +605,7 @@ en:
       transfer: Transfer
     update:
       success: "✅ Transaction was successfully updated."
+  unknown_warranty: "❓ Unknown warranty status"
   users:
     profiles:
       edit:
