@@ -467,7 +467,6 @@ nl:
       format:
         delimiter: ''
   out_of_warranty: "⚠️ Buiten garantie"
-  unknown_warranty: "❓ Onbekende garantiestatus"
   pagination:
     next: Volgende
     previous: Vorige
@@ -606,6 +605,7 @@ nl:
       transfer: Overboeking
     update:
       success: "✅ Transactie succesvol bijgewerkt."
+  unknown_warranty: "❓ Onbekende garantiestatus"
   users:
     profiles:
       edit:
