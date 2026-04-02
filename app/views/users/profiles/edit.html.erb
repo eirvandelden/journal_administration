@@ -32,20 +32,20 @@
       <%= translation_button(:email_address) %>
       <label class="flex align-center gap input input--actor">
         <%= form.email_field :email_address, class: "input full-width", autocomplete: "username", placeholder: t('.email_placeholder'), required: true %>
-        <%= image_tag "email.svg", aria: { hidden: "true" }, size: 30, class: "colorize--black" %>
+        <%= image_tag "email.svg", aria: { hidden: "true" }, alt: "", size: 30, class: "colorize--black" %>
       </label>
     </div>
     <div class="flex align-center gap">
       <%= translation_button(:update_password) %>
       <label class="flex align-center gap input input--actor">
         <%= form.password_field :password, class: "input full-width", autocomplete: "new-password", placeholder: t('.password_placeholder'), maxlength: 72 %>
-        <%= image_tag "password.svg", aria: { hidden: "true" }, size: 30, class: "colorize--black" %>
+        <%= image_tag "password.svg", aria: { hidden: "true" }, alt: "", size: 30, class: "colorize--black" %>
       </label>
     </div>
     <div class="flex align-center gap">
       <label class="flex align-center gap input input--actor">
         <%= form.select :locale, locale_options_for_select, {}, class: "input full-width", aria: { label: t(".locale") } %>
-        <%= image_tag "globe.svg", aria: { hidden: "true" }, size: 30, class: "colorize--black" %>
+        <%= image_tag "globe.svg", aria: { hidden: "true" }, alt: "", size: 30, class: "colorize--black" %>
       </label>
     </div>
     <button type="submit" class="btn btn--reversed center">
