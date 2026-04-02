@@ -61,6 +61,22 @@ class ChattelTest < ActiveSupport::TestCase
     assert_not_includes Chattel.warrantied, chattels(:two)
   end
 
+  # -- unknown_warranty scope -------------------------------------------------
+
+  class WhenUnknownWarranty < ActiveSupport::TestCase
+    test "unknown_warranty scope includes active chattels with nil warranty_expires_at" do
+      assert_includes Chattel.unknown_warranty, chattels(:three)
+    end
+
+    test "unknown_warranty scope excludes chattels with a set warranty_expires_at" do
+      assert_not_includes Chattel.unknown_warranty, chattels(:one)
+    end
+
+    test "unknown_warranty scope excludes chattels that have left possession" do
+      assert_not_includes Chattel.unknown_warranty, chattels(:two)
+    end
+  end
+
   # -- out_of_warranty scope --------------------------------------------------
 
   test "out_of_warranty scope includes chattels with expired warranty" do

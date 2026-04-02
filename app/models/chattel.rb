@@ -16,6 +16,7 @@ class Chattel < ApplicationRecord
   scope :left, -> { where.not(left_possession_at: nil) }
   scope :warrantied, -> { where(warranty_expires_at: Time.current..) }
   scope :out_of_warranty, -> { where(warranty_expires_at: ..Time.current) }
+  scope :unknown_warranty, -> { active.where(warranty_expires_at: nil) }
 
   def purchased_at
     self[:purchased_at] || purchase_transaction&.booked_at

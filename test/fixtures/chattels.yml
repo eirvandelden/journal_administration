@@ -19,3 +19,8 @@ two:
   left_possession_at: <%= 1.month.ago.to_fs(:db) %>
   purchase_price: 599.00
   notes: Replaced with newer model
+
+three:
+  name: Mystery Device
+  kind: electronics
+  purchase_price: 49.99
