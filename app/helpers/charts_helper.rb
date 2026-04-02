@@ -59,7 +59,11 @@ module ChartsHelper
 
     budget_by_cat = budget.budget_categories
                           .includes(:category)
-                          .each_with_object({}) { |bc, h| h[bc.category] = bc.amount }
+                          .each_with_object({}) do |budget_category, amounts|
+                            next if budget_category.category.transfer?
+
+                            amounts[budget_category.category] = budget_category.amount
+                          end
 
     credit_rows = build_budget_rows(credit_transactions, budget_by_cat, :credit)
     debit_rows  = build_budget_rows(debit_transactions,  budget_by_cat, :debit)

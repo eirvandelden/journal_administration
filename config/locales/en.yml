@@ -111,6 +111,7 @@ en:
               greater_than: must be greater than 0
             category:
               must_be_parent: must be a top-level category
+              must_not_be_transfer: must not be the Transfer category
         transaction:
           attributes:
             amount:

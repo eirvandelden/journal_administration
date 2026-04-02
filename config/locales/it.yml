@@ -111,6 +111,7 @@ it:
               greater_than: deve essere maggiore di 0
             category:
               must_be_parent: deve essere una categoria principale
+              must_not_be_transfer: non può essere la categoria Transfer
         transaction:
           attributes:
             amount:

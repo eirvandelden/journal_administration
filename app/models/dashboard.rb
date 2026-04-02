@@ -94,7 +94,11 @@ class Dashboard
 
     @budget_amounts ||= active_budget.budget_categories
       .includes(:category)
-      .each_with_object({}) { |bc, h| h[bc.category] = bc.amount }
+      .each_with_object({}) do |budget_category, amounts|
+        next if budget_category.category.transfer?
+
+        amounts[budget_category.category] = budget_category.amount
+      end
   end
 
   # Calculates total credit including profit/loss adjustment
@@ -113,7 +117,7 @@ class Dashboard
   end
 
   def transfer_category_id
-    @transfer_category_id ||= Category.find_by(name: "Transfer")&.id
+    @transfer_category_id ||= Category.find_by(name: Category::TRANSFER_NAME)&.id
   end
 
   def lookback_date_range

@@ -106,8 +106,7 @@ class MainDashboardTest < ActionDispatch::IntegrationTest
   end
 
   test "dashboard shows spending vs average chart when no active budget in date range" do
-    # Destroy the active budget fixture to simulate no active budget
-    budgets(:active_budget).destroy
+    Budget.destroy_all
 
     get dashboard_index_url, params: { filter: "month_to_date" }
 
@@ -116,7 +115,7 @@ class MainDashboardTest < ActionDispatch::IntegrationTest
   end
 
   test "dashboard does not show budget columns when no active budget" do
-    budgets(:active_budget).destroy
+    Budget.destroy_all
 
     get dashboard_index_url, params: { filter: "month_to_date" }
 

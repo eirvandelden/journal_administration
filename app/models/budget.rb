@@ -3,6 +3,8 @@
 # Only one budget may be active at a time, enforced via the chain invariant:
 # creating or updating a budget automatically closes the predecessor.
 class Budget < ApplicationRecord
+  belongs_to :closed_by_budget, class_name: "Budget", optional: true
+
   has_many :budget_categories, dependent: :destroy
   has_many :categories, through: :budget_categories
 
@@ -129,7 +131,7 @@ class Budget < ApplicationRecord
     return unless pred
     return unless pred.ends_at.nil? || pred.ends_at >= starts_at
 
-    pred.update_columns(ends_at: derived_predecessor_ends_at)
+    pred.update_columns(ends_at: derived_predecessor_ends_at, closed_by_budget_id: id)
   end
 
   def reconcile_predecessors
@@ -140,11 +142,11 @@ class Budget < ApplicationRecord
   def restore_former_predecessor
     pred = predecessor_before_last_save
     return unless pred
-    return unless derived_boundary?(pred.ends_at, starts_at_before_last_save)
+    return unless pred.closed_by_budget_id == id
 
     successor = successor_for(pred)
     ends_at = successor ? derived_predecessor_ends_at_for(successor.starts_at) : nil
-    pred.update_columns(ends_at: ends_at)
+    pred.update_columns(ends_at: ends_at, closed_by_budget_id: successor&.id)
   end
 
   def reclose_current_predecessor
@@ -152,7 +154,7 @@ class Budget < ApplicationRecord
     return unless pred
     return unless pred.ends_at.nil? || pred.ends_at >= starts_at
 
-    pred.update_columns(ends_at: derived_predecessor_ends_at)
+    pred.update_columns(ends_at: derived_predecessor_ends_at, closed_by_budget_id: id)
   end
 
   def derived_predecessor_ends_at
@@ -161,12 +163,6 @@ class Budget < ApplicationRecord
 
   def derived_predecessor_ends_at_for(time)
     (time.beginning_of_day - 1.day).end_of_day
-  end
-
-  def derived_boundary?(ends_at, start_time)
-    return false unless ends_at && start_time
-
-    ends_at.to_i == derived_predecessor_ends_at_for(start_time).to_i
   end
 
   def predecessor_before_last_save
