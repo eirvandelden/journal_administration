@@ -64,13 +64,14 @@ class TransactionsIndexTest < ActionDispatch::IntegrationTest
   end
 
   test "GET /transactions with date range shows date-filtered rows" do
-    start_date = 2.days.ago.to_date.to_s
-    end_date = Date.today.to_s
+    target_date = transactions(:transfer_savings).interest_at.to_date
+    start_date = target_date.to_s
+    end_date = target_date.to_s
 
     get transactions_path, params: { start_date: start_date, end_date: end_date }
 
     assert_response :success
-    assert_select "tr.unconsolidated"
+    assert_select "td", text: transactions(:transfer_savings).note.truncate(20)
     assert_select "td", text: transactions(:debit_grocery).note, count: 0
   end
 
