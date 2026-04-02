@@ -220,5 +220,14 @@ class DashboardTest < ActiveSupport::TestCase
 
       assert_equal({}, dashboard.budget_amounts)
     end
+
+    test "excludes transfer categories from budget amounts" do
+      budget = Budget.create!(starts_at: Time.current.beginning_of_month)
+      BudgetCategory.new(budget:, category: categories(:transfer), amount: 100).save(validate: false)
+
+      dashboard = Dashboard.new(filter: "month_to_date")
+
+      assert_not_includes dashboard.budget_amounts.keys, categories(:transfer)
+    end
   end
 end

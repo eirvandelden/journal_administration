@@ -6,6 +6,8 @@ class Category < ApplicationRecord
   include Sortable
   include Searchable
 
+  TRANSFER_NAME = "Transfer".freeze
+
   searchable_on :name
 
   # @!attribute [rw] direction
@@ -21,6 +23,7 @@ class Category < ApplicationRecord
 
   default_scope { order(name: :asc) }
   scope :groups, -> { where(parent_category_id: nil) }
+  scope :budgetable_groups, -> { groups.where.not(name: TRANSFER_NAME) }
 
   validates :direction, presence: true
 
@@ -66,6 +69,9 @@ class Category < ApplicationRecord
   def to_s
     name
   end
+
+  # @return [Boolean]
+  def transfer? = name == TRANSFER_NAME
 
   # Returns displayable full name including parent if this is a child category
   #

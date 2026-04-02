@@ -37,6 +37,12 @@ class BudgetCategoryTest < ActiveSupport::TestCase
       assert bc.errors[:category].any?
     end
 
+    test "is invalid when category is the transfer category" do
+      bc = BudgetCategory.new(budget: @budget, category: categories(:transfer), amount: 100)
+      assert bc.invalid?
+      assert bc.errors[:category].any?
+    end
+
     test "is valid when category is a parent category" do
       bc = BudgetCategory.new(budget: @budget, category: categories(:groceries), amount: 100)
       assert bc.valid?

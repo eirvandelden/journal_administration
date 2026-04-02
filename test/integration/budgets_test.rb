@@ -17,6 +17,13 @@ class BudgetsTest < ActionDispatch::IntegrationTest
     assert_select "form"
   end
 
+  test "GET /budgets/new does not offer the transfer category" do
+    get new_budget_url
+
+    assert_response :success
+    assert_select "option", text: categories(:transfer).name, count: 0
+  end
+
   test "POST /budgets creates budget" do
     assert_difference "Budget.count", 1 do
       post budgets_url, params: {

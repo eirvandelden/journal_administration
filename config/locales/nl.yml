@@ -111,6 +111,7 @@ nl:
               greater_than: moet groter zijn dan 0
             category:
               must_be_parent: moet een hoofdcategorie zijn
+              must_not_be_transfer: mag niet de categorie Transfer zijn
         transaction:
           attributes:
             amount:

@@ -9,6 +9,7 @@ class BudgetCategory < ApplicationRecord
   validates :amount, presence: true, numericality: { greater_than: 0 }
   validates :budget_id, uniqueness: { scope: :category_id }
   validate :category_must_be_parent
+  validate :category_must_not_be_transfer
 
   private
 
@@ -17,5 +18,12 @@ class BudgetCategory < ApplicationRecord
     return unless category.present?
 
     errors.add(:category, :must_be_parent) if category.parent_category_id.present?
+  end
+
+  # @return [void]
+  def category_must_not_be_transfer
+    return unless category.present?
+
+    errors.add(:category, :must_not_be_transfer) if category.transfer?
   end
 end

@@ -23,6 +23,7 @@
           <li><%= link_to t('home'), dashboard_index_path %></li>
           <li><%= link_to t('journal'), transactions_path %></li>
           <li><%= link_to t('main_nav.accounts', model: Account.model_name.human), accounts_path %></li>
+          <li><%= link_to t('main_nav.budgets', model: Budget.model_name.human), budgets_path %></li>
           <li><%= link_to t('main_nav.categories', model: Category.model_name.human), categories_path %></li>
           <li><%= link_to t('main_nav.chattels', model: Chattel.model_name.human), chattels_path %></li>
           <li>

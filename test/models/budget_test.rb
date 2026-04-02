@@ -241,6 +241,24 @@ class BudgetTest < ActiveSupport::TestCase
       assert_nil predecessor.reload.ends_at
     end
 
+    test "does not rewrite a manually set predecessor end date when starts_at changes" do
+      predecessor = Budget.create!(
+        starts_at: Time.zone.parse("2026-01-01"),
+        ends_at: Time.zone.parse("2026-02-28")
+      )
+      budget = Budget.create!(
+        starts_at: Time.zone.parse("2026-03-01"),
+        ends_at: Time.zone.parse("2026-03-31")
+      )
+
+      budget.update!(
+        starts_at: Time.zone.parse("2026-05-01"),
+        ends_at: Time.zone.parse("2026-05-31")
+      )
+
+      assert_equal Time.zone.parse("2026-02-28 23:59:59.999999"), predecessor.reload.ends_at
+    end
+
     test "destroy does not affect other budgets dates" do
       predecessor = Budget.create!(starts_at: 2.months.ago)
       new_budget = Budget.create!(starts_at: 1.month.from_now)
