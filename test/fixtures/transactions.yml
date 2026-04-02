@@ -1,8 +1,8 @@
 debit_grocery:
   type: Debit
   amount: 50.00
-  booked_at: <%= (Time.current.beginning_of_month + 1.hour).to_fs(:db) %>
-  interest_at: <%= (Time.current.beginning_of_month + 1.hour).to_fs(:db) %>
+  booked_at: <%= (Time.current.last_month.beginning_of_month + 1.hour).to_fs(:db) %>
+  interest_at: <%= (Time.current.last_month.beginning_of_month + 1.hour).to_fs(:db) %>
   debitor: checking
   creditor: albert_heijn
   category: supermarket
