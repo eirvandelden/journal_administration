@@ -23,6 +23,14 @@ class MainNavigationMenusTest < ApplicationSystemTestCase
     assert_no_selector "header nav summary", text: I18n.t("main_nav.dashboard_filters", locale: @locale)
   end
 
+  test "navigation links to budgets" do
+    visit root_url
+
+    click_link I18n.t("main_nav.budgets", model: Budget.model_name.human, locale: @locale)
+
+    assert_current_path budgets_path
+  end
+
   private
     def assert_todo_link(label, path)
       visit root_url

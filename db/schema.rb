@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_15_000003) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_02_090000) do
   create_table "account_aliases", force: :cascade do |t|
     t.integer "account_id", null: false
     t.datetime "created_at", null: false
@@ -58,6 +58,29 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_15_000003) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "budget_categories", force: :cascade do |t|
+    t.decimal "amount", precision: 10, scale: 2, null: false
+    t.integer "budget_id", null: false
+    t.integer "category_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["budget_id", "category_id"], name: "index_budget_categories_on_budget_id_and_category_id", unique: true
+    t.index ["budget_id"], name: "index_budget_categories_on_budget_id"
+    t.index ["category_id"], name: "index_budget_categories_on_category_id"
+    t.check_constraint "amount > 0", name: "check_budget_category_amount_positive"
+  end
+
+  create_table "budgets", force: :cascade do |t|
+    t.integer "closed_by_budget_id"
+    t.datetime "created_at", null: false
+    t.datetime "ends_at"
+    t.datetime "starts_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["closed_by_budget_id"], name: "index_budgets_on_closed_by_budget_id"
+    t.index ["starts_at"], name: "index_budgets_on_starts_at", unique: true
+    t.check_constraint "ends_at IS NULL OR starts_at < ends_at", name: "check_budget_dates"
   end
 
   create_table "categories", force: :cascade do |t|
@@ -239,6 +262,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_15_000003) do
   add_foreign_key "accounts", "categories"
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "budget_categories", "budgets"
+  add_foreign_key "budget_categories", "categories"
+  add_foreign_key "budgets", "budgets", column: "closed_by_budget_id", on_delete: :nullify
   add_foreign_key "chattels", "transactions", column: "purchase_transaction_id"
   add_foreign_key "faultline_error_contexts", "faultline_error_occurrences", column: "error_occurrence_id"
   add_foreign_key "faultline_error_occurrences", "faultline_error_groups", column: "error_group_id"

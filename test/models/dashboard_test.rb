@@ -159,4 +159,75 @@ class DashboardTest < ActiveSupport::TestCase
              "Expected all historical averages to be zero when no prior-year transactions exist"
     end
   end
+
+  class ActiveBudget < ActiveSupport::TestCase
+    setup do
+      BudgetCategory.delete_all
+      Budget.delete_all
+    end
+
+    test "returns nil when no active budget exists" do
+      dashboard = Dashboard.new(filter: "year_to_date")
+
+      assert_nil dashboard.active_budget
+    end
+
+    test "returns nil when date range is outside all budgets" do
+      Budget.create!(starts_at: 1.month.ago, ends_at: 1.week.ago)
+
+      dashboard = Dashboard.new(start_date: "2024-01-01", end_date: "2024-01-31")
+      assert_nil dashboard.active_budget
+    end
+
+    test "returns budget overlapping the selected date range" do
+      past_budget = Budget.create!(starts_at: 3.months.ago, ends_at: 2.months.ago)
+
+      dashboard = Dashboard.new(
+        start_date: 3.months.ago.to_date.to_s,
+        end_date: 2.months.ago.to_date.to_s
+      )
+      assert_equal past_budget, dashboard.active_budget
+    end
+
+    test "returns nil when the selected range extends outside the budget period" do
+      Budget.create!(starts_at: Time.zone.parse("2026-03-01"))
+
+      dashboard = Dashboard.new(start_date: "2026-01-01", end_date: "2026-12-31")
+
+      assert_nil dashboard.active_budget
+    end
+
+    test "returns period-specific budget, not the currently active one, for a past range" do
+      Budget.create!(starts_at: 1.month.ago, ends_at: 1.week.ago)
+      past_budget = Budget.create!(starts_at: 3.months.ago, ends_at: 2.months.ago)
+
+      dashboard = Dashboard.new(
+        start_date: 3.months.ago.to_date.to_s,
+        end_date: 2.months.ago.to_date.to_s
+      )
+      assert_equal past_budget, dashboard.active_budget
+    end
+  end
+
+  class BudgetAmounts < ActiveSupport::TestCase
+    setup do
+      BudgetCategory.delete_all
+      Budget.delete_all
+    end
+
+    test "returns empty hash when no active budget" do
+      dashboard = Dashboard.new(filter: "year_to_date")
+
+      assert_equal({}, dashboard.budget_amounts)
+    end
+
+    test "excludes transfer categories from budget amounts" do
+      budget = Budget.create!(starts_at: Time.current.beginning_of_month)
+      BudgetCategory.new(budget:, category: categories(:transfer), amount: 100).save(validate: false)
+
+      dashboard = Dashboard.new(filter: "month_to_date")
+
+      assert_not_includes dashboard.budget_amounts.keys, categories(:transfer)
+    end
+  end
 end

@@ -51,4 +51,71 @@ class ChartsHelperTest < ActionView::TestCase
       assert_not_includes svg, "<polyline"
     end
   end
+
+  class SvgBudgetChart < ActionView::TestCase
+    def build_budget(category_amounts)
+      BudgetCategory.delete_all
+      Budget.delete_all
+      budget = Budget.create!(starts_at: 1.month.ago)
+      category_amounts.each do |category, amount|
+        BudgetCategory.create!(budget: budget, category: category, amount: amount)
+      end
+      budget
+    end
+
+    test "returns empty paragraph when no budget is given" do
+      result = svg_budget_chart(budget: nil, debit_transactions: {}, credit_transactions: {})
+      assert_equal content_tag(:p, ""), result
+    end
+
+    test "renders an SVG element when budget exists" do
+      budget = build_budget(categories(:groceries) => 200)
+      result = svg_budget_chart(
+        budget: budget,
+        debit_transactions: { categories(:groceries) => 150 },
+        credit_transactions: {}
+      )
+      assert_match(/<svg/, result)
+    end
+
+    test "renders green bar when debit category is under 80% of budget" do
+      budget = build_budget(categories(:groceries) => 1000)
+      result = svg_budget_chart(
+        budget: budget,
+        debit_transactions: { categories(:groceries) => 700 },
+        credit_transactions: {}
+      )
+      assert_match(/green/, result)
+    end
+
+    test "renders red bar when debit category exceeds budget" do
+      budget = build_budget(categories(:groceries) => 100)
+      result = svg_budget_chart(
+        budget: budget,
+        debit_transactions: { categories(:groceries) => 200 },
+        credit_transactions: {}
+      )
+      assert_match(/red/, result)
+    end
+
+    test "renders red bar when credit category is below 50% of target" do
+      budget = build_budget(categories(:income) => 100)
+      result = svg_budget_chart(
+        budget: budget,
+        debit_transactions: {},
+        credit_transactions: { categories(:income) => 40 }
+      )
+      assert_match(/red/, result)
+    end
+
+    test "renders grey bar for categories without a budget line" do
+      budget = build_budget(categories(:groceries) => 200)
+      result = svg_budget_chart(
+        budget: budget,
+        debit_transactions: { categories(:housing) => 500 },
+        credit_transactions: {}
+      )
+      assert_match(/grey|gray|#888|muted/, result)
+    end
+  end
 end

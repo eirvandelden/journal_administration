@@ -24,9 +24,7 @@ class MainDashboardTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select "section.chart-section", count: 2
-    assert_select "h2", text: I18n.t("dashboard.charts.spending_by_category")
-    assert_select "h2", text: I18n.t("dashboard.charts.spending_vs_average")
-    assert_select "svg[role='img']", minimum: 2
+    assert_select "svg[role='img']", minimum: 1
   end
 
   test "dashboard with month_to_date filter shows transactions grouped by parent category" do
@@ -89,5 +87,65 @@ class MainDashboardTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "input[name='start_date'][value='#{Time.current.beginning_of_month.to_date.iso8601}']"
     assert_select "input[name='end_date'][value='#{Time.current.end_of_month.to_date.iso8601}']"
+  end
+
+  test "dashboard shows budget columns when active budget exists" do
+    get dashboard_index_url, params: { filter: "month_to_date" }
+
+    assert_response :success
+    assert_select "th", text: I18n.t("balance.budget")
+    assert_select "th", text: I18n.t("balance.target")
+    assert_select "th", text: I18n.t("balance.status")
+  end
+
+  test "dashboard shows budget chart heading when active budget exists" do
+    get dashboard_index_url, params: { filter: "month_to_date" }
+
+    assert_response :success
+    assert_select "h2", text: I18n.t("dashboard.charts.budget_vs_actual")
+  end
+
+  test "dashboard shows spending vs average chart when no active budget in date range" do
+    Budget.destroy_all
+
+    get dashboard_index_url, params: { filter: "month_to_date" }
+
+    assert_response :success
+    assert_select "h2", text: I18n.t("dashboard.charts.spending_vs_average")
+  end
+
+  test "dashboard does not show budget columns when no active budget" do
+    Budget.destroy_all
+
+    get dashboard_index_url, params: { filter: "month_to_date" }
+
+    assert_response :success
+    assert_select "th", text: I18n.t("balance.budget"), count: 0
+    assert_select "th", text: I18n.t("balance.status"), count: 0
+  end
+
+  test "dashboard shows spending_vs_average for a past range even when a current budget exists" do
+    # active_budget fixture covers 2026-03-01 onwards; selecting 2025 has no matching budget
+    get dashboard_index_url, params: { start_date: "2025-01-01", end_date: "2025-12-31" }
+
+    assert_response :success
+    assert_select "h2", text: I18n.t("dashboard.charts.spending_vs_average")
+  end
+
+  test "dashboard hides budget columns for a past range even when a current budget exists" do
+    get dashboard_index_url, params: { start_date: "2025-01-01", end_date: "2025-12-31" }
+
+    assert_response :success
+    assert_select "th", text: I18n.t("balance.budget"), count: 0
+    assert_select "th", text: I18n.t("balance.status"), count: 0
+  end
+
+  test "dashboard hides budget columns when the selected range is broader than the budget period" do
+    get dashboard_index_url, params: { start_date: "2026-01-01", end_date: "2026-12-31" }
+
+    assert_response :success
+    assert_select "h2", text: I18n.t("dashboard.charts.spending_vs_average")
+    assert_select "th", text: I18n.t("balance.budget"), count: 0
+    assert_select "th", text: I18n.t("balance.status"), count: 0
   end
 end

@@ -1,5 +1,7 @@
 # Helpers for rendering inline server-side SVG charts.
 module ChartsHelper
+  include BudgetHelper
+
   # @api private
   BAR_CHART_DIMS = { width: 640, height: 320, pad_left: 70, pad_top: 30, pad_bottom: 40 }.freeze
 
@@ -29,6 +31,59 @@ module ChartsHelper
     legend = build_donut_legend(labels, data, colors)
     content_tag(:svg, xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 320 200", role: "img") do
       safe_join(slices + legend)
+    end
+  end
+
+  # @api private
+  BUDGET_CHART_DIMS = { width: 500, row_height: 32, label_width: 130, pad_right: 20, pad_top: 10 }.freeze
+
+  # @api private
+  BUDGET_STATUS_COLORS = {
+    green:  "var(--color-green, oklch(64% 0.15 145))",
+    orange: "var(--color-orange, oklch(70% 0.15 60))",
+    red:    "var(--color-red, oklch(60% 0.15 25))",
+    grey:   "var(--color-grey, #888888)"
+  }.freeze
+
+  # Renders an inline SVG horizontal budget vs. actual bar chart.
+  #
+  # Shows credit categories (spending limits) and debit categories (savings targets)
+  # color-coded by status. Returns an empty paragraph when no budget is given.
+  #
+  # @param budget [Budget, nil] the active budget
+  # @param debit_transactions [Hash{Category => Numeric}] actual debit amounts
+  # @param credit_transactions [Hash{Category => Numeric}] actual credit amounts
+  # @return [String] HTML-safe SVG markup
+  def svg_budget_chart(budget:, debit_transactions:, credit_transactions:)
+    return content_tag(:p, "") unless budget
+
+    budget_by_cat = budget.budget_categories
+                          .includes(:category)
+                          .each_with_object({}) do |budget_category, amounts|
+                            next if budget_category.category.transfer?
+
+                            amounts[budget_category.category] = budget_category.amount
+                          end
+
+    credit_rows = build_budget_rows(credit_transactions, budget_by_cat, :credit)
+    debit_rows  = build_budget_rows(debit_transactions,  budget_by_cat, :debit)
+    all_rows    = credit_rows + debit_rows
+
+    return content_tag(:p, "") if all_rows.empty?
+
+    d      = BUDGET_CHART_DIMS
+    height = d[:pad_top] + all_rows.size * d[:row_height] + d[:pad_top]
+    max_amount = all_rows.map { |r| [ r[:actual], r[:budgeted] || 0 ].max }.max.to_f
+    bar_width  = d[:width] - d[:label_width] - d[:pad_right]
+
+    content_tag(:svg,
+                xmlns: "http://www.w3.org/2000/svg",
+                viewBox: "0 0 #{d[:width]} #{height}",
+                role: "img") do
+      parts = all_rows.each_with_index.map do |row, i|
+        budget_chart_row(row, i, max_amount, bar_width, d)
+      end
+      safe_join(parts)
     end
   end
 
@@ -161,5 +216,58 @@ module ChartsHelper
         tag.text(label.to_s.truncate(18), x: 216, y: ly,
                  "font-size": "12", fill: "currentColor", "dominant-baseline": "auto")
     end
+  end
+
+  def build_budget_rows(transactions, budget_by_cat, direction)
+    direction_budget = budget_by_cat.select { |cat, _| cat.public_send(:"#{direction}?") }
+    all_cats = (transactions.keys + direction_budget.keys).uniq.compact
+    all_cats.filter_map do |cat|
+      next unless cat
+
+      actual   = transactions[cat].to_f
+      budgeted = budget_by_cat[cat]
+      { category: cat, actual: actual, budgeted: budgeted }
+    end
+  end
+
+  def budget_chart_row(row, index, max_amount, bar_width, d)
+    category  = row[:category]
+    actual    = row[:actual]
+    budgeted  = row[:budgeted]
+    status    = budget_status(category: category, actual: actual, budgeted: budgeted)
+    bar_color = status ? BUDGET_STATUS_COLORS[status] : BUDGET_STATUS_COLORS[:grey]
+
+    y = d[:pad_top] + index * d[:row_height]
+
+    label_el  = budget_chart_label(category.name, y, d[:label_width])
+    bg_bar_el = budget_chart_bg_bar(budgeted, max_amount, bar_width, y, d)
+    actual_el = budget_chart_actual_bar(actual, max_amount, bar_width, y, d, bar_color)
+
+    safe_join([ label_el, bg_bar_el, actual_el ].compact)
+  end
+
+  def budget_chart_label(name, y, label_width)
+    tag.text(name.to_s.truncate(16),
+             x: label_width - 4,
+             y: y + 16,
+             "text-anchor": "end",
+             "font-size": "11",
+             fill: "currentColor")
+  end
+
+  def budget_chart_bg_bar(budgeted, max_amount, bar_width, y, d)
+    return nil unless budgeted && max_amount > 0
+
+    w = (budgeted.to_f / max_amount * bar_width).round
+    tag.rect(x: d[:label_width], y: y + 4, width: w, height: d[:row_height] - 8,
+             fill: "var(--color-border, #ddd)", rx: 2)
+  end
+
+  def budget_chart_actual_bar(actual, max_amount, bar_width, y, d, color)
+    return nil if actual.zero? || max_amount.zero?
+
+    w = (actual / max_amount * bar_width).round
+    tag.rect(x: d[:label_width], y: y + 8, width: w, height: d[:row_height] - 16,
+             fill: color, rx: 2)
   end
 end
