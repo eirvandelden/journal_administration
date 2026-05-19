@@ -134,7 +134,7 @@ GEM
     ed25519 (1.4.0)
     erb (6.0.4)
     erubi (1.13.1)
-    flutie (2.2.0)
+    flutie (2.2.1)
     geared_pagination (1.2.0)
       activesupport (>= 5.0)
       addressable (>= 2.5.0)
@@ -537,7 +537,7 @@ CHECKSUMS
   erb (6.0.4) sha256=38e3803694be357fe2bfe312487c74beaf9fb4e5beb3e22498952fe1645b95d9
   erubi (1.13.1) sha256=a082103b0885dbc5ecf1172fede897f9ebdb745a4b97a5e8dc63953db1ee4ad9
   faultline (0.1.0)
-  flutie (2.2.0) sha256=8fb2a14d6fa9d8e6aa74ea196fdd79f2bc4658fa8643310f1e43fdd24984715b
+  flutie (2.2.1) sha256=4b461043d086aa085f8e294780564c51571e08a50996cc0a85734dbdf46fedfc
   geared_pagination (1.2.0) sha256=16dc25b28e9d6945df27e9bcc6ed298d66eb9493ba45bf987037010724120cc7
   globalid (1.3.0) sha256=05c639ad6eb4594522a0b07983022f04aa7254626ab69445a0e493aa3786ff11
   herb (0.8.10) sha256=5c70c1402ba7bcc3f46d676fbb1cf5489cfa67c898f4700d2e5407c5627bf331
