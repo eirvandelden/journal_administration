@@ -10,7 +10,7 @@ jobs:
     name: Scan Ruby (Brakeman)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6.0.2
+      - uses: actions/checkout@v6.0.3
       - uses: spinel-coop/setup-rv@main
         with:
           ruby-version: current
@@ -21,7 +21,7 @@ jobs:
     name: Lint Ruby (RuboCop)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6.0.2
+      - uses: actions/checkout@v6.0.3
       - uses: spinel-coop/setup-rv@main
         with:
           ruby-version: current
@@ -33,7 +33,7 @@ jobs:
     name: Lint ERB (herb)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6.0.2
+      - uses: actions/checkout@v6.0.3
       - uses: actions/setup-node@v6
         with:
           node-version: lts/*
@@ -45,7 +45,7 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6.0.2
+      - uses: actions/checkout@v6.0.3
       - uses: spinel-coop/setup-rv@main
         with:
           ruby-version: current
