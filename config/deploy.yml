@@ -64,8 +64,11 @@ env:
 # "bin/kamal logs -r job" will tail logs from the first server in the job section.
 #
 aliases:
-  apps: server exec docker exec kamal-proxy kamal-proxy list
+  console: app exec --interactive --reuse "bin/rails console"
   shell: app exec --interactive --reuse "bash"
+  logs: app logs -f
+  dbc: app exec --interactive --reuse "bin/rails dbconsole --include-password"
+  apps: server exec docker exec kamal-proxy kamal-proxy list"
 
 # Use a different ssh user than root
 #
