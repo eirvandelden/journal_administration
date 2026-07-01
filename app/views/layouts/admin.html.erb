@@ -24,13 +24,14 @@
     </header>
 
     <main>
-      <% if flash[:notice] %>
-        <p role="status"><%= flash[:notice] %></p>
-      <% end %>
-
-      <% if flash[:alert] %>
-        <p role="alert"><%= flash[:alert] %></p>
-      <% end %>
+      <output data-mvpa-flashes>
+        <% if flash[:notice] %>
+          <aside role="status"><%= flash[:notice] %></aside>
+        <% end %>
+        <% if flash[:alert] %>
+          <aside role="alert"><%= flash[:alert] %></aside>
+        <% end %>
+      </output>
 
       <%= yield %>
     </main>

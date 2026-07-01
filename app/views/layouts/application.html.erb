@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-theme="selenized_light" data-color-scheme="system">
+<html data-theme="solunized-light" data-color-scheme="system">
   <head>
     <title>JournalAdministration</title>
     <%= csrf_meta_tags %>
@@ -47,11 +47,11 @@
       </nav>
     </header>
     <main>
-      <% flash.each do |key, value| %>
-        <aside>
-          <p role="<%= key.to_s == 'alert' || key.to_s == 'error' ? 'alert' : 'status' %>"><%= value %></p>
-        </aside>
-      <% end %>
+      <output data-mvpa-flashes>
+        <% flash.each do |key, value| %>
+          <aside role="<%= key.to_s.in?(%w[alert error]) ? 'alert' : 'status' %>"><%= value %></aside>
+        <% end %>
+      </output>
       <%= yield %>
     </main>
     <dialog id="confirm-dialog">
