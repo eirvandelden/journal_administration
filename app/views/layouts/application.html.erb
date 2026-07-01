@@ -47,11 +47,11 @@
       </nav>
     </header>
     <main>
-      <output data-mvpa-flashes>
+      <section data-mvpa-flashes>
         <% flash.each do |key, value| %>
           <aside role="<%= key.to_s.in?(%w[alert error]) ? 'alert' : 'status' %>"><%= value %></aside>
         <% end %>
-      </output>
+      </section>
       <%= yield %>
     </main>
     <dialog id="confirm-dialog">
