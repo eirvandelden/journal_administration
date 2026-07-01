@@ -1,0 +1,4 @@
+output[data-mvpa-flashes] {
+  top: unset;
+  bottom: var(--block-space);
+}
