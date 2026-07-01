@@ -1,4 +1,4 @@
-output[data-mvpa-flashes] {
+section[data-mvpa-flashes] {
   top: unset;
   bottom: var(--block-space);
 }
