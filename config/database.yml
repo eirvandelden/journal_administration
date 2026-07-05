@@ -40,8 +40,15 @@ default: &default
   pool: <%= ENV['RAILS_MAX_THREADS'] || 5 %>
   host: <%= ENV['DOCKER_DB_HOST'] || 'localhost' %>
   port: <%= ENV['DOCKER_DB_PORT'] || 5432 %>
-  timeout: 10000
+  timeout: 5000
   default_transaction_mode: immediate
+  pragmas:
+    journal_mode: wal
+    wal_autocheckpoint: 10000
+    synchronous: normal
+    temp_store: memory
+    mmap_size: 134217728
+    cache_size: -20000
 
 development:
   <<: *default
@@ -56,6 +63,13 @@ test:
   <<: *default
   # database: storage/test.sqlite3
   database: storage/db/test.sqlite3
+  timeout: 20000
+  pragmas:
+    journal_mode: wal
+    synchronous: "off"
+    temp_store: memory
+    mmap_size: 268435456
+    cache_size: -20000
 
 production:
   <<: *default
