@@ -2,6 +2,8 @@ module Authentication
   extend ActiveSupport::Concern
   include SessionLookup
 
+  SESSION_COOKIE_LIFETIME = 20.years
+
   included do
     before_action :require_authentication
     helper_method :signed_in?
@@ -57,7 +59,13 @@ module Authentication
     def authenticated_as(session)
       Current.user = session.user
       set_authenticated_by(:session)
-      cookies.signed.permanent[:session_token] = { value: session.token, httponly: true, same_site: :lax }
+      cookies.signed[:session_token] = {
+        value: session.token,
+        httponly: true,
+        secure: Rails.env.production?,
+        same_site: :lax,
+        expires: SESSION_COOKIE_LIFETIME.from_now
+      }
     end
 
     def post_authenticating_url
