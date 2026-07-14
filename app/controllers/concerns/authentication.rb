@@ -2,7 +2,7 @@ module Authentication
   extend ActiveSupport::Concern
   include SessionLookup
 
-  SESSION_COOKIE_LIFETIME = 20.years
+  SESSION_COOKIE_LIFETIME = 1.year
 
   included do
     before_action :require_authentication
