@@ -43,7 +43,7 @@ class ChattelsController < ApplicationController
 
     respond_to do |format|
       if @chattel.save
-        format.html { redirect_to @chattel, notice: t("chattels.create.success") }
+        format.html { redirect_to chattels_path, notice: t("chattels.create.success") }
         format.json { render :show, status: :created, location: @chattel }
       else
         format.html { render :new, status: :unprocessable_entity }

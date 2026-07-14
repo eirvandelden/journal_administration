@@ -21,7 +21,7 @@ class ChattelsTest < ApplicationSystemTestCase
     click_on I18n.t("common.save", locale: @locale)
 
     assert_text "Chattel was successfully created"
-    click_on I18n.t("common.back", locale: @locale)
+    assert_text "System Test Chattel"
   end
 
   test "should update Chattel" do
