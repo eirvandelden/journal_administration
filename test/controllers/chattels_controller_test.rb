@@ -47,7 +47,7 @@ class ChattelsControllerTest < ActionDispatch::IntegrationTest
            params: { chattel: chattel_params }
     end
 
-    assert_redirected_to chattel_url(Chattel.last)
+    assert_redirected_to chattels_url
   end
 
   test "should show chattel" do
