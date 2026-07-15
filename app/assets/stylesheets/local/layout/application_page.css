@@ -1,6 +1,8 @@
 /* Page layout customizations */
-body > header {
-  padding: 1rem;
+@media (min-width: 769px) {
+  body > header {
+    padding: 1rem;
+  }
 }
 
 body > main {
