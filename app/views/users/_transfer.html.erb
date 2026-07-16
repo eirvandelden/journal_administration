@@ -11,22 +11,26 @@
        autocomplete="off"
        readonly>
 
-<div>
-  <%= tag.button type: "button",
-                 data: { controller: "clipboard", action: "clipboard#copy", clipboard_text_value: url } do %>
-    <span aria-hidden="true">📋</span>
-    <%= t("users.transfer.copy") %>
-  <% end %>
+<ul>
+  <li>
+    <%= tag.button type: "button",
+                   data: { controller: "clipboard", action: "clipboard#copy", clipboard_text_value: url } do %>
+      <span aria-hidden="true">📋</span>
+      <%= t("users.transfer.copy") %>
+    <% end %>
+  </li>
 
-  <%= tag.button type: "button",
-                 data: {
-                   controller: "web-share",
-                   action: "web-share#share",
-                   web_share_url_value: url,
-                   web_share_title_value: t("users.transfer.share_title"),
-                   web_share_text_value: t("users.transfer.share_text"),
-                 } do %>
-    <span aria-hidden="true">📤</span>
-    <%= t("users.transfer.share") %>
-  <% end %>
-</div>
+  <li>
+    <%= tag.button type: "button",
+                   data: {
+                     controller: "web-share",
+                     action: "web-share#share",
+                     web_share_url_value: url,
+                     web_share_title_value: t("users.transfer.share_title"),
+                     web_share_text_value: t("users.transfer.share_text"),
+                   } do %>
+      <span aria-hidden="true">📤</span>
+      <%= t("users.transfer.share") %>
+    <% end %>
+  </li>
+</ul>
