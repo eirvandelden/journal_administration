@@ -1,5 +1,4 @@
 module ApplicationHelper
-  include TranslationsHelper
   include VersionHelper
 
   def locale_options_for_select

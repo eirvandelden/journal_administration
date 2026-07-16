@@ -544,6 +544,10 @@ nl:
       transactions: Transacties
     shortcut_hint: "⌘K"
   sessions:
+    new:
+      email_placeholder: Vul je e-mailadres in
+      password_placeholder: Vul je wachtwoord in
+      submit: Inloggen
     rejection: "🚫 Te veel aanvragen of ongeautoriseerd."
     transfers:
       show:
@@ -669,6 +673,9 @@ nl:
       success: "✅ Transactie succesvol bijgewerkt."
   unknown_warranty: "❓ Onbekende garantiestatus"
   users:
+    index:
+      go_back: Ga terug
+      title: Personen op de rekening
     profiles:
       edit:
         email_placeholder: E-mailadres
@@ -683,6 +690,10 @@ nl:
         save_changes: Wijzigingen opslaan
         sign_out: Uitloggen
         title: Jouw instellingen
+      show:
+        go_back: Ga terug
+        manage_people: Beheer mensen
+        title: Gebruikersprofiel
       update:
         success: Profiel bijgewerkt
     transfer:

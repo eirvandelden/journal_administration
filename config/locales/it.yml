@@ -544,6 +544,10 @@ it:
       transactions: Transazioni
     shortcut_hint: "⌘K"
   sessions:
+    new:
+      email_placeholder: Inserisci il tuo indirizzo email
+      password_placeholder: Inserisci la tua password
+      submit: Accedi
     rejection: "🚫 Troppe richieste o non autorizzato."
     transfers:
       show:
@@ -669,6 +673,9 @@ it:
       success: "✅ Transazione aggiornata con successo."
   unknown_warranty: "❓ Stato garanzia sconosciuto"
   users:
+    index:
+      go_back: Torna indietro
+      title: Persone sull'account
     profiles:
       edit:
         email_placeholder: Indirizzo email
@@ -683,6 +690,10 @@ it:
         save_changes: Salva modifiche
         sign_out: Esci
         title: Le tue impostazioni
+      show:
+        go_back: Torna indietro
+        manage_people: Gestisci persone
+        title: Profilo utente
       update:
         success: Profilo aggiornato
     transfer:

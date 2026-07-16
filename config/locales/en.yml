@@ -544,6 +544,10 @@ en:
       transactions: Transactions
     shortcut_hint: "⌘K"
   sessions:
+    new:
+      email_placeholder: Enter your email address
+      password_placeholder: Enter your password
+      submit: Sign in
     rejection: "🚫 Too many requests or unauthorized."
     transfers:
       show:
@@ -669,6 +673,9 @@ en:
       success: "✅ Transaction was successfully updated."
   unknown_warranty: "❓ Unknown warranty status"
   users:
+    index:
+      go_back: Go back
+      title: People on the account
     profiles:
       edit:
         email_placeholder: Email address
@@ -683,6 +690,10 @@ en:
         save_changes: Save changes
         sign_out: Sign out
         title: Your settings
+      show:
+        go_back: Go back
+        manage_people: Manage people
+        title: User profile
       update:
         success: Profile updated
     transfer:
