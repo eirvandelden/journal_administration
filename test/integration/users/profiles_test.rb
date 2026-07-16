@@ -20,6 +20,7 @@ class Users::ProfilesTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select "#session_transfer_url"
+    assert_select "#session_transfer_url ~ ul > li", count: 2
   end
 
   test "user can update their locale" do
