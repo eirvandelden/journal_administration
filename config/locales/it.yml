@@ -684,7 +684,6 @@ it:
         locale_en: "🇬🇧 English"
         locale_it: "🇮🇹 Italiano"
         locale_nl: "🇳🇱 Nederlands"
-        manage_people: Gestisci persone
         name_placeholder: Nome
         password_placeholder: Cambia password
         save_changes: Salva modifiche
@@ -692,8 +691,6 @@ it:
         title: Le tue impostazioni
       show:
         go_back: Torna indietro
-        manage_people: Gestisci persone
-        title: Profilo utente
       update:
         success: Profilo aggiornato
     transfer:

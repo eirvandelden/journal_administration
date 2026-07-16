@@ -684,7 +684,6 @@ nl:
         locale_en: "🇬🇧 English"
         locale_it: "🇮🇹 Italiano"
         locale_nl: "🇳🇱 Nederlands"
-        manage_people: Beheer mensen
         name_placeholder: Naam
         password_placeholder: Wachtwoord wijzigen
         save_changes: Wijzigingen opslaan
@@ -692,8 +691,6 @@ nl:
         title: Jouw instellingen
       show:
         go_back: Ga terug
-        manage_people: Beheer mensen
-        title: Gebruikersprofiel
       update:
         success: Profiel bijgewerkt
     transfer:

@@ -3,7 +3,7 @@
 <% transfer_label = Current.user != user ? t("users.transfer.other_title") : t("users.transfer.self_title") %>
 
 <label for="session_transfer_url">
-  <strong id="session_transfer_label"><%= transfer_label %></strong>
+  <strong><%= transfer_label %></strong>
 </label>
 <input type="text"
        id="session_transfer_url"
