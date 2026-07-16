@@ -35,7 +35,7 @@ class CategoriesIndexTest < ActionDispatch::IntegrationTest
     get categories_path
 
     assert_response :success
-    assert_select "section" do
+    assert_select "article" do
       assert_select "h2", text: I18n.t("categories.index.root_categories")
       assert_select "td", text: categories(:groceries).name
       assert_select "td", text: categories(:housing).name
@@ -48,7 +48,7 @@ class CategoriesIndexTest < ActionDispatch::IntegrationTest
     get categories_path
 
     assert_response :success
-    assert_select "section", count: 5
+    assert_select "article", count: 6
     assert_select "td", text: categories(:bakery).name
     assert_select "td", text: categories(:supermarket).name
     assert_select "td", text: categories(:rent).name

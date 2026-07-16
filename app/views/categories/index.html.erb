@@ -1,5 +1,5 @@
 <% @category_groups.each do |parent, categories| %>
-  <section>
+  <article>
     <h2><%= parent&.name || t('.root_categories') %></h2>
 
     <table class="categories">
@@ -20,9 +20,9 @@
         <% end %>
       </tbody>
     </table>
-  </section>
+  </article>
 <% end %>
 
-<section>
+<article>
   <%= link_to t('.new_category'), new_category_path %>
-</section>
+</article>
