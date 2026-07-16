@@ -1,25 +1,21 @@
-<% content_for(:title) { "Sign in" } %>
 <% turbo_page_requires_reload %>
 
-<div class="panel shadow center margin-block-double <%= "shake" if flash[:alert] %>">
-  <h1 class="margin-none-block-start margin-block-end-double"><%= ENV.fetch("APP_NAME") %></h1>
+<header>
+  <h1><%= ENV.fetch("APP_NAME") %></h1>
+</header>
 
-  <%= form_with url: session_url, class: "flex flex-column gap" do |form| %>
-    <div class="flex align-center gap">
-      <label class="flex align-center gap input input--actor txt-large">
-        <%= form.email_field :email_address, required: true, class: "input full-width", autofocus: true, autocomplete: "username", placeholder: "Enter your email address", value: params[:email_address] %>
-      </label>
-    </div>
+<article>
+  <%= form_with url: session_path do |form| %>
+    <fieldset>
+      <label for="email_address"><%= t('.email_placeholder') %></label>
+      <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username",
+          placeholder: t('.email_placeholder'), value: params[:email_address] %>
 
-    <div class="flex align-center gap">
-      <label class="flex align-center gap input input--actor txt-large">
-        <%= form.password_field :password, required: true, class: "input full-width", autocomplete: "current-password", placeholder: "Enter your password", maxlength: 72 %>
-      </label>
-    </div>
-    <button type="submit" id="log_in" class="btn btn--reversed center">Sign in</button>
+      <label for="password"><%= t('.password_placeholder') %></label>
+      <%= form.password_field :password, required: true, autocomplete: "current-password",
+          placeholder: t('.password_placeholder'), maxlength: 72 %>
+    </fieldset>
+
+    <button type="submit"><%= t('.submit') %></button>
   <% end %>
-</div>
-
-<% content_for(:footer) do %>
-  <div class="txt-align-center center margin-block-double txt-subtle">Writebook&trade; version <%= version_badge %></div>
-<% end %>
+</article>

@@ -1,31 +1,17 @@
-<% content_for(:title) { @user.name } %>
-
-<% content_for :header do %>
+<header>
+  <h1><%= @user.name %></h1>
   <nav>
-    <%= link_to users_path, class: "btn" do %>
-      <%= image_tag "arrow-left.svg", aria: { hidden: true }, alt: "", size: 24 %>
-      <span class="for-screen-reader">Go back</span>
-    <% end %>
-
-    <div class="breadcrumbs">
-      <%= render "books/index_link" %>
-      <span class="flex-item-no-shrink">▸</span>
-      <%= link_to users_path, class: "btn borderless txt-small flex-item-no-shrink" do %>
-        <%= image_tag "people.svg", aria: { label: "People" }, size: 19, class: "colorize--black", alt: "People" %>
-        <span class="for-screen-reader">Manage people</span>
-      <% end %>
-      <span class="flex-item-no-shrink">▸</span>
-      <%= @user.name %>
-    </div>
+    <%= link_to t('.go_back'), users_path %>
   </nav>
-<% end %>
+</header>
 
-<div class="panel margin-block-double shadow center">
-  <h2 class="margin-none-block-end"><%= @user.name %></h2>
-  <p class="margin-none-block-start"><%= mail_to @user.email_address %></p>
+<article>
+  <p><%= @user.name %></p>
+  <p><%= mail_to @user.email_address %></p>
+</article>
 
-  <% if Current.user.can_administer? %>
-    <hr class="full-width margin-block-double" aria-hidden="true">
+<% if Current.user.can_administer? %>
+  <article>
     <%= render "users/transfer", user: @user %>
-  <% end %>
-</div>
+  </article>
+<% end %>
