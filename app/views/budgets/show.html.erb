@@ -1,4 +1,10 @@
-<h1><%= t("budgets.show.title") %></h1>
+<header>
+  <h1><%= t("budgets.show.title") %></h1>
+  <nav>
+    <%= link_to t("budgets.index.edit"), edit_budget_path(@budget) %>
+    <%= link_to t("common.back"), budgets_path %>
+  </nav>
+</header>
 
 <article>
   <p>
@@ -38,9 +44,4 @@
   <% else %>
     <p><%= t("budgets.show.no_categories") %></p>
   <% end %>
-
-  <p>
-    <%= link_to t("budgets.index.edit"), edit_budget_path(@budget) %>
-    <%= link_to t("common.back"), budgets_path %>
-  </p>
 </article>
