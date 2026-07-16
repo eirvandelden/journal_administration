@@ -678,6 +678,7 @@ nl:
       title: Personen op de rekening
     profiles:
       edit:
+        cancel: Annuleren
         email_placeholder: E-mailadres
         go_back: Ga terug
         locale: Taal

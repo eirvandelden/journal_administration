@@ -678,6 +678,7 @@ en:
       title: People on the account
     profiles:
       edit:
+        cancel: Cancel
         email_placeholder: Email address
         go_back: Go back
         locale: Language

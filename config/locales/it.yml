@@ -678,6 +678,7 @@ it:
       title: Persone sull'account
     profiles:
       edit:
+        cancel: Annulla
         email_placeholder: Indirizzo email
         go_back: Torna indietro
         locale: Lingua
