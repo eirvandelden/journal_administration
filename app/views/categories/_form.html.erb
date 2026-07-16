@@ -12,12 +12,6 @@
       </div>
     <% end %>
 
-    <% unless disabled %>
-      <div class="actions">
-        <%= f.submit t('common.save') %>
-      </div>
-    <% end %>
-
     <%= f.label :name %>
     <%= f.text_field :name, disabled: disabled %>
 
@@ -26,5 +20,12 @@
 
     <%= f.label :parent_category %>
     <%= f.collection_select :parent_category_id, Category.groups, :id, :name, { include_blank: true } %>
+
+    <% unless disabled %>
+      <nav>
+        <%= link_to t('common.cancel'), category.persisted? ? category_path(category) : categories_path %>
+        <%= f.submit t('common.save') %>
+      </nav>
+    <% end %>
   <% end %>
 </section>

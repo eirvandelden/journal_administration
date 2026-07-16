@@ -11,10 +11,6 @@
     </div>
   <% end %>
 
-  <div class="actions">
-    <%= f.submit t('common.save') %>
-  </div>
-
   <div class="field">
     <%= f.label :id %>
     <%= f.text_field :id, disabled: :disabled %>
@@ -35,4 +31,9 @@
     <%= f.label :category_id %>
     <%= f.select :category_id, grouped_category_options(selected: f.object.category_id), { include_blank: true } %>
   </div>
+
+  <nav>
+    <%= link_to t('common.cancel'), account.persisted? ? account_path(account) : accounts_path %>
+    <%= f.submit t('common.save') %>
+  </nav>
 <% end %>

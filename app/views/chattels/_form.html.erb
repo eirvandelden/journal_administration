@@ -12,12 +12,6 @@
       </div>
     <% end %>
 
-    <% unless disabled %>
-      <div class="actions">
-        <%= f.submit t('common.save') %>
-      </div>
-    <% end %>
-
     <div class="field">
       <%= f.label :name %>
       <%= f.text_field :name, disabled: disabled %>
@@ -61,5 +55,12 @@
 
     <%= f.label :warranty_document %>
     <%= f.file_field :warranty_document, accept: "application/pdf", disabled: disabled %>
+
+    <% unless disabled %>
+      <nav>
+        <%= link_to t('common.cancel'), chattel.persisted? ? chattel_path(chattel) : chattels_path %>
+        <%= f.submit t('common.save') %>
+      </nav>
+    <% end %>
   <% end %>
 </section>
