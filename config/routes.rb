@@ -15,7 +15,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :users do
+  resources :users, only: %i[index update destroy] do
     scope module: "users" do
       resource :profile
     end
