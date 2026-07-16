@@ -1,4 +1,4 @@
-<section class="todo-list">
+<article class="todo-list">
   <% if @empty %>
     <p><%= t('.empty') %></p>
   <% else %>
@@ -39,4 +39,4 @@
     </table>
     <%= render "shared/pagination", page: @page %>
   <% end %>
-</section>
+</article>

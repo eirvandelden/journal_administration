@@ -1,4 +1,4 @@
-<section id="own-accounts">
+<article id="own-accounts">
   <h2><%= t('.own_accounts') %></h2>
 
   <% if @own_page.number > 1 || @own_page.before_last? %>
@@ -58,9 +58,9 @@
       <% end %>
     </nav>
   <% end %>
-</section>
+</article>
 
-<section id="external-accounts">
+<article id="external-accounts">
   <h2><%= t('.external_accounts') %></h2>
 
   <% if @external_page.number > 1 || @external_page.before_last? %>
@@ -118,10 +118,10 @@
       <% end %>
     </nav>
   <% end %>
-</section>
+</article>
 
-<section>
+<article>
   <%= link_to new_account_path do %>
     <b><%= t('.new_account') %></b>
   <% end %>
-</section>
+</article>
