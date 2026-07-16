@@ -25,7 +25,10 @@
       <%= form.select :locale, locale_options_for_select %>
     </fieldset>
 
-    <button type="submit"><%= t('.save_changes') %></button>
+    <nav>
+      <%= link_to t('.cancel'), user_profile_path(@user) %>
+      <%= form.submit t('.save_changes') %>
+    </nav>
   <% end %>
 </article>
 
