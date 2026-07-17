@@ -7,7 +7,7 @@ gem "dotenv-rails", "~> 3.2" # Read .env files and make available in Rails
 
 gem "rails", "~> 8.0"
 gem "exception_notification", ">= 5.0"
-gem "exception_notification-campfire-once", github: "eirvandelden/exception_notification-campfire-once", branch: "ai/reykjavik"
+gem "exception_notification-campfire-once", github: "eirvandelden/exception_notification-campfire-once"
 
 # Drivers
 gem "sqlite3", ">= 2.0" # Use sqlite3 as the database for Active Record
