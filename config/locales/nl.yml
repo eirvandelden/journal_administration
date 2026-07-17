@@ -152,7 +152,6 @@ nl:
     nav:
       back_to_site: "🌐 Terug naar site"
       dashboard: "📊 Dashboard"
-      faultline: "🥷 Faultline"
       users: "👥 Gebruikers"
     users:
       create:

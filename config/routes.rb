@@ -1,6 +1,4 @@
 Rails.application.routes.draw do
-  mount Faultline::Engine, at: "/faultline"
-
   namespace :admin do
     root "dashboard#index"
     resources :users
