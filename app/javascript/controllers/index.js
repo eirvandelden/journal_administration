@@ -12,6 +12,12 @@ eagerLoadControllersFrom("controllers", application)
 import ThemeController from "appkit/controllers/theme_controller"
 application.register("theme", ThemeController)
 
+import PushController from "appkit/controllers/push_controller"
+application.register("push", PushController)
+
+import AutoSubmitController from "appkit/controllers/auto_submit_controller"
+application.register("auto-submit", AutoSubmitController)
+
 // Lazy load controllers as they appear in the DOM (remember not to preload controllers in import map!)
 // import { lazyLoadControllersFrom } from "@hotwired/stimulus-loading"
 // lazyLoadControllersFrom("controllers", application)
