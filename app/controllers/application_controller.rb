@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  include Authentication, Authorization, VersionHeaders
+  include Appkit::Authentication, Authorization, VersionHeaders
 
   protect_from_forgery with: :exception
   around_action :switch_locale

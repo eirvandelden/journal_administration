@@ -1,5 +1,5 @@
 class Current < ActiveSupport::CurrentAttributes
-  attribute :user
+  attribute :user, :session
 
   # Return the shared "samen" (together) account for family finances
   attribute :account, default: -> { Account.find_by(owner: :samen) || Account.first }

@@ -20,9 +20,6 @@
       <label for="user_password"><%= t('.password_placeholder') %></label>
       <%= form.password_field :password, autocomplete: "new-password",
           placeholder: t('.password_placeholder'), maxlength: 72 %>
-
-      <label for="user_locale"><%= t('.locale') %></label>
-      <%= form.select :locale, locale_options_for_select %>
     </fieldset>
 
     <nav>

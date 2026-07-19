@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  mount Appkit::Engine => "/"
+
   namespace :admin do
     root "dashboard#index"
     resources :users
@@ -6,12 +8,6 @@ Rails.application.routes.draw do
 
   resources :chattels
   root "dashboard#index"
-
-  resource :session, only: %i[ new create destroy ] do
-    scope module: "sessions" do
-      resources :transfers, only: %i[ show update ]
-    end
-  end
 
   resources :users, only: %i[index update destroy] do
     scope module: "users" do

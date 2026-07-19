@@ -33,13 +33,8 @@ class Users::ProfilesController < ApplicationController
   private
 
   def user_params
-    params.require(:user).permit(:name, :email_address, :password, :locale).tap do |permitted|
+    params.require(:user).permit(:name, :email_address, :password).tap do |permitted|
       permitted.delete(:password) if permitted[:password].blank?
-      permitted[:locale] = normalize_locale(permitted[:locale], fallback: @user.locale)
     end
-  end
-
-  def normalize_locale(locale, fallback:)
-    locale.presence_in(User.locales.keys) || fallback
   end
 end

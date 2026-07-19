@@ -468,6 +468,7 @@ en:
     budgets: "💰 %{model}"
     categories: "🏷️ %{model}"
     chattels: "📦 %{model}"
+    preferences: "🎨 Preferences"
     profile: "👤 Profile"
     todo: "✅ %{model}"
     todo_all: All
@@ -542,15 +543,6 @@ en:
       pages: Pages
       transactions: Transactions
     shortcut_hint: "⌘K"
-  sessions:
-    new:
-      email_placeholder: Enter your email address
-      password_placeholder: Enter your password
-      submit: Sign in
-    rejection: "🚫 Too many requests or unauthorized."
-    transfers:
-      show:
-        submit: Continue
   show: Show
   support:
     array:
@@ -680,7 +672,6 @@ en:
         cancel: Cancel
         email_placeholder: Email address
         go_back: Go back
-        locale: Language
         locale_en: "🇬🇧 English"
         locale_it: "🇮🇹 Italiano"
         locale_nl: "🇳🇱 Nederlands"

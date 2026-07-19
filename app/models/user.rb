@@ -1,7 +1,12 @@
 class User < ApplicationRecord
-  include Role, Transferable
+  include Role, Appkit::Transferable, Appkit::UserTheming
 
   has_many :sessions, dependent: :destroy
+  has_many :push_subscriptions, class_name: "Appkit::PushSubscription", dependent: :destroy
+
+  # Not Appkit::Authenticatable: it calls `has_secure_password` without
+  # `validations: false`, which would add stricter password validations JA
+  # never had (user creation/validation is owned by the admin panel).
   has_secure_password validations: false
 
   validates :name, presence: true, uniqueness: true
