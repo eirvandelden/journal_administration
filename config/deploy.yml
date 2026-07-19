@@ -56,6 +56,7 @@ env:
   clear:
     APP_NAME: JournalAdministration
     REGISTRY_HTTP_ADDR: registry.vandelden.family
+    SOLID_QUEUE_IN_PUMA: true
   #   clear:
   #     DB_HOST: 192.168.0.2
   secret:
