@@ -1,23 +1,19 @@
 <!DOCTYPE html>
-<html data-theme="solunized-light" data-color-scheme="system">
+<html>
   <head>
-    <title>JournalAdministration</title>
+    <title><%= Appkit.config.app_name.call %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="view-transition" content="same-origin">
+    <meta name="color-scheme" content="light dark">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+    <%= render "appkit/shared/pwa_meta" %>
 
-    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbo-track': 'reload' %>
-
-    <%= javascript_importmap_tags %>
+    <%= stylesheet_link_tag "application", media: "all", "data-turbo-track": "reload" %>
   </head>
-  <body>
+  <body data-appkit-login>
     <main>
-      <% if flash.any? %>
-        <section data-mvpa-flashes>
-          <% flash.each do |key, value| %>
-            <aside role="<%= key.to_s.in?(%w[alert error]) ? 'alert' : 'status' %>"><%= value %></aside>
-          <% end %>
-        </section>
-      <% end %>
+      <%= render "appkit/shared/flashes" %>
       <%= yield %>
     </main>
   </body>

@@ -14,7 +14,7 @@ input:disabled,
 textarea:disabled,
 select:disabled {
   background-color: var(--color-bg);
-  color: var(--color-fg-subtle, var(--color-fg));
+  color: var(--color-fg-lighter);
   opacity: 0.6;
   cursor: not-allowed;
 }
@@ -34,7 +34,7 @@ select:disabled {
   border: 2px solid var(--color-danger, red);
   padding: 7px 7px 0;
   margin-bottom: 20px;
-  background-color: var(--color-bg-secondary, #f0f0f0);
+  background-color: var(--color-bg-lighter);
 }
 
 #error_explanation h2 {

@@ -9,6 +9,9 @@ gem "rails", "~> 8.0"
 gem "exception_notification", ">= 5.0"
 gem "exception_notification-campfire-once", github: "eirvandelden/exception_notification-campfire-once"
 
+# Auth, PWA/push, and theme/preferences
+gem "appkit", github: "eirvandelden/appkit"
+
 # Drivers
 gem "sqlite3", ">= 2.0" # Use sqlite3 as the database for Active Record
 gem "redis", "~> 5.0" # Use Redis for Action Cable
@@ -18,7 +21,7 @@ gem "kamal", require: false     # Deployment
 gem "puma" # Use Puma as the app server
 
 # Jobs
-# TODO: SolidJobs
+gem "solid_queue"
 
 # Front-end
 gem "importmap-rails"

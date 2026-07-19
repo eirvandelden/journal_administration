@@ -1,6 +1,9 @@
 /* MVPA.css framework - provides base styles, components, themes */
 @import url("mvpa/mvpa.css");
 
+/* appkit's login layout styling */
+@import url("appkit/login.css");
+
 /* Local customizations (SMACSS structure) - load after MVPA to override */
 @import url("local/layout/index.css");
 @import url("local/modules/index.css");

@@ -468,6 +468,7 @@ nl:
     budgets: "💰 %{model}"
     categories: "🏷️ %{model}"
     chattels: "📦 %{model}"
+    preferences: "🎨 Voorkeuren"
     profile: "👤 Profiel"
     todo: "✅ %{model}"
     todo_all: Alle
@@ -542,15 +543,6 @@ nl:
       pages: Pagina's
       transactions: Transacties
     shortcut_hint: "⌘K"
-  sessions:
-    new:
-      email_placeholder: Vul je e-mailadres in
-      password_placeholder: Vul je wachtwoord in
-      submit: Inloggen
-    rejection: "🚫 Te veel aanvragen of ongeautoriseerd."
-    transfers:
-      show:
-        submit: Doorgaan
   show: Tonen
   support:
     array:
@@ -680,7 +672,6 @@ nl:
         cancel: Annuleren
         email_placeholder: E-mailadres
         go_back: Ga terug
-        locale: Taal
         locale_en: "🇬🇧 English"
         locale_it: "🇮🇹 Italiano"
         locale_nl: "🇳🇱 Nederlands"
