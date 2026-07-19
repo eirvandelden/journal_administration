@@ -8,3 +8,27 @@ jobs:
     uses: eirvandelden/appkit/.github/workflows/rails-ci.yml@main
     with:
       run_system_tests: true
+
+  # JA-specific checks the shared reusable workflow doesn't cover.
+  lint_erb:
+    name: Lint ERB (herb)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6.0.2
+      - uses: actions/setup-node@v6
+        with:
+          node-version: lts/*
+          cache: npm
+      - run: npm ci
+      - run: npx herb-lint app/views/ --github --fail-level error
+
+  i18n:
+    name: i18n normalized
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6.0.2
+      - uses: spinel-coop/setup-rv@main
+        with:
+          ruby-version: current
+          install-gems: true
+      - run: bundle exec ruby ./bin/check_i18n_normalized

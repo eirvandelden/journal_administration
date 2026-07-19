@@ -1,6 +1,11 @@
 /* MVPA.css framework - provides base styles, components, themes */
 @import url("mvpa/mvpa.css");
 
+/* This app's brand accent, referenced by appkit's login page styling */
+:root {
+  --color-accent: var(--color-blue);
+}
+
 /* appkit's login layout styling */
 @import url("appkit/login.css");
 
