@@ -1,4 +1,4 @@
 /* This app's brand accent, referenced by appkit's login page styling */
 :root {
-  --color-accent: var(--color-blue);
+  --color-accent: var(--color-orange);
 }
