@@ -26,7 +26,7 @@ FROM --platform=$TARGETPLATFORM base AS build
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y \
       build-essential git pkg-config ssh \
-      libsqlite3-dev libyaml-dev \
+      libsqlite3-dev libyaml-dev libssl-dev \
       libxml2-dev libxslt1-dev zlib1g-dev && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
