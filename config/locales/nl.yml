@@ -163,7 +163,6 @@ nl:
         submit: Gebruiker bijwerken
         title: Gebruiker bewerken
       form:
-        cancel: Annuleren
         email: E-mail
         locale: Taal
         name: Naam
@@ -187,7 +186,6 @@ nl:
         title: Nieuwe gebruiker
       show:
         active_sessions: Actieve sessies
-        back: Terug
         created_at: Aangemaakt
         edit: Bewerken
         email: E-mail
@@ -217,7 +215,6 @@ nl:
     form:
       add_category: Categorie toevoegen
       amount: Bedrag
-      cancel: Annuleer
       category: Categorie
       ends_at: Einddatum (optioneel)
       remove: Verwijder
@@ -665,13 +662,10 @@ nl:
   unknown_warranty: "❓ Onbekende garantiestatus"
   users:
     index:
-      go_back: Ga terug
       title: Personen op de rekening
     profiles:
       edit:
-        cancel: Annuleren
         email_placeholder: E-mailadres
-        go_back: Ga terug
         locale_en: "🇬🇧 English"
         locale_it: "🇮🇹 Italiano"
         locale_nl: "🇳🇱 Nederlands"
@@ -680,8 +674,6 @@ nl:
         save_changes: Wijzigingen opslaan
         sign_out: Uitloggen
         title: Jouw instellingen
-      show:
-        go_back: Ga terug
       update:
         success: Profiel bijgewerkt
     transfer:

@@ -163,7 +163,6 @@ it:
         submit: Aggiorna utente
         title: Modifica utente
       form:
-        cancel: Annulla
         email: Email
         locale: Lingua
         name: Nome
@@ -187,7 +186,6 @@ it:
         title: Nuovo utente
       show:
         active_sessions: Sessioni attive
-        back: Indietro
         created_at: Creato
         edit: Modifica
         email: Email
@@ -217,7 +215,6 @@ it:
     form:
       add_category: Aggiungi categoria
       amount: Importo
-      cancel: Annulla
       category: Categoria
       ends_at: Data di fine (opzionale)
       remove: Rimuovi
@@ -665,13 +662,10 @@ it:
   unknown_warranty: "❓ Stato garanzia sconosciuto"
   users:
     index:
-      go_back: Torna indietro
       title: Persone sull'account
     profiles:
       edit:
-        cancel: Annulla
         email_placeholder: Indirizzo email
-        go_back: Torna indietro
         locale_en: "🇬🇧 English"
         locale_it: "🇮🇹 Italiano"
         locale_nl: "🇳🇱 Nederlands"
@@ -680,8 +674,6 @@ it:
         save_changes: Salva modifiche
         sign_out: Esci
         title: Le tue impostazioni
-      show:
-        go_back: Torna indietro
       update:
         success: Profilo aggiornato
     transfer:
