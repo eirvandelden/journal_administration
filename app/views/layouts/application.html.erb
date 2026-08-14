@@ -20,6 +20,7 @@
     <%= javascript_importmap_tags %>
   </head>
   <body data-controller="search-dialog">
+    <%= render "appkit/shared/skip_link" %>
     <header>
       <nav data-controller="nav" data-action="click->nav#click">
         <ul>
@@ -57,17 +58,11 @@
         </ul>
       </nav>
     </header>
-    <main>
+    <main id="main">
       <%= render "appkit/shared/flashes" %>
       <%= yield %>
     </main>
-    <dialog id="confirm-dialog">
-      <p id="confirm-dialog-message"></p>
-      <nav>
-        <button type="button" id="confirm-dialog-cancel" autofocus><%= t('common.cancel') %></button>
-        <button type="button" id="confirm-dialog-accept" class="button-danger" data-default-label="<%= t('common.delete') %>"></button>
-      </nav>
-    </dialog>
+    <%= render "appkit/shared/confirm_dialog" %>
     <dialog id="search-dialog"
             data-search-dialog-target="dialog"
             data-action="click->search-dialog#handleBackdropClick">
