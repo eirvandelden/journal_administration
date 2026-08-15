@@ -33,11 +33,14 @@ linter:
       enabled: true
       severity: error
     actionview-no-silent-helper:
-      enabled: false
+      enabled: true
+      severity: error
     erb-no-output-in-attribute-name:
-      enabled: false
+      enabled: true
+      severity: error
     erb-prefer-direct-output:
-      enabled: false
+      enabled: true
+      severity: error
 
 formatter:
   enabled: false
