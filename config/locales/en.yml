@@ -163,7 +163,6 @@ en:
         submit: Update User
         title: Edit User
       form:
-        cancel: Cancel
         email: Email
         locale: Language
         name: Name
@@ -187,7 +186,6 @@ en:
         title: New User
       show:
         active_sessions: Active Sessions
-        back: Back
         created_at: Created
         edit: Edit
         email: Email
@@ -217,7 +215,6 @@ en:
     form:
       add_category: Add category
       amount: Amount
-      cancel: Cancel
       category: Category
       ends_at: End date (optional)
       remove: Remove
@@ -665,13 +662,10 @@ en:
   unknown_warranty: "❓ Unknown warranty status"
   users:
     index:
-      go_back: Go back
       title: People on the account
     profiles:
       edit:
-        cancel: Cancel
         email_placeholder: Email address
-        go_back: Go back
         locale_en: "🇬🇧 English"
         locale_it: "🇮🇹 Italiano"
         locale_nl: "🇳🇱 Nederlands"
@@ -680,8 +674,6 @@ en:
         save_changes: Save changes
         sign_out: Sign out
         title: Your settings
-      show:
-        go_back: Go back
       update:
         success: Profile updated
     transfer:
