@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_21_090000) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_21_090001) do
   create_table "account_aliases", force: :cascade do |t|
     t.integer "account_id", null: false
     t.datetime "created_at", null: false
@@ -159,9 +159,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_21_090000) do
   create_table "receipts", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.date "issued_on", null: false
+    t.integer "payment_id"
     t.integer "shop_id", null: false
     t.decimal "total_amount", precision: 10, scale: 2, null: false
     t.datetime "updated_at", null: false
+    t.index ["payment_id"], name: "index_receipts_on_payment_id"
     t.index ["shop_id"], name: "index_receipts_on_shop_id"
   end
 
@@ -249,6 +251,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_21_090000) do
   add_foreign_key "receipt_lines", "products"
   add_foreign_key "receipt_lines", "receipts"
   add_foreign_key "receipts", "accounts", column: "shop_id"
+  add_foreign_key "receipts", "transactions", column: "payment_id"
   add_foreign_key "sessions", "users"
   add_foreign_key "transaction_links", "transactions", column: "source_transaction_id"
   add_foreign_key "transaction_links", "transactions", column: "transfer_id"
