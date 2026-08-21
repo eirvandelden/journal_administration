@@ -40,6 +40,8 @@ Rails.application.routes.draw do
   get "dashboard/index"
   get "todo", to: "todos#index", as: :todo
 
+  post "mcp" => "assistant#create", as: :assistant
+
   get "up" => "rails/health#show", as: :rails_health_check
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end
