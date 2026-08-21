@@ -24,6 +24,9 @@ gem "solid_cache"
 gem "solid_cable"
 gem "solid_queue"
 
+# Assistant access
+gem "mcp" # Model Context Protocol server, so an assistant can read and update the books
+
 # Front-end
 gem "importmap-rails"
 gem "mvpa-css", github: "eirvandelden/mvpa.css"
