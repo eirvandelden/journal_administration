@@ -112,6 +112,10 @@ nl:
             category:
               must_be_parent: moet een hoofdcategorie zijn
               must_not_be_transfer: mag niet de categorie Transfer zijn
+        receipt_line:
+          attributes:
+            paid_amount:
+              does_not_match_bonus: moet de winkelprijs min de bonus zijn
         transaction:
           attributes:
             amount:

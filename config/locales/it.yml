@@ -112,6 +112,10 @@ it:
             category:
               must_be_parent: deve essere una categoria principale
               must_not_be_transfer: non può essere la categoria Transfer
+        receipt_line:
+          attributes:
+            paid_amount:
+              does_not_match_bonus: deve essere il prezzo di listino meno lo sconto
         transaction:
           attributes:
             amount:

@@ -1,0 +1,4 @@
+albert_heijn_friday:
+  shop: albert_heijn
+  issued_on: <%= Time.current.last_month.beginning_of_month.to_date.to_fs(:db) %>
+  total_amount: 50.00

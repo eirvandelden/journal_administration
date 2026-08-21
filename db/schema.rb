@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_19_120001) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_21_090000) do
   create_table "account_aliases", force: :cascade do |t|
     t.integer "account_id", null: false
     t.datetime "created_at", null: false
@@ -141,6 +141,30 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_19_120001) do
     t.index ["product_type_id"], name: "index_products_on_product_type_id"
   end
 
+  create_table "receipt_lines", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.decimal "discount_amount", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "full_amount", precision: 10, scale: 2, null: false
+    t.decimal "pack_amount", precision: 10, scale: 3
+    t.integer "pack_unit"
+    t.decimal "paid_amount", precision: 10, scale: 2, null: false
+    t.integer "product_id", null: false
+    t.decimal "quantity", precision: 10, scale: 3, null: false
+    t.integer "receipt_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_id"], name: "index_receipt_lines_on_product_id"
+    t.index ["receipt_id"], name: "index_receipt_lines_on_receipt_id"
+  end
+
+  create_table "receipts", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.date "issued_on", null: false
+    t.integer "shop_id", null: false
+    t.decimal "total_amount", precision: 10, scale: 2, null: false
+    t.datetime "updated_at", null: false
+    t.index ["shop_id"], name: "index_receipts_on_shop_id"
+  end
+
   create_table "sessions", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
     t.string "ip_address"
@@ -222,6 +246,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_19_120001) do
   add_foreign_key "chattels", "transactions", column: "purchase_transaction_id"
   add_foreign_key "product_types", "categories"
   add_foreign_key "products", "product_types"
+  add_foreign_key "receipt_lines", "products"
+  add_foreign_key "receipt_lines", "receipts"
+  add_foreign_key "receipts", "accounts", column: "shop_id"
   add_foreign_key "sessions", "users"
   add_foreign_key "transaction_links", "transactions", column: "source_transaction_id"
   add_foreign_key "transaction_links", "transactions", column: "transfer_id"

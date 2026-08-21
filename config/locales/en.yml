@@ -112,6 +112,10 @@ en:
             category:
               must_be_parent: must be a top-level category
               must_not_be_transfer: must not be the Transfer category
+        receipt_line:
+          attributes:
+            paid_amount:
+              does_not_match_bonus: must be the shelf price minus the bonus
         transaction:
           attributes:
             amount:

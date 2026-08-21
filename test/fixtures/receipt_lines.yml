@@ -1,0 +1,19 @@
+ah_chips:
+  receipt: albert_heijn_friday
+  product: ah_ribbelchips
+  quantity: 1
+  pack_amount: 300
+  pack_unit: gram
+  full_amount: 1.49
+  discount_amount: 0.00
+  paid_amount: 1.49
+
+lays_chips_on_bonus:
+  receipt: albert_heijn_friday
+  product: lays_ribbelchips
+  quantity: 1
+  pack_amount: 300
+  pack_unit: gram
+  full_amount: 2.19
+  discount_amount: 0.70
+  paid_amount: 1.49
