@@ -35,3 +35,7 @@ salary:
   name: Salary
   direction: credit
   parent_category: income
+
+household:
+  name: Household
+  direction: debit

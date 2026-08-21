@@ -16,3 +16,10 @@ andrelon_shampoo:
   name: Andrelon shampoo
   pack_amount: 300
   pack_unit: millilitre
+
+dreft_dishwashing_liquid:
+  name: Dreft afwasmiddel
+  brand: Dreft
+  product_type: dishwashing_liquid
+  pack_amount: 750
+  pack_unit: millilitre

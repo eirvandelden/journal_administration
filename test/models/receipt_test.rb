@@ -2,7 +2,51 @@ require "test_helper"
 
 class ReceiptTest < ActiveSupport::TestCase
   test "a receipt adds up what the basket cost" do
-    assert_equal BigDecimal("2.98"), receipts(:albert_heijn_friday).basket_total
+    assert_equal BigDecimal("6.47"), receipts(:albert_heijn_friday).basket_total
+  end
+
+  test "the payment is split the way the basket divides over the categories" do
+    receipt = receipts(:albert_heijn_friday)
+    receipt.update!(payment: transactions(:debit_grocery))
+
+    receipt.rewrite_payment_splits
+
+    assert_equal(
+      { categories(:groceries) => BigDecimal("2.98"), categories(:household) => BigDecimal("3.49") },
+      receipt.payment.explicit_transaction_splits.to_h { |split| [ split.category, split.amount ] }
+    )
+  end
+
+  test "what the basket does not explain stays with the payment's own category" do
+    receipt = receipts(:albert_heijn_friday)
+    receipt.update!(payment: transactions(:debit_grocery))
+
+    receipt.rewrite_payment_splits
+
+    remainder = receipt.payment.transaction_splits.find_by(remainder: true)
+    assert_equal BigDecimal("43.53"), remainder.amount
+    assert_equal categories(:supermarket), remainder.category
+  end
+
+  test "splitting again replaces the splits from the previous import" do
+    receipt = receipts(:albert_heijn_friday)
+    receipt.update!(payment: transactions(:debit_grocery))
+
+    receipt.rewrite_payment_splits
+    receipt.rewrite_payment_splits
+
+    assert_equal 2, receipt.payment.explicit_transaction_splits.count
+  end
+
+  test "a basket bigger than the payment is not split at all" do
+    receipt = receipts(:albert_heijn_friday)
+    receipt.update!(payment: transactions(:debit_grocery), total_amount: BigDecimal("50.00"))
+    receipt.lines.first.update!(full_amount: BigDecimal("60.00"), discount_amount: 0, paid_amount: BigDecimal("60.00"))
+
+    splits_before = receipt.payment.transaction_splits.map(&:attributes)
+
+    assert_not receipt.rewrite_payment_splits
+    assert_equal splits_before, receipt.payment.reload.transaction_splits.map(&:attributes)
   end
 
   test "a receipt is issued by the shop the groceries came from" do

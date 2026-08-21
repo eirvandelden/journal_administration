@@ -25,7 +25,27 @@ class Receipt < ApplicationRecord
     fitting.first if fitting.one?
   end
 
+  # Splits the payment the way the basket divides over the accounting categories
+  #
+  # Refuses when the basket costs more than the payment: the books would not
+  # add up, and scaling the numbers to fit would invent figures.
+  def rewrite_payment_splits
+    return false if payment.blank? || basket_total > payment.amount
+
+    payment.transaction_splits.destroy_all
+    paid_per_category.each { |category, amount| payment.transaction_splits.create!(category: category, amount: amount) }
+    payment.ensure_remainder_split
+    true
+  end
+
   private
+
+  def paid_per_category
+    lines.includes(product: :product_type)
+         .filter_map { |line| [ line.product.product_type&.category, line.paid_amount ] if line.product.product_type }
+         .group_by(&:first)
+         .transform_values { |pairs| pairs.sum(&:last) }
+  end
 
   def fitting_payments
     Transaction.where(type: "Debit", creditor: shop, amount: total_amount)
