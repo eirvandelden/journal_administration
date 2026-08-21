@@ -21,9 +21,7 @@ class AssistantController < ActionController::API
     token = presented_token
     return head :unauthorized if token.blank?
 
-    @user = User.active.find_by(assistant_token: token)
-
-    head :unauthorized if @user.nil?
+    head :unauthorized unless User.active.exists?(assistant_token: token)
   end
 
   def presented_token
@@ -40,7 +38,7 @@ class AssistantController < ActionController::API
   end
 
   def server
-    MCP::Server.new(name: "journal_administration", tools: tools, server_context: { user: @user })
+    MCP::Server.new(name: "journal_administration", tools: tools)
   end
 
   def tools
