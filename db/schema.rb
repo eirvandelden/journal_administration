@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_21_100000) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_19_120001) do
   create_table "account_aliases", force: :cascade do |t|
     t.integer "account_id", null: false
     t.datetime "created_at", null: false
@@ -121,6 +121,26 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_21_100000) do
     t.index ["purchase_transaction_id"], name: "index_chattels_on_purchase_transaction_id"
   end
 
+  create_table "product_types", force: :cascade do |t|
+    t.integer "category_id", null: false
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.datetime "updated_at", null: false
+    t.index "LOWER(name)", name: "index_product_types_on_LOWER_name", unique: true
+    t.index ["category_id"], name: "index_product_types_on_category_id"
+  end
+
+  create_table "products", force: :cascade do |t|
+    t.string "brand"
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.decimal "pack_amount", precision: 10, scale: 3
+    t.integer "pack_unit"
+    t.integer "product_type_id"
+    t.datetime "updated_at", null: false
+    t.index ["product_type_id"], name: "index_products_on_product_type_id"
+  end
+
   create_table "sessions", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
     t.string "ip_address"
@@ -200,6 +220,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_21_100000) do
   add_foreign_key "budget_categories", "categories"
   add_foreign_key "budgets", "budgets", column: "closed_by_budget_id", on_delete: :nullify
   add_foreign_key "chattels", "transactions", column: "purchase_transaction_id"
+  add_foreign_key "product_types", "categories"
+  add_foreign_key "products", "product_types"
   add_foreign_key "sessions", "users"
   add_foreign_key "transaction_links", "transactions", column: "source_transaction_id"
   add_foreign_key "transaction_links", "transactions", column: "transfer_id"
