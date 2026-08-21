@@ -47,6 +47,13 @@ class AssistantTest < ActionDispatch::IntegrationTest
     assert_includes answer, "No transaction"
   end
 
+  test "the assistant finds the transactions that still need a category" do
+    answer = ask_assistant("find_uncategorized_transactions")
+
+    assert_includes answer, "Uncategorized transaction"
+    assert_not_includes answer, "Monthly salary"
+  end
+
   private
 
   def ask_assistant(tool, arguments = {})
