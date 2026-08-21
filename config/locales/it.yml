@@ -533,6 +533,21 @@ it:
   pagination:
     next: Successivo
     previous: Precedente
+  receipts:
+    basket:
+      bonus: Sconto
+      heading: Carrello
+      paid: Pagato
+      per_unit: Per unità
+      product: Prodotto
+      quantity: Quantità
+      shelf_price: Prezzo di listino
+      total: Totale carrello
+      units:
+        kilogram: kg
+        litre: L
+        piece: al pezzo
+      view_invoice: Vedi fattura
   search:
     no_results: Nessun risultato trovato
     open: "🔍 Cerca"

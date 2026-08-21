@@ -533,6 +533,21 @@ en:
   pagination:
     next: Next
     previous: Previous
+  receipts:
+    basket:
+      bonus: Bonus
+      heading: Basket
+      paid: Paid
+      per_unit: Per unit
+      product: Product
+      quantity: Quantity
+      shelf_price: Shelf price
+      total: Basket total
+      units:
+        kilogram: kg
+        litre: L
+        piece: each
+      view_invoice: View invoice
   search:
     no_results: No results found
     open: "🔍 Search"

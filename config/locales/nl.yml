@@ -533,6 +533,21 @@ nl:
   pagination:
     next: Volgende
     previous: Vorige
+  receipts:
+    basket:
+      bonus: Bonus
+      heading: Mandje
+      paid: Betaald
+      per_unit: Per eenheid
+      product: Product
+      quantity: Aantal
+      shelf_price: Winkelprijs
+      total: Totaal mandje
+      units:
+        kilogram: kg
+        litre: L
+        piece: per stuk
+      view_invoice: Factuur bekijken
   search:
     no_results: Geen resultaten gevonden
     open: "🔍 Zoeken"
