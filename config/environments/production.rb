@@ -104,4 +104,7 @@ Rails.application.configure do
   # ]
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
+
+  # The assistant answers only on the home network, so its token never leaves the house.
+  config.x.assistant_host = ENV.fetch("ASSISTANT_HOST", "finances.home.arpa")
 end
