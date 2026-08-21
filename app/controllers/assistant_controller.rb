@@ -44,6 +44,12 @@ class AssistantController < ActionController::API
   end
 
   def tools
-    [ Assistant::ListCategories, Assistant::FindUncategorizedTransactions, Assistant::SetTransactionCategory ]
+    [
+      Assistant::AddAccountAlias,
+      Assistant::FindAccounts,
+      Assistant::FindUncategorizedTransactions,
+      Assistant::ListCategories,
+      Assistant::SetTransactionCategory
+    ]
   end
 end
