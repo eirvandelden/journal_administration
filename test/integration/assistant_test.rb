@@ -33,6 +33,20 @@ class AssistantTest < ActionDispatch::IntegrationTest
     assert_includes answer, "Groceries - Supermarket"
   end
 
+  test "the assistant files an uncategorized transaction under a category" do
+    answer = ask_assistant("set_transaction_category",
+      transaction_id: transactions(:uncategorized).id, category_id: categories(:supermarket).id)
+
+    assert_equal categories(:supermarket), transactions(:uncategorized).reload.category
+    assert_includes answer, "Groceries - Supermarket"
+  end
+
+  test "the assistant is told when the transaction it wants to file cannot be found" do
+    answer = ask_assistant("set_transaction_category", transaction_id: 0, category_id: categories(:supermarket).id)
+
+    assert_includes answer, "No transaction"
+  end
+
   private
 
   def ask_assistant(tool, arguments = {})

@@ -44,6 +44,6 @@ class AssistantController < ActionController::API
   end
 
   def tools
-    [ Assistant::ListCategories ]
+    [ Assistant::ListCategories, Assistant::SetTransactionCategory ]
   end
 end

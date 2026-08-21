@@ -1,11 +1,11 @@
 # Tells the assistant every category a transaction can be filed under
 module Assistant
-  class ListCategories < MCP::Tool
+  class ListCategories < Tool
     description "List every category a transaction can be filed under, with the number that identifies it."
     annotations read_only_hint: true
 
     def self.call(server_context:)
-      MCP::Tool::Response.new([ { type: "text", text: catalogue } ])
+      answer(catalogue)
     end
 
     def self.catalogue
