@@ -1,6 +1,8 @@
 class User < ApplicationRecord
   include Role, Appkit::Transferable, Appkit::UserTheming
 
+  has_secure_token :assistant_token
+
   has_many :sessions, dependent: :destroy
   has_many :push_subscriptions, class_name: "Appkit::PushSubscription", dependent: :destroy
 

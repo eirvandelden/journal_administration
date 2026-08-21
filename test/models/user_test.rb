@@ -88,4 +88,22 @@ class UserTest < ActiveSupport::TestCase
 
     assert_not users(:member).current?
   end
+
+  # -- assistant token --------------------------------------------------------
+
+  test "a new user gets an assistant token so an assistant can act for them" do
+    user = User.create!(name: "Token Owner", email_address: "token@example.com",
+                        password: "password123", role: :member, locale: :nl)
+
+    assert_predicate user.assistant_token, :present?
+  end
+
+  test "regenerating the assistant token revokes the previous one" do
+    member = users(:member)
+    previous_token = member.assistant_token
+
+    member.regenerate_assistant_token
+
+    assert_not_equal previous_token, member.assistant_token
+  end
 end
