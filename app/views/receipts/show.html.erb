@@ -1,0 +1,28 @@
+<header>
+  <h1><%= @receipt.shop.name %> — <%= l @receipt.issued_on, format: :short %></h1>
+</header>
+
+<article>
+  <dl>
+    <dt><%= t(".invoice_total") %></dt>
+    <dd><%= number_to_currency(@receipt.total_amount) %></dd>
+
+    <dt><%= t(".basket_total") %></dt>
+    <dd><%= number_to_currency(@receipt.basket_total) %></dd>
+  </dl>
+
+  <%= render "receipts/basket", receipt: @receipt %>
+
+  <section>
+    <h2><%= t(".payment") %></h2>
+    <p>
+      <% if @receipt.payment %>
+        <%= link_to t(".settled_by"), transaction_path(@receipt.payment) %>
+        <%= number_to_currency(@receipt.payment.amount) %>
+        <%= l @receipt.payment.booked_at.to_date, format: :short %>
+      <% else %>
+        <%= t(".not_settled") %>
+      <% end %>
+    </p>
+  </section>
+</article>

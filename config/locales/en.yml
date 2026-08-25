@@ -136,6 +136,10 @@ en:
       account: Account
       category: Category
       chattel: Chattel
+      receipt:
+        one: Invoice
+        other: Invoices
+      receipt_line: Invoice line
       transaction: Transaction
       transaction_link: Transaction Link
   admin:
@@ -471,6 +475,7 @@ en:
     chattels: "📦 %{model}"
     preferences: "🎨 Preferences"
     profile: "👤 Profile"
+    receipts: "🧾 %{model}"
     todo: "✅ %{model}"
     todo_all: All
     todo_consolidatable_accounts: Consolidatable accounts
@@ -548,6 +553,21 @@ en:
         litre: L
         piece: each
       view_invoice: View invoice
+    index:
+      date: Date
+      empty: No grocery invoices yet.
+      heading: Grocery invoices
+      not_settled: Not settled
+      payment: Payment
+      settled: Settled
+      shop: Shop
+      total: Total
+    show:
+      basket_total: Basket adds up to
+      invoice_total: Invoice states
+      not_settled: No payment has been matched to this invoice yet.
+      payment: Payment
+      settled_by: Settled by
   search:
     no_results: No results found
     open: "🔍 Search"

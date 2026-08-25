@@ -136,6 +136,10 @@ nl:
       account: Rekening
       category: Categorie
       chattel: Bezitting
+      receipt:
+        one: Factuur
+        other: Facturen
+      receipt_line: Factuurregel
       transaction: Transactie
       transaction_link: Transactiekoppeling
   admin:
@@ -471,6 +475,7 @@ nl:
     chattels: "📦 %{model}"
     preferences: "🎨 Voorkeuren"
     profile: "👤 Profiel"
+    receipts: "🧾 %{model}"
     todo: "✅ %{model}"
     todo_all: Alle
     todo_consolidatable_accounts: Te consolideren rekeningen
@@ -548,6 +553,21 @@ nl:
         litre: L
         piece: per stuk
       view_invoice: Factuur bekijken
+    index:
+      date: Datum
+      empty: Nog geen boodschappenfacturen.
+      heading: Boodschappenfacturen
+      not_settled: Niet afgerekend
+      payment: Betaling
+      settled: Afgerekend
+      shop: Winkel
+      total: Totaal
+    show:
+      basket_total: Mandje komt op
+      invoice_total: Factuur zegt
+      not_settled: Nog geen betaling gekoppeld aan deze factuur.
+      payment: Betaling
+      settled_by: Afgerekend met
   search:
     no_results: Geen resultaten gevonden
     open: "🔍 Zoeken"

@@ -136,6 +136,10 @@ it:
       account: Conto
       category: Categoria
       chattel: Bene
+      receipt:
+        one: Fattura
+        other: Fatture
+      receipt_line: Riga della fattura
       transaction: Transazione
       transaction_link: Collegamento transazione
   admin:
@@ -471,6 +475,7 @@ it:
     chattels: "📦 %{model}"
     preferences: "🎨 Preferenze"
     profile: "👤 Profilo"
+    receipts: "🧾 %{model}"
     todo: "✅ %{model}"
     todo_all: Tutti
     todo_consolidatable_accounts: Conti da consolidare
@@ -548,6 +553,21 @@ it:
         litre: L
         piece: al pezzo
       view_invoice: Vedi fattura
+    index:
+      date: Data
+      empty: Nessuna fattura della spesa.
+      heading: Fatture della spesa
+      not_settled: Non saldata
+      payment: Pagamento
+      settled: Saldata
+      shop: Negozio
+      total: Totale
+    show:
+      basket_total: Il carrello arriva a
+      invoice_total: La fattura dice
+      not_settled: Nessun pagamento è ancora collegato a questa fattura.
+      payment: Pagamento
+      settled_by: Saldata con
   search:
     no_results: Nessun risultato trovato
     open: "🔍 Cerca"
