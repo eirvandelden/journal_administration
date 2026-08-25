@@ -42,7 +42,8 @@ pidfile ENV.fetch("PIDFILE") { "tmp/pids/server.pid" }
 # Allow puma to be restarted by `rails restart` command.
 plugin :tmp_restart
 
-# Run Solid Queue's supervisor in-process, so a single deployed web role
-# actually processes jobs (Appkit::SessionExpiryJob, queue cleanup, etc.)
-# instead of them queuing forever with no worker.
-plugin :solid_queue if ENV["SOLID_QUEUE_IN_PUMA"]
+# Run Solid Queue's supervisor in-process, so jobs are actually picked up
+# (Appkit::SessionExpiryJob, queue cleanup, etc.) instead of queuing forever
+# with no worker. Always in development, and in production wherever the single
+# deployed web role has to do the processing itself.
+plugin :solid_queue if ENV["SOLID_QUEUE_IN_PUMA"] || ENV.fetch("RAILS_ENV", "development") == "development"

@@ -62,6 +62,10 @@ development:
     <<: *development_primary
     database: storage/db/development_cable.sqlite3
     migrations_paths: db/cable_migrate
+  queue:
+    <<: *development_primary
+    database: storage/db/development_queue.sqlite3
+    migrations_paths: db/queue_migrate
 
 #
 #   # Warning: The database defined as "test" will be erased and
