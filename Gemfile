@@ -36,10 +36,8 @@ gem "bootsnap", require: false    # Reduces boot times through caching; required
 gem "bundler-audit"
 gem "csv"
 gem "data_migrate"                # Migrate data alongside schema
-gem "flutie"                      # Flutie provides some utility view helpers for use with Rails applications.
 gem "jbuilder" # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem "geared_pagination", "~> 1.2"
-gem "symbol-fstring", require: "fstring/all" # Performance improvement
 gem "thruster"
 gem "bcrypt_pbkdf", ">= 1.1.2", force_ruby_platform: true # Fix an issue with bcrypt_pbkdf 1.1.2 and darwin platform
 
