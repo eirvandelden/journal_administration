@@ -59,13 +59,8 @@ group :development do
   # Linting and formatting
   gem "herb", require: false                  # HTML-aware ERB analysis
   gem "rubocop-capybara", require: false
-  gem "rubocop-minitest", require: false
-  gem "rubocop-obsession", require: false
-  gem "rubocop-packaging", require: false
-  gem "rubocop-performance", require: false
-  gem "rubocop-rails", require: false
-  gem "rubocop-rails-omakase", require: false
-  gem "rubocop-rspec", require: false
+  gem "rubocop-eirvandelden", github: "eirvandelden/rubocop-eirvandelden",
+                              branch: "feat/shared-rubocop-config", require: false
   gem "lefthook", require: false
 end
 
