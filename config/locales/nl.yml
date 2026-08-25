@@ -72,6 +72,12 @@ nl:
         serial_number: Serienummer
         warranty_document: Garantiedocument
         warranty_expires_at: Garantie tot
+      product:
+        brand: Merk
+        name: Naam
+        pack_amount: Pakgrootte
+        pack_unit: Eenheid
+        product: Product
       product_type:
         category: Geboekt als
         name: Naam
@@ -479,6 +485,7 @@ nl:
     chattels: "📦 %{model}"
     preferences: "🎨 Voorkeuren"
     product_types: "🥫 %{model}"
+    products: "🛒 %{model}"
     profile: "👤 Profiel"
     receipts: "🧾 %{model}"
     todo: "✅ %{model}"
@@ -558,6 +565,26 @@ nl:
       heading: Nieuwe productsoort
     update:
       success: Productsoort opgeslagen.
+  products:
+    edit:
+      heading: Product indelen
+    index:
+      brand: Merk
+      empty: Nog geen producten.
+      heading: Producten
+      name: Naam
+      product_type: Productsoort
+      unclassified: Nog indelen
+    pack_units:
+      gram: g
+      kilogram: kg
+      litre: L
+      millilitre: ml
+      piece: stuk
+    show:
+      unknown: Nog niet bekend
+    update:
+      success: Product opgeslagen.
   receipts:
     basket:
       bonus: Bonus

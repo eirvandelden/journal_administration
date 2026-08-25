@@ -72,6 +72,12 @@ it:
         serial_number: Numero seriale
         warranty_document: Documento di garanzia
         warranty_expires_at: Garanzia fino al
+      product:
+        brand: Marca
+        name: Nome
+        pack_amount: Formato
+        pack_unit: Unità
+        product: Prodotto
       product_type:
         category: Registrato come
         name: Nome
@@ -479,6 +485,7 @@ it:
     chattels: "📦 %{model}"
     preferences: "🎨 Preferenze"
     product_types: "🥫 %{model}"
+    products: "🛒 %{model}"
     profile: "👤 Profilo"
     receipts: "🧾 %{model}"
     todo: "✅ %{model}"
@@ -558,6 +565,26 @@ it:
       heading: Nuovo tipo di prodotto
     update:
       success: Tipo di prodotto salvato.
+  products:
+    edit:
+      heading: Classifica prodotto
+    index:
+      brand: Marca
+      empty: Nessun prodotto.
+      heading: Prodotti
+      name: Nome
+      product_type: Tipo di prodotto
+      unclassified: Da classificare
+    pack_units:
+      gram: g
+      kilogram: kg
+      litre: L
+      millilitre: ml
+      piece: pezzo
+    show:
+      unknown: Non ancora noto
+    update:
+      success: Prodotto salvato.
   receipts:
     basket:
       bonus: Sconto

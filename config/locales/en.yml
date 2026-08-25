@@ -72,6 +72,12 @@ en:
         serial_number: Serial Number
         warranty_document: Warranty document
         warranty_expires_at: Warranty expires at
+      product:
+        brand: Brand
+        name: Name
+        pack_amount: Pack size
+        pack_unit: Unit
+        product: Product
       product_type:
         category: Booked as
         name: Name
@@ -479,6 +485,7 @@ en:
     chattels: "📦 %{model}"
     preferences: "🎨 Preferences"
     product_types: "🥫 %{model}"
+    products: "🛒 %{model}"
     profile: "👤 Profile"
     receipts: "🧾 %{model}"
     todo: "✅ %{model}"
@@ -558,6 +565,26 @@ en:
       heading: New product type
     update:
       success: Product type saved.
+  products:
+    edit:
+      heading: Classify product
+    index:
+      brand: Brand
+      empty: No products yet.
+      heading: Products
+      name: Name
+      product_type: Product type
+      unclassified: Still to classify
+    pack_units:
+      gram: g
+      kilogram: kg
+      litre: L
+      millilitre: ml
+      piece: piece
+    show:
+      unknown: Not known yet
+    update:
+      success: Product saved.
   receipts:
     basket:
       bonus: Bonus

@@ -8,6 +8,7 @@ Rails.application.routes.draw do
 
   resources :chattels
   resources :product_types, except: %i[show destroy]
+  resources :products, only: %i[index show edit update]
   resources :receipts, only: %i[index show] do
     scope module: "receipts" do
       resource :payment_link, only: %i[create]

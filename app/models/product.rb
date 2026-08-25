@@ -14,5 +14,12 @@ class Product < ApplicationRecord
 
   scope :unclassified, -> { where(product_type_id: nil).or(where(brand: [ nil, "" ])) }
 
+  # The brands we already buy from, so a new one is typed only once
+  def self.brands_in_use
+    where.not(brand: [ nil, "" ]).distinct.order(:brand).pluck(:brand)
+  end
+
   def unclassified? = brand.blank? || product_type.blank?
+
+  def to_s = name
 end

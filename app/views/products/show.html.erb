@@ -1,0 +1,19 @@
+<header>
+  <h1><%= @product.name %></h1>
+  <nav>
+    <%= link_to t("common.edit"), edit_product_path(@product) %>
+  </nav>
+</header>
+
+<article>
+  <dl>
+    <dt><%= Product.human_attribute_name(:brand) %></dt>
+    <dd><%= @product.brand.presence || t(".unknown") %></dd>
+
+    <dt><%= Product.human_attribute_name(:product_type) %></dt>
+    <dd><%= @product.product_type&.name || t(".unknown") %></dd>
+
+    <dt><%= Product.human_attribute_name(:pack_amount) %></dt>
+    <dd><%= @product.pack_amount ? "#{@product.pack_amount.to_i} #{t("products.pack_units.#{@product.pack_unit}")}" : t(".unknown") %></dd>
+  </dl>
+</article>
