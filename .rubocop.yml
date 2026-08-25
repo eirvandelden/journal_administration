@@ -1,6 +1,6 @@
-# Omakase Ruby styling for Rails
+# The rules shared by every personal Ruby project
 inherit_gem:
-  rubocop-rails-omakase: rubocop.yml
+  rubocop-eirvandelden: config/capybara.yml
 
 inherit_from:
   - .rubocop_todo.yml

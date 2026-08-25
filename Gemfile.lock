@@ -24,6 +24,20 @@ GIT
     mvpa-css (0.1.0.pre.git.3122fd2)
       railties (>= 6.0)
 
+GIT
+  remote: https://github.com/eirvandelden/rubocop-eirvandelden.git
+  revision: 2f419b99522d3926dd828d9289bbcf14b5448053
+  branch: feat/shared-rubocop-config
+  specs:
+    rubocop-eirvandelden (0.1.0)
+      rubocop
+      rubocop-minitest
+      rubocop-obsession
+      rubocop-packaging
+      rubocop-rails-omakase
+      rubocop-rspec
+      rubocop-yard
+
 GEM
   remote: https://gem.coop/
   specs:
@@ -406,6 +420,10 @@ GEM
       lint_roller (~> 1.1)
       regexp_parser (>= 2.0)
       rubocop (~> 1.86, >= 1.86.2)
+    rubocop-yard (1.3.0)
+      lint_roller
+      rubocop (~> 1.72)
+      yard
     ruby-progressbar (1.13.0)
     rubyzip (3.5.0)
     securerandom (0.4.1)
@@ -477,6 +495,7 @@ GEM
     websocket-extensions (0.1.5)
     xpath (3.2.0)
       nokogiri (~> 1.8)
+    yard (0.9.45)
     zeitwerk (2.8.3)
 
 PLATFORMS
@@ -523,13 +542,7 @@ DEPENDENCIES
   rails-erd
   redis (~> 5.0)
   rubocop-capybara
-  rubocop-minitest
-  rubocop-obsession
-  rubocop-packaging
-  rubocop-performance
-  rubocop-rails
-  rubocop-rails-omakase
-  rubocop-rspec
+  rubocop-eirvandelden!
   selenium-webdriver
   solid_queue
   sqlite3 (>= 2.0)
@@ -675,6 +688,7 @@ CHECKSUMS
   rubocop (1.90.0) sha256=9eb4c065b5c5154e4ef554c547972f3905a9eb6b53e657e580b6796b54bf8242
   rubocop-ast (1.50.0) sha256=b9ca88300da0803ee222ad20cdb30494c0a784eed06fdc35d254b06d662788db
   rubocop-capybara (3.0.0) sha256=7a64655238acda7f8f3c87e37ac825a64c615a79c17c253f1a28270dc3768c4b
+  rubocop-eirvandelden (0.1.0)
   rubocop-minitest (0.40.0) sha256=353c698199115f12151144cf0b5a96f69bb9d77b660cf6536df2c4250c672a9d
   rubocop-obsession (0.2.3) sha256=db35c9c2673d107c578e905c36e98f6d7c7e038e4d9afe27479e7e3dee06cc89
   rubocop-packaging (0.6.0) sha256=fb92bd0fb48e6f8cdb1648d2249b0cd51c2497dcc87340132d22f01edbf558a7
@@ -682,6 +696,7 @@ CHECKSUMS
   rubocop-rails (2.37.0) sha256=6e1645add5060e0328f8ddda0d820f55697c591394398bf14bb9dccb62f14b7e
   rubocop-rails-omakase (1.1.0) sha256=2af73ac8ee5852de2919abbd2618af9c15c19b512c4cfc1f9a5d3b6ef009109d
   rubocop-rspec (3.10.2) sha256=0b3e2ecc592cd10ecbf0095bb58d1e357905276e069643523cc19eb7495f65e2
+  rubocop-yard (1.3.0) sha256=29bc44274e0b10d7db60655e84089328c0aceadd246d24f8e963c67949a60269
   ruby-progressbar (1.13.0) sha256=80fc9c47a9b640d6834e0dc7b3c94c9df37f08cb072b7761e4a71e22cff29b33
   rubyzip (3.5.0) sha256=f77c49d737a849b662f6ca4de473f31b4ecd8288f1c9f901a5c820641f0f8d7c
   securerandom (0.4.1) sha256=cc5193d414a4341b6e225f0cb4446aceca8e50d5e1888743fac16987638ea0b1
@@ -721,6 +736,7 @@ CHECKSUMS
   websocket-driver (0.8.2) sha256=97c556b019bf3410b4961002ac501621e9322d3f8a7bc02161a09301cc4c4146
   websocket-extensions (0.1.5) sha256=1c6ba63092cda343eb53fc657110c71c754c56484aad42578495227d717a8241
   xpath (3.2.0) sha256=6dfda79d91bb3b949b947ecc5919f042ef2f399b904013eb3ef6d20dd3a4082e
+  yard (0.9.45) sha256=52e211493f7cb8a3ebf7e104a25a1e73937a3103092545d34cb88fafebb3dc51
   zeitwerk (2.8.3) sha256=2c85125a8467ce069e20123d1e709a08955c9d29c118c25b46b7b7fafdbb92e5
 
 RUBY VERSION
