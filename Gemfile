@@ -14,14 +14,14 @@ gem "appkit", github: "eirvandelden/appkit"
 
 # Drivers
 gem "sqlite3", ">= 2.0" # Use sqlite3 as the database for Active Record
-gem "redis", "~> 5.0" # Use Redis for Action Cable
 
 # Deployment
 gem "kamal", require: false     # Deployment
 gem "puma" # Use Puma as the app server
 
-# Caching and jobs
+# Caching, jobs, and websockets
 gem "solid_cache"
+gem "solid_cable"
 gem "solid_queue"
 
 # Front-end
