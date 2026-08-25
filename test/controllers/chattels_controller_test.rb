@@ -76,13 +76,6 @@ class ChattelsControllerTest < ActionDispatch::IntegrationTest
 
   private
 
-  def sign_in_as(user)
-    post session_url, params: {
-      email_address: user.email_address,
-      password: "password123"
-    }
-  end
-
   def chattel_params
     @chattel.attributes.symbolize_keys.slice(
       :kind, :left_possession_at, :model_number, :name, :notes,
