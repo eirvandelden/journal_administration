@@ -562,11 +562,18 @@ it:
       settled: Saldata
       shop: Negozio
       total: Totale
+    payment_links:
+      create:
+        basket_exceeds_payment: Il carrello costa più del pagamento, quindi il pagamento è rimasto invariato.
+        success: Il pagamento è stato diviso come si divide il carrello.
     show:
       basket_total: Il carrello arriva a
+      candidates: Quale pagamento ha saldato questa fattura?
       invoice_total: La fattura dice
+      no_candidates: Nessun pagamento con questo totale intorno a questa data.
       not_settled: Nessun pagamento è ancora collegato a questa fattura.
       payment: Pagamento
+      settle: Collega
       settled_by: Saldata con
   search:
     no_results: Nessun risultato trovato

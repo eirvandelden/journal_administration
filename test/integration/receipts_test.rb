@@ -54,6 +54,54 @@ class ReceiptsTest < ActionDispatch::IntegrationTest
     assert_select "dd", text: ApplicationController.helpers.number_to_currency(@receipt.basket_total)
   end
 
+  test "an unsettled receipt offers the payments that could have settled it" do
+    get receipt_path(@receipt)
+
+    assert_response :success
+    assert_select "form[action=?]", receipt_payment_link_path(@receipt)
+    assert_select "input[value=?]", transactions(:debit_grocery).id.to_s
+  end
+
+  test "choosing a payment settles the receipt and splits it by the basket" do
+    post receipt_payment_link_path(@receipt), params: { receipt: { payment_id: transactions(:debit_grocery).id } }
+
+    assert_redirected_to receipt_path(@receipt)
+    assert_equal transactions(:debit_grocery), @receipt.reload.payment
+    assert_equal(
+      { categories(:groceries) => BigDecimal("2.98"), categories(:household) => BigDecimal("3.49") },
+      @receipt.payment.explicit_transaction_splits.to_h { |split| [ split.category, split.amount ] }
+    )
+  end
+
+  test "a receipt that is already settled offers no picker" do
+    @receipt.update!(payment: transactions(:debit_grocery))
+
+    get receipt_path(@receipt)
+
+    assert_response :success
+    assert_select "form[action=?]", receipt_payment_link_path(@receipt), count: 0
+  end
+
+  test "a receipt no payment could have settled says so" do
+    @receipt.update!(total_amount: BigDecimal("999.99"))
+
+    get receipt_path(@receipt)
+
+    assert_response :success
+    assert_select "p", text: /#{Regexp.escape(I18n.t("receipts.show.no_candidates", locale: :en))}/
+    assert_select "form[action=?]", receipt_payment_link_path(@receipt), count: 0
+  end
+
+  test "a basket costing more than the payment leaves the payment's splits alone" do
+    @receipt.lines.first.update!(full_amount: BigDecimal("60.00"), discount_amount: 0, paid_amount: BigDecimal("60.00"))
+    splits_before = transactions(:debit_grocery).transaction_splits.map(&:attributes)
+
+    post receipt_payment_link_path(@receipt), params: { receipt: { payment_id: transactions(:debit_grocery).id } }
+
+    assert_redirected_to receipt_path(@receipt)
+    assert_equal splits_before, transactions(:debit_grocery).reload.transaction_splits.map(&:attributes)
+  end
+
   test "a receipt links to the invoice it came from" do
     @receipt.invoice.attach(
       io: StringIO.new("pdf content"), filename: "invoice.pdf", content_type: "application/pdf"

@@ -9,10 +9,12 @@ class ReceiptsController < ApplicationController
     @receipts = set_page_and_extract_portion_from receipts, per_page: [ 20 ]
   end
 
-  # Displays one invoice with its basket
+  # Displays one invoice with its basket, and the payments that could settle it
   #
   # @return [void]
-  def show; end
+  def show
+    @candidate_payments = @receipt.payment ? Transaction.none : @receipt.fitting_payments
+  end
 
   private
 

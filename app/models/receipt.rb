@@ -38,6 +38,12 @@ class Receipt < ApplicationRecord
     true
   end
 
+  # The payments that could have settled this receipt, for a person to choose between
+  def fitting_payments
+    Transaction.where(type: "Debit", creditor: shop, amount: total_amount)
+               .where(booked_at: (issued_on - BOOKING_WINDOW)..(issued_on + BOOKING_WINDOW))
+  end
+
   private
 
   def paid_per_category
@@ -45,10 +51,5 @@ class Receipt < ApplicationRecord
          .filter_map { |line| [ line.product.product_type&.category, line.paid_amount ] if line.product.product_type }
          .group_by(&:first)
          .transform_values { |pairs| pairs.sum(&:last) }
-  end
-
-  def fitting_payments
-    Transaction.where(type: "Debit", creditor: shop, amount: total_amount)
-               .where(booked_at: (issued_on - BOOKING_WINDOW)..(issued_on + BOOKING_WINDOW))
   end
 end

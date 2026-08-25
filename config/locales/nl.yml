@@ -562,11 +562,18 @@ nl:
       settled: Afgerekend
       shop: Winkel
       total: Totaal
+    payment_links:
+      create:
+        basket_exceeds_payment: Het mandje kost meer dan de betaling, dus de betaling is ongewijzigd gelaten.
+        success: De betaling is verdeeld zoals het mandje verdeeld is.
     show:
       basket_total: Mandje komt op
+      candidates: Welke betaling hoort bij deze factuur?
       invoice_total: Factuur zegt
+      no_candidates: Geen betaling met dit factuurtotaal rond deze datum.
       not_settled: Nog geen betaling gekoppeld aan deze factuur.
       payment: Betaling
+      settle: Koppelen
       settled_by: Afgerekend met
   search:
     no_results: Geen resultaten gevonden

@@ -24,5 +24,24 @@
         <%= t(".not_settled") %>
       <% end %>
     </p>
+
+    <% if @candidate_payments.any? %>
+      <%= form_with url: receipt_payment_link_path(@receipt) do |form| %>
+        <fieldset>
+          <legend><%= t(".candidates") %></legend>
+          <% @candidate_payments.each do |candidate| %>
+            <label>
+              <%= radio_button_tag "receipt[payment_id]", candidate.id, false, required: true %>
+              <%= l candidate.booked_at.to_date, format: :short %>
+              <%= number_to_currency(candidate.amount) %>
+              <%= candidate.debitor %>
+            </label>
+          <% end %>
+        </fieldset>
+        <%= form.submit t(".settle") %>
+      <% end %>
+    <% elsif @receipt.payment.blank? %>
+      <p><%= t(".no_candidates") %></p>
+    <% end %>
   </section>
 </article>

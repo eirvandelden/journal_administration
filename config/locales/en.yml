@@ -562,11 +562,18 @@ en:
       settled: Settled
       shop: Shop
       total: Total
+    payment_links:
+      create:
+        basket_exceeds_payment: The basket costs more than the payment, so the payment was left as it was.
+        success: The payment was split the way the basket divides up.
     show:
       basket_total: Basket adds up to
+      candidates: Which payment settled this invoice?
       invoice_total: Invoice states
+      no_candidates: No payment matches this invoice's total around its date.
       not_settled: No payment has been matched to this invoice yet.
       payment: Payment
+      settle: Settle
       settled_by: Settled by
   search:
     no_results: No results found
