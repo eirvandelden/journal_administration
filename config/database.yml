@@ -51,9 +51,13 @@ default: &default
     cache_size: -20000
 
 development:
-  <<: *default
-  database: storage/db/development.sqlite3
-  # database: journal_administration
+  primary: &development_primary
+    <<: *default
+    database: storage/db/development.sqlite3
+  cache:
+    <<: *development_primary
+    database: storage/db/development_cache.sqlite3
+    migrations_paths: db/cache_migrate
 
 #
 #   # Warning: The database defined as "test" will be erased and
@@ -75,6 +79,10 @@ production:
   primary:
     <<: *default
     database: storage/db/production.sqlite3
+  cache:
+    <<: *default
+    database: storage/db/production_cache.sqlite3
+    migrations_paths: db/cache_migrate
   queue:
     <<: *default
     database: storage/db/production_queue.sqlite3
