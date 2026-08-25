@@ -72,6 +72,9 @@ nl:
         serial_number: Serienummer
         warranty_document: Garantiedocument
         warranty_expires_at: Garantie tot
+      product_type:
+        category: Geboekt als
+        name: Naam
       transaction:
         account: Rekening
         amount: Bedrag
@@ -136,6 +139,7 @@ nl:
       account: Rekening
       category: Categorie
       chattel: Bezitting
+      product_type: Productsoort
       receipt:
         one: Factuur
         other: Facturen
@@ -474,6 +478,7 @@ nl:
     categories: "🏷️ %{model}"
     chattels: "📦 %{model}"
     preferences: "🎨 Voorkeuren"
+    product_types: "🥫 %{model}"
     profile: "👤 Profiel"
     receipts: "🧾 %{model}"
     todo: "✅ %{model}"
@@ -538,6 +543,21 @@ nl:
   pagination:
     next: Volgende
     previous: Vorige
+  product_types:
+    create:
+      success: Productsoort toegevoegd.
+    edit:
+      heading: 'Productsoort: %{name}'
+    index:
+      category: Geboekt als
+      empty: Nog geen productsoorten.
+      heading: Productsoorten
+      name: Naam
+      new: Nieuwe productsoort
+    new:
+      heading: Nieuwe productsoort
+    update:
+      success: Productsoort opgeslagen.
   receipts:
     basket:
       bonus: Bonus

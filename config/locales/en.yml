@@ -72,6 +72,9 @@ en:
         serial_number: Serial Number
         warranty_document: Warranty document
         warranty_expires_at: Warranty expires at
+      product_type:
+        category: Booked as
+        name: Name
       transaction:
         account: Account
         amount: Amount
@@ -136,6 +139,7 @@ en:
       account: Account
       category: Category
       chattel: Chattel
+      product_type: Product type
       receipt:
         one: Invoice
         other: Invoices
@@ -474,6 +478,7 @@ en:
     categories: "🏷️ %{model}"
     chattels: "📦 %{model}"
     preferences: "🎨 Preferences"
+    product_types: "🥫 %{model}"
     profile: "👤 Profile"
     receipts: "🧾 %{model}"
     todo: "✅ %{model}"
@@ -538,6 +543,21 @@ en:
   pagination:
     next: Next
     previous: Previous
+  product_types:
+    create:
+      success: Product type added.
+    edit:
+      heading: 'Product type: %{name}'
+    index:
+      category: Booked as
+      empty: No product types yet.
+      heading: Product types
+      name: Name
+      new: New product type
+    new:
+      heading: New product type
+    update:
+      success: Product type saved.
   receipts:
     basket:
       bonus: Bonus

@@ -72,6 +72,9 @@ it:
         serial_number: Numero seriale
         warranty_document: Documento di garanzia
         warranty_expires_at: Garanzia fino al
+      product_type:
+        category: Registrato come
+        name: Nome
       transaction:
         account: Conto
         amount: Importo
@@ -136,6 +139,7 @@ it:
       account: Conto
       category: Categoria
       chattel: Bene
+      product_type: Tipo di prodotto
       receipt:
         one: Fattura
         other: Fatture
@@ -474,6 +478,7 @@ it:
     categories: "🏷️ %{model}"
     chattels: "📦 %{model}"
     preferences: "🎨 Preferenze"
+    product_types: "🥫 %{model}"
     profile: "👤 Profilo"
     receipts: "🧾 %{model}"
     todo: "✅ %{model}"
@@ -538,6 +543,21 @@ it:
   pagination:
     next: Successivo
     previous: Precedente
+  product_types:
+    create:
+      success: Tipo di prodotto aggiunto.
+    edit:
+      heading: 'Tipo di prodotto: %{name}'
+    index:
+      category: Registrato come
+      empty: Nessun tipo di prodotto.
+      heading: Tipi di prodotto
+      name: Nome
+      new: Nuovo tipo di prodotto
+    new:
+      heading: Nuovo tipo di prodotto
+    update:
+      success: Tipo di prodotto salvato.
   receipts:
     basket:
       bonus: Sconto
