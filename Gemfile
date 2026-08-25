@@ -20,7 +20,8 @@ gem "redis", "~> 5.0" # Use Redis for Action Cable
 gem "kamal", require: false     # Deployment
 gem "puma" # Use Puma as the app server
 
-# Jobs
+# Caching and jobs
+gem "solid_cache"
 gem "solid_queue"
 
 # Front-end
