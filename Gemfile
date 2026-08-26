@@ -14,7 +14,7 @@ gem "appkit", github: "eirvandelden/appkit"
 
 # Drivers
 gem "sqlite3", ">= 2.0" # Use sqlite3 as the database for Active Record
-gem "redis", "~> 5.0" # Use Redis for Action Cable
+gem "redis", "~> 6.0" # Use Redis for Action Cable
 
 # Deployment
 gem "kamal", require: false     # Deployment
