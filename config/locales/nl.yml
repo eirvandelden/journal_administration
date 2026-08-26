@@ -650,11 +650,13 @@ nl:
     index:
       account: Rekening
       actions: Acties
+      classify: Indelen
       date: Datum
       description: Omschrijving
       edit: Bewerken
       empty: "🎉 Niets te doen. Alle transacties zijn gecategoriseerd en alle rekeningen zijn bijgewerkt."
       kind: Soort
+      product: Product
       transaction: Transactie
       update_transactions: Transacties bijwerken
   transaction_absorptions:

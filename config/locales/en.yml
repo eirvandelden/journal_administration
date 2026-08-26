@@ -650,11 +650,13 @@ en:
     index:
       account: Account
       actions: Actions
+      classify: Classify
       date: Date
       description: Description
       edit: Edit
       empty: "🎉 Nothing to do. All transactions are categorized and all accounts are up to date."
       kind: Kind
+      product: Product
       transaction: Transaction
       update_transactions: Update Transactions
   transaction_absorptions:

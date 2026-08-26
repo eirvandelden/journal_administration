@@ -58,10 +58,11 @@ class TodoTest < ActiveSupport::TestCase
     assert_equal dates.sort.reverse, dates
   end
 
-  test "empty? returns true when no uncategorized transactions or untouched accounts" do
+  test "empty? returns true when there is nothing left to do" do
     TransactionSplit.delete_all
     Transaction.where(category_id: nil).delete_all
     Account.update_all(updated_at: Time.current)
+    Product.unclassified.update_all(brand: "AH", product_type_id: product_types(:naturel_chips).id)
     todo = Todo.new
 
     assert_empty todo
@@ -71,5 +72,18 @@ class TodoTest < ActiveSupport::TestCase
     todo = Todo.new
 
     assert_not todo.empty?
+  end
+  test "a product still needing a brand or type is something to do" do
+    todo = Todo.new
+
+    product_records = todo.items.select { |item| item.kind == :product }.map(&:record)
+    assert_includes product_records, products(:andrelon_shampoo)
+  end
+
+  test "a product we have already classified is nothing to do" do
+    todo = Todo.new
+
+    product_records = todo.items.select { |item| item.kind == :product }.map(&:record)
+    assert_not_includes product_records, products(:ah_ribbelchips)
   end
 end

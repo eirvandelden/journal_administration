@@ -650,11 +650,13 @@ it:
     index:
       account: Conto
       actions: Azioni
+      classify: Classifica
       date: Data
       description: Descrizione
       edit: Modifica
       empty: "🎉 Nulla da fare. Tutte le transazioni sono categorizzate e tutti i conti sono aggiornati."
       kind: Tipo
+      product: Prodotto
       transaction: Transazione
       update_transactions: Aggiorna transazioni
   transaction_absorptions:
