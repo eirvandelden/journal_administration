@@ -8,7 +8,7 @@ module Splittable
   included do
     has_many :transaction_splits, dependent: :destroy
     validate :amount_must_cover_explicit_splits
-    after_save :sync_remainder_split, if: :remainder_split_needs_sync?
+    after_save :sync_remainder_split
   end
 
   # Explicit user-defined splits, excluding the synthetic remainder row.
@@ -111,5 +111,9 @@ module Splittable
     split? && (saved_change_to_amount? || saved_change_to_category_id?)
   end
 
-  def sync_remainder_split = ensure_remainder_split
+  def sync_remainder_split
+    return unless remainder_split_needs_sync?
+
+    ensure_remainder_split
+  end
 end
