@@ -19,7 +19,7 @@ class TransactionSplitsTest < ActionDispatch::IntegrationTest
       remainder = @debit.transaction_splits.find_by(remainder: true)
 
       assert remainder
-      assert_in_delta(15.00, remainder.amount)
+      assert_equal BigDecimal("15.00"), remainder.amount
     end
 
     test "via turbo stream re-renders splits frame" do
@@ -37,7 +37,8 @@ class TransactionSplitsTest < ActionDispatch::IntegrationTest
         headers: { "Accept" => "text/vnd.turbo-stream.html" }
 
       assert_response :unprocessable_entity
-      assert_includes response.body, I18n.t("activerecord.errors.models.transaction_split.attributes.amount.exceeds_transaction")
+      assert_includes response.body,
+I18n.t("activerecord.errors.models.transaction_split.attributes.amount.exceeds_transaction")
     end
 
     test "with invalid amount via html re-renders the form with errors" do
@@ -45,7 +46,8 @@ class TransactionSplitsTest < ActionDispatch::IntegrationTest
         params: { transaction_split: { amount: 999.99 } }
 
       assert_response :unprocessable_entity
-      assert_includes response.body, I18n.t("activerecord.errors.models.transaction_split.attributes.amount.exceeds_transaction")
+      assert_includes response.body,
+I18n.t("activerecord.errors.models.transaction_split.attributes.amount.exceeds_transaction")
     end
 
     test "rejects transfer transactions" do
@@ -58,7 +60,8 @@ class TransactionSplitsTest < ActionDispatch::IntegrationTest
       end
 
       assert_response :unprocessable_entity
-      assert_includes response.body, I18n.t("activerecord.errors.models.transaction_split.attributes.financial_transaction.must_not_be_transfer")
+      assert_includes response.body,
+I18n.t("activerecord.errors.models.transaction_split.attributes.financial_transaction.must_not_be_transfer")
     end
   end
 
@@ -75,7 +78,7 @@ class TransactionSplitsTest < ActionDispatch::IntegrationTest
 
       assert_response :redirect
       assert_redirected_to edit_transaction_url(@transaction)
-      assert_in_delta(20.00, @split.reload.amount.to_f)
+      assert_equal BigDecimal("20.00"), @split.reload.amount
     end
 
     test "via turbo stream re-renders splits frame" do
@@ -93,7 +96,8 @@ class TransactionSplitsTest < ActionDispatch::IntegrationTest
         headers: { "Accept" => "text/vnd.turbo-stream.html" }
 
       assert_response :unprocessable_entity
-      assert_includes response.body, I18n.t("activerecord.errors.models.transaction_split.attributes.amount.exceeds_transaction")
+      assert_includes response.body,
+I18n.t("activerecord.errors.models.transaction_split.attributes.amount.exceeds_transaction")
     end
 
     test "with invalid amount via html re-renders the form with errors" do
@@ -101,7 +105,8 @@ class TransactionSplitsTest < ActionDispatch::IntegrationTest
         params: { transaction_split: { amount: 999.99 } }
 
       assert_response :unprocessable_entity
-      assert_includes response.body, I18n.t("activerecord.errors.models.transaction_split.attributes.amount.exceeds_transaction")
+      assert_includes response.body,
+I18n.t("activerecord.errors.models.transaction_split.attributes.amount.exceeds_transaction")
     end
   end
 
@@ -122,7 +127,7 @@ class TransactionSplitsTest < ActionDispatch::IntegrationTest
       remainder = @transaction.transaction_splits.find_by(remainder: true)
 
       assert remainder
-      assert_in_delta(40.00, remainder.amount)
+      assert_equal BigDecimal("40.00"), remainder.amount
     end
 
     test "via turbo stream re-renders splits frame" do
@@ -147,7 +152,7 @@ class TransactionSplitsTest < ActionDispatch::IntegrationTest
       remainder = @debit.transaction_splits.find_by(remainder: true)
 
       assert remainder
-      assert_in_delta(15.00, remainder.amount)
+      assert_equal BigDecimal("15.00"), remainder.amount
     end
 
     test "updating a split adjusts the remainder" do
@@ -161,7 +166,7 @@ class TransactionSplitsTest < ActionDispatch::IntegrationTest
       remainder = @debit.transaction_splits.reload.find_by(remainder: true)
 
       assert remainder
-      assert_in_delta(5.00, remainder.amount)
+      assert_equal BigDecimal("5.00"), remainder.amount
     end
 
     test "deleting last explicit split removes remainder too" do

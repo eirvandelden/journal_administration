@@ -353,7 +353,7 @@ class TransactionSplittableTest < ActiveSupport::TestCase
   end
 
   test "uncategorized_amount returns only the untracked uncategorized remainder" do
-    assert_in_delta(10.00, transactions(:debit_grocery).uncategorized_amount)
+    assert_equal BigDecimal("10.00"), transactions(:debit_grocery).uncategorized_amount
   end
 
   test "uncategorized_amount includes a nil-category remainder split" do
@@ -361,14 +361,14 @@ class TransactionSplittableTest < ActiveSupport::TestCase
     transaction.transaction_splits.create!(amount: 10.00, category: categories(:supermarket))
     transaction.ensure_remainder_split
 
-    assert_in_delta(15.00, transaction.reload.uncategorized_amount)
+    assert_equal BigDecimal("15.00"), transaction.reload.uncategorized_amount
   end
 
   test "amount_for uses split rows including the remainder row" do
     transaction = transactions(:debit_grocery)
     transaction.ensure_remainder_split
 
-    assert_in_delta(40.00, transaction.amount_for(category: categories(:supermarket)))
+    assert_equal BigDecimal("40.00"), transaction.amount_for(category: categories(:supermarket))
   end
 
   class RemainderSplit < ActiveSupport::TestCase
@@ -381,7 +381,7 @@ class TransactionSplittableTest < ActiveSupport::TestCase
       remainder = transaction.transaction_splits.find_by(remainder: true)
 
       assert remainder
-      assert_in_delta(15.00, remainder.amount)
+      assert_equal BigDecimal("15.00"), remainder.amount
       assert_nil remainder.category
     end
 
@@ -406,7 +406,7 @@ class TransactionSplittableTest < ActiveSupport::TestCase
       remainders = transaction.transaction_splits.where(remainder: true)
 
       assert_equal 1, remainders.count
-      assert_in_delta(10.00, remainders.first.amount)
+      assert_equal BigDecimal("10.00"), remainders.first.amount
     end
 
     test "ensure_remainder_split removes remainder when fully covered by explicit splits" do
@@ -438,7 +438,7 @@ class TransactionSplittableTest < ActiveSupport::TestCase
 
       transaction.update!(amount: 60.00)
 
-      assert_in_delta(20.00, transaction.reload.transaction_splits.find_by(remainder: true).amount)
+      assert_equal BigDecimal("20.00"), transaction.reload.transaction_splits.find_by(remainder: true).amount
     end
 
     test "updating the category adjusts the remainder split category" do
