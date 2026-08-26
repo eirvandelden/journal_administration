@@ -11,7 +11,7 @@ what already exists on the branch, the repository's conventions, and the traps.
 | `00-context.md` | Context, decisions, conventions, traps | Read first |
 | `01-receipt-pages.md` | See and settle receipts | Done |
 | `02-classify-products.md` | Classify products, todo list | Done |
-| `03-price-history.md` | Price history, chart, brand comparison | Not started |
+| `03-price-history.md` | Price history, chart, brand comparison | Done |
 | `04-invoice-import.md` | Parse a real invoice and import it | Blocked on a real invoice mail |
 | `05-finish-the-branch.md` | Sync, verify, pull request | Last |
 
