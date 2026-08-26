@@ -134,7 +134,15 @@ bin/rails test                        # whole suite
 bin/rails test test/models/x_test.rb  # one file
 bundle exec rubocop <files>
 bundle exec herb lint <files>
+bundle exec i18n-tasks normalize      # locale files must be normalized or test/i18n_test.rb fails
 bin/rails db:migrate
+```
+
+The project runs on the Ruby named in `.ruby-version`. In a shell where `rv` does not resolve that
+per directory, every command above needs the version put in front of it, or Bundler refuses to boot:
+
+```
+PATH="$HOME/.local/share/rv/rubies/ruby-4.0.6/bin:$PATH" bin/rails test
 ```
 
 ## Known state and traps
@@ -144,11 +152,9 @@ bin/rails db:migrate
   create `.worktrees/grocery-basket` for it if it does not exist.
 - **Another worktree, `.worktrees/mcp-server` on branch `ai/mcp-server`, is building the app's `/mcp`
   endpoint.** Phase 04's last step depends on it. Do not build a second MCP endpoint.
-- **Two chattels tests fail** in this working tree — `ChattelsControllerTest` "index renders
-  proof-of-purchase column" and "index renders unknown warranty section when such a chattel exists".
-  Cause is an uncommitted `Gemfile.lock` bump of the `appkit` gem, which changed strings the tests pin
-  in English. Not caused by this feature; do not try to fix it as part of this work, and do not count
-  it as your regression.
+- The whole suite is green on this branch. Two `ChattelsControllerTest` failures that dogged earlier
+  work came from an uncommitted `appkit` gem bump and were settled on `main` by
+  `chore(deps): update appkit and mvpa.css to latest`; the branch has been rebased onto that.
 - **Agent sandboxes** may refuse to read `.env` or `config/credentials.yml.enc` and to reach the
   1Password agent socket. Symptoms: the test runner claims `bin/rails` is a Bundler binstub, and
   `git commit` fails with "1Password: Could not connect to socket". Run tests and git outside the
