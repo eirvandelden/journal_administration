@@ -20,7 +20,8 @@ class TransactionSplitTest < ActiveSupport::TestCase
       split = TransactionSplit.new(financial_transaction: transactions(:debit_grocery), amount: 999.99)
 
       assert_not split.valid?
-      assert_includes split.errors[:amount], I18n.t("activerecord.errors.models.transaction_split.attributes.amount.exceeds_transaction")
+      assert_includes split.errors[:amount],
+I18n.t("activerecord.errors.models.transaction_split.attributes.amount.exceeds_transaction")
     end
 
     test "amount within split_balance is valid on create" do
@@ -59,7 +60,8 @@ class TransactionSplitTest < ActiveSupport::TestCase
       )
 
       assert_not split.valid?
-      assert_includes split.errors[:financial_transaction], I18n.t("activerecord.errors.models.transaction_split.attributes.financial_transaction.must_not_be_transfer")
+      assert_includes split.errors[:financial_transaction],
+I18n.t("activerecord.errors.models.transaction_split.attributes.financial_transaction.must_not_be_transfer")
     end
 
     test "category is optional" do
@@ -90,7 +92,8 @@ class TransactionSplitTest < ActiveSupport::TestCase
       split.amount = 999.99
 
       assert_not split.valid?
-      assert_includes split.errors[:amount], I18n.t("activerecord.errors.models.transaction_split.attributes.amount.exceeds_transaction")
+      assert_includes split.errors[:amount],
+I18n.t("activerecord.errors.models.transaction_split.attributes.amount.exceeds_transaction")
     end
   end
 end

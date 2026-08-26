@@ -46,7 +46,8 @@ class AccountAliasTest < ActiveSupport::TestCase
     account_alias = AccountAlias.new(account: accounts(:checking), pattern: "Shared")
 
     assert_not account_alias.valid?
-    assert_includes account_alias.errors[:account], I18n.t("activerecord.errors.models.account_alias.attributes.account.must_be_external")
+    assert_includes account_alias.errors[:account],
+I18n.t("activerecord.errors.models.account_alias.attributes.account.must_be_external")
   end
 
   test "is invalid with underscore wildcard in pattern" do

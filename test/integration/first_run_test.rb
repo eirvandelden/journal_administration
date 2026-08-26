@@ -15,7 +15,8 @@ class FirstRunTest < ActionDispatch::IntegrationTest
   end
 
   test "first_run show redirects to root once a user exists" do
-    User.create!(name: "Existing", email_address: "existing@example.com", password: "password", role: :member, locale: :en)
+    User.create!(name: "Existing", email_address: "existing@example.com", password: "password", role: :member,
+locale: :en)
 
     get first_run_url
 
@@ -24,7 +25,8 @@ class FirstRunTest < ActionDispatch::IntegrationTest
 
   test "first_run create makes the first user an administrator with a default locale, and starts a session" do
     assert_difference -> { User.count }, 1 do
-      post first_run_url, params: { user: { name: "New Person", email_address: "new@example.com", password: "password" } }
+      post first_run_url,
+params: { user: { name: "New Person", email_address: "new@example.com", password: "password" } }
     end
 
     assert_redirected_to root_url
@@ -34,10 +36,12 @@ class FirstRunTest < ActionDispatch::IntegrationTest
   end
 
   test "first_run create is not permitted once a user exists" do
-    User.create!(name: "Existing", email_address: "existing@example.com", password: "password", role: :member, locale: :en)
+    User.create!(name: "Existing", email_address: "existing@example.com", password: "password", role: :member,
+locale: :en)
 
     assert_no_difference -> { User.count } do
-      post first_run_url, params: { user: { name: "New Person", email_address: "new@example.com", password: "password" } }
+      post first_run_url,
+params: { user: { name: "New Person", email_address: "new@example.com", password: "password" } }
     end
 
     assert_redirected_to root_url

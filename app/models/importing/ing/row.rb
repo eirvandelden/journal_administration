@@ -51,7 +51,7 @@ module Importing
       #
       # @return [String] Newline-joined non-blank fields from description, code, and mutation_kind
       def note
-        [description, code, mutation_kind].compact_blank.join("\n")
+        [ description, code, mutation_kind ].compact_blank.join("\n")
       end
 
       # Returns true if this is a debit transaction (money leaving our account)

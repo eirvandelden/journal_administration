@@ -87,7 +87,9 @@ class ChattelsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def chattel_params
-      params.require(:chattel).permit(:name, :kind, :model_number, :serial_number, :purchase_transaction_id, :purchased_at,
-:warranty_expires_at, :left_possession_at, :purchase_price, :notes, :warranty_document)
+      params.require(:chattel).permit(:name, :kind, :model_number, :serial_number,
+                                      :purchase_transaction_id, :purchased_at,
+                                      :warranty_expires_at, :left_possession_at,
+                                      :purchase_price, :notes, :warranty_document)
     end
 end

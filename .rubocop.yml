@@ -2,8 +2,5 @@
 inherit_gem:
   rubocop-eirvandelden: config/capybara.yml
 
-inherit_from:
-  - .rubocop_todo.yml
-
 AllCops:
   TargetRubyVersion: 4.0

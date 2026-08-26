@@ -51,7 +51,8 @@ class Admin::UsersTest < ActionDispatch::IntegrationTest
     sign_in_as(@admin)
     original_digest = @member.password_digest
 
-    patch admin_user_path(@member), params: { user: { name: "Updated Member", password: "", password_confirmation: "" } }
+    patch admin_user_path(@member),
+params: { user: { name: "Updated Member", password: "", password_confirmation: "" } }
 
     assert_redirected_to admin_user_path(@member)
     assert_equal original_digest, @member.reload.password_digest

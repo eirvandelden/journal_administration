@@ -314,7 +314,8 @@ class BudgetTest < ActiveSupport::TestCase
 
       budget.suggested_amounts.each_key do |category|
         assert_nil category.parent_category_id,
-          "Expected #{category.name} to be a parent category but it has parent_category_id #{category.parent_category_id}"
+          "Expected #{category.name} to be a parent category but it has " \
+          "parent_category_id #{category.parent_category_id}"
       end
     end
 
@@ -340,7 +341,8 @@ class BudgetTest < ActiveSupport::TestCase
       if common_cats.any?
         cat = common_cats.first
 
-        assert_operator suggestions_60_day[cat], :>=, suggestions_30_day[cat], "Expected 60-day suggestion (#{suggestions_60_day[cat]}) to be >= 30-day suggestion (#{suggestions_30_day[cat]})"
+        assert_operator suggestions_60_day[cat], :>=, suggestions_30_day[cat],
+"Expected 60-day suggestion (#{suggestions_60_day[cat]}) to be >= 30-day suggestion (#{suggestions_30_day[cat]})"
       end
     end
   end

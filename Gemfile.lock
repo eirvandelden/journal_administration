@@ -26,7 +26,7 @@ GIT
 
 GIT
   remote: https://github.com/eirvandelden/rubocop-eirvandelden.git
-  revision: 3b0291ad3f8a72b42c72664636cf58f22857484c
+  revision: a92b37a85b4b319ef759d393b3bd7403ccd718a3
   branch: feat/shared-rubocop-config
   specs:
     rubocop-eirvandelden (0.1.0)
@@ -34,6 +34,8 @@ GIT
       rubocop-minitest
       rubocop-obsession
       rubocop-packaging
+      rubocop-performance
+      rubocop-rails
       rubocop-rails-omakase
       rubocop-rspec
       rubocop-yard

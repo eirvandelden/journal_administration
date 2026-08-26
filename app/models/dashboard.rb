@@ -119,7 +119,8 @@ class Dashboard
   def grouped_transactions_for(transaction_class, range: date_range)
     scope = transaction_class.where(booked_at: range.to_range)
 
-    transactions = unsplit_transactions_for(scope).merge(split_transactions_for(scope)) { |_key, left, right| left + right }
+    transactions = unsplit_transactions_for(scope).merge(split_transactions_for(scope)) { |_key, left, right|
+ left + right }
     transactions[nil] = transactions.fetch(nil, 0) + remaining_split_balance_for(scope)
 
     category_ids = transactions.keys.compact

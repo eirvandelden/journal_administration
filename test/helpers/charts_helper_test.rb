@@ -3,7 +3,8 @@ require "test_helper"
 class ChartsHelperTest < ActionView::TestCase
   class SvgDonutChart < ActionView::TestCase
     test "returns SVG with one path per non-zero slice" do
-      svg = ApplicationController.helpers.svg_donut_chart(labels: [ "Food", "Transport", "Housing" ], data: [ 100, 200, 300 ])
+      svg = ApplicationController.helpers.svg_donut_chart(labels: [ "Food", "Transport", "Housing" ],
+data: [ 100, 200, 300 ])
 
       assert_equal 3, svg.scan("<path").size
     end
@@ -24,7 +25,8 @@ class ChartsHelperTest < ActionView::TestCase
 
   class SvgBarChart < ActionView::TestCase
     test "returns SVG with correct number of rect elements" do
-      svg = ApplicationController.helpers.svg_bar_chart(labels: [ "Food", "Transport", "Housing" ], data: [ 100, 200, 300 ])
+      svg = ApplicationController.helpers.svg_bar_chart(labels: [ "Food", "Transport", "Housing" ],
+data: [ 100, 200, 300 ])
 
       assert_equal 3, svg.scan("<rect").size
     end
