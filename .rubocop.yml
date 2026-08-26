@@ -1,6 +1,9 @@
 # The rules shared by every personal Ruby project
 inherit_gem:
-  rubocop-eirvandelden: config/capybara.yml
+  rubocop-eirvandelden:
+    - config/default.yml
+    - config/rails.yml
+    - config/capybara.yml
 
 AllCops:
   TargetRubyVersion: 4.0
