@@ -100,13 +100,13 @@ class DashboardTest < ActiveSupport::TestCase
   test "debit_transactions use split amounts for split transactions" do
     dashboard = Dashboard.new(filter: "year_to_date")
 
-    assert_in_delta(52.50, dashboard.debit_transactions[categories(:groceries)])
+    assert_equal BigDecimal("52.50"), dashboard.debit_transactions[categories(:groceries)]
   end
 
   test "debit_transactions keep remaining split balance uncategorized" do
     dashboard = Dashboard.new(filter: "year_to_date")
 
-    assert_in_delta(35.00, dashboard.debit_transactions[nil])
+    assert_equal BigDecimal("35.00"), dashboard.debit_transactions[nil]
   end
 
   test "month_to_date filter uses beginning of month to now" do
