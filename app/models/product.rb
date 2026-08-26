@@ -7,6 +7,7 @@ class Product < ApplicationRecord
   PACK_UNITS = { gram: 0, kilogram: 1, millilitre: 2, litre: 3, piece: 4 }.freeze
 
   belongs_to :product_type, optional: true
+  has_many :receipt_lines
 
   enum :pack_unit, PACK_UNITS
 
@@ -20,6 +21,11 @@ class Product < ApplicationRecord
   end
 
   def unclassified? = brand.blank? || product_type.blank?
+
+  # Every time we bought this product, most recent invoice first
+  def purchases
+    receipt_lines.joins(:receipt).includes(:receipt).order("receipts.issued_on DESC")
+  end
 
   def to_s = name
 end

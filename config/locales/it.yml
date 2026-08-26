@@ -582,6 +582,8 @@ it:
       millilitre: ml
       piece: pezzo
     show:
+      never_bought: Non l'abbiamo mai comprato.
+      purchases: Ogni volta che l'abbiamo comprato
       unknown: Non ancora noto
     update:
       success: Prodotto salvato.

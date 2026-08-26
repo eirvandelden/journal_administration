@@ -9,10 +9,12 @@ class ProductsController < ApplicationController
     @products = Product.includes(:product_type).order(:name)
   end
 
-  # Displays one product
+  # Displays one product with every purchase of it
   #
   # @return [void]
-  def show; end
+  def show
+    @purchases = @product.purchases
+  end
 
   # Renders the form for classifying a product
   #

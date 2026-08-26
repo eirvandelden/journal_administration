@@ -26,4 +26,17 @@ class ProductTest < ActiveSupport::TestCase
     assert_includes Product.unclassified, products(:andrelon_shampoo)
     assert_not_includes Product.unclassified, products(:ah_ribbelchips)
   end
+  test "a product knows every time we bought it, newest first" do
+    older = Receipt.create!(shop: accounts(:albert_heijn), issued_on: 2.months.ago.to_date, total_amount: 5.00)
+    older.lines.create!(product: products(:lays_ribbelchips), quantity: 1, pack_amount: 300, pack_unit: :gram,
+                        full_amount: 2.29, discount_amount: 0, paid_amount: 2.29)
+
+    purchases = products(:lays_ribbelchips).purchases
+
+    assert_equal [ receipts(:albert_heijn_friday), older ], purchases.map(&:receipt)
+  end
+
+  test "a product we never bought has no purchases" do
+    assert_empty products(:andrelon_shampoo).purchases
+  end
 end

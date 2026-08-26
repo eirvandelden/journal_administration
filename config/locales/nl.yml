@@ -582,6 +582,8 @@ nl:
       millilitre: ml
       piece: stuk
     show:
+      never_bought: Dit hebben we nog nooit gekocht.
+      purchases: Elke keer dat we het kochten
       unknown: Nog niet bekend
     update:
       success: Product opgeslagen.

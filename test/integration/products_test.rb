@@ -48,4 +48,22 @@ class ProductsTest < ActionDispatch::IntegrationTest
     assert_select "#error_explanation li"
     assert_equal "AH Naturel Ribbelchips", product.reload.name
   end
+  test "a product page shows what each purchase cost" do
+    get product_path(products(:lays_ribbelchips))
+
+    assert_response :success
+    currency = ApplicationController.helpers.method(:number_to_currency)
+    assert_select "tbody td", text: currency.call(BigDecimal("2.19"))
+    assert_select "tbody td", text: currency.call(BigDecimal("0.70"))
+    assert_select "tbody td", text: currency.call(BigDecimal("1.49"))
+    assert_select "tbody td", text: /#{Regexp.escape(currency.call(BigDecimal("4.97")))}/
+  end
+
+  test "a product page says when we never bought it" do
+    get product_path(products(:andrelon_shampoo))
+
+    assert_response :success
+    assert_select "p", text: /#{Regexp.escape(I18n.t("products.show.never_bought", locale: :en))}/
+    assert_select "tbody td", count: 0
+  end
 end

@@ -582,6 +582,8 @@ en:
       millilitre: ml
       piece: piece
     show:
+      never_bought: We have never bought this.
+      purchases: Every time we bought it
       unknown: Not known yet
     update:
       success: Product saved.
