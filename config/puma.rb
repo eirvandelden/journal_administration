@@ -44,6 +44,8 @@ plugin :tmp_restart
 
 # Run Solid Queue's supervisor in-process, so jobs are actually picked up
 # (Appkit::SessionExpiryJob, queue cleanup, etc.) instead of queuing forever
-# with no worker. Always in development, and in production wherever the single
-# deployed web role has to do the processing itself.
-plugin :solid_queue if ENV["SOLID_QUEUE_IN_PUMA"] || ENV.fetch("RAILS_ENV", "development") == "development"
+# with no worker. On by default in development; in production only where the
+# single deployed web role has to do the processing itself. Set
+# SOLID_QUEUE_IN_PUMA=false to run bin/jobs separately instead.
+run_jobs_in_puma = ENV.fetch("SOLID_QUEUE_IN_PUMA") { ENV.fetch("RAILS_ENV", "development") == "development" }
+plugin :solid_queue unless [ "", "false" ].include?(run_jobs_in_puma.to_s)
