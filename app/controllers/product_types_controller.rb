@@ -1,12 +1,20 @@
 # Manages the kinds of thing we buy, and how each kind is booked
 class ProductTypesController < ApplicationController
-  before_action :set_product_type, only: %i[edit update]
+  before_action :set_product_type, only: %i[show edit update]
 
   # Lists the product types with the category each is booked to
   #
   # @return [void]
   def index
     @product_types = ProductType.includes(:category).order(:name)
+  end
+
+  # Compares the products of this type and totals what we spend on them
+  #
+  # @return [void]
+  def show
+    @latest_purchases = @product_type.latest_purchase_per_product
+    @monthly_totals = @product_type.monthly_totals
   end
 
   # Renders the form for a new product type

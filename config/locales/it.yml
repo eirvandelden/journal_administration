@@ -355,6 +355,7 @@ it:
     formats:
       default: "%d/%m/%Y"
       long: "%d %B %Y"
+      month_and_year: "%B %Y"
       short: "%d %b"
     month_names:
     -
@@ -563,6 +564,15 @@ it:
       new: Nuovo tipo di prodotto
     new:
       heading: Nuovo tipo di prodotto
+    show:
+      bought: Comprati
+      brands: Marche che compriamo
+      last_bought: Ultimo acquisto
+      month: Mese
+      never_bought: Di questo tipo non abbiamo mai comprato nulla.
+      on_bonus: In offerta
+      per_month: Per mese
+      spent: Speso
     update:
       success: Tipo di prodotto salvato.
   products:

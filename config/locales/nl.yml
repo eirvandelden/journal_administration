@@ -355,6 +355,7 @@ nl:
     formats:
       default: "%d-%m-%Y"
       long: "%e %B %Y"
+      month_and_year: "%B %Y"
       short: "%e %b"
     month_names:
     -
@@ -563,6 +564,15 @@ nl:
       new: Nieuwe productsoort
     new:
       heading: Nieuwe productsoort
+    show:
+      bought: Gekocht
+      brands: Merken die we kopen
+      last_bought: Laatst gekocht
+      month: Maand
+      never_bought: Van deze soort hebben we nog nooit iets gekocht.
+      on_bonus: In de bonus
+      per_month: Per maand
+      spent: Besteed
     update:
       success: Productsoort opgeslagen.
   products:

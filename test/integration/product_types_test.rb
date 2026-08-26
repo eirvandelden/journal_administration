@@ -40,4 +40,29 @@ class ProductTypesTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "#error_explanation li"
   end
+  test "a product type page compares the brands we buy it from" do
+    get product_type_path(product_types(:naturel_chips))
+
+    assert_response :success
+    assert_select "tbody td", text: products(:ah_ribbelchips).brand
+    assert_select "tbody td", text: products(:lays_ribbelchips).brand
+  end
+
+  test "a product type page totals each month, bonus count included" do
+    get product_type_path(product_types(:naturel_chips))
+
+    assert_response :success
+    currency = ApplicationController.helpers.method(:number_to_currency)
+    assert_select "#monthly-totals-table tbody td", text: currency.call(BigDecimal("2.98"))
+    assert_select "#monthly-totals-table tbody td", text: "1"
+  end
+
+  test "a product type page says when nothing was ever bought under it" do
+    shampoo = ProductType.create!(name: "Shampoo", category: categories(:household))
+
+    get product_type_path(shampoo)
+
+    assert_response :success
+    assert_select "p", text: /#{Regexp.escape(I18n.t("product_types.show.never_bought", locale: :en))}/
+  end
 end
