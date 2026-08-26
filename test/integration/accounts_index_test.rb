@@ -6,17 +6,25 @@ class AccountsIndexTest < ActionDispatch::IntegrationTest
     sign_in_as(@member)
   end
 
-  test "index shows own and external accounts in separate tables" do
+  test "the accounts page separates our own accounts from external ones" do
     get accounts_path
 
     assert_response :success
     assert_select "h2", text: I18n.t("accounts.index.own_accounts")
     assert_select "h2", text: I18n.t("accounts.index.external_accounts")
+  end
+
+  test "each account is listed under the heading it belongs to" do
+    get accounts_path
 
     assert_select "#own-accounts-table tbody td", text: accounts(:checking).name
     assert_select "#own-accounts-table tbody td", text: accounts(:savings).name
     assert_select "#external-accounts-table tbody td", text: accounts(:albert_heijn).name
     assert_select "#external-accounts-table tbody td", text: accounts(:employer).name
+  end
+
+  test "only our own accounts say who owns them" do
+    get accounts_path
 
     assert_select "#own-accounts-table thead th", text: I18n.t("accounts.index.owner")
     assert_select "#external-accounts-table thead th", text: I18n.t("accounts.index.owner"), count: 0
@@ -37,6 +45,7 @@ class AccountsIndexTest < ActionDispatch::IntegrationTest
     end
 
     get accounts_path, params: { own_page: 1, external_page: 1 }
+
     assert_response :success
 
     own_items_per_page = css_select("#own-accounts-table tbody tr").size
@@ -50,8 +59,8 @@ class AccountsIndexTest < ActionDispatch::IntegrationTest
     get accounts_path, params: { own_page: 2, external_page: 1 }
 
     assert_response :success
-    assert own_page_2_number.present?
-    assert external_page_2_number.present?
+    assert_predicate own_page_2_number, :present?
+    assert_predicate external_page_2_number, :present?
 
     assert_includes response.body, own_page_2_number
     assert_not_includes response.body, own_page_1_number
