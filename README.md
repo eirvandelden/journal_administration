@@ -13,7 +13,19 @@ For example, in a .env file:
   DEFAULT_HOST=foo.example.com
 ```
 
+Background jobs are picked up by a supervisor running inside the web server. That
+is on by default in development. Set `SOLID_QUEUE_IN_PUMA=false` to leave them to
+a separate `bin/jobs` process instead.
+
 ## Things todo when going to production
+
+Nothing by hand. `bin/start-app` runs `db:prepare` on every boot, so the extra
+databases holding the cache, the job queue and live updates are created on the
+first deploy that needs them.
+
+Do check the volume. All four SQLite files live under `storage/db/`, which
+`config/deploy.yml` mounts as persistent storage — without that mount every
+deploy starts from an empty database.
 
 ## Releasing
 
