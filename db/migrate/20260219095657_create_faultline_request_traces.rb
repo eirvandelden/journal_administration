@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class CreateFaultlineRequestTraces < ActiveRecord::Migration[8.1]
   def change
     create_table :faultline_request_traces do |t|
@@ -17,6 +15,6 @@ class CreateFaultlineRequestTraces < ActiveRecord::Migration[8.1]
 
     add_index :faultline_request_traces, :endpoint
     add_index :faultline_request_traces, :created_at
-    add_index :faultline_request_traces, [:endpoint, :created_at]
+    add_index :faultline_request_traces, [ :endpoint, :created_at ]
   end
 end

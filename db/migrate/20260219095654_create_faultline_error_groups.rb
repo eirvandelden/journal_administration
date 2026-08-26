@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class CreateFaultlineErrorGroups < ActiveRecord::Migration[8.1]
   def change
     create_table :faultline_error_groups do |t|

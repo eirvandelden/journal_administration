@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 Appkit.configure do |config|
   config.app_name = -> { ENV.fetch("APP_NAME", Rails.application.class.module_parent_name) }
   config.email_attribute = :email_address

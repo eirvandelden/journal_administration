@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class CreateFaultlineErrorContexts < ActiveRecord::Migration[8.1]
   def change
     create_table :faultline_error_contexts do |t|
@@ -10,6 +8,6 @@ class CreateFaultlineErrorContexts < ActiveRecord::Migration[8.1]
       t.timestamps
     end
 
-    add_index :faultline_error_contexts, [:error_occurrence_id, :key]
+    add_index :faultline_error_contexts, [ :error_occurrence_id, :key ]
   end
 end

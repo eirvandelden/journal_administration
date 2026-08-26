@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class CreateFaultlineErrorOccurrences < ActiveRecord::Migration[8.1]
   def change
     create_table :faultline_error_occurrences do |t|
@@ -30,7 +28,7 @@ class CreateFaultlineErrorOccurrences < ActiveRecord::Migration[8.1]
     end
 
     add_index :faultline_error_occurrences, :created_at
-    add_index :faultline_error_occurrences, [:error_group_id, :created_at]
-    add_index :faultline_error_occurrences, [:user_type, :user_id]
+    add_index :faultline_error_occurrences, [ :error_group_id, :created_at ]
+    add_index :faultline_error_occurrences, [ :user_type, :user_id ]
   end
 end
