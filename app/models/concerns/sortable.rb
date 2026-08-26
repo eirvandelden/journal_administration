@@ -27,10 +27,10 @@ module Sortable
     # @param record [Category, nil] The category record
     # @return [Array] A sort key suitable for comparison
     private def hierarchy_sort_key(record)
-      return ["", 0, ""] if record.nil?
-      return [record.name.downcase, 0, ""] if record.parent_category.nil?
+      return [ "", 0, "" ] if record.nil?
+      return [ record.name.downcase, 0, "" ] if record.parent_category.nil?
 
-      [record.parent_category.name.downcase, 1, record.name.downcase]
+      [ record.parent_category.name.downcase, 1, record.name.downcase ]
     end
   end
 end

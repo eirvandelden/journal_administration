@@ -12,12 +12,12 @@ module Categorizable
   # @return [void]
   def assign_category_from_type
     self.category = case type
-                    when "Transfer"
+    when "Transfer"
                       Category.find_by(name: "Transfer")
-                    when "Credit"
+    when "Credit"
                       debitor&.category
-                    when "Debit"
+    when "Debit"
                       creditor&.category
-                    end
+    end
   end
 end

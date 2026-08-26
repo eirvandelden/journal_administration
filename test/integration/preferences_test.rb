@@ -26,7 +26,8 @@ class PreferencesTest < ActionDispatch::IntegrationTest
   test "updates color_scheme, light_theme, and dark_theme" do
     sign_in_as(@member)
 
-    patch preferences_path, params: { user: { color_scheme: "dark", light_theme: "solunized-white", dark_theme: "solunized-black" } }
+    patch preferences_path,
+params: { user: { color_scheme: "dark", light_theme: "solunized-white", dark_theme: "solunized-black" } }
 
     assert_redirected_to edit_preferences_path
     @member.reload

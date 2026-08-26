@@ -29,6 +29,6 @@ class SortableTest < ActiveSupport::TestCase
 
     sorted = Category.sort_by_hierarchy(records)
 
-    assert_equal [nil, categories(:groceries)], sorted.keys
+    assert_equal [ nil, categories(:groceries) ], sorted.keys
   end
 end

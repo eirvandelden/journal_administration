@@ -1,8 +1,11 @@
 require "test_helper"
 
 class ApplicationControllerTest < ActionDispatch::IntegrationTest
-  OLD_CHROME_UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"
-  ELECTRON_UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) ResponsivelyApp/1.9.0 Chrome/108.0.0.0 Electron/13.0.0 Safari/537.36"
+  OLD_CHROME_UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " \
+                  "(KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"
+  ELECTRON_UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 " \
+                "(KHTML, like Gecko) ResponsivelyApp/1.9.0 Chrome/108.0.0.0 " \
+                "Electron/13.0.0 Safari/537.36"
 
   class InLocalEnvironment < ActionDispatch::IntegrationTest
     setup do

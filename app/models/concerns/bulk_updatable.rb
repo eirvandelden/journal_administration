@@ -27,6 +27,6 @@ module BulkUpdatable
   private
 
   def updatable_transaction_types
-    Transaction::TYPES - ["Transfer"]
+    Transaction::TYPES - [ "Transfer" ]
   end
 end

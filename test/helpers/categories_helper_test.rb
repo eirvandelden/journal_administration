@@ -17,7 +17,8 @@ class CategoriesHelperTest < ActionView::TestCase
     first_group_end = html.index("</optgroup>", first_group_start)
     first_group = html[first_group_start..first_group_end]
 
-    assert_operator first_group.index(">#{groceries.name}</option>"), :<, first_group.index(">#{housing.name}</option>"), "Parents not sorted alphabetically"
+    assert_operator first_group.index(">#{groceries.name}</option>"), :<,
+first_group.index(">#{housing.name}</option>"), "Parents not sorted alphabetically"
 
     # Ensure child groups exist labeled by parent
     assert_includes html, "<optgroup label=\"#{groceries.name}\">"

@@ -16,7 +16,7 @@ class TransactionsController < ApplicationController
       .in_date_range(params[:start_date], params[:end_date])
     transactions = transactions.uncategorized if params[:filter] == "no_category"
 
-    @transactions = set_page_and_extract_portion_from transactions.order(interest_at: :desc), per_page: [20]
+    @transactions = set_page_and_extract_portion_from transactions.order(interest_at: :desc), per_page: [ 20 ]
   end
 
   # Displays a single transaction

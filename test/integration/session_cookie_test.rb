@@ -29,6 +29,7 @@ class SessionCookieTest < ActionDispatch::IntegrationTest
 
     expires_at = Time.parse(expires_match[1])
 
-    assert_operator expires_at, :>, 6.months.from_now, "Expected cookie to expire more than 6 months from now, got #{expires_at}"
+    assert_operator expires_at, :>, 6.months.from_now,
+"Expected cookie to expire more than 6 months from now, got #{expires_at}"
   end
 end
