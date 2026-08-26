@@ -18,7 +18,7 @@ class Budget < ApplicationRecord
 
   before_validation :normalize_dates
   after_create  :close_open_predecessor
-  after_update  :reconcile_predecessors, if: :saved_change_to_starts_at?
+  after_update  :reconcile_predecessors
 
   scope :active, -> {
     where("starts_at <= ?", Time.current)
@@ -73,8 +73,96 @@ class Budget < ApplicationRecord
 
   private
 
-  def suggestion_period_days
-    ends_at ? ((ends_at.to_date - starts_at.to_date).to_i + 1) : 30
+  def starts_at_not_before_predecessor
+    return unless starts_at.present?
+
+    pred = predecessor
+    return unless pred
+
+    errors.add(:starts_at, :before_predecessor) if starts_at < pred.starts_at
+  end
+
+  def predecessor
+    Budget.where("starts_at < ?", starts_at).order(starts_at: :desc).first
+  end
+
+  def ends_at_not_past_successor
+    succ = successor
+    return unless succ
+
+    if ends_at.nil?
+      errors.add(:ends_at, :open_ended_with_successor)
+    elsif ends_at >= succ.starts_at
+      errors.add(:ends_at, :overlaps_successor)
+    end
+  end
+
+  def successor
+    scope = Budget.where("starts_at > ?", starts_at)
+    scope = scope.where.not(id: id) if persisted?
+    scope.order(starts_at: :asc).first
+  end
+
+  def normalize_dates
+    self.starts_at = starts_at.beginning_of_day if starts_at.present?
+    self.ends_at   = ends_at.end_of_day          if ends_at.present?
+  end
+
+  def close_open_predecessor
+    pred = predecessor
+    return unless pred
+    return unless pred.ends_at.nil? || pred.ends_at >= starts_at
+
+    pred.update_columns(ends_at: derived_predecessor_ends_at, closed_by_budget_id: id)
+  end
+
+  def derived_predecessor_ends_at
+    derived_predecessor_ends_at_for(starts_at)
+  end
+
+  def derived_predecessor_ends_at_for(time)
+    (time.beginning_of_day - 1.day).end_of_day
+  end
+
+  def reconcile_predecessors
+    return unless saved_change_to_starts_at?
+
+    restore_former_predecessor
+    reclose_current_predecessor
+  end
+
+  def restore_former_predecessor
+    pred = predecessor_before_last_save
+    return unless pred
+    return unless pred.closed_by_budget_id == id
+
+    successor = successor_for(pred)
+    ends_at = successor ? derived_predecessor_ends_at_for(successor.starts_at) : nil
+    pred.update_columns(ends_at: ends_at, closed_by_budget_id: successor&.id)
+  end
+
+  def predecessor_before_last_save
+    return unless starts_at_before_last_save
+
+    Budget.where.not(id: id)
+      .where("starts_at < ?", starts_at_before_last_save)
+      .order(starts_at: :desc)
+      .first
+  end
+
+  def successor_for(budget)
+    Budget.where("starts_at > ?", budget.starts_at)
+      .where.not(id: budget.id)
+      .order(starts_at: :asc)
+      .first
+  end
+
+  def reclose_current_predecessor
+    pred = predecessor
+    return unless pred
+    return unless pred.ends_at.nil? || pred.ends_at >= starts_at
+
+    pred.update_columns(ends_at: derived_predecessor_ends_at, closed_by_budget_id: id)
   end
 
   def suggestion_lookback_range
@@ -83,8 +171,8 @@ class Budget < ApplicationRecord
     lookback_start..lookback_end
   end
 
-  def suggestion_lookback_days(range)
-    ((range.end.to_date - range.begin.to_date).to_i + 1).to_f
+  def suggestion_period_days
+    ends_at ? ((ends_at.to_date - starts_at.to_date).to_i + 1) : 30
   end
 
   def suggestion_totals_by_parent(klass, lookback)
@@ -111,93 +199,7 @@ class Budget < ApplicationRecord
     end
   end
 
-  def normalize_dates
-    self.starts_at = starts_at.beginning_of_day if starts_at.present?
-    self.ends_at   = ends_at.end_of_day          if ends_at.present?
-  end
-
-  def predecessor
-    Budget.where("starts_at < ?", starts_at).order(starts_at: :desc).first
-  end
-
-  def successor
-    scope = Budget.where("starts_at > ?", starts_at)
-    scope = scope.where.not(id: id) if persisted?
-    scope.order(starts_at: :asc).first
-  end
-
-  def close_open_predecessor
-    pred = predecessor
-    return unless pred
-    return unless pred.ends_at.nil? || pred.ends_at >= starts_at
-
-    pred.update_columns(ends_at: derived_predecessor_ends_at, closed_by_budget_id: id)
-  end
-
-  def reconcile_predecessors
-    restore_former_predecessor
-    reclose_current_predecessor
-  end
-
-  def restore_former_predecessor
-    pred = predecessor_before_last_save
-    return unless pred
-    return unless pred.closed_by_budget_id == id
-
-    successor = successor_for(pred)
-    ends_at = successor ? derived_predecessor_ends_at_for(successor.starts_at) : nil
-    pred.update_columns(ends_at: ends_at, closed_by_budget_id: successor&.id)
-  end
-
-  def reclose_current_predecessor
-    pred = predecessor
-    return unless pred
-    return unless pred.ends_at.nil? || pred.ends_at >= starts_at
-
-    pred.update_columns(ends_at: derived_predecessor_ends_at, closed_by_budget_id: id)
-  end
-
-  def derived_predecessor_ends_at
-    derived_predecessor_ends_at_for(starts_at)
-  end
-
-  def derived_predecessor_ends_at_for(time)
-    (time.beginning_of_day - 1.day).end_of_day
-  end
-
-  def predecessor_before_last_save
-    return unless starts_at_before_last_save
-
-    Budget.where.not(id: id)
-      .where("starts_at < ?", starts_at_before_last_save)
-      .order(starts_at: :desc)
-      .first
-  end
-
-  def successor_for(budget)
-    Budget.where("starts_at > ?", budget.starts_at)
-      .where.not(id: budget.id)
-      .order(starts_at: :asc)
-      .first
-  end
-
-  def starts_at_not_before_predecessor
-    return unless starts_at.present?
-
-    pred = predecessor
-    return unless pred
-
-    errors.add(:starts_at, :before_predecessor) if starts_at < pred.starts_at
-  end
-
-  def ends_at_not_past_successor
-    succ = successor
-    return unless succ
-
-    if ends_at.nil?
-      errors.add(:ends_at, :open_ended_with_successor)
-    elsif ends_at >= succ.starts_at
-      errors.add(:ends_at, :overlaps_successor)
-    end
+  def suggestion_lookback_days(range)
+    ((range.end.to_date - range.begin.to_date).to_i + 1).to_f
   end
 end
