@@ -51,19 +51,19 @@ default: &default
     cache_size: -20000
 
 development:
-  primary: &development_primary
+  primary:
     <<: *default
     database: storage/db/development.sqlite3
   cache:
-    <<: *development_primary
+    <<: *default
     database: storage/db/development_cache.sqlite3
     migrations_paths: db/cache_migrate
   queue:
-    <<: *development_primary
+    <<: *default
     database: storage/db/development_queue.sqlite3
     migrations_paths: db/queue_migrate
   cable:
-    <<: *development_primary
+    <<: *default
     database: storage/db/development_cable.sqlite3
     migrations_paths: db/cable_migrate
 
