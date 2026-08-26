@@ -11,7 +11,7 @@ class SearchDialogTest < ApplicationSystemTestCase
 
     click_button I18n.t("search.open")
 
-    assert_equal true, page.evaluate_script("document.getElementById('search-dialog').open")
+    assert page.evaluate_script("document.getElementById('search-dialog').open")
   end
 
   test "keyboard shortcut does not crash when dialog is already open" do
@@ -34,7 +34,7 @@ class SearchDialogTest < ApplicationSystemTestCase
       }))
     JS
 
-    assert_equal true, page.evaluate_script("document.getElementById('search-dialog').open")
+    assert page.evaluate_script("document.getElementById('search-dialog').open")
     assert_equal 0, page.evaluate_script("window.searchDialogShowModalCalls")
   end
 end
