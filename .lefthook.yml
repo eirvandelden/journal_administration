@@ -5,8 +5,8 @@ pre-commit:
   commands:
     herb-lint:
       glob: "*.erb"
-      run: npx herb-lint {staged_files}
-      fail_text: "herb-lint found ERB issues. Run: npx herb-lint --fix app/views/"
+      run: yarn run herb-lint {staged_files}
+      fail_text: "herb-lint found ERB issues. Run: yarn run herb-lint --fix app/views/"
     i18n-normalized:
       glob: "config/locales/**/*.yml"
       run: bundle exec ruby ./bin/check_i18n_normalized
@@ -15,7 +15,7 @@ pre-commit:
 pre-push:
   commands:
     herb-lint-full:
-      run: npx herb-lint app/views/
+      run: yarn run herb-lint app/views/
       fail_text: "herb-lint failed on full view scan"
     herb-analyze:
       run: bundle exec herb analyze app/views/
