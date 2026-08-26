@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class SeedAccountAliases < ActiveRecord::Migration[8.0]
   def up
     seed_aliases("Albert Heijn B.V.", [ "AH to go", "AH ", "Albert Heijn" ])
