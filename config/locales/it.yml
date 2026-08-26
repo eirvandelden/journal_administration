@@ -581,6 +581,11 @@ it:
       litre: L
       millilitre: ml
       piece: pezzo
+    price_chart:
+      highest: 'massimo: %{price}'
+      paid_series: il verde è quanto abbiamo pagato per unità
+      shelf_series: il blu è il prezzo di listino per unità
+      title: Prezzo per unità nel tempo
     show:
       never_bought: Non l'abbiamo mai comprato.
       purchases: Ogni volta che l'abbiamo comprato

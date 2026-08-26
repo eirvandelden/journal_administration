@@ -66,4 +66,39 @@ class ProductsTest < ActionDispatch::IntegrationTest
     assert_select "p", text: /#{Regexp.escape(I18n.t("products.show.never_bought", locale: :en))}/
     assert_select "tbody td", count: 0
   end
+  test "a product bought more than once is charted" do
+    buy_again(products(:lays_ribbelchips), shelf: 2.29, paid: 2.29)
+
+    get product_path(products(:lays_ribbelchips))
+
+    assert_response :success
+    assert_select "svg polyline", count: 2
+  end
+
+  test "a product bought once shows the table without a chart" do
+    get product_path(products(:lays_ribbelchips))
+
+    assert_response :success
+    assert_select "svg", count: 0
+    assert_select "#purchases-table"
+  end
+
+  test "the chart says what it shows" do
+    buy_again(products(:lays_ribbelchips), shelf: 2.29, paid: 2.29)
+
+    get product_path(products(:lays_ribbelchips))
+
+    assert_response :success
+    assert_select "svg title"
+    assert_select "figcaption", text: /#{Regexp.escape(I18n.t("products.price_chart.shelf_series", locale: :en))}/
+    assert_select "figcaption", text: /#{Regexp.escape(I18n.t("products.price_chart.paid_series", locale: :en))}/
+  end
+
+  private
+
+  def buy_again(product, shelf:, paid:)
+    receipt = Receipt.create!(shop: accounts(:albert_heijn), issued_on: 2.months.ago.to_date, total_amount: shelf)
+    receipt.lines.create!(product: product, quantity: 1, pack_amount: 300, pack_unit: :gram,
+                          full_amount: shelf, discount_amount: shelf - paid, paid_amount: paid)
+  end
 end

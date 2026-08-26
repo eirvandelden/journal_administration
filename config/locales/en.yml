@@ -581,6 +581,11 @@ en:
       litre: L
       millilitre: ml
       piece: piece
+    price_chart:
+      highest: 'highest: %{price}'
+      paid_series: green is what we paid per unit
+      shelf_series: blue is the shelf price per unit
+      title: Price per unit over time
     show:
       never_bought: We have never bought this.
       purchases: Every time we bought it

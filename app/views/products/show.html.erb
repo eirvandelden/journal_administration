@@ -23,6 +23,11 @@
     <% if @purchases.empty? %>
       <p><%= t(".never_bought") %></p>
     <% else %>
+      <% chartable = chartable_purchases(@purchases) %>
+      <% if chartable.size > 1 %>
+        <%= render "price_chart", purchases: chartable %>
+      <% end %>
+
       <table id="purchases-table">
         <thead>
           <tr>
