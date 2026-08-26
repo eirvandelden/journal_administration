@@ -4,11 +4,11 @@ class UserTest < ActiveSupport::TestCase
   # -- role enum --------------------------------------------------------------
 
   test "default role is member" do
-    assert User.new.member?
+    assert_predicate User.new, :member?
   end
 
   test "can_administer? returns true for administrators" do
-    assert users(:admin).can_administer?
+    assert_predicate users(:admin), :can_administer?
   end
 
   test "can_administer? returns false for members" do
@@ -18,18 +18,18 @@ class UserTest < ActiveSupport::TestCase
   # -- locale enum ------------------------------------------------------------
 
   test "locale can be set to nl" do
-    assert users(:admin).nl?
+    assert_predicate users(:admin), :nl?
   end
 
   test "locale can be set to en" do
-    assert users(:member).en?
+    assert_predicate users(:member), :en?
   end
 
   # -- active scope -----------------------------------------------------------
 
   test "active scope returns only active users" do
     User.active.each do |user|
-      assert user.active?
+      assert_predicate user, :active?
     end
   end
 
@@ -49,7 +49,8 @@ class UserTest < ActiveSupport::TestCase
 
   test "deactivate destroys all sessions for the user" do
     admin = users(:admin)
-    assert admin.sessions.count > 0
+
+    assert_operator admin.sessions.count, :>, 0
 
     admin.deactivate
 
@@ -79,7 +80,7 @@ class UserTest < ActiveSupport::TestCase
   test "current? returns true when user matches Current.user" do
     Current.user = users(:admin)
 
-    assert users(:admin).current?
+    assert_predicate users(:admin), :current?
   end
 
   test "current? returns false when user does not match Current.user" do

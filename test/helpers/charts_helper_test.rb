@@ -65,6 +65,7 @@ class ChartsHelperTest < ActionView::TestCase
 
     test "returns empty paragraph when no budget is given" do
       result = svg_budget_chart(budget: nil, debit_transactions: {}, credit_transactions: {})
+
       assert_equal content_tag(:p, ""), result
     end
 
@@ -75,6 +76,7 @@ class ChartsHelperTest < ActionView::TestCase
         debit_transactions: { categories(:groceries) => 150 },
         credit_transactions: {}
       )
+
       assert_match(/<svg/, result)
     end
 
@@ -85,6 +87,7 @@ class ChartsHelperTest < ActionView::TestCase
         debit_transactions: { categories(:groceries) => 700 },
         credit_transactions: {}
       )
+
       assert_match(/green/, result)
     end
 
@@ -95,6 +98,7 @@ class ChartsHelperTest < ActionView::TestCase
         debit_transactions: { categories(:groceries) => 200 },
         credit_transactions: {}
       )
+
       assert_match(/red/, result)
     end
 
@@ -105,6 +109,7 @@ class ChartsHelperTest < ActionView::TestCase
         debit_transactions: {},
         credit_transactions: { categories(:income) => 40 }
       )
+
       assert_match(/red/, result)
     end
 
@@ -115,6 +120,7 @@ class ChartsHelperTest < ActionView::TestCase
         debit_transactions: { categories(:housing) => 500 },
         credit_transactions: {}
       )
+
       assert_match(/grey|gray|#888|muted/, result)
     end
   end

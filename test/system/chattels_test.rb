@@ -10,6 +10,7 @@ class ChattelsTest < ApplicationSystemTestCase
 
   test "visiting the index" do
     visit chattels_url
+
     assert_link I18n.t("chattels.index.new_chattel", locale: @locale)
   end
 
@@ -37,6 +38,7 @@ class ChattelsTest < ApplicationSystemTestCase
 
   test "index does not show destroy button" do
     visit chattels_url
+
     assert_no_button I18n.t("common.destroy", locale: @locale)
   end
 
@@ -47,6 +49,7 @@ class ChattelsTest < ApplicationSystemTestCase
       accept_confirm do
         click_on I18n.t("common.destroy", locale: @locale)
       end
+
       assert_text "Chattel was successfully destroyed"
     end
   end

@@ -25,6 +25,7 @@ class Users::ProfilesTest < ActionDispatch::IntegrationTest
 
   test "locale is not editable from the profile screen (moved to preferences)" do
     sign_in_as(@member)
+
     assert_equal "en", @member.locale
 
     patch user_profile_path(@member), params: { user: { locale: "nl" } }

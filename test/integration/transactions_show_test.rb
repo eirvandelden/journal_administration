@@ -38,6 +38,7 @@ class TransactionsShowTest < ActionDispatch::IntegrationTest
   test "show displays unconsolidated notification for uncategorized transaction" do
     sign_in_as(@member)
     get transaction_url(@uncategorized)
+
     assert_response :success
     assert_select "mark.unconsolidated"
   end
@@ -45,6 +46,7 @@ class TransactionsShowTest < ActionDispatch::IntegrationTest
   test "show displays unconsolidated notification for categorized transaction with uncategorized remainder" do
     sign_in_as(@member)
     get transaction_url(@transaction)
+
     assert_response :success
     assert_select "mark.unconsolidated"
   end
@@ -52,6 +54,7 @@ class TransactionsShowTest < ActionDispatch::IntegrationTest
   test "show does not display unconsolidated notification for fully categorized transaction" do
     sign_in_as(@member)
     get transaction_url(transactions(:debit_bakery))
+
     assert_response :success
     assert_select "mark.unconsolidated", count: 0
   end

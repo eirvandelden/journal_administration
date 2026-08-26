@@ -89,7 +89,7 @@ class LinkableTest < ActiveSupport::TestCase
   test "fully_covered? returns true when balance is zero" do
     debit = transactions(:debit_grocery)
 
-    assert debit.fully_covered?
+    assert_predicate debit, :fully_covered?
   end
 
   test "fully_covered? returns false when balance is positive" do
@@ -102,7 +102,7 @@ class LinkableTest < ActiveSupport::TestCase
   test "fully_covered? returns true for a linked transfer" do
     transfer = transactions(:transfer_for_grocery)
 
-    assert transfer.fully_covered?
+    assert_predicate transfer, :fully_covered?
   end
 
   # -- linked? ----------------------------------------------------------------
@@ -110,7 +110,7 @@ class LinkableTest < ActiveSupport::TestCase
   test "linked? returns true when transaction has links" do
     debit = transactions(:debit_grocery)
 
-    assert debit.linked?
+    assert_predicate debit, :linked?
   end
 
   test "linked? returns false when transaction has no links" do
@@ -122,6 +122,6 @@ class LinkableTest < ActiveSupport::TestCase
   test "linked? returns true when transfer has linked sources" do
     transfer = transactions(:transfer_for_grocery)
 
-    assert transfer.linked?
+    assert_predicate transfer, :linked?
   end
 end

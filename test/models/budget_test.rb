@@ -12,53 +12,61 @@ class BudgetTest < ActiveSupport::TestCase
       Budget.create!(starts_at:)
 
       budget = Budget.new(starts_at:)
-      assert budget.invalid?
-      assert budget.errors[:starts_at].any?
+
+      assert_predicate budget, :invalid?
+      assert_predicate budget.errors[:starts_at], :any?
     end
 
     test "is invalid without starts_at" do
       budget = Budget.new(starts_at: nil)
-      assert budget.invalid?
-      assert budget.errors[:starts_at].any?
+
+      assert_predicate budget, :invalid?
+      assert_predicate budget.errors[:starts_at], :any?
     end
 
     test "is invalid when ends_at is not after starts_at" do
       budget = Budget.new(starts_at: Time.current, ends_at: 1.day.ago)
-      assert budget.invalid?
-      assert budget.errors[:ends_at].any?
+
+      assert_predicate budget, :invalid?
+      assert_predicate budget.errors[:ends_at], :any?
     end
 
     test "is valid with only starts_at" do
       budget = Budget.new(starts_at: Time.current)
-      assert budget.valid?
+
+      assert_predicate budget, :valid?
     end
 
     test "is valid with starts_at and future ends_at" do
       budget = Budget.new(starts_at: 1.month.ago, ends_at: 1.month.from_now)
-      assert budget.valid?
+
+      assert_predicate budget, :valid?
     end
 
     test "is invalid when ends_at overlaps a successor budget" do
       Budget.create!(starts_at: 2.months.from_now)
 
       budget = Budget.new(starts_at: 1.month.ago, ends_at: 3.months.from_now)
-      assert budget.invalid?
-      assert budget.errors[:ends_at].any?
+
+      assert_predicate budget, :invalid?
+      assert_predicate budget.errors[:ends_at], :any?
     end
 
     test "is valid when ends_at is before successor starts_at" do
       Budget.create!(starts_at: 2.months.from_now)
 
       budget = Budget.new(starts_at: 1.month.ago, ends_at: 1.month.from_now)
-      assert budget.valid?
+
+      assert_predicate budget, :valid?
     end
 
     test "is invalid when created open-ended and a later budget exists" do
       Budget.create!(starts_at: 2.months.from_now)
 
       budget = Budget.new(starts_at: 1.month.ago)
-      assert budget.invalid?
-      assert budget.errors[:ends_at].any?
+
+      assert_predicate budget, :invalid?
+      assert_predicate budget.errors[:ends_at], :any?
     end
 
     test "is invalid when ends_at is cleared and a successor exists" do
@@ -66,8 +74,9 @@ class BudgetTest < ActiveSupport::TestCase
       budget = Budget.create!(starts_at: 1.month.ago, ends_at: 1.month.from_now)
 
       budget.ends_at = nil
-      assert budget.invalid?
-      assert budget.errors[:ends_at].any?
+
+      assert_predicate budget, :invalid?
+      assert_predicate budget.errors[:ends_at], :any?
     end
 
     test "is invalid when starts_at is moved to before a later budget leaving ends_at nil" do
@@ -77,8 +86,9 @@ class BudgetTest < ActiveSupport::TestCase
 
       # Move starts_at so the 2-months-from-now budget becomes a successor
       budget.starts_at = 1.month.ago
-      assert budget.invalid?
-      assert budget.errors[:ends_at].any?
+
+      assert_predicate budget, :invalid?
+      assert_predicate budget.errors[:ends_at], :any?
     end
   end
 
@@ -86,18 +96,21 @@ class BudgetTest < ActiveSupport::TestCase
     test "normalizes starts_at to beginning of day" do
       budget = Budget.new(starts_at: Time.current.noon)
       budget.valid?
+
       assert_equal budget.starts_at.to_date.beginning_of_day, budget.starts_at
     end
 
     test "normalizes ends_at to end of day" do
       budget = Budget.new(starts_at: 1.month.ago, ends_at: Time.current.noon)
       budget.valid?
+
       assert_in_delta budget.ends_at.to_date.end_of_day, budget.ends_at, 1.second
     end
 
     test "does not normalize nil ends_at" do
       budget = Budget.new(starts_at: Time.current)
       budget.valid?
+
       assert_nil budget.ends_at
     end
   end
@@ -110,31 +123,37 @@ class BudgetTest < ActiveSupport::TestCase
 
     test "active scope returns budget where starts_at <= now and ends_at is nil" do
       budget = Budget.create!(starts_at: 1.month.ago)
+
       assert_includes Budget.active, budget
     end
 
     test "active scope returns budget where starts_at <= now and ends_at > now" do
       budget = Budget.create!(starts_at: 1.month.ago, ends_at: 1.month.from_now)
+
       assert_includes Budget.active, budget
     end
 
     test "active scope excludes future budget" do
       budget = Budget.create!(starts_at: 1.month.from_now)
+
       assert_not_includes Budget.active, budget
     end
 
     test "active scope excludes past budget" do
       budget = Budget.create!(starts_at: 2.months.ago, ends_at: 1.month.ago)
+
       assert_not_includes Budget.active, budget
     end
 
     test "future scope returns budget with starts_at in the future" do
       budget = Budget.create!(starts_at: 1.month.from_now)
+
       assert_includes Budget.future, budget
     end
 
     test "past scope returns budget with ends_at in the past" do
       budget = Budget.create!(starts_at: 2.months.ago, ends_at: 1.month.ago)
+
       assert_includes Budget.past, budget
     end
   end
@@ -142,26 +161,31 @@ class BudgetTest < ActiveSupport::TestCase
   class Predicates < ActiveSupport::TestCase
     test "active? returns true for active budget" do
       budget = Budget.new(starts_at: 1.month.ago)
-      assert budget.active?
+
+      assert_predicate budget, :active?
     end
 
     test "active? returns false for future budget" do
       budget = Budget.new(starts_at: 1.month.from_now)
+
       assert_not budget.active?
     end
 
     test "future? returns true when starts_at is in the future" do
       budget = Budget.new(starts_at: 1.month.from_now)
-      assert budget.future?
+
+      assert_predicate budget, :future?
     end
 
     test "past? returns true when ends_at is in the past" do
       budget = Budget.new(starts_at: 3.months.ago, ends_at: 1.month.ago)
-      assert budget.past?
+
+      assert_predicate budget, :past?
     end
 
     test "past? returns false when ends_at is nil" do
       budget = Budget.new(starts_at: 1.month.ago, ends_at: nil)
+
       assert_not budget.past?
     end
   end
@@ -174,11 +198,13 @@ class BudgetTest < ActiveSupport::TestCase
 
     test "closes predecessor with nil ends_at when new budget is created" do
       predecessor = Budget.create!(starts_at: 2.months.ago)
+
       assert_nil predecessor.ends_at
 
       new_budget = Budget.create!(starts_at: 1.month.from_now)
       predecessor.reload
       expected_ends_at = (new_budget.starts_at.beginning_of_day - 1.day).end_of_day
+
       assert_in_delta expected_ends_at, predecessor.ends_at, 1.second
     end
 
@@ -188,6 +214,7 @@ class BudgetTest < ActiveSupport::TestCase
 
       Budget.create!(starts_at: 1.month.from_now)
       predecessor.reload
+
       assert_in_delta original_ends_at, predecessor.ends_at, 1.second
     end
 
@@ -198,6 +225,7 @@ class BudgetTest < ActiveSupport::TestCase
       predecessor.reload
 
       expected = (new_budget.starts_at.beginning_of_day - 1.day).end_of_day
+
       assert_in_delta expected, predecessor.ends_at, 1.second
     end
 
@@ -219,6 +247,7 @@ class BudgetTest < ActiveSupport::TestCase
       predecessor.reload
 
       expected = (new_budget.starts_at.beginning_of_day - 1.day).end_of_day
+
       assert_in_delta expected, predecessor.ends_at, 1.second
       assert_not_equal first_close.to_i, predecessor.ends_at.to_i
     end
@@ -231,6 +260,7 @@ class BudgetTest < ActiveSupport::TestCase
       )
 
       predecessor.reload
+
       assert_equal Time.zone.parse("2026-02-28 23:59:59.999999"), predecessor.ends_at
 
       budget.update!(
@@ -267,6 +297,7 @@ class BudgetTest < ActiveSupport::TestCase
 
       new_budget.destroy
       predecessor.reload
+
       assert_in_delta original_ends_at, predecessor.ends_at, 1.second
     end
   end
@@ -274,11 +305,13 @@ class BudgetTest < ActiveSupport::TestCase
   class SuggestedAmounts < ActiveSupport::TestCase
     test "returns a Hash" do
       budget = Budget.new(starts_at: Time.current)
+
       assert_instance_of Hash, budget.suggested_amounts
     end
 
     test "returns keys that are all parent categories" do
       budget = Budget.new(starts_at: Time.current)
+
       budget.suggested_amounts.each_key do |category|
         assert_nil category.parent_category_id,
           "Expected #{category.name} to be a parent category but it has parent_category_id #{category.parent_category_id}"
@@ -287,6 +320,7 @@ class BudgetTest < ActiveSupport::TestCase
 
     test "returns positive amounts" do
       budget = Budget.new(starts_at: Time.current)
+
       budget.suggested_amounts.each_value do |amount|
         assert_operator amount, :>, 0, "Expected suggested amount to be positive"
       end
@@ -305,8 +339,8 @@ class BudgetTest < ActiveSupport::TestCase
       common_cats = suggestions_30_day.keys & suggestions_60_day.keys
       if common_cats.any?
         cat = common_cats.first
-        assert suggestions_60_day[cat] >= suggestions_30_day[cat],
-          "Expected 60-day suggestion (#{suggestions_60_day[cat]}) to be >= 30-day suggestion (#{suggestions_30_day[cat]})"
+
+        assert_operator suggestions_60_day[cat], :>=, suggestions_30_day[cat], "Expected 60-day suggestion (#{suggestions_60_day[cat]}) to be >= 30-day suggestion (#{suggestions_30_day[cat]})"
       end
     end
   end

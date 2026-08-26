@@ -4,11 +4,11 @@ class CategoryTest < ActiveSupport::TestCase
   # -- direction enum ---------------------------------------------------------
 
   test "debit? returns true for debit categories" do
-    assert categories(:groceries).debit?
+    assert_predicate categories(:groceries), :debit?
   end
 
   test "credit? returns true for credit categories" do
-    assert categories(:income).credit?
+    assert_predicate categories(:income), :credit?
   end
 
   # -- direction validation ---------------------------------------------------

@@ -100,7 +100,7 @@ class SearchTest < ActiveSupport::TestCase
   test "any_results? returns true when there are matching records" do
     search = Search.new(query: "Laptop")
 
-    assert search.any_results?
+    assert_predicate search, :any_results?
   end
 
   # -- memoization ------------------------------------------------------------

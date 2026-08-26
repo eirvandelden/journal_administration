@@ -73,6 +73,6 @@ class AccountsShowTest < ActionDispatch::IntegrationTest
     delete account_path(accounts(:checking))
 
     assert_redirected_to account_path(accounts(:checking))
-    assert flash[:alert].present?
+    assert_predicate flash[:alert], :present?
   end
 end

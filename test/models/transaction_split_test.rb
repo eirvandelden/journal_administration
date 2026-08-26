@@ -30,7 +30,7 @@ class TransactionSplitTest < ActiveSupport::TestCase
         amount: 10.00
       )
 
-      assert split.valid?
+      assert_predicate split, :valid?
     end
 
     test "database rejects non-positive amounts" do
@@ -69,7 +69,7 @@ class TransactionSplitTest < ActiveSupport::TestCase
         category: nil
       )
 
-      assert split.valid?
+      assert_predicate split, :valid?
     end
 
     test "belongs to category when set" do
@@ -82,7 +82,7 @@ class TransactionSplitTest < ActiveSupport::TestCase
       split = transaction_splits(:split_grocery_supermarket)
       split.amount = 20.00
 
-      assert split.valid?
+      assert_predicate split, :valid?
     end
 
     test "amount cannot be updated to exceed transaction amount" do

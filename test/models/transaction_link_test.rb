@@ -23,7 +23,7 @@ class TransactionLinkTest < ActiveSupport::TestCase
       transfer: transactions(:transfer_savings)
     )
 
-    assert link.valid?
+    assert_predicate link, :valid?
   end
 
   test "invalid when transfer is not a Transfer type" do

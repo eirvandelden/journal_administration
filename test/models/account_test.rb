@@ -5,6 +5,7 @@ class AccountTest < ActiveSupport::TestCase
 
   test "own scope returns accounts with an owner" do
     own = Account.own
+
     assert_includes own, accounts(:checking)
     assert_includes own, accounts(:savings)
     assert_not_includes own, accounts(:albert_heijn)
@@ -13,6 +14,7 @@ class AccountTest < ActiveSupport::TestCase
 
   test "external scope returns accounts without an owner" do
     external = Account.external
+
     assert_includes external, accounts(:albert_heijn)
     assert_includes external, accounts(:employer)
     assert_not_includes external, accounts(:checking)
@@ -51,7 +53,7 @@ class AccountTest < ActiveSupport::TestCase
   test "account_number allows blank" do
     account = Account.new(name: "No Number")
 
-    assert account.valid?
+    assert_predicate account, :valid?
   end
 
   # -- associations -----------------------------------------------------------
@@ -62,7 +64,7 @@ class AccountTest < ActiveSupport::TestCase
 
   test "category can be nil" do
     assert_nil accounts(:savings).category
-    assert accounts(:savings).valid?
+    assert_predicate accounts(:savings), :valid?
   end
 
   # -- recent_transactions ----------------------------------------------------

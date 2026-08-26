@@ -134,6 +134,7 @@ class TransactionsIndexTest < ActionDispatch::IntegrationTest
       assert_response :success
       assert_select "tr" do |rows|
         bakery_row = rows.detect { |r| r.text.include?(transactions(:debit_bakery).note) }
+
         assert bakery_row
       end
     end

@@ -22,13 +22,13 @@ class ChattelTest < ActiveSupport::TestCase
   test "purchase_price allows nil" do
     chattel = Chattel.new(name: "Test", purchase_price: nil)
 
-    assert chattel.valid?
+    assert_predicate chattel, :valid?
   end
 
   test "purchase_price accepts positive values" do
     chattel = Chattel.new(name: "Test", purchase_price: 99.99)
 
-    assert chattel.valid?
+    assert_predicate chattel, :valid?
   end
 
   # -- active scope -----------------------------------------------------------
@@ -90,7 +90,7 @@ class ChattelTest < ActiveSupport::TestCase
   # -- under_warranty? --------------------------------------------------------
 
   test "under_warranty? returns true when warranty is in the future" do
-    assert chattels(:one).under_warranty?
+    assert_predicate chattels(:one), :under_warranty?
   end
 
   test "under_warranty? returns false when warranty is in the past" do
@@ -104,7 +104,7 @@ class ChattelTest < ActiveSupport::TestCase
   # -- active? ----------------------------------------------------------------
 
   test "active? returns true when left_possession_at is nil" do
-    assert chattels(:one).active?
+    assert_predicate chattels(:one), :active?
   end
 
   test "active? returns false when left_possession_at is set" do
@@ -149,7 +149,7 @@ class ChattelTest < ActiveSupport::TestCase
         content_type: "application/pdf"
       )
 
-      assert chattel.proof_of_purchase?
+      assert_predicate chattel, :proof_of_purchase?
     end
   end
 
@@ -190,7 +190,7 @@ class ChattelTest < ActiveSupport::TestCase
         content_type: "application/pdf"
       )
 
-      assert chattel.proof_of_purchase?
+      assert_predicate chattel, :proof_of_purchase?
     end
   end
 end

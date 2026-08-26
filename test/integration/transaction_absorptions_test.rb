@@ -16,6 +16,7 @@ class TransactionAbsorptionsTest < ActionDispatch::IntegrationTest
       post account_transaction_absorption_path(@account)
 
       transaction.reload
+
       assert_equal @account, transaction.creditor
     end
 
@@ -28,6 +29,7 @@ class TransactionAbsorptionsTest < ActionDispatch::IntegrationTest
       post account_transaction_absorption_path(@account)
 
       transaction.reload
+
       assert_equal @account, transaction.debitor
     end
 
@@ -36,6 +38,7 @@ class TransactionAbsorptionsTest < ActionDispatch::IntegrationTest
 
       assert_redirected_to account_path(@account)
       follow_redirect!
+
       assert_equal I18n.t("transaction_absorptions.create.success"), flash[:notice]
     end
   end

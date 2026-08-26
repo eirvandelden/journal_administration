@@ -23,16 +23,16 @@ module Budgets
 
     private
 
+    def set_budget
+      @budget = Budget.find(params[:budget_id])
+    end
+
     def render_suggestions
       @budget.assign_attributes(budget_params) if params[:budget].present?
       @budget.valid?
       @budget.apply_suggestions if @budget.errors[:starts_at].blank? && @budget.errors[:ends_at].blank?
       @budget.valid?
       render "budgets/edit"
-    end
-
-    def set_budget
-      @budget = Budget.find(params[:budget_id])
     end
 
     def budget_params

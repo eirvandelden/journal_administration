@@ -17,8 +17,9 @@ class TransactionSplitsTest < ActionDispatch::IntegrationTest
       assert_redirected_to edit_transaction_url(@debit)
 
       remainder = @debit.transaction_splits.find_by(remainder: true)
+
       assert remainder
-      assert_equal 15.00, remainder.amount
+      assert_in_delta(15.00, remainder.amount)
     end
 
     test "via turbo stream re-renders splits frame" do
@@ -74,7 +75,7 @@ class TransactionSplitsTest < ActionDispatch::IntegrationTest
 
       assert_response :redirect
       assert_redirected_to edit_transaction_url(@transaction)
-      assert_equal 20.00, @split.reload.amount.to_f
+      assert_in_delta(20.00, @split.reload.amount.to_f)
     end
 
     test "via turbo stream re-renders splits frame" do
@@ -119,8 +120,9 @@ class TransactionSplitsTest < ActionDispatch::IntegrationTest
       assert_not @transaction.transaction_splits.exists?(id: @split.id)
 
       remainder = @transaction.transaction_splits.find_by(remainder: true)
+
       assert remainder
-      assert_equal 40.00, remainder.amount
+      assert_in_delta(40.00, remainder.amount)
     end
 
     test "via turbo stream re-renders splits frame" do
@@ -143,8 +145,9 @@ class TransactionSplitsTest < ActionDispatch::IntegrationTest
         params: { transaction_split: { category_id: categories(:supermarket).id, amount: 10.00 } }
 
       remainder = @debit.transaction_splits.find_by(remainder: true)
+
       assert remainder
-      assert_equal 15.00, remainder.amount
+      assert_in_delta(15.00, remainder.amount)
     end
 
     test "updating a split adjusts the remainder" do
@@ -156,8 +159,9 @@ class TransactionSplitsTest < ActionDispatch::IntegrationTest
         params: { transaction_split: { amount: 20.00 } }
 
       remainder = @debit.transaction_splits.reload.find_by(remainder: true)
+
       assert remainder
-      assert_equal 5.00, remainder.amount
+      assert_in_delta(5.00, remainder.amount)
     end
 
     test "deleting last explicit split removes remainder too" do

@@ -11,11 +11,13 @@ class ApplicationControllerTest < ActionDispatch::IntegrationTest
 
     test "Electron UA is allowed through" do
       get root_url, headers: { "HTTP_USER_AGENT" => ELECTRON_UA }
+
       assert_not_equal 406, response.status
     end
 
     test "old Chrome UA without Electron is blocked with 406" do
       get root_url, headers: { "HTTP_USER_AGENT" => OLD_CHROME_UA }
+
       assert_response :not_acceptable
     end
   end

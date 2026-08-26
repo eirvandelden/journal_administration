@@ -24,7 +24,7 @@ class ImportableTest < ActiveSupport::TestCase
 
     assert_equal accounts(:checking), transaction.creditor
     assert_equal accounts(:albert_heijn), transaction.debitor
-    assert_equal 25.50, transaction.amount
+    assert_in_delta(25.50, transaction.amount)
     assert_equal "Credit", transaction.type
   end
 
@@ -51,7 +51,7 @@ class ImportableTest < ActiveSupport::TestCase
 
     assert_equal accounts(:checking), transaction.debitor
     assert_equal accounts(:employer), transaction.creditor
-    assert_equal 3000.00, transaction.amount
+    assert_in_delta(3000.00, transaction.amount)
     assert_equal "Debit", transaction.type
   end
 

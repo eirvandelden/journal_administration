@@ -116,16 +116,6 @@ class Dashboard
     DateRange.from_dates(start_date, end_date)
   end
 
-  def transfer_category_id
-    @transfer_category_id ||= Category.find_by(name: Category::TRANSFER_NAME)&.id
-  end
-
-  def lookback_date_range
-    lookback_end = date_range.start_date.to_date - 1.day
-    lookback_start = lookback_end - 1.year + 1.day
-    DateRange.new(lookback_start.beginning_of_day, lookback_end.end_of_day)
-  end
-
   def grouped_transactions_for(transaction_class, range: date_range)
     scope = transaction_class.where(booked_at: range.to_range)
 
@@ -153,6 +143,10 @@ class Dashboard
       .except(transfer_category_id)
   end
 
+  def transfer_category_id
+    @transfer_category_id ||= Category.find_by(name: Category::TRANSFER_NAME)&.id
+  end
+
   def split_transactions_for(scope)
     scope
       .joins(:transaction_splits)
@@ -167,5 +161,11 @@ class Dashboard
       .group(:id, :amount)
       .sum("transaction_splits.amount")
       .sum { |(_id, amount), split_total| amount - split_total }
+  end
+
+  def lookback_date_range
+    lookback_end = date_range.start_date.to_date - 1.day
+    lookback_start = lookback_end - 1.year + 1.day
+    DateRange.new(lookback_start.beginning_of_day, lookback_end.end_of_day)
   end
 end

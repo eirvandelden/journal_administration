@@ -30,9 +30,10 @@ class PreferencesTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to edit_preferences_path
     @member.reload
-    assert @member.dark?
-    assert @member.solunized_white?
-    assert @member.solunized_black?
+
+    assert_predicate @member, :dark?
+    assert_predicate @member, :solunized_white?
+    assert_predicate @member, :solunized_black?
   end
 
   # JA's locale enum is integer-backed (`enum :locale, { nl: 0, en: 1, it: 2 }`),
@@ -42,6 +43,7 @@ class PreferencesTest < ActionDispatch::IntegrationTest
   # underlying column type.
   test "persists a locale change through the integer-backed locale enum" do
     sign_in_as(@member)
+
     assert_equal "en", @member.locale
 
     patch preferences_path, params: { user: { locale: "nl" } }
