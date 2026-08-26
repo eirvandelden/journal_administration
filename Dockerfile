@@ -75,7 +75,6 @@ ENV APP_VERSION=$APP_VERSION
 ARG GIT_REVISION
 ENV GIT_REVISION=$GIT_REVISION
 
-# Entrypoint prepares the database.
 ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 
 # Start the server by default, this can be overwritten at runtime
