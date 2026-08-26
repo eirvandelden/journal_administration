@@ -8,14 +8,14 @@ class TodoTest < ActiveSupport::TestCase
     Transaction.delete_all
     todo = Todo.new
 
-    assert todo.show_upload_form?
+    assert_predicate todo, :show_upload_form?
   end
 
   test "show_upload_form? returns true when latest transaction is older than threshold" do
     Transaction.update_all(booked_at: 14.days.ago)
     todo = Todo.new
 
-    assert todo.show_upload_form?
+    assert_predicate todo, :show_upload_form?
   end
 
   test "show_upload_form? returns false when latest transaction is recent" do
@@ -29,6 +29,7 @@ class TodoTest < ActiveSupport::TestCase
     todo = Todo.new
 
     kinds = todo.items.map(&:kind)
+
     assert_includes kinds, :transaction
   end
 
@@ -36,6 +37,7 @@ class TodoTest < ActiveSupport::TestCase
     todo = Todo.new
 
     transaction_records = todo.items.select { |item| item.kind == :transaction }.map(&:record)
+
     assert_includes transaction_records, transactions(:debit_grocery)
   end
 
@@ -44,6 +46,7 @@ class TodoTest < ActiveSupport::TestCase
     todo = Todo.new
 
     kinds = todo.items.map(&:kind)
+
     assert_includes kinds, :account
   end
 
@@ -51,6 +54,7 @@ class TodoTest < ActiveSupport::TestCase
     todo = Todo.new
 
     dates = todo.items.map { |item| item.date.to_i }
+
     assert_equal dates.sort.reverse, dates
   end
 
@@ -60,7 +64,7 @@ class TodoTest < ActiveSupport::TestCase
     Account.update_all(updated_at: Time.current)
     todo = Todo.new
 
-    assert todo.empty?
+    assert_empty todo
   end
 
   test "empty? returns false when uncategorized transactions exist" do

@@ -39,7 +39,7 @@ class AccountAliasTest < ActiveSupport::TestCase
     account_alias = AccountAlias.new(account: accounts(:albert_heijn), pattern: "%")
 
     assert_not account_alias.valid?
-    assert account_alias.errors[:pattern].any?
+    assert_predicate account_alias.errors[:pattern], :any?
   end
 
   test "is invalid for a family account" do
@@ -53,6 +53,6 @@ class AccountAliasTest < ActiveSupport::TestCase
     account_alias = AccountAlias.new(account: accounts(:albert_heijn), pattern: "SHOP_X")
 
     assert_not account_alias.valid?
-    assert account_alias.errors[:pattern].any?
+    assert_predicate account_alias.errors[:pattern], :any?
   end
 end

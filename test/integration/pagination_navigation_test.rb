@@ -9,11 +9,13 @@ class PaginationNavigationTest < ActionDispatch::IntegrationTest
     create_accounts(51)
 
     get accounts_path
+
     assert_response :success
     assert_select "nav.pagination a[rel='next'][href*='own_page=2']", 2
     assert_select "nav.pagination a[rel='prev']", 0
 
     get accounts_path, params: { own_page: 2 }
+
     assert_response :success
     assert_select "nav.pagination a[rel='prev'][href*='own_page=1']", 2
     assert_select "nav.pagination a[rel='next']", 0
@@ -23,11 +25,13 @@ class PaginationNavigationTest < ActionDispatch::IntegrationTest
     create_uncategorized_transactions(21)
 
     get transactions_path, params: { filter: "no_category" }
+
     assert_response :success
     assert_select "nav.pagination a[rel='next'][href*='filter=no_category'][href*='page=2']", 2
     assert_select "nav.pagination a[rel='prev']", 0
 
     get transactions_path, params: { filter: "no_category", page: 999 }
+
     assert_response :success
     assert_select "nav.pagination a[rel='prev'][href*='filter=no_category'][href*='page=998']", 2
     assert_select "nav.pagination a[rel='next']", 0
@@ -37,11 +41,13 @@ class PaginationNavigationTest < ActionDispatch::IntegrationTest
     create_uncategorized_transactions(21)
 
     get todo_path
+
     assert_response :success
     assert_select "nav.pagination a[rel='next'][href*='page=2']", 2
     assert_select "nav.pagination a[rel='prev']", 0
 
     get todo_path, params: { page: 999 }
+
     assert_response :success
     assert_select "nav.pagination a[rel='prev'][href*='page=1']", 2
     assert_select "nav.pagination a[rel='next']", 0

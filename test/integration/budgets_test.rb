@@ -7,12 +7,14 @@ class BudgetsTest < ActionDispatch::IntegrationTest
 
   test "GET /budgets lists all budgets" do
     get budgets_url
+
     assert_response :success
     assert_select "table"
   end
 
   test "GET /budgets/new renders form" do
     get new_budget_url
+
     assert_response :success
     assert_select "form"
   end
@@ -66,16 +68,19 @@ class BudgetsTest < ActionDispatch::IntegrationTest
 
   test "POST /budgets with invalid params renders new" do
     post budgets_url, params: { budget: { starts_at: "" } }
+
     assert_response :unprocessable_entity
   end
 
   test "GET /budgets/:id shows budget" do
     get budget_url(budgets(:active_budget))
+
     assert_response :success
   end
 
   test "GET /budgets/:id/edit renders edit form" do
     get edit_budget_url(budgets(:active_budget))
+
     assert_response :success
     assert_select "form"
   end
@@ -84,6 +89,7 @@ class BudgetsTest < ActionDispatch::IntegrationTest
     patch budget_url(budgets(:past_budget)), params: {
       budget: { ends_at: "2026-01-31" }
     }
+
     assert_redirected_to budget_url(budgets(:past_budget))
   end
 
@@ -96,6 +102,7 @@ class BudgetsTest < ActionDispatch::IntegrationTest
 
   test "POST /budgets/:id/suggestion pre-fills amounts and renders edit form" do
     post budget_suggestion_url(budgets(:active_budget))
+
     assert_response :success
     assert_select "form"
   end
@@ -120,6 +127,7 @@ class BudgetsTest < ActionDispatch::IntegrationTest
     delete budget_url(budgets(:past_budget))
 
     active.reload
+
     assert_nil active.ends_at
   end
 end

@@ -32,11 +32,11 @@ class UsersController < ApplicationController
 
   private
 
-  def role_params
-    { role: params.require(:user)[:role].presence_in(%w[member administrator]) || "member" }
-  end
-
   def set_user
     @user = User.active.find(params[:id])
+  end
+
+  def role_params
+    { role: params.require(:user)[:role].presence_in(%w[member administrator]) || "member" }
   end
 end

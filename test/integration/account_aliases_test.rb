@@ -14,6 +14,7 @@ class AccountAliasesTest < ActionDispatch::IntegrationTest
 
       assert_redirected_to account_path(@account)
       follow_redirect!
+
       assert_equal I18n.t("account_aliases.create.success"), flash[:notice]
     end
 
@@ -46,6 +47,7 @@ class AccountAliasesTest < ActionDispatch::IntegrationTest
 
       assert_redirected_to account_path(@account)
       follow_redirect!
+
       assert_equal I18n.t("account_aliases.destroy.success"), flash[:notice]
     end
   end

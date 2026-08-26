@@ -27,10 +27,12 @@ class AccountAuthorizationTest < ActionDispatch::IntegrationTest
 
     # Both users should see the samen account
     Current.user = etienne
+
     assert_equal samen_account.id, Current.account.id
 
     Current.reset
     Current.user = michelle
+
     assert_equal samen_account.id, Current.account.id
   end
 end

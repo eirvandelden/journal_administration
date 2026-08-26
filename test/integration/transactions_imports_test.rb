@@ -19,6 +19,7 @@ class TransactionsImportsTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to new_transactions_import_path
     follow_redirect!
+
     assert_select "form[action='#{transactions_imports_path}'][method='post']"
   end
 end

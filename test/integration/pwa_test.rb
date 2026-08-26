@@ -13,6 +13,7 @@ class PwaTest < ActionDispatch::IntegrationTest
     assert_equal "JournalAdministration", body["name"]
     assert_equal "#0068c9", body["theme_color"]
     icon_paths = body["icons"].map { |icon| icon["src"] }
+
     assert_includes icon_paths, "/icon.svg"
     assert_includes icon_paths, "/icon-192.png"
     assert_includes icon_paths, "/icon-512.png"
@@ -24,8 +25,8 @@ class PwaTest < ActionDispatch::IntegrationTest
     icons = JSON.parse(response.body)["icons"]
 
     icons.each do |icon|
-      assert Rails.root.join("public#{icon['src']}").exist?, "missing icon file: #{icon['src']}"
-      assert Rails.root.join("public#{icon['src']}").size > 0, "icon file is empty: #{icon['src']}"
+      assert_predicate Rails.root.join("public#{icon['src']}"), :exist?, "missing icon file: #{icon['src']}"
+      assert_operator Rails.root.join("public#{icon['src']}").size, :>, 0, "icon file is empty: #{icon['src']}"
     end
   end
 

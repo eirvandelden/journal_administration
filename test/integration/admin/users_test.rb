@@ -93,6 +93,7 @@ class Admin::UsersTest < ActionDispatch::IntegrationTest
     end
 
     created_user = User.order(:id).last
+
     assert_equal User.new.locale, created_user.locale
   end
 
@@ -110,12 +111,15 @@ class Admin::UsersTest < ActionDispatch::IntegrationTest
     sign_in_as(@member)
 
     get admin_users_path
+
     assert_redirected_to root_path
 
     get admin_user_path(@admin)
+
     assert_redirected_to root_path
 
     get new_admin_user_path
+
     assert_redirected_to root_path
 
     post admin_users_path,
@@ -126,15 +130,19 @@ class Admin::UsersTest < ActionDispatch::IntegrationTest
            password: "password123",
            password_confirmation: "password123"
          } }
+
     assert_redirected_to root_path
 
     get edit_admin_user_path(@admin)
+
     assert_redirected_to root_path
 
     patch admin_user_path(@admin), params: { user: { role: "member" } }
+
     assert_redirected_to root_path
 
     delete admin_user_path(@admin)
+
     assert_redirected_to root_path
   end
 end

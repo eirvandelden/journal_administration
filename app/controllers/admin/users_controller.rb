@@ -48,15 +48,23 @@ class Admin::UsersController < Admin::BaseController
     @user = User.find(params[:id])
   end
 
-  def user_params
-    params.require(:user).permit(:name, :email_address, :role, :locale, :password, :password_confirmation)
-  end
-
   def create_user_params
     user_params.tap do |permitted|
       permitted[:role] = normalize_role(permitted[:role], fallback: "member")
       permitted[:locale] = normalize_locale(permitted[:locale], fallback: User.new.locale)
     end
+  end
+
+  def user_params
+    params.require(:user).permit(:name, :email_address, :role, :locale, :password, :password_confirmation)
+  end
+
+  def normalize_role(role, fallback:)
+    role.presence_in(User.roles.keys) || fallback
+  end
+
+  def normalize_locale(locale, fallback:)
+    locale.presence_in(User.locales.keys) || fallback
   end
 
   def update_user_params
@@ -69,13 +77,5 @@ class Admin::UsersController < Admin::BaseController
         permitted.delete(:password_confirmation)
       end
     end
-  end
-
-  def normalize_role(role, fallback:)
-    role.presence_in(User.roles.keys) || fallback
-  end
-
-  def normalize_locale(locale, fallback:)
-    locale.presence_in(User.locales.keys) || fallback
   end
 end

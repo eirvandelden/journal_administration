@@ -8,11 +8,13 @@ class ChattelsControllerTest < ActionDispatch::IntegrationTest
 
   test "should get index" do
     get chattels_url
+
     assert_response :success
   end
 
   test "should get new" do
     get new_chattel_url
+
     assert_response :success
   end
 
@@ -52,17 +54,20 @@ class ChattelsControllerTest < ActionDispatch::IntegrationTest
 
   test "should show chattel" do
     get chattel_url(@chattel)
+
     assert_response :success
   end
 
   test "should get edit" do
     get edit_chattel_url(@chattel)
+
     assert_response :success
   end
 
   test "should update chattel" do
     patch chattel_url(@chattel),
           params: { chattel: chattel_params }
+
     assert_redirected_to chattel_url(@chattel)
   end
 

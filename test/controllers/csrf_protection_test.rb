@@ -10,6 +10,7 @@ class CsrfProtectionTest < ActionDispatch::IntegrationTest
     # Attempt to create a transaction without CSRF token
     # show_exceptions = :rescuable catches InvalidAuthenticityToken and renders 422
     post transactions_path, params: { transaction: { amount: 100 } }
+
     assert_response :unprocessable_entity
   end
 
@@ -17,10 +18,12 @@ class CsrfProtectionTest < ActionDispatch::IntegrationTest
     sign_in_as(users(:member))
 
     get root_path
+
     assert_response :success
 
     # Sign out using DELETE with valid CSRF token - verifies token is accepted
     delete session_path, headers: { "X-CSRF-Token" => session[:_csrf_token] }
+
     assert_response :redirect
   end
 

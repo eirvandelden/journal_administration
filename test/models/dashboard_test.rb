@@ -53,6 +53,7 @@ class DashboardTest < ActiveSupport::TestCase
     dashboard = Dashboard.new(filter: "year_to_date")
 
     keys = dashboard.debit_transactions.keys.compact
+
     assert keys.all? { |category| category.parent_category.nil? },
            "Expected all debit transaction keys to be parent (root) categories"
   end
@@ -61,6 +62,7 @@ class DashboardTest < ActiveSupport::TestCase
     dashboard = Dashboard.new(filter: "year_to_date")
 
     keys = dashboard.credit_transactions.keys.compact
+
     assert keys.all? { |category| category.parent_category.nil? },
            "Expected all credit transaction keys to be parent (root) categories"
   end
@@ -69,6 +71,7 @@ class DashboardTest < ActiveSupport::TestCase
     dashboard = Dashboard.new(filter: "year_to_date")
 
     expected_total = 52.50
+
     assert_equal expected_total, dashboard.debit_transactions[categories(:groceries)]
   end
 
@@ -82,6 +85,7 @@ class DashboardTest < ActiveSupport::TestCase
     dashboard = Dashboard.new(filter: "year_to_date")
 
     transfer_category = categories(:transfer)
+
     assert_nil dashboard.debit_transactions[transfer_category]
     assert_nil dashboard.credit_transactions[transfer_category]
   end
@@ -96,13 +100,13 @@ class DashboardTest < ActiveSupport::TestCase
   test "debit_transactions use split amounts for split transactions" do
     dashboard = Dashboard.new(filter: "year_to_date")
 
-    assert_equal 52.50, dashboard.debit_transactions[categories(:groceries)]
+    assert_in_delta(52.50, dashboard.debit_transactions[categories(:groceries)])
   end
 
   test "debit_transactions keep remaining split balance uncategorized" do
     dashboard = Dashboard.new(filter: "year_to_date")
 
-    assert_equal 35.00, dashboard.debit_transactions[nil]
+    assert_in_delta(35.00, dashboard.debit_transactions[nil])
   end
 
   test "month_to_date filter uses beginning of month to now" do
@@ -176,6 +180,7 @@ class DashboardTest < ActiveSupport::TestCase
       Budget.create!(starts_at: 1.month.ago, ends_at: 1.week.ago)
 
       dashboard = Dashboard.new(start_date: "2024-01-01", end_date: "2024-01-31")
+
       assert_nil dashboard.active_budget
     end
 
@@ -186,6 +191,7 @@ class DashboardTest < ActiveSupport::TestCase
         start_date: 3.months.ago.to_date.to_s,
         end_date: 2.months.ago.to_date.to_s
       )
+
       assert_equal past_budget, dashboard.active_budget
     end
 
@@ -205,6 +211,7 @@ class DashboardTest < ActiveSupport::TestCase
         start_date: 3.months.ago.to_date.to_s,
         end_date: 2.months.ago.to_date.to_s
       )
+
       assert_equal past_budget, dashboard.active_budget
     end
   end

@@ -28,9 +28,9 @@ class FirstRunTest < ActionDispatch::IntegrationTest
     end
 
     assert_redirected_to root_url
-    assert User.last.administrator?
+    assert_predicate User.last, :administrator?
     assert_equal "en", User.last.locale
-    assert cookies[:session_token].present?
+    assert_predicate cookies[:session_token], :present?
   end
 
   test "first_run create is not permitted once a user exists" do
