@@ -18,11 +18,11 @@ class ReceiptsController < ApplicationController
 
   private
 
-  def receipts
-    Receipt.includes(:shop, :payment).order(issued_on: :desc)
-  end
-
   def set_receipt
     @receipt = Receipt.includes(lines: { product: :product_type }).find(params[:id])
+  end
+
+  def receipts
+    Receipt.includes(:shop, :payment).order(issued_on: :desc)
   end
 end

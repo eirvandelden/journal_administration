@@ -77,6 +77,7 @@ class TodoTest < ActiveSupport::TestCase
     todo = Todo.new
 
     product_records = todo.items.select { |item| item.kind == :product }.map(&:record)
+
     assert_includes product_records, products(:andrelon_shampoo)
   end
 
@@ -84,6 +85,7 @@ class TodoTest < ActiveSupport::TestCase
     todo = Todo.new
 
     product_records = todo.items.select { |item| item.kind == :product }.map(&:record)
+
     assert_not_includes product_records, products(:ah_ribbelchips)
   end
 end

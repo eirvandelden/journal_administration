@@ -15,7 +15,10 @@ class ReceiptLine < ApplicationRecord
 
   enum :pack_unit, Product::PACK_UNITS
 
-  validates :quantity, :full_amount, :discount_amount, :paid_amount, presence: true
+  validates :quantity, presence: true
+  validates :full_amount, presence: true
+  validates :discount_amount, presence: true
+  validates :paid_amount, presence: true
   validate :paid_amount_follows_from_the_bonus
 
   def on_bonus? = discount_amount.positive?
@@ -28,6 +31,13 @@ class ReceiptLine < ApplicationRecord
 
   private
 
+  def paid_amount_follows_from_the_bonus
+    return if [ full_amount, discount_amount, paid_amount ].any?(&:blank?)
+    return if paid_amount == full_amount - discount_amount
+
+    errors.add(:paid_amount, :does_not_match_bonus)
+  end
+
   def price_per_comparable_unit(amount)
     return if comparable_quantity.blank? || comparable_quantity.zero?
 
@@ -38,12 +48,5 @@ class ReceiptLine < ApplicationRecord
     return if pack_amount.blank? || pack_unit.blank?
 
     quantity * pack_amount / PER_COMPARABLE_UNIT.fetch(pack_unit.to_sym)
-  end
-
-  def paid_amount_follows_from_the_bonus
-    return if [ full_amount, discount_amount, paid_amount ].any?(&:blank?)
-    return if paid_amount == full_amount - discount_amount
-
-    errors.add(:paid_amount, :does_not_match_bonus)
   end
 end

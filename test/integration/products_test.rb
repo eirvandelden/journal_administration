@@ -53,6 +53,7 @@ class ProductsTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     currency = ApplicationController.helpers.method(:number_to_currency)
+
     assert_select "tbody td", text: currency.call(BigDecimal("2.19"))
     assert_select "tbody td", text: currency.call(BigDecimal("0.70"))
     assert_select "tbody td", text: currency.call(BigDecimal("1.49"))

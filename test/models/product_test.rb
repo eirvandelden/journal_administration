@@ -6,13 +6,13 @@ class ProductTest < ActiveSupport::TestCase
   end
 
   test "a product straight off an invoice still needs its brand and type" do
-    assert products(:andrelon_shampoo).unclassified?
+    assert_predicate products(:andrelon_shampoo), :unclassified?
   end
 
   test "a product without a brand is unclassified" do
     products(:ah_ribbelchips).brand = ""
 
-    assert products(:ah_ribbelchips).unclassified?
+    assert_predicate products(:ah_ribbelchips), :unclassified?
   end
 
   test "a product needs a name" do
