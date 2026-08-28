@@ -83,7 +83,7 @@ class ReceiptsTest < ActionDispatch::IntegrationTest
   end
 
   test "a receipt no payment could have settled says so" do
-    @receipt.update!(total_amount: BigDecimal("999.99"))
+    @receipt.update!(issued_on: 1.year.from_now.to_date)
 
     get receipt_path(@receipt)
 

@@ -13,17 +13,11 @@ class Receipt < ApplicationRecord
   has_many :lines, class_name: "ReceiptLine", dependent: :destroy
   has_one_attached :invoice
 
-  validates :issued_on, :total_amount, presence: true
+  validates :issued_on, presence: true
+  validates :total_amount, presence: true
   validates_pdf_attachment_of :invoice
 
   def basket_total = lines.sum(:paid_amount)
-
-  # The one payment that fits this receipt, or nothing when it is not the only one
-  def matching_payment
-    fitting = fitting_payments.limit(2).to_a
-
-    fitting.first if fitting.one?
-  end
 
   # Splits the payment the way the basket divides over the accounting categories
   #
@@ -39,8 +33,11 @@ class Receipt < ApplicationRecord
   end
 
   # The payments that could have settled this receipt, for a person to choose between
+  #
+  # Deliberately not narrowed by amount: empty crates, bottles and cans are
+  # settled at the door, so what the bank takes rarely equals the mail's total.
   def fitting_payments
-    Transaction.where(type: "Debit", creditor: shop, amount: total_amount)
+    Transaction.where(type: "Debit", creditor: shop)
                .where(booked_at: (issued_on - BOOKING_WINDOW)..(issued_on + BOOKING_WINDOW))
   end
 
