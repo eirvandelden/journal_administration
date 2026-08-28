@@ -77,7 +77,6 @@ en:
         name: Name
         pack_amount: Pack size
         pack_unit: Unit
-        product: Product
       product_type:
         category: Booked as
         name: Name
@@ -145,7 +144,12 @@ en:
       account: Account
       category: Category
       chattel: Chattel
-      product_type: Product type
+      product:
+        one: Product
+        other: Products
+      product_type:
+        one: Product type
+        other: Product types
       receipt:
         one: Invoice
         other: Invoices
@@ -634,7 +638,7 @@ en:
       basket_total: Basket adds up to
       candidates: Which payment settled this invoice?
       invoice_total: Invoice states
-      no_candidates: No payment matches this invoice's total around its date.
+      no_candidates: No payment to this shop was booked around this date.
       not_settled: No payment has been matched to this invoice yet.
       payment: Payment
       settle: Settle

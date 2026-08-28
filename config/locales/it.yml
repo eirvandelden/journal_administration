@@ -77,7 +77,6 @@ it:
         name: Nome
         pack_amount: Formato
         pack_unit: Unità
-        product: Prodotto
       product_type:
         category: Registrato come
         name: Nome
@@ -145,7 +144,12 @@ it:
       account: Conto
       category: Categoria
       chattel: Bene
-      product_type: Tipo di prodotto
+      product:
+        one: Prodotto
+        other: Prodotti
+      product_type:
+        one: Tipo di prodotto
+        other: Tipi di prodotto
       receipt:
         one: Fattura
         other: Fatture
@@ -634,7 +638,7 @@ it:
       basket_total: Il carrello arriva a
       candidates: Quale pagamento ha saldato questa fattura?
       invoice_total: La fattura dice
-      no_candidates: Nessun pagamento con questo totale intorno a questa data.
+      no_candidates: Nessun pagamento a questo negozio intorno a questa data.
       not_settled: Nessun pagamento è ancora collegato a questa fattura.
       payment: Pagamento
       settle: Collega

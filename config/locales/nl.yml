@@ -77,7 +77,6 @@ nl:
         name: Naam
         pack_amount: Pakgrootte
         pack_unit: Eenheid
-        product: Product
       product_type:
         category: Geboekt als
         name: Naam
@@ -145,7 +144,12 @@ nl:
       account: Rekening
       category: Categorie
       chattel: Bezitting
-      product_type: Productsoort
+      product:
+        one: Product
+        other: Producten
+      product_type:
+        one: Productsoort
+        other: Productsoorten
       receipt:
         one: Factuur
         other: Facturen
@@ -634,7 +638,7 @@ nl:
       basket_total: Mandje komt op
       candidates: Welke betaling hoort bij deze factuur?
       invoice_total: Factuur zegt
-      no_candidates: Geen betaling met dit factuurtotaal rond deze datum.
+      no_candidates: Geen betaling aan deze winkel rond deze datum.
       not_settled: Nog geen betaling gekoppeld aan deze factuur.
       payment: Betaling
       settle: Koppelen
