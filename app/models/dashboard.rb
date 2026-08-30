@@ -60,11 +60,10 @@ class Dashboard
   def historical_averages
     lookback = lookback_date_range
     totals = grouped_transactions_for(Credit, range: lookback)
-    selected_days = (date_range.end_date.to_date - date_range.start_date.to_date).to_i + 1
 
     credit_transactions.keys.map do |category|
       hist_sum = totals[category] || 0.0
-      (hist_sum / 365.0 * selected_days).round(2)
+      (hist_sum / 365.0 * range_days).round(2)
     end
   end
 
@@ -86,7 +85,8 @@ class Dashboard
       .first
   end
 
-  # Returns budget amounts per parent category keyed by Category.
+  # Returns budget amounts per parent category keyed by Category, scaled from the
+  # budget's stored monthly amount to the number of months in the selected date range.
   #
   # @return [Hash{Category => BigDecimal}]
   def budget_amounts
@@ -97,7 +97,7 @@ class Dashboard
       .each_with_object({}) do |budget_category, amounts|
         next if budget_category.category.transfer?
 
-        amounts[budget_category.category] = budget_category.amount
+        amounts[budget_category.category] = budget_category.amount * months_in_range
       end
   end
 
@@ -106,6 +106,16 @@ class Dashboard
   # @return [Float] Credit subtotal plus profit/loss
   def credit_total
     credit_sub_total + profit_or_loss
+  end
+
+  # Returns each category's net amount for budget comparison: its debit total minus
+  # its credit total, so a refund offsets the spending it was refunding.
+  #
+  # @return [Hash{Category => Float}]
+  def budget_actuals
+    @budget_actuals ||= (debit_transactions.keys | credit_transactions.keys).compact.index_with do |category|
+      debit_transactions[category].to_f - credit_transactions[category].to_f
+    end
   end
 
   private
@@ -168,5 +178,13 @@ class Dashboard
     lookback_end = date_range.start_date.to_date - 1.day
     lookback_start = lookback_end - 1.year + 1.day
     DateRange.new(lookback_start.beginning_of_day, lookback_end.end_of_day)
+  end
+
+  def range_days
+    (date_range.end_date.to_date - date_range.start_date.to_date).to_i + 1
+  end
+
+  def months_in_range
+    range_days / 30.0
   end
 end

@@ -27,6 +27,7 @@ class Dashboard::BalancePartialTest < ActiveSupport::TestCase
       credit_transactions: {},
       active_budget: OpenStruct.new,
       budget_amounts: { categories(:groceries) => 500 },
+      budget_actuals: {},
       debit_total: 0,
       credit_total: 0,
       profit_or_loss: 0
@@ -47,6 +48,7 @@ class Dashboard::BalancePartialTest < ActiveSupport::TestCase
       credit_transactions: {},
       active_budget: OpenStruct.new,
       budget_amounts: { categories(:income) => 3000 },
+      budget_actuals: {},
       debit_total: 0,
       credit_total: 0,
       profit_or_loss: 0
@@ -59,5 +61,26 @@ class Dashboard::BalancePartialTest < ActiveSupport::TestCase
 
     assert_match categories(:income).name, html
     assert_match "$3,000.00", html
+  end
+
+  test "budget status reflects the net of debits and credits in the same category" do
+    dashboard = OpenStruct.new(
+      debit_transactions: { categories(:groceries) => 80 },
+      credit_transactions: {},
+      active_budget: OpenStruct.new,
+      budget_amounts: { categories(:groceries) => 100 },
+      budget_actuals: { categories(:groceries) => 60 },
+      debit_total: 80,
+      credit_total: 0,
+      profit_or_loss: 80
+    )
+
+    html = ApplicationController.render(
+      partial: "dashboard/balance",
+      locals: { dashboard: dashboard }
+    )
+
+    assert_match "budget-status--green", html
+    assert_no_match "budget-status--orange", html
   end
 end

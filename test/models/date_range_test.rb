@@ -15,11 +15,11 @@ class DateRangeTest < ActiveSupport::TestCase
     assert_equal Time.current.last_month.end_of_month.to_date, range.end_date.to_date
   end
 
-  test "from_filter with year_to_date returns current year range" do
+  test "from_filter with year_to_date returns the current year up to today" do
     range = DateRange.from_filter("year_to_date")
 
     assert_equal Time.current.beginning_of_year.to_date, range.start_date.to_date
-    assert_equal Time.current.end_of_year.to_date, range.end_date.to_date
+    assert_equal Time.current.to_date, range.end_date.to_date
   end
 
   test "from_filter with last_year returns last year range" do
