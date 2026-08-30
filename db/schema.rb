@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_18_120001) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_21_100000) do
   create_table "account_aliases", force: :cascade do |t|
     t.integer "account_id", null: false
     t.datetime "created_at", null: false
@@ -121,6 +121,52 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_18_120001) do
     t.index ["purchase_transaction_id"], name: "index_chattels_on_purchase_transaction_id"
   end
 
+  create_table "product_types", force: :cascade do |t|
+    t.integer "category_id", null: false
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.datetime "updated_at", null: false
+    t.index "LOWER(name)", name: "index_product_types_on_LOWER_name", unique: true
+    t.index ["category_id"], name: "index_product_types_on_category_id"
+  end
+
+  create_table "products", force: :cascade do |t|
+    t.string "brand"
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.decimal "pack_amount", precision: 10, scale: 3
+    t.integer "pack_unit"
+    t.integer "product_type_id"
+    t.datetime "updated_at", null: false
+    t.index ["product_type_id"], name: "index_products_on_product_type_id"
+  end
+
+  create_table "receipt_lines", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.decimal "discount_amount", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "full_amount", precision: 10, scale: 2, null: false
+    t.decimal "pack_amount", precision: 10, scale: 3
+    t.integer "pack_unit"
+    t.decimal "paid_amount", precision: 10, scale: 2, null: false
+    t.integer "product_id", null: false
+    t.decimal "quantity", precision: 10, scale: 3, null: false
+    t.integer "receipt_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_id"], name: "index_receipt_lines_on_product_id"
+    t.index ["receipt_id"], name: "index_receipt_lines_on_receipt_id"
+  end
+
+  create_table "receipts", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.date "issued_on", null: false
+    t.integer "payment_id"
+    t.integer "shop_id", null: false
+    t.decimal "total_amount", precision: 10, scale: 2, null: false
+    t.datetime "updated_at", null: false
+    t.index ["payment_id"], name: "index_receipts_on_payment_id"
+    t.index ["shop_id"], name: "index_receipts_on_shop_id"
+  end
+
   create_table "sessions", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
     t.string "ip_address"
@@ -175,6 +221,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_18_120001) do
 
   create_table "users", force: :cascade do |t|
     t.boolean "active", default: true
+    t.string "assistant_token"
     t.integer "color_scheme", default: 0, null: false
     t.datetime "created_at", precision: nil, null: false
     t.integer "dark_theme", default: 1, null: false
@@ -185,6 +232,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_18_120001) do
     t.string "password_digest", null: false
     t.integer "role", null: false
     t.datetime "updated_at", precision: nil, null: false
+    t.index ["assistant_token"], name: "index_users_on_assistant_token", unique: true
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
     t.index ["name"], name: "index_users_on_name", unique: true
   end
@@ -198,6 +246,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_18_120001) do
   add_foreign_key "budget_categories", "categories"
   add_foreign_key "budgets", "budgets", column: "closed_by_budget_id", on_delete: :nullify
   add_foreign_key "chattels", "transactions", column: "purchase_transaction_id"
+  add_foreign_key "product_types", "categories"
+  add_foreign_key "products", "product_types"
+  add_foreign_key "receipt_lines", "products"
+  add_foreign_key "receipt_lines", "receipts"
+  add_foreign_key "receipts", "accounts", column: "shop_id"
+  add_foreign_key "receipts", "transactions", column: "payment_id"
   add_foreign_key "sessions", "users"
   add_foreign_key "transaction_links", "transactions", column: "source_transaction_id"
   add_foreign_key "transaction_links", "transactions", column: "transfer_id"
