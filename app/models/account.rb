@@ -58,8 +58,10 @@ class Account < ApplicationRecord
 
   # Reassigns transactions from any external account whose name exactly matches
   # one of this account's alias patterns to self.
+  #
+  # @return [Integer] Number of transactions reassigned
   def absorb_transactions_from_aliases
-    account_aliases.each { |a| absorb_transactions_for(a.pattern) }
+    account_aliases.sum { |a| absorb_transactions_for(a.pattern) }
   end
 
   private
@@ -72,9 +74,11 @@ class Account < ApplicationRecord
   end
 
   # @param pattern [String]
+  # @return [Integer] Number of transactions reassigned
   def absorb_transactions_for(pattern)
     duplicates = Account.external.where.not(id: id).where("LOWER(name) = LOWER(?)", pattern)
-    Transaction.where(debitor_account_id: duplicates).update_all(debitor_account_id: id)
-    Transaction.where(creditor_account_id: duplicates).update_all(creditor_account_id: id)
+    debitor_count = Transaction.where(debitor_account_id: duplicates).update_all(debitor_account_id: id)
+    creditor_count = Transaction.where(creditor_account_id: duplicates).update_all(creditor_account_id: id)
+    debitor_count + creditor_count
   end
 end

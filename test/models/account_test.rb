@@ -170,6 +170,14 @@ class AccountTest < ActiveSupport::TestCase
     assert_equal "NL00TEST0000000001", account.to_s
   end
 
+  # -- absorb_transactions_from_aliases ----------------------------------------
+
+  test "absorb_transactions_from_aliases returns the number of transactions reassigned" do
+    count = accounts(:albert_heijn).absorb_transactions_from_aliases
+
+    assert_equal 2, count
+  end
+
   class WhenDestroying < ActiveSupport::TestCase
     test "can be destroyed when it has no transactions" do
       assert accounts(:jumbo).destroy

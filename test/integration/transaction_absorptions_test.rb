@@ -33,13 +33,13 @@ class TransactionAbsorptionsTest < ActionDispatch::IntegrationTest
       assert_equal @account, transaction.debitor
     end
 
-    test "redirects to account with success notice" do
+    test "redirects to account with success notice including the number absorbed" do
       post account_transaction_absorption_path(@account)
 
       assert_redirected_to account_path(@account)
       follow_redirect!
 
-      assert_equal I18n.t("transaction_absorptions.create.success"), flash[:notice]
+      assert_equal I18n.t("transaction_absorptions.create.success", count: 2), flash[:notice]
     end
   end
 
