@@ -34,6 +34,45 @@ class AccountsShowTest < ActionDispatch::IntegrationTest
     assert_includes response.body, transactions(:debit_grocery).note
   end
 
+  test "show links a recent transaction to its show and edit page" do
+    get account_path(accounts(:checking))
+
+    assert_response :success
+    assert_select "a[href='#{transaction_path(transactions(:debit_grocery))}']"
+    assert_select "a[href='#{edit_transaction_path(transactions(:debit_grocery))}']"
+  end
+
+  test "show paginates recent transactions to the next page" do
+    oldest = Transaction.create!(
+      amount: 5,
+      booked_at: 1.day.from_now,
+      interest_at: 1.day.from_now,
+      debitor: accounts(:checking),
+      creditor: accounts(:albert_heijn),
+      category: categories(:supermarket)
+    )
+    20.times do |index|
+      Transaction.create!(
+        amount: 10 + index,
+        booked_at: 2.days.from_now + index.minutes,
+        interest_at: 2.days.from_now + index.minutes,
+        debitor: accounts(:checking),
+        creditor: accounts(:albert_heijn),
+        category: categories(:supermarket)
+      )
+    end
+
+    get account_path(accounts(:checking))
+
+    assert_select "a[rel='next']"
+    assert_not_includes response.body, transaction_path(oldest)
+
+    get account_path(accounts(:checking), transactions_page: 2)
+
+    assert_select "a[rel='prev']"
+    assert_includes response.body, transaction_path(oldest)
+  end
+
   test "edit renders recent transactions heading" do
     get edit_account_path(accounts(:checking))
 
