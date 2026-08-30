@@ -23,7 +23,12 @@ class AccountsController < ApplicationController
   # Displays a single account
   #
   # @return [void]
-  def show; end
+  def show
+    @transactions_page =
+      GearedPagination::Recordset.new(@account.recent_transactions(limit: nil), per_page: [ 20 ])
+        .page(params[:transactions_page])
+    @transactions = @transactions_page.records
+  end
 
   # Renders form for creating a new account
   #

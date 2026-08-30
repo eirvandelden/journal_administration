@@ -42,7 +42,7 @@
 <% end %>
 
 <article>
-  <%= render "shared/recent_transactions", transactions: @account.recent_transactions %>
+  <%= render "shared/recent_transactions", transactions: @transactions, page: @transactions_page %>
 </article>
 
 <footer>
