@@ -566,7 +566,7 @@ nl:
       update_transactions: Transacties bijwerken
   transaction_absorptions:
     create:
-      success: Transacties overgenomen van dubbele rekeningen.
+      success: "%{count} transacties overgenomen van dubbele rekeningen."
   transaction_links:
     balance_table:
       amount: Bedrag

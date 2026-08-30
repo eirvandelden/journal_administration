@@ -7,8 +7,8 @@ class Accounts::TransactionAbsorptionsController < ApplicationController
   # @action POST
   # @route /accounts/:account_id/transaction_absorption
   def create
-    @account.absorb_transactions_from_aliases
-    redirect_to @account, notice: t("transaction_absorptions.create.success")
+    count = @account.absorb_transactions_from_aliases
+    redirect_to @account, notice: t("transaction_absorptions.create.success", count: count)
   end
 
   private

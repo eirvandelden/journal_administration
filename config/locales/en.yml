@@ -566,7 +566,7 @@ en:
       update_transactions: Update Transactions
   transaction_absorptions:
     create:
-      success: Transactions absorbed from duplicate accounts.
+      success: "%{count} transactions absorbed from duplicate accounts."
   transaction_links:
     balance_table:
       amount: Amount
