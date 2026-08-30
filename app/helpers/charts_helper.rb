@@ -48,25 +48,14 @@ module ChartsHelper
   # Renders an inline SVG horizontal budget vs. actual bar chart.
   #
   # Shows credit categories (spending limits) and debit categories (savings targets)
-  # color-coded by status. Returns an empty paragraph when no budget is given.
+  # color-coded by status. Returns an empty paragraph when there is nothing to show.
   #
-  # @param budget [Budget, nil] the active budget
-  # @param debit_transactions [Hash{Category => Numeric}] actual debit amounts
-  # @param credit_transactions [Hash{Category => Numeric}] actual credit amounts
+  # @param budget_amounts [Hash{Category => Numeric}] budgeted amount per category
+  # @param budget_actuals [Hash{Category => Numeric}] net debit-minus-credit amount per category
   # @return [String] HTML-safe SVG markup
-  def svg_budget_chart(budget:, debit_transactions:, credit_transactions:)
-    return content_tag(:p, "") unless budget
-
-    budget_by_cat = budget.budget_categories
-                          .includes(:category)
-                          .each_with_object({}) do |budget_category, amounts|
-                            next if budget_category.category.transfer?
-
-                            amounts[budget_category.category] = budget_category.amount
-                          end
-
-    credit_rows = build_budget_rows(credit_transactions, budget_by_cat, :credit)
-    debit_rows  = build_budget_rows(debit_transactions,  budget_by_cat, :debit)
+  def svg_budget_chart(budget_amounts:, budget_actuals:)
+    credit_rows = build_budget_rows(budget_amounts, budget_actuals, :credit)
+    debit_rows  = build_budget_rows(budget_amounts, budget_actuals, :debit)
     all_rows    = credit_rows + debit_rows
 
     return content_tag(:p, "") if all_rows.empty?
@@ -218,14 +207,16 @@ module ChartsHelper
     end
   end
 
-  def build_budget_rows(transactions, budget_by_cat, direction)
-    direction_budget = budget_by_cat.select { |cat, _| cat.public_send(:"#{direction}?") }
-    all_cats = (transactions.keys + direction_budget.keys).uniq.compact
+  def build_budget_rows(budget_amounts, budget_actuals, direction)
+    direction_budgeted = budget_amounts.select { |cat, _| cat.public_send(:"#{direction}?") }
+    direction_actuals  = budget_actuals.select { |cat, _| cat.public_send(:"#{direction}?") }
+    all_cats = (direction_actuals.keys + direction_budgeted.keys).uniq.compact
     all_cats.filter_map do |cat|
       next unless cat
 
-      actual   = transactions[cat].to_f
-      budgeted = budget_by_cat[cat]
+      net      = budget_actuals[cat].to_f
+      actual   = direction == :credit ? -net : net
+      budgeted = budget_amounts[cat]
       { category: cat, actual: actual, budgeted: budgeted }
     end
   end

@@ -236,5 +236,32 @@ class DashboardTest < ActiveSupport::TestCase
 
       assert_not_includes dashboard.budget_amounts.keys, categories(:transfer)
     end
+
+    test "scales the monthly budget to the number of months in the selected range" do
+      budget = Budget.create!(starts_at: Time.zone.parse("2026-01-01"))
+      BudgetCategory.create!(budget:, category: categories(:groceries), amount: 100)
+
+      dashboard = Dashboard.new(start_date: "2026-01-01", end_date: "2026-03-31")
+
+      assert_equal 300, dashboard.budget_amounts[categories(:groceries)]
+    end
+  end
+
+  class BudgetActuals < ActiveSupport::TestCase
+    test "nets a category's credits against its debits" do
+      booked_at = 10.days.from_now
+      Debit.create!(
+        amount: 80, booked_at:, interest_at: booked_at,
+        debitor: accounts(:checking), creditor: accounts(:albert_heijn), category: categories(:groceries)
+      )
+      Credit.create!(
+        amount: 20, booked_at:, interest_at: booked_at,
+        debitor: accounts(:albert_heijn), creditor: accounts(:checking), category: categories(:groceries)
+      )
+
+      dashboard = Dashboard.new(start_date: 9.days.from_now.to_date.to_s, end_date: 11.days.from_now.to_date.to_s)
+
+      assert_equal 60, dashboard.budget_actuals[categories(:groceries)]
+    end
   end
 end

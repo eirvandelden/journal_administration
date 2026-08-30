@@ -40,7 +40,7 @@ class DateRange
           Time.current.last_month.end_of_month)
     when "year_to_date"
       new(Time.current.beginning_of_year,
-          Time.current.end_of_year)
+          Time.current)
     when "last_year"
       new(Time.current.last_year.beginning_of_year,
           Time.current.last_year.end_of_year)
