@@ -64,6 +64,20 @@ class AssistantTest < ActionDispatch::IntegrationTest
     assert_not_includes answer, "Jumbo"
   end
 
+  test "the assistant is told when more accounts match than it was shown" do
+    12.times { |number| Account.create!(name: "Bakery number #{number}") }
+
+    answer = ask_assistant("find_accounts", query: "Bakery")
+
+    assert_includes answer, "Showing 10 of 12"
+  end
+
+  test "the assistant is told when nothing matches what it searched for" do
+    answer = ask_assistant("find_accounts", query: "Nowhere At All")
+
+    assert_includes answer, "No account matches"
+  end
+
   test "the assistant teaches the books to recognise a shop by a new pattern" do
     answer = ask_assistant("add_account_alias", account_id: accounts(:jumbo).id, pattern: "JUMBO SUPERMARKTEN")
 
