@@ -27,7 +27,7 @@ class ProductTypesTest < ActionDispatch::IntegrationTest
       post product_types_path, params: { product_type: { name: "Shampoo" } }
     end
 
-    assert_response :success
+    assert_response :unprocessable_entity
     assert_select "#error_explanation li"
   end
 
@@ -37,7 +37,7 @@ class ProductTypesTest < ActionDispatch::IntegrationTest
         params: { product_type: { name: product_types(:naturel_chips).name, category_id: categories(:groceries).id } }
     end
 
-    assert_response :success
+    assert_response :unprocessable_entity
     assert_select "#error_explanation li"
   end
   test "a product type page compares the brands we buy it from" do

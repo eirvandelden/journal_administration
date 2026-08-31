@@ -75,8 +75,6 @@ en:
       product:
         brand: Brand
         name: Name
-        pack_amount: Pack size
-        pack_unit: Unit
       product_type:
         category: Booked as
         name: Name
@@ -561,6 +559,7 @@ en:
     edit:
       heading: 'Product type: %{name}'
     index:
+      actions: Actions
       category: Booked as
       empty: No product types yet.
       heading: Product types
@@ -589,17 +588,11 @@ en:
       name: Name
       product_type: Product type
       unclassified: Still to classify
-    pack_units:
-      gram: g
-      kilogram: kg
-      litre: L
-      millilitre: ml
-      piece: piece
     price_chart:
       highest: 'highest: %{price}'
-      paid_series: green is what we paid per unit
-      shelf_series: blue is the shelf price per unit
-      title: Price per unit over time
+      paid_series: green is what we paid
+      shelf_series: blue is the shelf price
+      title: Price over time
     show:
       never_bought: We have never bought this.
       purchases: Every time we bought it
@@ -611,15 +604,10 @@ en:
       bonus: Bonus
       heading: Basket
       paid: Paid
-      per_unit: Per unit
       product: Product
       quantity: Quantity
       shelf_price: Shelf price
       total: Basket total
-      units:
-        kilogram: kg
-        litre: L
-        piece: each
       view_invoice: View invoice
     index:
       date: Date

@@ -75,8 +75,6 @@ nl:
       product:
         brand: Merk
         name: Naam
-        pack_amount: Pakgrootte
-        pack_unit: Eenheid
       product_type:
         category: Geboekt als
         name: Naam
@@ -561,6 +559,7 @@ nl:
     edit:
       heading: 'Productsoort: %{name}'
     index:
+      actions: Acties
       category: Geboekt als
       empty: Nog geen productsoorten.
       heading: Productsoorten
@@ -589,17 +588,11 @@ nl:
       name: Naam
       product_type: Productsoort
       unclassified: Nog indelen
-    pack_units:
-      gram: g
-      kilogram: kg
-      litre: L
-      millilitre: ml
-      piece: stuk
     price_chart:
       highest: 'hoogste: %{price}'
-      paid_series: groen is wat we per eenheid betaalden
-      shelf_series: blauw is de winkelprijs per eenheid
-      title: Prijs per eenheid in de tijd
+      paid_series: groen is wat we betaalden
+      shelf_series: blauw is de winkelprijs
+      title: Prijs in de tijd
     show:
       never_bought: Dit hebben we nog nooit gekocht.
       purchases: Elke keer dat we het kochten
@@ -611,15 +604,10 @@ nl:
       bonus: Bonus
       heading: Mandje
       paid: Betaald
-      per_unit: Per eenheid
       product: Product
       quantity: Aantal
       shelf_price: Winkelprijs
       total: Totaal mandje
-      units:
-        kilogram: kg
-        litre: L
-        piece: per stuk
       view_invoice: Factuur bekijken
     index:
       date: Datum

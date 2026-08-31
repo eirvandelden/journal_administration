@@ -12,9 +12,6 @@
 
     <dt><%= Product.human_attribute_name(:product_type) %></dt>
     <dd><%= @product.product_type&.name || t(".unknown") %></dd>
-
-    <dt><%= Product.human_attribute_name(:pack_amount) %></dt>
-    <dd><%= @product.pack_amount ? "#{@product.pack_amount.to_i} #{t("products.pack_units.#{@product.pack_unit}")}" : t(".unknown") %></dd>
   </dl>
 
   <section>
@@ -23,9 +20,8 @@
     <% if @purchases.empty? %>
       <p><%= t(".never_bought") %></p>
     <% else %>
-      <% chartable = chartable_purchases(@purchases) %>
-      <% if chartable.size > 1 %>
-        <%= render "price_chart", purchases: chartable %>
+      <% if @purchases.size > 1 %>
+        <%= render "price_chart", purchases: @purchases.to_a.reverse %>
       <% end %>
 
       <table id="purchases-table">
@@ -33,11 +29,9 @@
           <tr>
             <th><%= t("receipts.index.date") %></th>
             <th><%= t("receipts.basket.quantity") %></th>
-            <th><%= Product.human_attribute_name(:pack_amount) %></th>
             <th><%= t("receipts.basket.shelf_price") %></th>
             <th><%= t("receipts.basket.bonus") %></th>
             <th><%= t("receipts.basket.paid") %></th>
-            <th><%= t("receipts.basket.per_unit") %></th>
           </tr>
         </thead>
         <tbody>
@@ -45,18 +39,9 @@
             <tr>
               <td><%= link_to l(purchase.receipt.issued_on, format: :short), receipt_path(purchase.receipt) %></td>
               <td><%= number_with_precision(purchase.quantity, precision: 3, strip_insignificant_zeros: true) %></td>
-              <td><%= purchase.pack_amount&.to_i %> <%= t("products.pack_units.#{purchase.pack_unit}") if purchase.pack_unit %></td>
               <td><%= number_to_currency(purchase.full_amount) %></td>
               <td><%= purchase.on_bonus? ? number_to_currency(purchase.discount_amount) : "-" %></td>
               <td><%= number_to_currency(purchase.paid_amount) %></td>
-              <td>
-                <% if purchase.paid_price_per_unit %>
-                  <%= number_to_currency(purchase.paid_price_per_unit) %> /
-                  <%= t("receipts.basket.units.#{purchase.comparable_unit}") %>
-                <% else %>
-                  -
-                <% end %>
-              </td>
             </tr>
           <% end %>
         </tbody>

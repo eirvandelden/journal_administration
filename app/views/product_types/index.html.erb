@@ -13,13 +13,15 @@
       <tr>
         <th><%= t(".name") %></th>
         <th><%= t(".category") %></th>
+        <th><%= t(".actions") %></th>
       </tr>
     </thead>
     <tbody>
       <% @product_types.each do |product_type| %>
         <tr>
-          <td><%= link_to product_type.name, edit_product_type_path(product_type) %></td>
+          <td><%= link_to product_type.name, product_type_path(product_type) %></td>
           <td><%= product_type.category.name %></td>
+          <td><%= link_to t("common.edit"), edit_product_type_path(product_type) %></td>
         </tr>
       <% end %>
     </tbody>

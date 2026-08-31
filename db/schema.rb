@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_31_091000) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_31_140000) do
   create_table "account_aliases", force: :cascade do |t|
     t.integer "account_id", null: false
     t.datetime "created_at", null: false
@@ -134,8 +134,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_31_091000) do
     t.string "brand"
     t.datetime "created_at", null: false
     t.string "name", null: false
-    t.decimal "pack_amount", precision: 10, scale: 3
-    t.integer "pack_unit"
     t.integer "product_type_id"
     t.datetime "updated_at", null: false
     t.index "LOWER(name)", name: "index_products_on_LOWER_name", unique: true
@@ -146,8 +144,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_31_091000) do
     t.datetime "created_at", null: false
     t.decimal "discount_amount", precision: 10, scale: 2, default: "0.0", null: false
     t.decimal "full_amount", precision: 10, scale: 2, null: false
-    t.decimal "pack_amount", precision: 10, scale: 3
-    t.integer "pack_unit"
     t.decimal "paid_amount", precision: 10, scale: 2, null: false
     t.integer "product_id", null: false
     t.decimal "quantity", precision: 10, scale: 3, null: false
@@ -224,7 +220,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_31_091000) do
 
   create_table "users", force: :cascade do |t|
     t.boolean "active", default: true
-    t.string "assistant_token"
     t.integer "color_scheme", default: 0, null: false
     t.datetime "created_at", precision: nil, null: false
     t.integer "dark_theme", default: 1, null: false
@@ -235,7 +230,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_31_091000) do
     t.string "password_digest", null: false
     t.integer "role", null: false
     t.datetime "updated_at", precision: nil, null: false
-    t.index ["assistant_token"], name: "index_users_on_assistant_token", unique: true
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
     t.index ["name"], name: "index_users_on_name", unique: true
   end

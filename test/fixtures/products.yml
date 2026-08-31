@@ -2,24 +2,16 @@ ah_ribbelchips:
   name: AH Naturel Ribbelchips
   brand: AH
   product_type: naturel_chips
-  pack_amount: 300
-  pack_unit: gram
 
 lays_ribbelchips:
   name: Lay's Ribbelchips Naturel
   brand: Lay's
   product_type: naturel_chips
-  pack_amount: 300
-  pack_unit: gram
 
 andrelon_shampoo:
   name: Andrelon shampoo
-  pack_amount: 300
-  pack_unit: millilitre
 
 dreft_dishwashing_liquid:
   name: Dreft afwasmiddel
   brand: Dreft
   product_type: dishwashing_liquid
-  pack_amount: 750
-  pack_unit: millilitre

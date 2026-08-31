@@ -18,11 +18,11 @@ class ProductTypeTest < ActiveSupport::TestCase
     assert_includes products_bought, products(:lays_ribbelchips)
   end
 
-  test "a product type knows what each product last cost per unit" do
+  test "a product type knows what each product last cost" do
     latest = product_types(:naturel_chips).latest_purchase_per_product
 
-    assert_equal BigDecimal("4.97"), latest[products(:ah_ribbelchips)].paid_price_per_unit
-    assert_equal BigDecimal("4.97"), latest[products(:lays_ribbelchips)].paid_price_per_unit
+    assert_equal BigDecimal("1.49"), latest[products(:ah_ribbelchips)].paid_amount
+    assert_equal BigDecimal("1.49"), latest[products(:lays_ribbelchips)].paid_amount
   end
 
   test "a product type totals what we spent per month, and how much of it was on bonus" do

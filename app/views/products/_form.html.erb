@@ -1,4 +1,4 @@
-<%# locals: (product:, brands_in_use:) %>
+<%# locals: (product:, brands_in_use:, product_types:) %>
 <section>
   <%= form_for product do |f| %>
     <% if product.errors.any? %>
@@ -26,14 +26,7 @@
     </datalist>
 
     <%= f.label :product_type %>
-    <%= f.collection_select :product_type_id, ProductType.order(:name), :id, :name, { include_blank: true } %>
-
-    <%= f.label :pack_amount %>
-    <%= f.number_field :pack_amount, step: :any %>
-
-    <%= f.label :pack_unit %>
-    <%= f.collection_select :pack_unit, Product.pack_units.keys, :to_s, ->(unit) { t("products.pack_units.#{unit}") },
-                            { include_blank: true } %>
+    <%= f.collection_select :product_type_id, product_types, :id, :name, { include_blank: true } %>
 
     <nav>
       <%= f.submit %>

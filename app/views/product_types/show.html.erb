@@ -24,7 +24,6 @@
             <th><%= t("products.index.name") %></th>
             <th><%= t(".last_bought") %></th>
             <th><%= t("receipts.basket.paid") %></th>
-            <th><%= t("receipts.basket.per_unit") %></th>
           </tr>
         </thead>
         <tbody>
@@ -34,14 +33,6 @@
               <td><%= link_to product.name, product_path(product) %></td>
               <td><%= l purchase.receipt.issued_on, format: :short %></td>
               <td><%= number_to_currency(purchase.paid_amount) %></td>
-              <td>
-                <% if purchase.paid_price_per_unit %>
-                  <%= number_to_currency(purchase.paid_price_per_unit) %> /
-                  <%= t("receipts.basket.units.#{purchase.comparable_unit}") %>
-                <% else %>
-                  -
-                <% end %>
-              </td>
             </tr>
           <% end %>
         </tbody>

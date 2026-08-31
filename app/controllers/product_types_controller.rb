@@ -37,7 +37,7 @@ class ProductTypesController < ApplicationController
 
     return redirect_to product_types_path, notice: t(".success") if @product_type.save
 
-    render :new
+    render :new, status: :unprocessable_entity
   end
 
   # Updates a product type
@@ -46,7 +46,7 @@ class ProductTypesController < ApplicationController
   def update
     return redirect_to product_types_path, notice: t(".success") if @product_type.update(product_type_params)
 
-    render :edit
+    render :edit, status: :unprocessable_entity
   end
 
   private

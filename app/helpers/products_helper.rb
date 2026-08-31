@@ -2,11 +2,6 @@ module ProductsHelper
   CHART_WIDTH = 600
   CHART_HEIGHT = 200
 
-  # The purchases a price per unit can be drawn for, oldest first
-  def chartable_purchases(purchases)
-    purchases.to_a.reverse.select(&:paid_price_per_unit)
-  end
-
   # Turns prices into the points of an SVG polyline, scaled from zero so a
   # bonus reads as a dip rather than a loss
   def price_chart_points(prices, highest)

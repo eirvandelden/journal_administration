@@ -20,7 +20,7 @@ class ProductsController < ApplicationController
   #
   # @return [void]
   def edit
-    @brands_in_use = Product.brands_in_use
+    load_form_choices
   end
 
   # Records a product's brand, type and pack size
@@ -29,8 +29,8 @@ class ProductsController < ApplicationController
   def update
     return redirect_to products_path, notice: t(".success") if @product.update(product_params)
 
-    @brands_in_use = Product.brands_in_use
-    render :edit
+    load_form_choices
+    render :edit, status: :unprocessable_entity
   end
 
   private
@@ -39,7 +39,12 @@ class ProductsController < ApplicationController
     @product = Product.find(params[:id])
   end
 
+  def load_form_choices
+    @brands_in_use = Product.brands_in_use
+    @product_types = ProductType.order(:name)
+  end
+
   def product_params
-    params.expect(product: %i[name brand product_type_id pack_amount pack_unit])
+    params.expect(product: %i[name brand product_type_id])
   end
 end

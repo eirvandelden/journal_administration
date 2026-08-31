@@ -75,8 +75,6 @@ it:
       product:
         brand: Marca
         name: Nome
-        pack_amount: Formato
-        pack_unit: Unità
       product_type:
         category: Registrato come
         name: Nome
@@ -561,6 +559,7 @@ it:
     edit:
       heading: 'Tipo di prodotto: %{name}'
     index:
+      actions: Azioni
       category: Registrato come
       empty: Nessun tipo di prodotto.
       heading: Tipi di prodotto
@@ -589,17 +588,11 @@ it:
       name: Nome
       product_type: Tipo di prodotto
       unclassified: Da classificare
-    pack_units:
-      gram: g
-      kilogram: kg
-      litre: L
-      millilitre: ml
-      piece: pezzo
     price_chart:
       highest: 'massimo: %{price}'
-      paid_series: il verde è quanto abbiamo pagato per unità
-      shelf_series: il blu è il prezzo di listino per unità
-      title: Prezzo per unità nel tempo
+      paid_series: il verde è quanto abbiamo pagato
+      shelf_series: il blu è il prezzo di listino
+      title: Prezzo nel tempo
     show:
       never_bought: Non l'abbiamo mai comprato.
       purchases: Ogni volta che l'abbiamo comprato
@@ -611,15 +604,10 @@ it:
       bonus: Sconto
       heading: Carrello
       paid: Pagato
-      per_unit: Per unità
       product: Prodotto
       quantity: Quantità
       shelf_price: Prezzo di listino
       total: Totale carrello
-      units:
-        kilogram: kg
-        litre: L
-        piece: al pezzo
       view_invoice: Vedi fattura
     index:
       date: Data

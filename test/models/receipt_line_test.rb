@@ -20,19 +20,4 @@ I18n.t("activerecord.errors.models.receipt_line.attributes.paid_amount.does_not_
     assert_predicate receipt_lines(:lays_chips_on_bonus), :on_bonus?
     assert_not receipt_lines(:ah_chips).on_bonus?
   end
-
-  test "a line knows what a kilo of it cost" do
-    assert_equal BigDecimal("4.97"), receipt_lines(:ah_chips).paid_price_per_unit
-  end
-
-  test "a bonus line also knows what a kilo would have cost without the bonus" do
-    line = receipt_lines(:lays_chips_on_bonus)
-
-    assert_equal BigDecimal("4.97"), line.paid_price_per_unit
-    assert_equal BigDecimal("7.30"), line.shelf_price_per_unit
-  end
-
-  test "a line names the unit its price can be compared in" do
-    assert_equal :kilogram, receipt_lines(:ah_chips).comparable_unit
-  end
 end

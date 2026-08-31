@@ -10,7 +10,6 @@
         <th><%= t("receipts.basket.shelf_price") %></th>
         <th><%= t("receipts.basket.bonus") %></th>
         <th><%= t("receipts.basket.paid") %></th>
-        <th><%= t("receipts.basket.per_unit") %></th>
       </tr>
     </thead>
     <tbody>
@@ -21,11 +20,6 @@
           <td><%= number_to_currency(line.full_amount) %></td>
           <td><%= line.on_bonus? ? number_to_currency(line.discount_amount) : "-" %></td>
           <td><%= number_to_currency(line.paid_amount) %></td>
-          <td>
-            <% if line.paid_price_per_unit %>
-              <%= number_to_currency(line.paid_price_per_unit) %> / <%= t("receipts.basket.units.#{line.comparable_unit}") %>
-            <% end %>
-          </td>
         </tr>
       <% end %>
     </tbody>
@@ -33,7 +27,6 @@
       <tr>
         <th colspan="4"><%= t("receipts.basket.total") %></th>
         <td><%= number_to_currency(receipt.basket_total) %></td>
-        <td></td>
       </tr>
     </tfoot>
   </table>
