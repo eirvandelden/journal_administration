@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_31_090000) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_31_091000) do
   create_table "account_aliases", force: :cascade do |t|
     t.integer "account_id", null: false
     t.datetime "created_at", null: false
@@ -160,10 +160,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_31_090000) do
   create_table "receipts", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.date "issued_on", null: false
+    t.string "order_number"
     t.integer "payment_id"
     t.integer "shop_id", null: false
     t.decimal "total_amount", precision: 10, scale: 2, null: false
     t.datetime "updated_at", null: false
+    t.index ["order_number"], name: "index_receipts_on_order_number", unique: true
     t.index ["payment_id"], name: "index_receipts_on_payment_id"
     t.index ["shop_id"], name: "index_receipts_on_shop_id"
   end
