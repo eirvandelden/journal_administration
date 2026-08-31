@@ -10,15 +10,15 @@ class ChattelsTest < ApplicationSystemTestCase
   test "visiting the index" do
     visit chattels_url
 
-    assert_link I18n.t("chattels.index.new_chattel", locale: @locale)
+    assert_link I18n.t("chattels.index.new_chattel", locale: locale)
   end
 
   test "should create chattel" do
     visit chattels_url
-    click_on I18n.t("chattels.index.new_chattel", locale: @locale)
+    click_on I18n.t("chattels.index.new_chattel", locale: locale)
 
     fill_in "chattel_name", with: "System Test Chattel"
-    click_on I18n.t("common.save", locale: @locale)
+    click_on I18n.t("common.save", locale: locale)
 
     assert_text "Chattel was successfully created"
     assert_text "System Test Chattel"
@@ -26,19 +26,19 @@ class ChattelsTest < ApplicationSystemTestCase
 
   test "should update Chattel" do
     visit chattel_url(@chattel)
-    click_on I18n.t("common.edit", locale: @locale), match: :first
+    click_on I18n.t("common.edit", locale: locale), match: :first
 
     fill_in "chattel_name", with: "#{@chattel.name} updated"
-    click_on I18n.t("common.save", locale: @locale)
+    click_on I18n.t("common.save", locale: locale)
 
     assert_text "Chattel was successfully updated"
-    click_on I18n.t("common.back", locale: @locale)
+    click_on I18n.t("common.back", locale: locale)
   end
 
   test "index does not show destroy button" do
     visit chattels_url
 
-    assert_no_button I18n.t("common.destroy", locale: @locale)
+    assert_no_button I18n.t("common.destroy", locale: locale)
   end
 
   test "should destroy Chattel from show page" do
@@ -46,7 +46,7 @@ class ChattelsTest < ApplicationSystemTestCase
 
     assert_difference("Chattel.count", -1) do
       accept_confirm do
-        click_on I18n.t("common.destroy", locale: @locale)
+        click_on I18n.t("common.destroy", locale: locale)
       end
 
       assert_text "Chattel was successfully destroyed"

@@ -8,24 +8,24 @@ class MainNavigationMenusTest < ApplicationSystemTestCase
   end
 
   test "todo menu links reach the expected pages" do
-    assert_todo_link(I18n.t("main_nav.todo_all", locale: @locale), todo_path)
-    assert_todo_link(I18n.t("main_nav.todo_consolidatable_transactions", locale: @locale),
+    assert_todo_link(I18n.t("main_nav.todo_all", locale: locale), todo_path)
+    assert_todo_link(I18n.t("main_nav.todo_consolidatable_transactions", locale: locale),
                      transactions_path(filter: :no_category))
-    assert_todo_link(I18n.t("main_nav.todo_consolidatable_accounts", locale: @locale),
+    assert_todo_link(I18n.t("main_nav.todo_consolidatable_accounts", locale: locale),
                      accounts_path(filter: :untouched))
-    assert_todo_link(I18n.t("main_nav.todo_upload", locale: @locale), new_transactions_import_path)
+    assert_todo_link(I18n.t("main_nav.todo_upload", locale: locale), new_transactions_import_path)
   end
 
   test "navigation does not show a separate filters menu" do
     visit root_url
 
-    assert_no_selector "header nav summary", text: I18n.t("main_nav.dashboard_filters", locale: @locale)
+    assert_no_selector "header nav summary", text: I18n.t("main_nav.dashboard_filters", locale: locale)
   end
 
   test "navigation links to budgets" do
     visit root_url
 
-    click_link I18n.t("main_nav.budgets", model: Budget.model_name.human, locale: @locale)
+    click_link I18n.t("main_nav.budgets", model: Budget.model_name.human, locale: locale)
 
     assert_current_path budgets_path
   end
@@ -33,7 +33,7 @@ class MainNavigationMenusTest < ApplicationSystemTestCase
   private
     def assert_todo_link(label, path)
       visit root_url
-      open_nav_section(I18n.t("main_nav.todo", model: Todo.model_name.human, locale: @locale))
+      open_nav_section(I18n.t("main_nav.todo", model: Todo.model_name.human, locale: locale))
 
       click_link label
 
