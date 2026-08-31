@@ -4,7 +4,6 @@ class ChattelsTest < ApplicationSystemTestCase
   setup do
     @chattel = chattels(:one)
     @user = users(:member)
-    @locale = @user.locale.to_sym
     sign_in_as(@user)
   end
 

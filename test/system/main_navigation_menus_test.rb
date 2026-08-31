@@ -3,7 +3,6 @@ require "application_system_test_case"
 class MainNavigationMenusTest < ApplicationSystemTestCase
   setup do
     @user = users(:member)
-    @locale = @user.locale.to_sym
 
     sign_in_as(@user)
   end

@@ -41,6 +41,8 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
       # Keep system tests independent from external shell env setup.
       ENV["APP_NAME"] ||= "JournalAdministration"
 
+      @locale = user.locale.to_sym
+
       session = user.sessions.first || user.sessions.start!(user_agent: "SystemTest", ip_address: "127.0.0.1")
       signed_token = signed_cookie_value(:session_token, session.token)
 
