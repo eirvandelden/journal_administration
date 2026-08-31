@@ -30,6 +30,42 @@ class AssistantTest < ActionDispatch::IntegrationTest
     assert_response :unauthorized
   end
 
+  test "the assistant says what was planned, what was spent and what is left" do
+    plan = budget_starting_this_month(groceries: 100)
+
+    answer = ask_assistant("budget_status", start_date: plan[:from], end_date: plan[:until])
+
+    assert_includes answer, "Groceries: planned 100.00, spent 12.50, 87.50 left"
+  end
+
+  test "the assistant says money coming in came in, rather than calling it spending" do
+    plan = budget_starting_this_month(income: 4000)
+
+    answer = ask_assistant("budget_status", start_date: plan[:from], end_date: plan[:until])
+
+    assert_includes answer, "Income: expected 4000.00, came in 3000.00, 1000.00 still to come"
+  end
+
+  test "the assistant says how far over the plan the spending went" do
+    plan = budget_starting_this_month(groceries: 10)
+
+    answer = ask_assistant("budget_status", start_date: plan[:from], end_date: plan[:until])
+
+    assert_includes answer, "Groceries: planned 10.00, spent 12.50, 2.50 over"
+  end
+
+  test "the assistant is told when no budget covers the period it asked about" do
+    answer = ask_assistant("budget_status", start_date: "2001-01-01", end_date: "2001-01-30")
+
+    assert_includes answer, "No budget covers 2001-01-01 to 2001-01-30"
+  end
+
+  test "the assistant is told when the dates it gave cannot be read" do
+    answer = ask_assistant("budget_status", start_date: "last Tuesday", end_date: "whenever")
+
+    assert_includes answer, "Could not read"
+  end
+
   test "the assistant lists the categories it may file a transaction under" do
     answer = ask_assistant("list_categories")
 
@@ -196,6 +232,17 @@ class AssistantTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     JSON.parse(response.body).dig("result", "content").map { |part| part["text"] }.join("\n")
+  end
+
+  # A budget's amounts are stated per month and scaled to the period asked about, so a period of
+  # exactly thirty days is the one where planned and stated are the same number.
+  def budget_starting_this_month(amounts)
+    from = Time.current.beginning_of_month
+    budget = Budget.create!(starts_at: from, ends_at: from + 29.days)
+
+    amounts.each { |category, amount| budget.budget_categories.create!(category: categories(category), amount:) }
+
+    { from: from.to_date.to_s, until: budget.ends_at.to_date.to_s }
   end
 
   def more_categories_than_fit_in_one_answer
