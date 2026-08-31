@@ -116,6 +116,7 @@ class ReceiptTest < ActiveSupport::TestCase
     assert_not receipt.valid?
     assert_includes receipt.errors[:total_amount], "can't be blank"
   end
+
   test "a category whose products came to nothing is not split" do
     free_type = ProductType.create!(name: "Free samples", category: categories(:housing))
     sample = Product.create!(name: "AH Sample", brand: "AH", product_type: free_type)
@@ -125,5 +126,15 @@ class ReceiptTest < ActiveSupport::TestCase
 
     assert @receipt.rewrite_payment_splits
     assert_not_includes @receipt.payment.explicit_transaction_splits.map(&:category), categories(:housing)
+  end
+
+  test "a payment booked late on the last day of the window is still offered" do
+    receipt = receipts(:albert_heijn_friday)
+    late = Transaction.create!(
+      type: "Debit", debitor: accounts(:checking), creditor: accounts(:albert_heijn), amount: 12,
+      booked_at: receipt.issued_on + 7.days + 18.hours, interest_at: receipt.issued_on + 7.days
+    )
+
+    assert_includes receipt.fitting_payments, late
   end
 end

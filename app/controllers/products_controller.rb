@@ -6,7 +6,7 @@ class ProductsController < ApplicationController
   #
   # @return [void]
   def index
-    @products = Product.includes(:product_type).order(:name)
+    @products = set_page_and_extract_portion_from Product.includes(:product_type).order(:name), per_page: [ 20 ]
   end
 
   # Displays one product with every purchase of it

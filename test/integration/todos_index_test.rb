@@ -30,6 +30,7 @@ class TodosIndexTest < ActionDispatch::IntegrationTest
 
     assert_match %r{#{formatted_note}.*?#{formatted_amount}}m, response.body
   end
+
   test "the todo page links a product still needing a type to its form" do
     get todo_path
 

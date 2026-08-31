@@ -74,8 +74,12 @@ module Importing
         @blocks[first...last]
       end
 
+      # A product can be discounted more than once on one slip — two promotions on
+      # the same thing — so the bonuses on a name are added up, not overwritten.
       def discounts
-        @discounts ||= bonuses.each_slice(3).to_h { |name, _promotion, amount| [ name, -BigDecimal(amount) ] }
+        @discounts ||= bonuses.each_slice(3).each_with_object(Hash.new(0)) do |(name, _promotion, amount), all|
+          all[name] -= BigDecimal(amount)
+        end
       end
 
       # Empty on a delivery where nothing was on bonus: the summary still names

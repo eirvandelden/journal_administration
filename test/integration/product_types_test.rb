@@ -40,6 +40,7 @@ class ProductTypesTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_entity
     assert_select "#error_explanation li"
   end
+
   test "a product type page compares the brands we buy it from" do
     get product_type_path(product_types(:naturel_chips))
 

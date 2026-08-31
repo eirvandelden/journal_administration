@@ -73,6 +73,7 @@ class TodoTest < ActiveSupport::TestCase
 
     assert_not todo.empty?
   end
+
   test "a product still needing a brand or type is something to do" do
     todo = Todo.new
 

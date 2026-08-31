@@ -51,6 +51,7 @@ class Importing::AlbertHeijn::PackingSlipTest < ActiveSupport::TestCase
   test "mail that is not a packing slip is refused" do
     assert_nil Importing::AlbertHeijn::PackingSlip.parse("Beste familie, hier is een nieuwsbrief.")
   end
+
   test "a product sold by weight is priced by what it weighed" do
     slip = Importing::AlbertHeijn::PackingSlip.parse(
       file_fixture("albert_heijn_packing_slip_with_weighed_items.txt").read
@@ -71,6 +72,7 @@ class Importing::AlbertHeijn::PackingSlipTest < ActiveSupport::TestCase
     assert_equal BigDecimal("170.26"), slip.lines.sum(&:full_amount)
     assert_equal BigDecimal("43.04"), slip.lines.sum(&:discount_amount)
   end
+
   test "a slip where nothing was on bonus records no discounts" do
     slip = Importing::AlbertHeijn::PackingSlip.parse(without_bonus_section(@slip_text))
 
@@ -83,6 +85,15 @@ class Importing::AlbertHeijn::PackingSlipTest < ActiveSupport::TestCase
     without_products = @slip_text.sub("Aantal", "Iets anders")
 
     assert_nil Importing::AlbertHeijn::PackingSlip.parse(without_products)
+  end
+
+  test "two bonuses on the same product are added together" do
+    doubled = @slip_text.sub(" AH Tonijnsalade \n\nBonus\n\n -0.75 \n\n",
+                             " AH Tonijnsalade \n\nBonus\n\n -0.75 \n\n AH Tonijnsalade \n\nBonus\n\n -0.25 \n\n")
+    slip = Importing::AlbertHeijn::PackingSlip.parse(doubled)
+    tuna = slip.lines.find { |line| line.name == "AH Tonijnsalade" }
+
+    assert_equal BigDecimal("1.00"), tuna.discount_amount
   end
 
   private

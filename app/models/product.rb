@@ -13,10 +13,19 @@ class Product < ApplicationRecord
   # The product this name stands for, however it was capitalised, or a new one
   # we know nothing about yet
   def self.resolve_by_name(name)
-    find_by("LOWER(name) = ?", name.downcase.strip) || create!(name: name.strip)
+    wanted = name.strip
+
+    find_by("LOWER(name) = ?", wanted.downcase) || find_by(id: id_named_like(wanted)) || create!(name: wanted)
   end
 
-  scope :unclassified, -> { where(product_type_id: nil).or(where(brand: [ nil, "" ])) }
+  # The database folds only A to Z, so a stored name holding an accented capital
+  # needs Ruby's own idea of lower case to be recognised.
+  def self.id_named_like(wanted)
+    pluck(:id, :name).find { |_id, name| name.downcase == wanted.downcase }&.first
+  end
+  private_class_method :id_named_like
+
+  scope :unclassified, -> { where(product_type_id: nil).or(where("TRIM(COALESCE(brand, '')) = ''")) }
 
   # The brands we already buy from, so a new one is typed only once
   def self.brands_in_use

@@ -44,7 +44,7 @@ class Receipt < ApplicationRecord
   # settled at the door, so what the bank takes rarely equals the mail's total.
   def fitting_payments
     Transaction.where(type: "Debit", creditor: shop)
-               .where(booked_at: (issued_on - BOOKING_WINDOW)..(issued_on + BOOKING_WINDOW))
+               .where(booked_at: (issued_on - BOOKING_WINDOW).beginning_of_day..(issued_on + BOOKING_WINDOW).end_of_day)
   end
 
   private

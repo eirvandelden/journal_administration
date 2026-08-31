@@ -48,6 +48,7 @@ class ProductsTest < ActionDispatch::IntegrationTest
     assert_select "#error_explanation li"
     assert_equal "AH Naturel Ribbelchips", product.reload.name
   end
+
   test "a product page shows what each purchase cost" do
     get product_path(products(:lays_ribbelchips))
 
@@ -66,6 +67,7 @@ class ProductsTest < ActionDispatch::IntegrationTest
     assert_select "p", text: /#{Regexp.escape(I18n.t("products.show.never_bought", locale: :en))}/
     assert_select "tbody td", count: 0
   end
+
   test "a product bought more than once is charted" do
     buy_again(products(:lays_ribbelchips), shelf: 2.29, paid: 2.29)
 
@@ -92,6 +94,15 @@ class ProductsTest < ActionDispatch::IntegrationTest
     assert_select "svg title"
     assert_select "figcaption", text: /#{Regexp.escape(I18n.t("products.price_chart.shelf_series", locale: :en))}/
     assert_select "figcaption", text: /#{Regexp.escape(I18n.t("products.price_chart.paid_series", locale: :en))}/
+  end
+
+  test "the products page shows one page at a time" do
+    25.times { |number| Product.create!(name: "AH Filler #{number}") }
+
+    get products_path
+
+    assert_response :success
+    assert_select "#products-table tbody tr", count: 20
   end
 
   private

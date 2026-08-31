@@ -11,6 +11,7 @@ class ProductTypeTest < ActiveSupport::TestCase
     assert_not product_type.valid?
     assert_includes product_type.errors[:name], "can't be blank"
   end
+
   test "a product type knows the products we buy under it" do
     products_bought = product_types(:naturel_chips).latest_purchase_per_product.keys
 
