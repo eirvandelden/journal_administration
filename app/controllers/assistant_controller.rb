@@ -14,7 +14,8 @@ class AssistantController < ActionController::API
   def create
     status, headers, body = transport.handle_request(request)
 
-    headers.each { |name, value| response.set_header(name, value) }
+    # Rendering owns the content type, so passing the transport's along would only be overwritten.
+    headers.except("content-type").each { |name, value| response.set_header(name, value) }
     render json: body.first, status: status
   end
 
