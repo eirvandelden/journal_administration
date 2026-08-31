@@ -2,6 +2,7 @@
 #
 # The caller identifies itself with the assistant token of the user it acts for.
 class AssistantController < ActionController::API
+  before_action :ensure_home_network
   before_action :authenticate_assistant
 
   # Dispatches one protocol request to the assistant's tools
@@ -16,6 +17,15 @@ class AssistantController < ActionController::API
   end
 
   private
+
+  # Asked from anywhere else, the app says only that it will not answer: confirming that a token
+  # is wanted, and reading the one presented, are both things the home network alone gets to see.
+  def ensure_home_network
+    home_network = Rails.configuration.x.assistant_host
+    return if home_network.blank?
+
+    head :forbidden unless request.host == home_network
+  end
 
   def authenticate_assistant
     token = presented_token
