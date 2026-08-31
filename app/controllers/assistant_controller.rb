@@ -58,6 +58,7 @@ class AssistantController < ActionController::API
   def tools
     [
       Assistant::AddAccountAlias,
+      Assistant::BudgetStatus,
       Assistant::FindAccounts,
       Assistant::FindUncategorizedTransactions,
       Assistant::ListCategories,
