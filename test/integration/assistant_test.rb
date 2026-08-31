@@ -119,6 +119,24 @@ class AssistantTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "with no home network named the assistant is answered on this machine only" do
+    host! "finances.vandelden.family"
+
+    post_to_assistant
+
+    assert_response :forbidden
+  end
+
+  test "off the home network the app says nothing about tokens, right or wrong" do
+    only_on_home_network do
+      host! "finances.vandelden.family"
+
+      post_to_assistant(token: "not-a-real-token")
+
+      assert_response :forbidden
+    end
+  end
+
   private
 
   def only_on_home_network
