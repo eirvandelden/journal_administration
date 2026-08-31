@@ -1,6 +1,8 @@
 # Answers Model Context Protocol requests, so an assistant can read and update the books
 #
-# The caller identifies itself with the assistant token of the user it acts for.
+# The token an assistant presents is a key to the household books, not a signature: the books are
+# shared, so nothing an assistant reads or writes belongs to one user. Giving each user their own
+# token buys the ability to revoke one of them, and nothing more.
 class AssistantController < ActionController::API
   before_action :ensure_home_network
   before_action :authenticate_assistant
