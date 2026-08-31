@@ -25,4 +25,14 @@ class BudgetsTest < ApplicationSystemTestCase
 
     assert_text I18n.t("budgets.update.success", locale: @locale)
   end
+
+  test "suggesting amounts keeps you on the budget form" do
+    budget = budgets(:active_budget)
+    visit edit_budget_url(budget)
+
+    click_on I18n.t("budgets.form.suggest_amounts", locale: @locale)
+
+    assert_no_text "Content missing"
+    assert_current_path edit_budget_path(budget)
+  end
 end
