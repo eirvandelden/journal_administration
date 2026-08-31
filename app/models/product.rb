@@ -12,6 +12,13 @@ class Product < ApplicationRecord
   enum :pack_unit, PACK_UNITS
 
   validates :name, presence: true
+  validates :name, uniqueness: { case_sensitive: false }
+
+  # The product this name stands for, however it was capitalised, or a new one
+  # we know nothing about yet
+  def self.resolve_by_name(name)
+    find_by("LOWER(name) = ?", name.downcase.strip) || create!(name: name.strip)
+  end
 
   scope :unclassified, -> { where(product_type_id: nil).or(where(brand: [ nil, "" ])) }
 

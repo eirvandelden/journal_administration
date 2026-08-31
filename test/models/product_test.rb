@@ -39,4 +39,23 @@ class ProductTest < ActiveSupport::TestCase
   test "a product we never bought has no purchases" do
     assert_empty products(:andrelon_shampoo).purchases
   end
+  test "a product is found by its name however it was capitalised" do
+    assert_equal products(:ah_ribbelchips), Product.resolve_by_name("ah naturel ribbelchips")
+  end
+
+  test "a name we have never bought starts a new unclassified product" do
+    product = nil
+
+    assert_difference "Product.count", 1 do
+      product = Product.resolve_by_name("Knorr Maaltijdmix tagliatelle")
+    end
+
+    assert_predicate product, :unclassified?
+  end
+
+  test "two products cannot share a name" do
+    duplicate = Product.new(name: products(:ah_ribbelchips).name.upcase)
+
+    assert_not duplicate.valid?
+  end
 end
