@@ -33,6 +33,7 @@ class AssistantController < ActionController::API
       server,
       stateless: true,
       enable_json_response: true,
+      serve_subscriptions_listen: false,
       allowed_hosts: Array(Rails.configuration.x.assistant_host)
     )
   end
