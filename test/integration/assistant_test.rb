@@ -92,6 +92,18 @@ class AssistantTest < ActionDispatch::IntegrationTest
     assert_includes answer, "must belong to an external account"
   end
 
+  test "an assistant probing for an open stream is told the app does not offer one" do
+    get "/mcp", headers: assistant_headers
+
+    assert_response :method_not_allowed
+  end
+
+  test "an assistant hanging up is answered rather than sent a web page" do
+    delete "/mcp", headers: assistant_headers
+
+    assert_response :success
+  end
+
   test "an assistant asking to be kept posted is told the app cannot do that" do
     ask_to_be_kept_posted
 
@@ -171,10 +183,13 @@ class AssistantTest < ActionDispatch::IntegrationTest
   end
 
   def post_to_assistant(method: "tools/list", params: {}, token: @user.assistant_token, headers: {})
-    request_headers = { "Content-Type" => "application/json", "Accept" => "application/json" }
-    request_headers["Authorization"] = "Bearer #{token}" if token
-
     post "/mcp", params: { jsonrpc: "2.0", id: 1, method: method, params: params }.to_json,
-      headers: request_headers.merge(headers)
+      headers: assistant_headers(token: token).merge(headers)
+  end
+
+  def assistant_headers(token: @user.assistant_token)
+    headers = { "Content-Type" => "application/json", "Accept" => "application/json" }
+    headers["Authorization"] = "Bearer #{token}" if token
+    headers
   end
 end
