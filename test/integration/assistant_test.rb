@@ -1,6 +1,9 @@
 require "test_helper"
 
 class AssistantTest < ActionDispatch::IntegrationTest
+  KEEP_ME_POSTED = "subscriptions/listen"
+  METHOD_NOT_FOUND = -32601
+
   setup do
     host! "localhost"
     @user = users(:admin)
@@ -75,6 +78,13 @@ class AssistantTest < ActionDispatch::IntegrationTest
     assert_includes answer, "must belong to an external account"
   end
 
+  test "an assistant asking to be kept posted is told the app cannot do that" do
+    ask_to_be_kept_posted
+
+    assert_response :not_found
+    assert_equal METHOD_NOT_FOUND, JSON.parse(response.body).dig("error", "code")
+  end
+
   test "the assistant answers on the home network host it is configured for" do
     only_on_home_network do
       host! "finances.home.arpa"
@@ -111,10 +121,28 @@ class AssistantTest < ActionDispatch::IntegrationTest
     JSON.parse(response.body).dig("result", "content").map { |part| part["text"] }.join("\n")
   end
 
-  def post_to_assistant(method: "tools/list", params: {}, token: @user.assistant_token)
-    headers = { "Content-Type" => "application/json", "Accept" => "application/json" }
-    headers["Authorization"] = "Bearer #{token}" if token
+  def ask_to_be_kept_posted
+    version = MCP::Configuration::LATEST_MODERN_PROTOCOL_VERSION
 
-    post "/mcp", params: { jsonrpc: "2.0", id: 1, method: method, params: params }.to_json, headers: headers
+    post_to_assistant(
+      method: KEEP_ME_POSTED,
+      params: { notifications: {}, _meta: {
+        "io.modelcontextprotocol/protocolVersion" => version,
+        "io.modelcontextprotocol/clientCapabilities" => {}
+      } },
+      headers: {
+        "Accept" => "application/json, text/event-stream",
+        "MCP-Protocol-Version" => version,
+        "Mcp-Method" => KEEP_ME_POSTED
+      }
+    )
+  end
+
+  def post_to_assistant(method: "tools/list", params: {}, token: @user.assistant_token, headers: {})
+    request_headers = { "Content-Type" => "application/json", "Accept" => "application/json" }
+    request_headers["Authorization"] = "Bearer #{token}" if token
+
+    post "/mcp", params: { jsonrpc: "2.0", id: 1, method: method, params: params }.to_json,
+      headers: request_headers.merge(headers)
   end
 end
