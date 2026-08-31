@@ -2,6 +2,7 @@ require "test_helper"
 
 class ConfigurationTest < ActiveSupport::TestCase
   RUNNING_ENVIRONMENTS = %w[ development production ]
+  SCHEMA_TASKS = %w[ db:migrate db:prepare ]
 
   test "the cache, background jobs and live updates each get a database of their own" do
     RUNNING_ENVIRONMENTS.each do |environment|
@@ -32,6 +33,15 @@ class ConfigurationTest < ActiveSupport::TestCase
     end
   end
 
+  test "migrating the schema also migrates the data" do
+    load_rake_tasks
+
+    SCHEMA_TASKS.each do |schema_task|
+      assert_includes files_behind(schema_task), Rails.root.join("lib/tasks/data_migrate.rake").to_s,
+        "#{schema_task} should run the data migrations too, or a backfill never happens on deploy"
+    end
+  end
+
   test "running the tests neither caches anything nor carries live updates" do
     assert_equal "test", Rails.application.config_for(:cable, env: "test")[:adapter]
     assert_nil Rails.application.config_for(:cache, env: "test")[:database]
@@ -41,5 +51,14 @@ class ConfigurationTest < ActiveSupport::TestCase
   private
     def databases_for(environment)
       ActiveRecord::Base.configurations.configs_for(env_name: environment)
+    end
+
+    def load_rake_tasks
+      require "rake"
+      Rails.application.load_tasks unless Rake::Task.task_defined?("db:migrate")
+    end
+
+    def files_behind(task_name)
+      Rake::Task[task_name].actions.filter_map { |action| action.source_location&.first }
     end
 end
