@@ -24,7 +24,8 @@ a separate bonus block naming the product each discount came off along with its 
 3.49", "1 + 1 GRATIS", "30% KORTING"), free extras under "Gratis toegevoegd", the deposit and bag
 fees under "Overig", and the totals. Its arithmetic reconciles: shelf total − bonus + other = total.
 
-There is no pack size anywhere in it, and no PDF attached, ever.
+There is no pack size anywhere in it, and no PDF attached, ever. A product sold by weight has
+`gew.` where the unit price would be, a quantity of 1, and the weighed price as its line total.
 
 ## Done
 

@@ -50,4 +50,24 @@ class Importing::AlbertHeijn::PackingSlipTest < ActiveSupport::TestCase
   test "mail that is not a packing slip is refused" do
     assert_nil Importing::AlbertHeijn::PackingSlip.parse("Beste familie, hier is een nieuwsbrief.")
   end
+  test "a product sold by weight is priced by what it weighed" do
+    slip = Importing::AlbertHeijn::PackingSlip.parse(
+      file_fixture("albert_heijn_packing_slip_with_weighed_items.txt").read
+    )
+    cheese = slip.lines.find { |line| line.name == "AH Goudse Extra belegen 48+ pondstuk var" }
+
+    assert_equal 1, cheese.quantity
+    assert_equal BigDecimal("8.60"), cheese.full_amount
+    assert_equal BigDecimal("4.30"), cheese.discount_amount
+  end
+
+  test "a slip of any size adds up to the totals it stated" do
+    slip = Importing::AlbertHeijn::PackingSlip.parse(
+      file_fixture("albert_heijn_packing_slip_with_weighed_items.txt").read
+    )
+
+    assert_equal 44, slip.lines.size
+    assert_equal BigDecimal("170.26"), slip.lines.sum(&:full_amount)
+    assert_equal BigDecimal("43.04"), slip.lines.sum(&:discount_amount)
+  end
 end
