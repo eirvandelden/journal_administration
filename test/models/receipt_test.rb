@@ -116,4 +116,14 @@ class ReceiptTest < ActiveSupport::TestCase
     assert_not receipt.valid?
     assert_includes receipt.errors[:total_amount], "can't be blank"
   end
+  test "a category whose products came to nothing is not split" do
+    free_type = ProductType.create!(name: "Free samples", category: categories(:housing))
+    sample = Product.create!(name: "AH Sample", brand: "AH", product_type: free_type)
+    @receipt = receipts(:albert_heijn_friday)
+    @receipt.lines.create!(product: sample, quantity: 1, full_amount: 1, discount_amount: 1, paid_amount: 0)
+    @receipt.update!(payment: transactions(:debit_grocery))
+
+    assert @receipt.rewrite_payment_splits
+    assert_not_includes @receipt.payment.explicit_transaction_splits.map(&:category), categories(:housing)
+  end
 end

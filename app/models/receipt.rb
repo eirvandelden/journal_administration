@@ -27,11 +27,14 @@ class Receipt < ApplicationRecord
   # Refuses when the basket costs more than the payment: the books would not
   # add up, and scaling the numbers to fit would invent figures.
   def rewrite_payment_splits
-    return false if payment.blank? || basket_total > payment.amount
+    return false unless basket_fits?(payment)
 
-    payment.transaction_splits.destroy_all
-    paid_per_category.each { |category, amount| payment.transaction_splits.create!(category: category, amount: amount) }
-    payment.ensure_remainder_split
+    transaction do
+      payment.transaction_splits.destroy_all
+      splittable_totals.each { |category, amount|
+ payment.transaction_splits.create!(category: category, amount: amount) }
+      payment.ensure_remainder_split
+    end
     true
   end
 
@@ -46,9 +49,15 @@ class Receipt < ApplicationRecord
 
   private
 
+  # A category whose products all came free of charge is left out: a split of
+  # nothing is not a split, and the books reject one.
+  def splittable_totals
+    paid_per_category.reject { |_category, amount| amount.zero? }
+  end
+
   def paid_per_category
     lines.includes(product: :product_type)
-         .filter_map { |line| [ line.product.product_type&.category, line.paid_amount ] if line.product.product_type }
+         .filter_map { |line| [ line.product.product_type.category, line.paid_amount ] if line.product.product_type }
          .group_by(&:first)
          .transform_values { |pairs| pairs.sum(&:last) }
   end
