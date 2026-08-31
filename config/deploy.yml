@@ -56,7 +56,6 @@ builder:
 env:
   clear:
     APP_NAME: JournalAdministration
-    ASSISTANT_HOST: finances.home.arpa
     REGISTRY_HTTP_ADDR: registry.vandelden.family
     SOLID_QUEUE_IN_PUMA: true
   #   clear:
