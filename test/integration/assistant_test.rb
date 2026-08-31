@@ -176,10 +176,11 @@ class AssistantTest < ActionDispatch::IntegrationTest
   private
 
   def only_on_home_network
+    previous_host = Rails.configuration.x.assistant_host
     Rails.configuration.x.assistant_host = "finances.home.arpa"
     yield
   ensure
-    Rails.configuration.x.assistant_host = nil
+    Rails.configuration.x.assistant_host = previous_host
   end
 
   def ask_assistant(tool, arguments = {})
