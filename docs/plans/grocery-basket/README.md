@@ -12,7 +12,7 @@ what already exists on the branch, the repository's conventions, and the traps.
 | `01-receipt-pages.md` | See and settle receipts | Done |
 | `02-classify-products.md` | Classify products, todo list | Done |
 | `03-price-history.md` | Price history, chart, brand comparison | Done |
-| `04-invoice-import.md` | Parse a real invoice and import it | Blocked on a real invoice mail |
+| `04-packing-slip-import.md` | Read the packing slip and import it | Parser and import done; MCP tool waits on `ai/mcp-server` |
 | `05-finish-the-branch.md` | Sync, verify, pull request | Last |
 
 Phases 01 to 03 are independent of 04 and can be done in any order, though the order above is the one
