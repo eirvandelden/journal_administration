@@ -7,11 +7,23 @@ module Receipts
     #
     # @return [void]
     def create
-      @receipt.update!(payment: chosen_payment)
+      payment = chosen_payment
+      return redirect_to @receipt, alert: t(".basket_exceeds_payment") unless @receipt.basket_fits?(payment)
 
-      return redirect_to @receipt, notice: t(".success") if @receipt.rewrite_payment_splits
+      @receipt.update!(payment: payment)
+      @receipt.rewrite_payment_splits
 
-      redirect_to @receipt, alert: t(".basket_exceeds_payment")
+      redirect_to @receipt, notice: t(".success")
+    end
+
+    # Lets a person undo settling the wrong payment. The splits already written
+    # stay as they are: what the payment carried before is not recoverable.
+    #
+    # @return [void]
+    def destroy
+      @receipt.update!(payment: nil)
+
+      redirect_to @receipt, notice: t(".success")
     end
 
     private

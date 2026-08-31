@@ -622,6 +622,8 @@ it:
       create:
         basket_exceeds_payment: Il carrello costa più del pagamento, quindi il pagamento è rimasto invariato.
         success: Il pagamento è stato diviso come si divide il carrello.
+      destroy:
+        success: La fattura non è più saldata con quel pagamento.
     show:
       basket_total: Il carrello arriva a
       candidates: Quale pagamento ha saldato questa fattura?
@@ -631,6 +633,7 @@ it:
       payment: Pagamento
       settle: Collega
       settled_by: Saldata con
+      unsettle: Non questo pagamento
   search:
     no_results: Nessun risultato trovato
     open: "🔍 Cerca"

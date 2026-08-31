@@ -58,7 +58,7 @@ class ReceiptsTest < ActionDispatch::IntegrationTest
     get receipt_path(@receipt)
 
     assert_response :success
-    assert_select "form[action=?]", receipt_payment_link_path(@receipt)
+    assert_select "#payment-picker"
     assert_select "input[value=?]", transactions(:debit_grocery).id.to_s
   end
 
@@ -79,7 +79,7 @@ class ReceiptsTest < ActionDispatch::IntegrationTest
     get receipt_path(@receipt)
 
     assert_response :success
-    assert_select "form[action=?]", receipt_payment_link_path(@receipt), count: 0
+    assert_select "#payment-picker", count: 0
   end
 
   test "a receipt no payment could have settled says so" do
@@ -89,7 +89,7 @@ class ReceiptsTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select "p", text: /#{Regexp.escape(I18n.t("receipts.show.no_candidates", locale: :en))}/
-    assert_select "form[action=?]", receipt_payment_link_path(@receipt), count: 0
+    assert_select "#payment-picker", count: 0
   end
 
   test "a basket costing more than the payment leaves the payment's splits alone" do
@@ -100,6 +100,23 @@ class ReceiptsTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to receipt_path(@receipt)
     assert_equal splits_before, transactions(:debit_grocery).reload.transaction_splits.map(&:attributes)
+  end
+
+  test "a basket costing more than the payment does not settle the receipt either" do
+    @receipt.lines.first.update!(full_amount: BigDecimal("60.00"), discount_amount: 0, paid_amount: BigDecimal("60.00"))
+
+    post receipt_payment_link_path(@receipt), params: { receipt: { payment_id: transactions(:debit_grocery).id } }
+
+    assert_nil @receipt.reload.payment
+  end
+
+  test "a receipt settled by mistake can be unsettled" do
+    @receipt.update!(payment: transactions(:debit_grocery))
+
+    delete receipt_payment_link_path(@receipt)
+
+    assert_redirected_to receipt_path(@receipt)
+    assert_nil @receipt.reload.payment
   end
 
   test "a receipt links to the invoice it came from" do

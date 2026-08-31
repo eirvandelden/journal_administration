@@ -2,7 +2,8 @@ require "test_helper"
 
 class Importing::AlbertHeijn::PackingSlipTest < ActiveSupport::TestCase
   setup do
-    @slip = Importing::AlbertHeijn::PackingSlip.parse(file_fixture("albert_heijn_packing_slip.txt").read)
+    @slip_text = file_fixture("albert_heijn_packing_slip.txt").read
+    @slip = Importing::AlbertHeijn::PackingSlip.parse(@slip_text)
   end
 
   test "a packing slip says which order it belongs to and when it arrives" do
@@ -69,5 +70,31 @@ class Importing::AlbertHeijn::PackingSlipTest < ActiveSupport::TestCase
     assert_equal 44, slip.lines.size
     assert_equal BigDecimal("170.26"), slip.lines.sum(&:full_amount)
     assert_equal BigDecimal("43.04"), slip.lines.sum(&:discount_amount)
+  end
+  test "a slip where nothing was on bonus records no discounts" do
+    slip = Importing::AlbertHeijn::PackingSlip.parse(without_bonus_section(@slip_text))
+
+    assert_equal 37, slip.lines.size
+    assert_equal 0, slip.lines.sum(&:discount_amount)
+    assert_equal BigDecimal("137.39"), slip.lines.sum(&:full_amount)
+  end
+
+  test "a mail missing the parts a slip is made of is refused" do
+    without_products = @slip_text.sub("Aantal", "Iets anders")
+
+    assert_nil Importing::AlbertHeijn::PackingSlip.parse(without_products)
+  end
+
+  private
+
+  # The same mail with the bonus detail section taken out, as it arrives when
+  # nothing was on bonus: the summary still names the bonus row, no detail follows.
+  def without_bonus_section(mail)
+    blocks = mail.split("\n\n")
+    stripped = blocks.map(&:strip)
+    first = stripped.rindex("Bonusvoordeel")
+    last = stripped.index("Totaal voordeel")
+
+    (blocks[0...first] + blocks[(last + 2)..]).join("\n\n")
   end
 end

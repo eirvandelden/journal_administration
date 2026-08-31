@@ -20,13 +20,14 @@
         <%= link_to t(".settled_by"), transaction_path(@receipt.payment) %>
         <%= number_to_currency(@receipt.payment.amount) %>
         <%= l @receipt.payment.booked_at.to_date, format: :short %>
+        <%= button_to t(".unsettle"), receipt_payment_link_path(@receipt), method: :delete %>
       <% else %>
         <%= t(".not_settled") %>
       <% end %>
     </p>
 
     <% if @candidate_payments.any? %>
-      <%= form_with url: receipt_payment_link_path(@receipt) do |form| %>
+      <%= form_with url: receipt_payment_link_path(@receipt), id: "payment-picker" do |form| %>
         <fieldset>
           <legend><%= t(".candidates") %></legend>
           <% @candidate_payments.each do |candidate| %>

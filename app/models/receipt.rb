@@ -19,6 +19,9 @@ class Receipt < ApplicationRecord
 
   def basket_total = lines.sum(:paid_amount)
 
+  # Whether this payment is big enough to have paid for the basket
+  def basket_fits?(payment) = payment.present? && basket_total <= payment.amount
+
   # Splits the payment the way the basket divides over the accounting categories
   #
   # Refuses when the basket costs more than the payment: the books would not

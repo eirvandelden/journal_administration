@@ -622,6 +622,8 @@ nl:
       create:
         basket_exceeds_payment: Het mandje kost meer dan de betaling, dus de betaling is ongewijzigd gelaten.
         success: De betaling is verdeeld zoals het mandje verdeeld is.
+      destroy:
+        success: Deze factuur is niet meer met die betaling afgerekend.
     show:
       basket_total: Mandje komt op
       candidates: Welke betaling hoort bij deze factuur?
@@ -631,6 +633,7 @@ nl:
       payment: Betaling
       settle: Koppelen
       settled_by: Afgerekend met
+      unsettle: Toch niet deze betaling
   search:
     no_results: Geen resultaten gevonden
     open: "🔍 Zoeken"

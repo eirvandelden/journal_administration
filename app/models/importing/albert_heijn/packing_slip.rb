@@ -13,6 +13,8 @@ module Importing
 
       DELIVERY_DATE = /(\d{1,2})\s+(\p{L}+)\s+(\d{4})/
       ORDER_NUMBER = /Bestelnummer:\s*(\d+)/
+      # Every heading this reader steers by; without one of them it is not a slip
+      HEADINGS = [ "Aantal", "Boodschappen totaal", "Totaal" ].freeze
 
       attr_reader :order_number, :delivered_on, :total_amount, :lines
 
@@ -22,10 +24,17 @@ module Importing
       # @return [PackingSlip, nil]
       def self.parse(mail)
         blocks = mail.split("\n\n").map(&:strip).reject(&:empty?)
-        return nil unless blocks.grep(ORDER_NUMBER).any? && blocks.include?("Boodschappen totaal")
+        return nil unless readable?(blocks)
 
         new(blocks)
       end
+
+      def self.readable?(blocks)
+        blocks.grep(ORDER_NUMBER).any? &&
+          blocks.grep(/Bezorging op/).any? &&
+          HEADINGS.all? { |heading| blocks.include?(heading) }
+      end
+      private_class_method :readable?
 
       def initialize(blocks)
         @blocks = blocks
@@ -69,8 +78,14 @@ module Importing
         @discounts ||= bonuses.each_slice(3).to_h { |name, _promotion, amount| [ name, -BigDecimal(amount) ] }
       end
 
+      # Empty on a delivery where nothing was on bonus: the summary still names
+      # the bonus row, but no detail section follows it.
       def bonuses
-        @blocks[(@blocks.rindex("Bonusvoordeel") + 1)...@blocks.index("Totaal voordeel")]
+        first = @blocks.rindex("Bonusvoordeel")
+        last = @blocks.index("Totaal voordeel")
+        return [] if first.nil? || last.nil? || last < first
+
+        @blocks[(first + 1)...last]
       end
     end
   end
