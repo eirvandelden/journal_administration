@@ -36,6 +36,14 @@ class AssistantTest < ActionDispatch::IntegrationTest
     assert_includes answer, "Groceries - Supermarket"
   end
 
+  test "the assistant is told when more categories exist than it was shown" do
+    more_categories_than_fit_in_one_answer
+
+    answer = ask_assistant("list_categories")
+
+    assert_includes answer, "Showing #{Assistant::ListCategories::HIGHEST_COUNT} of"
+  end
+
   test "the assistant files an uncategorized transaction under a category" do
     answer = ask_assistant("set_transaction_category",
       transaction_id: transactions(:uncategorized).id, category_id: categories(:supermarket).id)
@@ -188,6 +196,15 @@ class AssistantTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     JSON.parse(response.body).dig("result", "content").map { |part| part["text"] }.join("\n")
+  end
+
+  def more_categories_than_fit_in_one_answer
+    now = Time.current
+    extra = (Assistant::ListCategories::HIGHEST_COUNT + 1 - Category.count).times.map do |number|
+      { name: "Spare category #{number}", direction: 0, created_at: now, updated_at: now }
+    end
+
+    Category.insert_all(extra)
   end
 
   def refused?(tool, arguments = {})
