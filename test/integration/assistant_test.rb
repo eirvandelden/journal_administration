@@ -50,6 +50,30 @@ class AssistantTest < ActionDispatch::IntegrationTest
     assert_includes answer, "No transaction"
   end
 
+  test "the assistant is told when the category it wants to file under cannot be found" do
+    answer = ask_assistant("set_transaction_category", transaction_id: transactions(:uncategorized).id, category_id: 0)
+
+    assert_includes answer, "No category"
+    assert_nil transactions(:uncategorized).reload.category
+  end
+
+  test "a problem reads as a problem and not as an answer" do
+    assert refused?("set_transaction_category", transaction_id: 0, category_id: 0)
+    assert_not refused?("list_categories")
+  end
+
+  test "the assistant is told when the account it wants to teach cannot be found" do
+    answer = ask_assistant("add_account_alias", account_id: 0, pattern: "SOMEWHERE")
+
+    assert_includes answer, "No account"
+  end
+
+  test "the assistant asking for fewer transactions than one is given one" do
+    answer = ask_assistant("find_uncategorized_transactions", limit: 0)
+
+    assert_equal 1, answer.lines.count
+  end
+
   test "the assistant finds the transactions that still need a category" do
     answer = ask_assistant("find_uncategorized_transactions")
 
@@ -163,6 +187,12 @@ class AssistantTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     JSON.parse(response.body).dig("result", "content").map { |part| part["text"] }.join("\n")
+  end
+
+  def refused?(tool, arguments = {})
+    post_to_assistant(method: "tools/call", params: { name: tool, arguments: arguments })
+
+    JSON.parse(response.body).dig("result", "isError").present?
   end
 
   def ask_to_be_kept_posted
