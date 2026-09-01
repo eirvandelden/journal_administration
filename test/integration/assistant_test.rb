@@ -126,6 +126,12 @@ class AssistantTest < ActionDispatch::IntegrationTest
     assert_includes answer, "No budget covers 2001-01-01 to 2001-01-30"
   end
 
+  test "the assistant is refused a period described loosely rather than written out" do
+    answer = ask_assistant("budget_status", start_date: "next Monday", end_date: "next Friday")
+
+    assert_includes answer, "Could not read"
+  end
+
   test "the assistant is told when the dates it gave cannot be read" do
     answer = ask_assistant("budget_status", start_date: "last Tuesday", end_date: "whenever")
 

@@ -21,15 +21,6 @@ module Assistant
       start(first_day, last_day)
     end
 
-    # Read strictly rather than leniently: Date.parse turns "next Monday" into a real day, and a
-    # budget starting on a day nobody named is worse than a refusal.
-    def self.day(text)
-      Date.strptime(text.to_s, "%Y-%m-%d")
-    rescue Date::Error
-      nil
-    end
-    private_class_method :day
-
     def self.unreadable(text)
       "Could not read #{text} as a day. Write days as 2026-09-01."
     end
