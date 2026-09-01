@@ -23,6 +23,7 @@ module Assistant
     # question nobody asked and have no way of noticing.
     def self.period(start_date, end_date)
       return DateRange.from_filter(nil) if start_date.blank? && end_date.blank?
+      return nil unless day(start_date) && day(end_date)
 
       DateRange.from_dates(start_date, end_date)
     end
