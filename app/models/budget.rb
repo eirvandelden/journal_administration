@@ -4,6 +4,8 @@
 # creating or updating a budget automatically closes the predecessor.
 class Budget < ApplicationRecord
   belongs_to :closed_by_budget, class_name: "Budget", optional: true
+  has_one :closed_predecessor, class_name: "Budget", foreign_key: "closed_by_budget_id",
+    inverse_of: :closed_by_budget, dependent: nil
 
   has_many :budget_categories, dependent: :destroy
   has_many :categories, through: :budget_categories
