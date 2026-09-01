@@ -30,6 +30,13 @@ class AssistantTest < ActionDispatch::IntegrationTest
     assert_response :unauthorized
   end
 
+  test "the assistant lists the budgets and when each one runs" do
+    answer = ask_assistant("list_budgets")
+
+    assert_includes answer, "#{budgets(:active_budget).id}: 2026-03-01 onwards, running now, 2 categories planned"
+    assert_includes answer, "#{budgets(:past_budget).id}: 2026-01-01 to 2026-01-31, finished, nothing planned"
+  end
+
   test "the assistant says what was planned, what was spent and what is left" do
     plan = budget_starting_this_month(groceries: 100)
 
