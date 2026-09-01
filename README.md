@@ -23,6 +23,10 @@ The app answers Model Context Protocol requests at `/mcp`, so Claude Code or Cod
 books and file transactions for you. It answers only on the host named by `ASSISTANT_HOST`
 (`finances.home.arpa`), which keeps it on the home network.
 
+An assistant can read the categories, find the transactions that still need one and file them,
+search the accounts and teach the books to recognise a shop, list the budgets, and say how the
+budget for a period is doing category by category.
+
 Each user has their own token. Read yours with `bin/kamal console`:
 
 ```ruby
