@@ -27,6 +27,10 @@ An assistant can read the categories, find the transactions that still need one 
 search the accounts and teach the books to recognise a shop, list the budgets, and say how the
 budget for a period is doing category by category.
 
+It can also change the plan: set what a category may cost per month, and start a new budget. A
+budget that has already finished is off limits to an assistant — correct one of those on the
+budgets page instead.
+
 Each user has their own token. Read yours with `bin/kamal console`:
 
 ```ruby
