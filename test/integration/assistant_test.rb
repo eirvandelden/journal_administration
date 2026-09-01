@@ -47,6 +47,30 @@ class AssistantTest < ActionDispatch::IntegrationTest
     assert_includes answer, "Groceries may cost 250.00 a month"
   end
 
+  test "the assistant starts a budget and says which one that closed" do
+    starts_on = Date.current.to_s
+
+    answer = ask_assistant("start_budget", starts_on: starts_on)
+
+    assert Budget.exists?(starts_at: Date.current.beginning_of_day)
+    assert_includes answer, "starts #{starts_on}"
+    assert_includes answer, "closed budget ##{budgets(:future_budget).id}"
+  end
+
+  test "the assistant cannot start a second budget on a day one already starts" do
+    answer = ask_assistant("start_budget", starts_on: budgets(:active_budget).starts_at.to_date.to_s)
+
+    assert_equal 3, Budget.count
+    assert_includes answer, "has already been taken"
+  end
+
+  test "the assistant is told when the day it gave to start from cannot be read" do
+    answer = ask_assistant("start_budget", starts_on: "next Monday")
+
+    assert_equal 3, Budget.count
+    assert_includes answer, "Could not read"
+  end
+
   test "the assistant plans a category the budget did not cover yet" do
     budget = budgets(:active_budget)
 
