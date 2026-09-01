@@ -37,6 +37,41 @@ class AssistantTest < ActionDispatch::IntegrationTest
     assert_includes answer, "#{budgets(:past_budget).id}: 2026-01-01 to 2026-01-31, finished, nothing planned"
   end
 
+  test "the assistant changes what a category may cost" do
+    budget = budgets(:active_budget)
+
+    answer = ask_assistant("set_budget_amount",
+      budget_id: budget.id, category_id: categories(:groceries).id, amount: 250)
+
+    assert_equal 250, planned_for(budget, :groceries)
+    assert_includes answer, "Groceries may cost 250.00 a month"
+  end
+
+  test "the assistant plans a category the budget did not cover yet" do
+    budget = budgets(:active_budget)
+
+    ask_assistant("set_budget_amount", budget_id: budget.id, category_id: categories(:housing).id, amount: 800)
+
+    assert_equal 800, planned_for(budget, :housing)
+  end
+
+  test "the assistant may not change a budget that has already finished" do
+    budget = budgets(:past_budget)
+
+    answer = ask_assistant("set_budget_amount",
+      budget_id: budget.id, category_id: categories(:groceries).id, amount: 50)
+
+    assert_nil planned_for(budget, :groceries)
+    assert_includes answer, "already finished"
+  end
+
+  test "the assistant is told a category inside another cannot carry an amount of its own" do
+    answer = ask_assistant("set_budget_amount",
+      budget_id: budgets(:active_budget).id, category_id: categories(:supermarket).id, amount: 100)
+
+    assert_includes answer, "must be a top-level category"
+  end
+
   test "the assistant says what was planned, what was spent and what is left" do
     plan = budget_starting_this_month(groceries: 100)
 
@@ -239,6 +274,10 @@ class AssistantTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     JSON.parse(response.body).dig("result", "content").map { |part| part["text"] }.join("\n")
+  end
+
+  def planned_for(budget, category)
+    budget.budget_categories.find_by(category: categories(category))&.amount
   end
 
   # A budget's amounts are stated per month and scaled to the period asked about, so a period of

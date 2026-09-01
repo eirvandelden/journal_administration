@@ -37,6 +37,19 @@ class Budget < ApplicationRecord
   # @return [Boolean]
   def past? = ends_at.present? && ends_at <= Time.current
 
+  # Plans what a category may cost per month, replacing whatever was planned for it before.
+  #
+  # @param category [Category] The category to plan for
+  # @param amount [Numeric] What it may cost per month
+  # @return [BudgetCategory] The allocation, carrying its errors when it could not be saved
+  def plan(category:, amount:)
+    allocation = budget_categories.find_or_initialize_by(category: category)
+    allocation.amount = amount
+    allocation.save
+
+    allocation
+  end
+
   # Returns suggested budget amounts per parent category based on 36-month historical averages.
   #
   # Scales to the budget's period length (defaults to 30 days for open-ended budgets).

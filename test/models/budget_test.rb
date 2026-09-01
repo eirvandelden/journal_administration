@@ -302,6 +302,34 @@ class BudgetTest < ActiveSupport::TestCase
     end
   end
 
+  class Planning < ActiveSupport::TestCase
+    test "planning a category the budget already covers replaces the amount" do
+      budget = budgets(:active_budget)
+
+      budget.plan(category: categories(:groceries), amount: 275)
+
+      assert_equal 275, budget.budget_categories.find_by(category: categories(:groceries)).amount
+      assert_equal 2, budget.budget_categories.count
+    end
+
+    test "planning a category the budget does not cover yet adds it" do
+      budget = budgets(:active_budget)
+
+      budget.plan(category: categories(:housing), amount: 900)
+
+      assert_equal 900, budget.budget_categories.find_by(category: categories(:housing)).amount
+    end
+
+    test "planning nothing at all is refused and says why" do
+      budget = budgets(:active_budget)
+
+      planned = budget.plan(category: categories(:housing), amount: 0)
+
+      assert_predicate planned.errors, :any?
+      assert_nil budget.budget_categories.find_by(category: categories(:housing))
+    end
+  end
+
   class SuggestedAmounts < ActiveSupport::TestCase
     test "returns a Hash" do
       budget = Budget.new(starts_at: Time.current)
