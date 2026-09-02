@@ -96,6 +96,13 @@ class Importing::AlbertHeijn::PackingSlipTest < ActiveSupport::TestCase
     assert_equal BigDecimal("1.00"), tuna.discount_amount
   end
 
+  test "a slip whose product rows do not line up is refused" do
+    mangled = @slip_text.sub(" AH Broccoliroosjes \n\n 1 \n\n 1.49 \n\n 1.49 \n\n",
+" AH Broccoliroosjes \n\n 1 \n\n 1.49 \n\n")
+
+    assert_nil Importing::AlbertHeijn::PackingSlip.parse(mangled)
+  end
+
   private
 
   # The same mail with the bonus detail section taken out, as it arrives when

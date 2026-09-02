@@ -590,8 +590,8 @@ it:
       unclassified: Da classificare
     price_chart:
       highest: 'massimo: %{price}'
-      paid_series: il verde è quanto abbiamo pagato
-      shelf_series: il blu è il prezzo di listino
+      paid_series: la linea continua è quanto abbiamo pagato
+      shelf_series: la linea tratteggiata è il prezzo di listino
       title: Prezzo nel tempo
     show:
       never_bought: Non l'abbiamo mai comprato.
@@ -635,6 +635,7 @@ it:
       settle: Collega
       settled_by: Saldata con
       unsettle: Non questo pagamento
+      unsettle_confirm: Scollegare questo pagamento? Le categorie scritte dal carrello restano.
   search:
     no_results: Nessun risultato trovato
     open: "🔍 Cerca"

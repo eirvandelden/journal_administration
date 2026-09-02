@@ -22,12 +22,15 @@ class ProductTypesController < ApplicationController
   # @return [void]
   def new
     @product_type = ProductType.new
+    @categories = Category.order(:name)
   end
 
   # Renders the form for an existing product type
   #
   # @return [void]
-  def edit; end
+  def edit
+    @categories = Category.order(:name)
+  end
 
   # Creates a product type
   #
@@ -37,6 +40,7 @@ class ProductTypesController < ApplicationController
 
     return redirect_to product_types_path, notice: t(".success") if @product_type.save
 
+    @categories = Category.order(:name)
     render :new, status: :unprocessable_entity
   end
 
@@ -46,6 +50,7 @@ class ProductTypesController < ApplicationController
   def update
     return redirect_to product_types_path, notice: t(".success") if @product_type.update(product_type_params)
 
+    @categories = Category.order(:name)
     render :edit, status: :unprocessable_entity
   end
 

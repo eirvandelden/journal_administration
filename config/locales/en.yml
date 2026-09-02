@@ -590,8 +590,8 @@ en:
       unclassified: Still to classify
     price_chart:
       highest: 'highest: %{price}'
-      paid_series: green is what we paid
-      shelf_series: blue is the shelf price
+      paid_series: the solid line is what we paid
+      shelf_series: the dashed line is the shelf price
       title: Price over time
     show:
       never_bought: We have never bought this.
@@ -635,6 +635,7 @@ en:
       settle: Settle
       settled_by: Settled by
       unsettle: Not this payment
+      unsettle_confirm: Detach this payment? The categories the basket wrote stay on it.
   search:
     no_results: No results found
     open: "🔍 Search"

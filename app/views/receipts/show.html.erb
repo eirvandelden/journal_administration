@@ -20,7 +20,8 @@
         <%= link_to t(".settled_by"), transaction_path(@receipt.payment) %>
         <%= number_to_currency(@receipt.payment.amount) %>
         <%= l @receipt.payment.booked_at.to_date, format: :short %>
-        <%= button_to t(".unsettle"), receipt_payment_link_path(@receipt), method: :delete %>
+        <%= button_to t(".unsettle"), receipt_payment_link_path(@receipt), method: :delete,
+                      data: { turbo_confirm: t(".unsettle_confirm") } %>
       <% else %>
         <%= t(".not_settled") %>
       <% end %>

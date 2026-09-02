@@ -23,7 +23,7 @@ class ProductsController < ApplicationController
     load_form_choices
   end
 
-  # Records a product's brand, type and pack size
+  # Records a product's brand and type
   #
   # @return [void]
   def update

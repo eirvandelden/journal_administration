@@ -590,8 +590,8 @@ nl:
       unclassified: Nog indelen
     price_chart:
       highest: 'hoogste: %{price}'
-      paid_series: groen is wat we betaalden
-      shelf_series: blauw is de winkelprijs
+      paid_series: de doorgetrokken lijn is wat we betaalden
+      shelf_series: de streepjeslijn is de winkelprijs
       title: Prijs in de tijd
     show:
       never_bought: Dit hebben we nog nooit gekocht.
@@ -635,6 +635,7 @@ nl:
       settle: Koppelen
       settled_by: Afgerekend met
       unsettle: Toch niet deze betaling
+      unsettle_confirm: Deze betaling losmaken? De categorieën die het mandje schreef blijven staan.
   search:
     no_results: Geen resultaten gevonden
     open: "🔍 Zoeken"

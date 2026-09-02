@@ -15,6 +15,7 @@ module Importing
       ORDER_NUMBER = /Bestelnummer:\s*(\d+)/
       # Every heading this reader steers by; without one of them it is not a slip
       HEADINGS = [ "Aantal", "Boodschappen totaal", "Totaal" ].freeze
+      FIELDS_PER_PRODUCT = 4
 
       attr_reader :order_number, :delivered_on, :total_amount, :lines
 
@@ -32,9 +33,27 @@ module Importing
       def self.readable?(blocks)
         blocks.grep(ORDER_NUMBER).any? &&
           blocks.grep(/Bezorging op/).any? &&
-          HEADINGS.all? { |heading| blocks.include?(heading) }
+          HEADINGS.all? { |heading| blocks.include?(heading) } &&
+          products_line_up?(blocks)
       end
       private_class_method :readable?
+
+      # Each product is written as four blocks: what it is, how many, the price
+      # each, and the price together. Anything else is not a slip we can read.
+      def self.products_line_up?(blocks)
+        (product_section(blocks).size % FIELDS_PER_PRODUCT).zero?
+      end
+      private_class_method :products_line_up?
+
+      # The blocks that describe the products packed, without the free extras
+      # Albert Heijn throws in. Read both while checking a mail and while
+      # parsing one.
+      def self.product_section(blocks)
+        first = blocks.index("Aantal") + 3
+        last = [ blocks.index("Gratis toegevoegd"), blocks.index("Boodschappen totaal") ].compact.min
+
+        blocks[first...last]
+      end
 
       def initialize(blocks)
         @blocks = blocks
@@ -61,17 +80,14 @@ module Importing
       end
 
       def read_lines
-        products.each_slice(4).map do |name, quantity, _shelf_price, total|
+        products.each_slice(FIELDS_PER_PRODUCT).map do |name, quantity, _shelf_price, total|
           Line.new(name, quantity.to_i, BigDecimal(total), discounts.fetch(name, 0))
         end
       end
 
       # The products packed, without the free extras Albert Heijn throws in
       def products
-        first = @blocks.index("Aantal") + 3
-        last = [ @blocks.index("Gratis toegevoegd"), @blocks.index("Boodschappen totaal") ].compact.min
-
-        @blocks[first...last]
+        self.class.product_section(@blocks)
       end
 
       # A product can be discounted more than once on one slip — two promotions on

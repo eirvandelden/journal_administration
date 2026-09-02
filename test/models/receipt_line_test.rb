@@ -12,8 +12,10 @@ class ReceiptLineTest < ActiveSupport::TestCase
     )
 
     assert_not line.valid?
-    assert_includes line.errors[:paid_amount],
-I18n.t("activerecord.errors.models.receipt_line.attributes.paid_amount.does_not_match_bonus", locale: :en)
+    expected = I18n.t("activerecord.errors.models.receipt_line.attributes.paid_amount.does_not_match_bonus",
+locale: :en)
+
+    assert_includes line.errors[:paid_amount], expected
   end
 
   test "a line bought on bonus knows it was" do
