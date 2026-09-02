@@ -129,4 +129,14 @@ class ReceiptsTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "a", text: I18n.t("receipts.basket.view_invoice", locale: :en)
   end
+  test "settling a delivery of unclassified products keeps the payment's own categories" do
+    @receipt.lines.each { |line| line.product.update!(product_type: nil) }
+    splits_before = transactions(:debit_grocery).transaction_splits.map(&:attributes)
+
+    post receipt_payment_link_path(@receipt), params: { receipt: { payment_id: transactions(:debit_grocery).id } }
+
+    assert_equal transactions(:debit_grocery), @receipt.reload.payment
+    assert_equal splits_before, transactions(:debit_grocery).reload.transaction_splits.map(&:attributes)
+    assert_equal I18n.t("receipts.payment_links.create.nothing_to_split", locale: :en), flash[:notice]
+  end
 end

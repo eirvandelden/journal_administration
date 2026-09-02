@@ -24,15 +24,20 @@ class Receipt < ApplicationRecord
 
   # Splits the payment the way the basket divides over the accounting categories
   #
-  # Refuses when the basket costs more than the payment: the books would not
-  # add up, and scaling the numbers to fit would invent figures.
+  # Refuses, and changes nothing, unless the basket can actually say how the
+  # payment divides up: a basket costing more than the payment would not add up,
+  # and a basket whose products nobody has classified yet says nothing at all.
+  # Wiping the payment's splits on the strength of that would throw away work
+  # this receipt never did.
   def rewrite_payment_splits
     return false unless basket_fits?(payment)
+    return false if splittable_totals.empty?
 
     transaction do
       payment.transaction_splits.destroy_all
-      splittable_totals.each { |category, amount|
- payment.transaction_splits.create!(category: category, amount: amount) }
+      splittable_totals.each do |category, amount|
+        payment.transaction_splits.create!(category: category, amount: amount)
+      end
       payment.ensure_remainder_split
     end
     true

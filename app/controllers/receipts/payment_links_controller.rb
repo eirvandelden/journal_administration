@@ -10,10 +10,14 @@ module Receipts
       payment = chosen_payment
       return redirect_to @receipt, alert: t(".basket_exceeds_payment") unless @receipt.basket_fits?(payment)
 
-      @receipt.update!(payment: payment)
-      @receipt.rewrite_payment_splits
+      settled = Receipt.transaction do
+        @receipt.update!(payment: payment)
+        @receipt.rewrite_payment_splits
+      end
 
-      redirect_to @receipt, notice: t(".success")
+      return redirect_to @receipt, notice: t(".success") if settled
+
+      redirect_to @receipt, notice: t(".nothing_to_split")
     end
 
     # Lets a person undo settling the wrong payment. The splits already written

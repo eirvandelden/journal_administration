@@ -621,6 +621,7 @@ it:
     payment_links:
       create:
         basket_exceeds_payment: Il carrello costa più del pagamento, quindi il pagamento è rimasto invariato.
+        nothing_to_split: Collegato. Il pagamento mantiene le sue categorie finché questi prodotti non sono classificati.
         success: Il pagamento è stato diviso come si divide il carrello.
       destroy:
         success: La fattura non è più saldata con quel pagamento.

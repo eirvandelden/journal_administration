@@ -137,4 +137,22 @@ class ReceiptTest < ActiveSupport::TestCase
 
     assert_includes receipt.fitting_payments, late
   end
+  test "a basket of products nobody has classified yet is not split at all" do
+    receipt = receipts(:albert_heijn_friday)
+    receipt.lines.each { |line| line.product.update!(product_type: nil) }
+    receipt.update!(payment: transactions(:debit_grocery))
+    splits_before = receipt.payment.transaction_splits.map(&:attributes)
+
+    assert_not receipt.rewrite_payment_splits
+    assert_equal splits_before, receipt.payment.reload.transaction_splits.map(&:attributes)
+  end
+
+  test "a delivery with an empty basket is not split at all" do
+    receipt = Receipt.create!(shop: accounts(:albert_heijn), issued_on: Date.current, total_amount: 10,
+                              payment: transactions(:debit_grocery))
+    splits_before = transactions(:debit_grocery).transaction_splits.map(&:attributes)
+
+    assert_not receipt.rewrite_payment_splits
+    assert_equal splits_before, transactions(:debit_grocery).reload.transaction_splits.map(&:attributes)
+  end
 end

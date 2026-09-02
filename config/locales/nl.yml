@@ -621,6 +621,7 @@ nl:
     payment_links:
       create:
         basket_exceeds_payment: Het mandje kost meer dan de betaling, dus de betaling is ongewijzigd gelaten.
+        nothing_to_split: Gekoppeld. De betaling houdt haar eigen categorieën tot deze producten zijn ingedeeld.
         success: De betaling is verdeeld zoals het mandje verdeeld is.
       destroy:
         success: Deze factuur is niet meer met die betaling afgerekend.

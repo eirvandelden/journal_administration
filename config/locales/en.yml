@@ -621,6 +621,7 @@ en:
     payment_links:
       create:
         basket_exceeds_payment: The basket costs more than the payment, so the payment was left as it was.
+        nothing_to_split: Settled. The payment keeps its own categories until these products are classified.
         success: The payment was split the way the basket divides up.
       destroy:
         success: The invoice is no longer settled by that payment.
