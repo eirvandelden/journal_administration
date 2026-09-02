@@ -76,9 +76,11 @@ module Importing
 
       # A product can be discounted more than once on one slip — two promotions on
       # the same thing — so the bonuses on a name are added up, not overwritten.
+      # The slip writes a bonus as a negative amount; a discount is recorded as
+      # the size of what came off, whichever sign the slip used.
       def discounts
         @discounts ||= bonuses.each_slice(3).each_with_object(Hash.new(0)) do |(name, _promotion, amount), all|
-          all[name] -= BigDecimal(amount)
+          all[name] += BigDecimal(amount).abs
         end
       end
 

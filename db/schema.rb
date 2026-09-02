@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_31_140000) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_02_090000) do
   create_table "account_aliases", force: :cascade do |t|
     t.integer "account_id", null: false
     t.datetime "created_at", null: false
@@ -121,6 +121,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_31_140000) do
     t.index ["purchase_transaction_id"], name: "index_chattels_on_purchase_transaction_id"
   end
 
+  create_table "data_migrations", primary_key: "version", id: :string, force: :cascade do |t|
+  end
+
   create_table "product_types", force: :cascade do |t|
     t.integer "category_id", null: false
     t.datetime "created_at", null: false
@@ -134,9 +137,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_31_140000) do
     t.string "brand"
     t.datetime "created_at", null: false
     t.string "name", null: false
+    t.string "normalized_name", null: false
     t.integer "product_type_id"
     t.datetime "updated_at", null: false
-    t.index "LOWER(name)", name: "index_products_on_LOWER_name", unique: true
+    t.index ["normalized_name"], name: "index_products_on_normalized_name", unique: true
     t.index ["product_type_id"], name: "index_products_on_product_type_id"
   end
 

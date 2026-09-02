@@ -61,8 +61,8 @@ class Receipt < ApplicationRecord
   end
 
   def paid_per_category
-    lines.includes(product: :product_type)
-         .filter_map { |line| [ line.product.product_type.category, line.paid_amount ] if line.product.product_type }
+    lines.includes(product: { product_type: :category })
+         .filter_map { |line| [ line.category, line.paid_amount ] if line.category }
          .group_by(&:first)
          .transform_values { |pairs| pairs.sum(&:last) }
   end

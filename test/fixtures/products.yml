@@ -2,16 +2,20 @@ ah_ribbelchips:
   name: AH Naturel Ribbelchips
   brand: AH
   product_type: naturel_chips
+  normalized_name: ah naturel ribbelchips
 
 lays_ribbelchips:
   name: Lay's Ribbelchips Naturel
   brand: Lay's
   product_type: naturel_chips
+  normalized_name: lay's ribbelchips naturel
 
 andrelon_shampoo:
   name: Andrelon shampoo
+  normalized_name: andrelon shampoo
 
 dreft_dishwashing_liquid:
   name: Dreft afwasmiddel
   brand: Dreft
   product_type: dishwashing_liquid
+  normalized_name: dreft afwasmiddel

@@ -4,7 +4,8 @@ module Importing
     #
     # A delivery is identified by its order number, so a slip that arrives twice
     # — Albert Heijn sends a fresh one whenever the order changes — updates the
-    # delivery already recorded instead of adding a second one. Which payment
+    # delivery already recorded instead of adding a second one, and splits its
+    # payment again so the books follow the corrected basket. Which payment
     # settled it is left to a person: empties are settled at the door, so the
     # amount the bank took rarely equals the slip's total.
     class ImportJob < ApplicationJob
@@ -26,6 +27,7 @@ module Importing
         receipt.update!(shop: shop, issued_on: slip.delivered_on, total_amount: slip.total_amount)
         receipt.lines.destroy_all
         slip.lines.each { |line| receipt.lines.create!(line_attributes(line)) }
+        receipt.rewrite_payment_splits
       end
 
       def shop

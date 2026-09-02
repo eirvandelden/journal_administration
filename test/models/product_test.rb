@@ -82,4 +82,20 @@ class ProductTest < ActiveSupport::TestCase
       assert_equal shouting, Product.resolve_by_name("AH Café Crema bonen")
     end
   end
+  test "resolving a name costs the same however many products we know" do
+    10.times { |number| Product.create!(name: "AH Filler #{number}") }
+    small = count_queries { Product.resolve_by_name("AH Something New") }
+    40.times { |number| Product.create!(name: "AH More filler #{number}") }
+
+    assert_equal small, count_queries { Product.resolve_by_name("AH Something Else New") }
+  end
+
+  private
+
+  def count_queries(&block)
+    counted = 0
+    counter = ->(*, payload) { counted += 1 unless payload[:name].in?([ "SCHEMA", "TRANSACTION" ]) }
+    ActiveSupport::Notifications.subscribed(counter, "sql.active_record", &block)
+    counted
+  end
 end

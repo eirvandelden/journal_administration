@@ -8,22 +8,24 @@ class Product < ApplicationRecord
   has_many :receipt_lines
 
   validates :name, presence: true
-  validates :name, uniqueness: { case_sensitive: false }
+  validates :normalized_name, uniqueness: true
+
+  # Ruby folds the whole alphabet a shop might print; the database folds only
+  # A to Z, so the name it is matched on is folded here and stored.
+  before_validation { self.normalized_name = name&.strip&.downcase }
 
   # The product this name stands for, however it was capitalised, or a new one
   # we know nothing about yet
+  #
+  # Matching is on the name the database folded for us, since its own LOWER
+  # folds only A to Z and Albert Heijn prints accented capitals.
   def self.resolve_by_name(name)
     wanted = name.strip
 
-    find_by("LOWER(name) = ?", wanted.downcase) || find_by(id: id_named_like(wanted)) || create!(name: wanted)
+    find_by(normalized_name: wanted.downcase) || create!(name: wanted)
+  rescue ActiveRecord::RecordNotUnique
+    find_by(normalized_name: wanted.downcase)
   end
-
-  # The database folds only A to Z, so a stored name holding an accented capital
-  # needs Ruby's own idea of lower case to be recognised.
-  def self.id_named_like(wanted)
-    pluck(:id, :name).find { |_id, name| name.downcase == wanted.downcase }&.first
-  end
-  private_class_method :id_named_like
 
   scope :unclassified, -> { where(product_type_id: nil).or(where("TRIM(COALESCE(brand, '')) = ''")) }
 
