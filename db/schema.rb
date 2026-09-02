@@ -220,6 +220,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_31_140000) do
 
   create_table "users", force: :cascade do |t|
     t.boolean "active", default: true
+    t.string "assistant_token"
     t.integer "color_scheme", default: 0, null: false
     t.datetime "created_at", precision: nil, null: false
     t.integer "dark_theme", default: 1, null: false
@@ -230,6 +231,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_31_140000) do
     t.string "password_digest", null: false
     t.integer "role", null: false
     t.datetime "updated_at", precision: nil, null: false
+    t.index ["assistant_token"], name: "index_users_on_assistant_token", unique: true
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
     t.index ["name"], name: "index_users_on_name", unique: true
   end
