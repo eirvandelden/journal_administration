@@ -1,5 +1,6 @@
 one:
   name: Laptop
+  brand: Dell
   kind: electronics
   model_number: XPS-15
   serial_number: SN123456

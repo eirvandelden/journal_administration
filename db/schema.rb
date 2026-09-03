@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_21_100000) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_03_151125) do
   create_table "account_aliases", force: :cascade do |t|
     t.integer "account_id", null: false
     t.datetime "created_at", null: false
@@ -106,6 +106,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_21_100000) do
   end
 
   create_table "chattels", force: :cascade do |t|
+    t.string "brand"
     t.datetime "created_at", null: false
     t.string "kind"
     t.datetime "left_possession_at"

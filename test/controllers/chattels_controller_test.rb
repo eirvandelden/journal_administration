@@ -43,6 +43,13 @@ class ChattelsControllerTest < ActionDispatch::IntegrationTest
     assert_select "h2", text: I18n.t("unknown_warranty", locale: :en)
   end
 
+  test "the chattels page shows each brand" do
+    get chattels_url
+
+    assert_response :success
+    assert_select "td", text: chattels(:one).brand
+  end
+
   test "should create chattel" do
     assert_difference("Chattel.count") do
       post chattels_url,
@@ -50,6 +57,12 @@ class ChattelsControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_redirected_to chattels_url
+  end
+
+  test "creating a chattel records the brand that made it" do
+    post chattels_url, params: { chattel: chattel_params.merge(brand: "Dell") }
+
+    assert_equal "Dell", Chattel.last.brand
   end
 
   test "should show chattel" do

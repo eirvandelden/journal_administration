@@ -1,6 +1,7 @@
 # Manages household chattels (valuable items with warranties and insurance)
 class ChattelsController < ApplicationController
   before_action :set_chattel, only: %i[show edit update destroy]
+  before_action :set_brands_in_use, only: %i[show new create edit update]
 
   # Lists chattels organized by warranty status
   #
@@ -85,9 +86,13 @@ class ChattelsController < ApplicationController
       @chattel = Chattel.find(params[:id])
     end
 
+    def set_brands_in_use
+      @brands_in_use = Chattel.brands_in_use
+    end
+
     # Only allow a list of trusted parameters through.
     def chattel_params
-      params.require(:chattel).permit(:name, :kind, :model_number, :serial_number,
+      params.require(:chattel).permit(:name, :brand, :kind, :model_number, :serial_number,
                                       :purchase_transaction_id, :purchased_at,
                                       :warranty_expires_at, :left_possession_at,
                                       :purchase_price, :notes, :warranty_document)
