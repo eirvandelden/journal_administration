@@ -2,7 +2,7 @@ class Chattel < ApplicationRecord
   include Searchable
   include PdfAttachmentValidatable
 
-  searchable_on :name, :kind, :model_number, :serial_number, :notes
+  searchable_on :name, :brand, :kind, :model_number, :serial_number, :notes
 
   belongs_to :purchase_transaction, class_name: "Transaction", optional: true
 
@@ -17,6 +17,13 @@ class Chattel < ApplicationRecord
   scope :warrantied, -> { where(warranty_expires_at: Time.current..) }
   scope :out_of_warranty, -> { where(warranty_expires_at: ..Time.current) }
   scope :unknown_warranty, -> { active.where(warranty_expires_at: nil) }
+
+  # The brands already recorded, so the same brand is not typed two ways
+  #
+  # @return [Array<String>]
+  def self.brands_in_use
+    where.not(brand: [ nil, "" ]).distinct.order(:brand).pluck(:brand)
+  end
 
   def purchased_at
     self[:purchased_at] || purchase_transaction&.booked_at

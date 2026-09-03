@@ -61,6 +61,7 @@ nl:
         kind: Type
         name: Naam
       chattel:
+        brand: Merk
         kind: Type
         left_possession_at: Verlaten op
         model_number: Modelnummer
