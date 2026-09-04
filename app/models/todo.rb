@@ -42,7 +42,7 @@ class Todo
   #
   # @return [Array<Todo::Item>]
   def items
-    @items ||= (transaction_items + account_items).sort_by { |item| -item.date.to_i }
+    @items ||= (transaction_items + account_items + product_items).sort_by { |item| -item.date.to_i }
   end
 
   # Returns whether the combined list is empty
@@ -62,5 +62,10 @@ class Todo
   def account_items
     Account.where("updated_at = created_at").order(created_at: :desc)
            .map { |a| Item.new(:account, a.created_at, a) }
+  end
+
+  def product_items
+    Product.unclassified.order(created_at: :desc)
+           .map { |product| Item.new(:product, product.created_at, product) }
   end
 end

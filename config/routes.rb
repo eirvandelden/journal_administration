@@ -7,6 +7,13 @@ Rails.application.routes.draw do
   end
 
   resources :chattels
+  resources :product_types, except: %i[destroy]
+  resources :products, only: %i[index show edit update]
+  resources :receipts, only: %i[index show] do
+    scope module: "receipts" do
+      resource :payment_link, only: %i[create destroy]
+    end
+  end
   root "dashboard#index"
 
   resources :users, only: %i[index update destroy] do

@@ -49,6 +49,7 @@ class Transaction < ApplicationRecord
   belongs_to :creditor, class_name: "Account", foreign_key: "creditor_account_id", optional: true
   belongs_to :category, optional: true
   has_many :chattels, foreign_key: :purchase_transaction_id
+  has_one :receipt, foreign_key: :payment_id, dependent: :nullify
   has_one_attached :proof_of_purchase
 
   scope :uncategorized, -> { where(Transaction.send(:uncategorized_clause)) }

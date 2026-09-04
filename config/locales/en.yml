@@ -72,6 +72,12 @@ en:
         serial_number: Serial Number
         warranty_document: Warranty document
         warranty_expires_at: Warranty expires at
+      product:
+        brand: Brand
+        name: Name
+      product_type:
+        category: Booked as
+        name: Name
       transaction:
         account: Account
         amount: Amount
@@ -112,6 +118,10 @@ en:
             category:
               must_be_parent: must be a top-level category
               must_not_be_transfer: must not be the Transfer category
+        receipt_line:
+          attributes:
+            paid_amount:
+              does_not_match_bonus: must be the shelf price minus the bonus
         transaction:
           attributes:
             amount:
@@ -132,6 +142,16 @@ en:
       account: Account
       category: Category
       chattel: Chattel
+      product:
+        one: Product
+        other: Products
+      product_type:
+        one: Product type
+        other: Product types
+      receipt:
+        one: Invoice
+        other: Invoices
+      receipt_line: Invoice line
       transaction: Transaction
       transaction_link: Transaction Link
   admin:
@@ -337,6 +357,7 @@ en:
     formats:
       default: "%Y-%m-%d"
       long: "%B %d, %Y"
+      month_and_year: "%B %Y"
       short: "%b %d"
     month_names:
     -
@@ -466,7 +487,10 @@ en:
     categories: "🏷️ %{model}"
     chattels: "📦 %{model}"
     preferences: "🎨 Preferences"
+    product_types: "🥫 %{model}"
+    products: "🛒 %{model}"
     profile: "👤 Profile"
+    receipts: "🧾 %{model}"
     todo: "✅ %{model}"
     todo_all: All
     todo_consolidatable_accounts: Consolidatable accounts
@@ -529,6 +553,89 @@ en:
   pagination:
     next: Next
     previous: Previous
+  product_types:
+    create:
+      success: Product type added.
+    edit:
+      heading: 'Product type: %{name}'
+    index:
+      actions: Actions
+      category: Booked as
+      empty: No product types yet.
+      heading: Product types
+      name: Name
+      new: New product type
+    new:
+      heading: New product type
+    show:
+      bought: Bought
+      brands: Brands we buy it from
+      last_bought: Last bought
+      month: Month
+      never_bought: We have never bought anything of this type.
+      on_bonus: On bonus
+      per_month: Per month
+      spent: Spent
+    update:
+      success: Product type saved.
+  products:
+    edit:
+      heading: Classify product
+    index:
+      brand: Brand
+      empty: No products yet.
+      heading: Products
+      name: Name
+      product_type: Product type
+      unclassified: Still to classify
+    price_chart:
+      highest: 'highest: %{price}'
+      paid_series: the solid line is what we paid
+      shelf_series: the dashed line is the shelf price
+      title: Price over time
+    show:
+      never_bought: We have never bought this.
+      purchases: Every time we bought it
+      unknown: Not known yet
+    update:
+      success: Product saved.
+  receipts:
+    basket:
+      bonus: Bonus
+      heading: Basket
+      paid: Paid
+      product: Product
+      quantity: Quantity
+      shelf_price: Shelf price
+      total: Basket total
+      view_invoice: View invoice
+    index:
+      date: Date
+      empty: No grocery invoices yet.
+      heading: Grocery invoices
+      not_settled: Not settled
+      payment: Payment
+      settled: Settled
+      shop: Shop
+      total: Total
+    payment_links:
+      create:
+        basket_exceeds_payment: The basket costs more than the payment, so the payment was left as it was.
+        nothing_to_split: Settled. The payment keeps its own categories until these products are classified.
+        success: The payment was split the way the basket divides up.
+      destroy:
+        success: The invoice is no longer settled by that payment.
+    show:
+      basket_total: Basket adds up to
+      candidates: Which payment settled this invoice?
+      invoice_total: Invoice states
+      no_candidates: No payment to this shop was booked around this date.
+      not_settled: No payment has been matched to this invoice yet.
+      payment: Payment
+      settle: Settle
+      settled_by: Settled by
+      unsettle: Not this payment
+      unsettle_confirm: Detach this payment? The categories the basket wrote stay on it.
   search:
     no_results: No results found
     open: "🔍 Search"
@@ -557,11 +664,13 @@ en:
     index:
       account: Account
       actions: Actions
+      classify: Classify
       date: Date
       description: Description
       edit: Edit
       empty: "🎉 Nothing to do. All transactions are categorized and all accounts are up to date."
       kind: Kind
+      product: Product
       transaction: Transaction
       update_transactions: Update Transactions
   transaction_absorptions:

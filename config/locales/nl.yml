@@ -72,6 +72,12 @@ nl:
         serial_number: Serienummer
         warranty_document: Garantiedocument
         warranty_expires_at: Garantie tot
+      product:
+        brand: Merk
+        name: Naam
+      product_type:
+        category: Geboekt als
+        name: Naam
       transaction:
         account: Rekening
         amount: Bedrag
@@ -112,6 +118,10 @@ nl:
             category:
               must_be_parent: moet een hoofdcategorie zijn
               must_not_be_transfer: mag niet de categorie Transfer zijn
+        receipt_line:
+          attributes:
+            paid_amount:
+              does_not_match_bonus: moet de winkelprijs min de bonus zijn
         transaction:
           attributes:
             amount:
@@ -132,6 +142,16 @@ nl:
       account: Rekening
       category: Categorie
       chattel: Bezitting
+      product:
+        one: Product
+        other: Producten
+      product_type:
+        one: Productsoort
+        other: Productsoorten
+      receipt:
+        one: Factuur
+        other: Facturen
+      receipt_line: Factuurregel
       transaction: Transactie
       transaction_link: Transactiekoppeling
   admin:
@@ -337,6 +357,7 @@ nl:
     formats:
       default: "%d-%m-%Y"
       long: "%e %B %Y"
+      month_and_year: "%B %Y"
       short: "%e %b"
     month_names:
     -
@@ -466,7 +487,10 @@ nl:
     categories: "🏷️ %{model}"
     chattels: "📦 %{model}"
     preferences: "🎨 Voorkeuren"
+    product_types: "🥫 %{model}"
+    products: "🛒 %{model}"
     profile: "👤 Profiel"
+    receipts: "🧾 %{model}"
     todo: "✅ %{model}"
     todo_all: Alle
     todo_consolidatable_accounts: Te consolideren rekeningen
@@ -529,6 +553,89 @@ nl:
   pagination:
     next: Volgende
     previous: Vorige
+  product_types:
+    create:
+      success: Productsoort toegevoegd.
+    edit:
+      heading: 'Productsoort: %{name}'
+    index:
+      actions: Acties
+      category: Geboekt als
+      empty: Nog geen productsoorten.
+      heading: Productsoorten
+      name: Naam
+      new: Nieuwe productsoort
+    new:
+      heading: Nieuwe productsoort
+    show:
+      bought: Gekocht
+      brands: Merken die we kopen
+      last_bought: Laatst gekocht
+      month: Maand
+      never_bought: Van deze soort hebben we nog nooit iets gekocht.
+      on_bonus: In de bonus
+      per_month: Per maand
+      spent: Besteed
+    update:
+      success: Productsoort opgeslagen.
+  products:
+    edit:
+      heading: Product indelen
+    index:
+      brand: Merk
+      empty: Nog geen producten.
+      heading: Producten
+      name: Naam
+      product_type: Productsoort
+      unclassified: Nog indelen
+    price_chart:
+      highest: 'hoogste: %{price}'
+      paid_series: de doorgetrokken lijn is wat we betaalden
+      shelf_series: de streepjeslijn is de winkelprijs
+      title: Prijs in de tijd
+    show:
+      never_bought: Dit hebben we nog nooit gekocht.
+      purchases: Elke keer dat we het kochten
+      unknown: Nog niet bekend
+    update:
+      success: Product opgeslagen.
+  receipts:
+    basket:
+      bonus: Bonus
+      heading: Mandje
+      paid: Betaald
+      product: Product
+      quantity: Aantal
+      shelf_price: Winkelprijs
+      total: Totaal mandje
+      view_invoice: Factuur bekijken
+    index:
+      date: Datum
+      empty: Nog geen boodschappenfacturen.
+      heading: Boodschappenfacturen
+      not_settled: Niet afgerekend
+      payment: Betaling
+      settled: Afgerekend
+      shop: Winkel
+      total: Totaal
+    payment_links:
+      create:
+        basket_exceeds_payment: Het mandje kost meer dan de betaling, dus de betaling is ongewijzigd gelaten.
+        nothing_to_split: Gekoppeld. De betaling houdt haar eigen categorieën tot deze producten zijn ingedeeld.
+        success: De betaling is verdeeld zoals het mandje verdeeld is.
+      destroy:
+        success: Deze factuur is niet meer met die betaling afgerekend.
+    show:
+      basket_total: Mandje komt op
+      candidates: Welke betaling hoort bij deze factuur?
+      invoice_total: Factuur zegt
+      no_candidates: Geen betaling aan deze winkel rond deze datum.
+      not_settled: Nog geen betaling gekoppeld aan deze factuur.
+      payment: Betaling
+      settle: Koppelen
+      settled_by: Afgerekend met
+      unsettle: Toch niet deze betaling
+      unsettle_confirm: Deze betaling losmaken? De categorieën die het mandje schreef blijven staan.
   search:
     no_results: Geen resultaten gevonden
     open: "🔍 Zoeken"
@@ -557,11 +664,13 @@ nl:
     index:
       account: Rekening
       actions: Acties
+      classify: Indelen
       date: Datum
       description: Omschrijving
       edit: Bewerken
       empty: "🎉 Niets te doen. Alle transacties zijn gecategoriseerd en alle rekeningen zijn bijgewerkt."
       kind: Soort
+      product: Product
       transaction: Transactie
       update_transactions: Transacties bijwerken
   transaction_absorptions:

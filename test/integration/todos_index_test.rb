@@ -30,4 +30,11 @@ class TodosIndexTest < ActionDispatch::IntegrationTest
 
     assert_match %r{#{formatted_note}.*?#{formatted_amount}}m, response.body
   end
+
+  test "the todo page links a product still needing a type to its form" do
+    get todo_path
+
+    assert_response :success
+    assert_select "a[href=?]", edit_product_path(products(:andrelon_shampoo))
+  end
 end

@@ -72,6 +72,12 @@ it:
         serial_number: Numero seriale
         warranty_document: Documento di garanzia
         warranty_expires_at: Garanzia fino al
+      product:
+        brand: Marca
+        name: Nome
+      product_type:
+        category: Registrato come
+        name: Nome
       transaction:
         account: Conto
         amount: Importo
@@ -112,6 +118,10 @@ it:
             category:
               must_be_parent: deve essere una categoria principale
               must_not_be_transfer: non può essere la categoria Transfer
+        receipt_line:
+          attributes:
+            paid_amount:
+              does_not_match_bonus: deve essere il prezzo di listino meno lo sconto
         transaction:
           attributes:
             amount:
@@ -132,6 +142,16 @@ it:
       account: Conto
       category: Categoria
       chattel: Bene
+      product:
+        one: Prodotto
+        other: Prodotti
+      product_type:
+        one: Tipo di prodotto
+        other: Tipi di prodotto
+      receipt:
+        one: Fattura
+        other: Fatture
+      receipt_line: Riga della fattura
       transaction: Transazione
       transaction_link: Collegamento transazione
   admin:
@@ -337,6 +357,7 @@ it:
     formats:
       default: "%d/%m/%Y"
       long: "%d %B %Y"
+      month_and_year: "%B %Y"
       short: "%d %b"
     month_names:
     -
@@ -466,7 +487,10 @@ it:
     categories: "🏷️ %{model}"
     chattels: "📦 %{model}"
     preferences: "🎨 Preferenze"
+    product_types: "🥫 %{model}"
+    products: "🛒 %{model}"
     profile: "👤 Profilo"
+    receipts: "🧾 %{model}"
     todo: "✅ %{model}"
     todo_all: Tutti
     todo_consolidatable_accounts: Conti da consolidare
@@ -529,6 +553,89 @@ it:
   pagination:
     next: Successivo
     previous: Precedente
+  product_types:
+    create:
+      success: Tipo di prodotto aggiunto.
+    edit:
+      heading: 'Tipo di prodotto: %{name}'
+    index:
+      actions: Azioni
+      category: Registrato come
+      empty: Nessun tipo di prodotto.
+      heading: Tipi di prodotto
+      name: Nome
+      new: Nuovo tipo di prodotto
+    new:
+      heading: Nuovo tipo di prodotto
+    show:
+      bought: Comprati
+      brands: Marche che compriamo
+      last_bought: Ultimo acquisto
+      month: Mese
+      never_bought: Di questo tipo non abbiamo mai comprato nulla.
+      on_bonus: In offerta
+      per_month: Per mese
+      spent: Speso
+    update:
+      success: Tipo di prodotto salvato.
+  products:
+    edit:
+      heading: Classifica prodotto
+    index:
+      brand: Marca
+      empty: Nessun prodotto.
+      heading: Prodotti
+      name: Nome
+      product_type: Tipo di prodotto
+      unclassified: Da classificare
+    price_chart:
+      highest: 'massimo: %{price}'
+      paid_series: la linea continua è quanto abbiamo pagato
+      shelf_series: la linea tratteggiata è il prezzo di listino
+      title: Prezzo nel tempo
+    show:
+      never_bought: Non l'abbiamo mai comprato.
+      purchases: Ogni volta che l'abbiamo comprato
+      unknown: Non ancora noto
+    update:
+      success: Prodotto salvato.
+  receipts:
+    basket:
+      bonus: Sconto
+      heading: Carrello
+      paid: Pagato
+      product: Prodotto
+      quantity: Quantità
+      shelf_price: Prezzo di listino
+      total: Totale carrello
+      view_invoice: Vedi fattura
+    index:
+      date: Data
+      empty: Nessuna fattura della spesa.
+      heading: Fatture della spesa
+      not_settled: Non saldata
+      payment: Pagamento
+      settled: Saldata
+      shop: Negozio
+      total: Totale
+    payment_links:
+      create:
+        basket_exceeds_payment: Il carrello costa più del pagamento, quindi il pagamento è rimasto invariato.
+        nothing_to_split: Collegato. Il pagamento mantiene le sue categorie finché questi prodotti non sono classificati.
+        success: Il pagamento è stato diviso come si divide il carrello.
+      destroy:
+        success: La fattura non è più saldata con quel pagamento.
+    show:
+      basket_total: Il carrello arriva a
+      candidates: Quale pagamento ha saldato questa fattura?
+      invoice_total: La fattura dice
+      no_candidates: Nessun pagamento a questo negozio intorno a questa data.
+      not_settled: Nessun pagamento è ancora collegato a questa fattura.
+      payment: Pagamento
+      settle: Collega
+      settled_by: Saldata con
+      unsettle: Non questo pagamento
+      unsettle_confirm: Scollegare questo pagamento? Le categorie scritte dal carrello restano.
   search:
     no_results: Nessun risultato trovato
     open: "🔍 Cerca"
@@ -557,11 +664,13 @@ it:
     index:
       account: Conto
       actions: Azioni
+      classify: Classifica
       date: Data
       description: Descrizione
       edit: Modifica
       empty: "🎉 Nulla da fare. Tutte le transazioni sono categorizzate e tutti i conti sono aggiornati."
       kind: Tipo
+      product: Prodotto
       transaction: Transazione
       update_transactions: Aggiorna transazioni
   transaction_absorptions:

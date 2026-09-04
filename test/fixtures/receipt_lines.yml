@@ -1,0 +1,23 @@
+ah_chips:
+  receipt: albert_heijn_friday
+  product: ah_ribbelchips
+  quantity: 1
+  full_amount: 1.49
+  discount_amount: 0.00
+  paid_amount: 1.49
+
+lays_chips_on_bonus:
+  receipt: albert_heijn_friday
+  product: lays_ribbelchips
+  quantity: 1
+  full_amount: 2.19
+  discount_amount: 0.70
+  paid_amount: 1.49
+
+dreft:
+  receipt: albert_heijn_friday
+  product: dreft_dishwashing_liquid
+  quantity: 1
+  full_amount: 3.49
+  discount_amount: 0.00
+  paid_amount: 3.49
