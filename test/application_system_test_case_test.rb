@@ -27,14 +27,22 @@ class ApplicationSystemTestCaseTest < ActiveSupport::TestCase
     end
   end
 
-  private
+  test "an older complete download is used when the newest version directory has no binary" do
+    Dir.mktmpdir do |cache_root|
+      older = make_cached_chrome(cache_root, "150.0.7871.24")
+      FileUtils.mkdir_p(File.join(cache_root, "mac-arm64", "152.0.7977.64"))
 
-  def make_cached_chrome(cache_root, version)
-    leaf = File.join(cache_root, "mac-arm64", version, "Google Chrome for Testing.app/Contents/MacOS")
-    FileUtils.mkdir_p(leaf)
-    binary = File.join(leaf, "Google Chrome for Testing")
-    FileUtils.touch(binary)
-    File.chmod(0755, binary)
-    binary
+      assert_equal older, ApplicationSystemTestCase.chrome_binary(cache_root: cache_root)
+    end
   end
+
+  private
+    def make_cached_chrome(cache_root, version)
+      leaf = File.join(cache_root, "mac-arm64", version, "Google Chrome for Testing.app/Contents/MacOS")
+      FileUtils.mkdir_p(leaf)
+      binary = File.join(leaf, "Google Chrome for Testing")
+      FileUtils.touch(binary)
+      File.chmod(0755, binary)
+      binary
+    end
 end
