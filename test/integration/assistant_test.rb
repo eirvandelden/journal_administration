@@ -57,17 +57,34 @@ class AssistantTest < ActionDispatch::IntegrationTest
     assert_includes answer, "closed budget ##{budgets(:future_budget).id}"
   end
 
-  test "the assistant cannot start a second budget on a day one already starts" do
-    answer = ask_assistant("start_budget", starts_on: budgets(:active_budget).starts_at.to_date.to_s)
+  test "the assistant may not start a budget on a day that has passed" do
+    finished = budgets(:past_budget)
+    ended_on = finished.ends_at
 
-    assert_equal 3, Budget.count
+    answer = assert_no_difference("Budget.count") do
+      ask_assistant("start_budget", starts_on: "2026-01-15", ends_on: "2026-01-20")
+    end
+
+    assert_includes answer, "has passed"
+    assert_equal ended_on, finished.reload.ends_at
+  end
+
+  test "the assistant cannot start a second budget on a day one already starts" do
+    taken = Date.current + 1.month
+    Budget.create!(starts_at: taken)
+
+    answer = assert_no_difference("Budget.count") do
+      ask_assistant("start_budget", starts_on: taken.to_s)
+    end
+
     assert_includes answer, "has already been taken"
   end
 
   test "the assistant is told when the day it gave to start from cannot be read" do
-    answer = ask_assistant("start_budget", starts_on: "next Monday")
+    answer = assert_no_difference("Budget.count") do
+      ask_assistant("start_budget", starts_on: "next Monday")
+    end
 
-    assert_equal 3, Budget.count
     assert_includes answer, "Could not read"
   end
 

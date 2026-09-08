@@ -1,8 +1,9 @@
 # Lets an assistant start a new budget
 module Assistant
   class StartBudget < Tool
-    description "Start a budget running from a day, and optionally until another day. Starting one " \
-      "closes whichever budget was running, the day before the new one starts."
+    description "Start a budget running from a day, and optionally until another day. It can only " \
+      "start today or later. Starting one closes whichever budget was running, the day before the " \
+      "new one starts."
     input_schema(
       properties: {
         starts_on: { type: "string", description: "First day the budget runs, written as 2026-09-01" },
@@ -14,12 +15,24 @@ module Assistant
     def self.call(starts_on:, server_context:, ends_on: nil)
       first_day = day(starts_on)
       return problem(unreadable(starts_on)) if first_day.nil?
+      return problem(already_gone(first_day)) if first_day.past?
 
-      last_day = day(ends_on) if ends_on.present?
-      return problem(unreadable(ends_on)) if ends_on.present? && last_day.nil?
+      if ends_on.present?
+        last_day = day(ends_on)
+        return problem(unreadable(ends_on)) if last_day.nil?
+      end
 
       start(first_day, last_day)
     end
+
+    # Starting a budget on a day gone by closes whatever was running then, and a budget that has
+    # already finished is closed with its validations skipped. A person correcting the record on
+    # the budgets page means to do that; an assistant asked for next month's budget does not.
+    def self.already_gone(first_day)
+      "A budget can only start today or later, and #{first_day} has passed. " \
+        "Change a budget that has already run on the budgets page instead."
+    end
+    private_class_method :already_gone
 
     def self.unreadable(text)
       "Could not read #{text} as a day. Write days as 2026-09-01."
