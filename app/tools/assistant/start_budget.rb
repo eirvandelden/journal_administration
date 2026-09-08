@@ -4,6 +4,7 @@ module Assistant
     description "Start a budget running from a day, and optionally until another day. It can only " \
       "start today or later. Starting one closes whichever budget was running, the day before the " \
       "new one starts."
+    annotations destructive_hint: true
     input_schema(
       properties: {
         starts_on: { type: "string", description: "First day the budget runs, written as 2026-09-01" },

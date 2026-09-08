@@ -57,6 +57,14 @@ class AssistantTest < ActionDispatch::IntegrationTest
     assert_includes answer, "closed budget ##{budgets(:future_budget).id}"
   end
 
+  test "starting a budget warns a client that it changes what other budgets cover" do
+    post_to_assistant(method: "tools/list")
+
+    listed = JSON.parse(response.body).dig("result", "tools").find { |tool| tool["name"] == "start_budget" }
+
+    assert listed.dig("annotations", "destructiveHint"), "start_budget should say it changes things"
+  end
+
   test "a budget started without a last day runs until further notice" do
     answer = ask_assistant("start_budget", starts_on: Date.current.to_s)
 
@@ -177,6 +185,12 @@ class AssistantTest < ActionDispatch::IntegrationTest
     answer = ask_assistant("budget_status", start_date: "2001-01-01", end_date: "2001-01-30")
 
     assert_includes answer, "No budget covers 2001-01-01 to 2001-01-30"
+  end
+
+  test "the assistant giving one day of a period is asked for both" do
+    answer = ask_assistant("budget_status", start_date: Date.current.to_s)
+
+    assert_includes answer, "Give both days"
   end
 
   test "the assistant is refused a period described loosely rather than written out" do
