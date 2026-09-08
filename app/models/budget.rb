@@ -41,11 +41,14 @@ class Budget < ApplicationRecord
 
   # Plans what a category may cost per month, replacing whatever was planned for it before.
   #
+  # A refused allocation is not left behind on the budget: built through the association, it would
+  # stay in the collection and make every later save of the budget fail on its behalf.
+  #
   # @param category [Category] The category to plan for
   # @param amount [Numeric] What it may cost per month
   # @return [BudgetCategory] The allocation, carrying its errors when it could not be saved
   def plan(category:, amount:)
-    allocation = budget_categories.find_or_initialize_by(category: category)
+    allocation = BudgetCategory.find_or_initialize_by(budget: self, category: category)
     allocation.amount = amount
     allocation.save
 

@@ -320,6 +320,14 @@ class BudgetTest < ActiveSupport::TestCase
       assert_equal 900, budget.budget_categories.find_by(category: categories(:housing)).amount
     end
 
+    test "a refused plan leaves the budget itself saveable" do
+      budget = budgets(:past_budget)
+
+      budget.plan(category: categories(:housing), amount: 0)
+
+      assert budget.save, "a plan the budget refused should not stop the budget saving"
+    end
+
     test "planning nothing at all is refused and says why" do
       budget = budgets(:active_budget)
 
