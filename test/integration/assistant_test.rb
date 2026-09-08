@@ -57,6 +57,42 @@ class AssistantTest < ActionDispatch::IntegrationTest
     assert_includes answer, "closed budget ##{budgets(:future_budget).id}"
   end
 
+  test "a budget started without a last day runs until further notice" do
+    answer = ask_assistant("start_budget", starts_on: Date.current.to_s)
+
+    assert_includes answer, "runs until further notice"
+  end
+
+  test "the assistant starts a budget that ends on the day it named" do
+    starts_on = Date.current
+    ends_on = starts_on + 2.months
+
+    answer = ask_assistant("start_budget", starts_on: starts_on.to_s, ends_on: ends_on.to_s)
+
+    assert_equal ends_on, Budget.find_by(starts_at: starts_on.beginning_of_day).ends_at.to_date
+    assert_includes answer, "runs to #{ends_on}"
+  end
+
+  test "the assistant is told when the day it gave to end on cannot be read" do
+    answer = assert_no_difference("Budget.count") do
+      ask_assistant("start_budget", starts_on: Date.current.to_s, ends_on: "whenever")
+    end
+
+    assert_includes answer, "Could not read"
+  end
+
+  test "the assistant is told when the budget it wants to change cannot be found" do
+    answer = ask_assistant("set_budget_amount", budget_id: 0, category_id: categories(:groceries).id, amount: 10)
+
+    assert_includes answer, "No budget"
+  end
+
+  test "the assistant is told when the category it wants to plan for cannot be found" do
+    answer = ask_assistant("set_budget_amount", budget_id: budgets(:active_budget).id, category_id: 0, amount: 10)
+
+    assert_includes answer, "No category"
+  end
+
   test "the assistant may not start a budget on a day that has passed" do
     finished = budgets(:past_budget)
     ended_on = finished.ends_at
