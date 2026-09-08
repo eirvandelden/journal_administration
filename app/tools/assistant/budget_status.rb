@@ -12,12 +12,19 @@ module Assistant
     )
 
     def self.call(server_context:, start_date: nil, end_date: nil)
+      return problem(half_a_period) if [ start_date, end_date ].select(&:present?).one?
+
       unless period(start_date, end_date)
         return problem("Could not read #{start_date} to #{end_date} as a period. Write dates as 2026-08-01.")
       end
 
       report(Dashboard.new(start_date: start_date, end_date: end_date))
     end
+
+    def self.half_a_period
+      "Give both days of the period, or neither for the current month. Write days as 2026-08-01."
+    end
+    private_class_method :half_a_period
 
     # An unreadable date must not quietly become the current month: the assistant would answer a
     # question nobody asked and have no way of noticing.
