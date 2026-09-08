@@ -3,6 +3,7 @@ require "test_helper"
 class ConfigurationTest < ActiveSupport::TestCase
   RUNNING_ENVIRONMENTS = %w[ development production ]
   SCHEMA_TASKS = %w[ db:migrate db:prepare ]
+  DATA_TASKS = %w[ data:migrate db:migrate:with_data ]
 
   test "the cache, background jobs and live updates each get a database of their own" do
     RUNNING_ENVIRONMENTS.each do |environment|
@@ -42,6 +43,15 @@ class ConfigurationTest < ActiveSupport::TestCase
     end
   end
 
+  test "the data migrations run through the task that writes the schema file afterwards" do
+    load_rake_tasks
+
+    SCHEMA_TASKS.each do |schema_task|
+      assert_equal [ "db:migrate:with_data" ], data_tasks_run_by(schema_task),
+        "#{schema_task} should leave the schema file describing a database the data migrations have run on"
+    end
+  end
+
   test "running the tests neither caches anything nor carries live updates" do
     assert_equal "test", Rails.application.config_for(:cable, env: "test")[:adapter]
     assert_nil Rails.application.config_for(:cache, env: "test")[:database]
@@ -60,5 +70,22 @@ class ConfigurationTest < ActiveSupport::TestCase
 
     def files_behind(task_name)
       Rake::Task[task_name].actions.filter_map { |action| action.source_location&.first }
+    end
+
+    # Runs only the step this app appends to a schema task, with the data tasks it could reach
+    # standing in for themselves, and reports which one it asked for.
+    def data_tasks_run_by(schema_task)
+      asked_for = []
+      standing_in = DATA_TASKS.index_with { |name| Rake::Task[name].actions.dup }
+
+      standing_in.each_key do |name|
+        Rake::Task[name].actions.replace([ proc { asked_for << name } ])
+        Rake::Task[name].reenable
+      end
+
+      Rake::Task[schema_task].actions.last.call
+      asked_for
+    ensure
+      standing_in.each { |name, actions| Rake::Task[name].actions.replace(actions) }
     end
 end
