@@ -4,32 +4,22 @@ Fill in the journal with all your transactions. Look at the dashboard to get a s
 
 ## Configuration
 
-To setup a whitelist of urls, define `ENV["HOSTS"]` as a comma separated list.
-Sending emails uses the `ENV["DEFAULT_HOST"]` variable
-For example, in a .env file:
+To setup a whitelist of urls, define `ENV["HOSTS"]` as a comma separated list. Sending emails uses the `ENV["DEFAULT_HOST"]` variable For example, in a .env file:
 
 ```
   HOSTS=foo.example.com, foo.example.test
   DEFAULT_HOST=foo.example.com
 ```
 
-Background jobs are picked up by a supervisor running inside the web server. That
-is on by default in development. Set `SOLID_QUEUE_IN_PUMA=false` to leave them to
-a separate `bin/jobs` process instead.
+Background jobs are picked up by a supervisor running inside the web server. That is on by default in development. Set `SOLID_QUEUE_IN_PUMA=false` to leave them to a separate `bin/jobs` process instead.
 
 ## Letting an assistant help
 
-The app answers Model Context Protocol requests at `/mcp`, so Claude Code or Codex can read the
-books and file transactions for you. It answers only on the host named by `ASSISTANT_HOST`
-(`finances.home.arpa`), which keeps it on the home network.
+The app answers Model Context Protocol requests at `/mcp`, so Claude Code or Codex can read the books and file transactions for you. It answers only on the host named by `ASSISTANT_HOST` (`finances.home.arpa`), which keeps it on the home network.
 
-An assistant can read the categories, find the transactions that still need one and file them,
-search the accounts and teach the books to recognise a shop, list the budgets, and say how the
-budget for a period is doing category by category.
+An assistant can read the categories, find the transactions that still need one and file them, search the accounts and teach the books to recognise a shop, list the budgets, and say how the budget for a period is doing category by category.
 
-It can also change the plan: set what a category may cost per month, and start a new budget, which
-can only start today or later. A budget that has already finished is off limits to an assistant —
-correct one of those on the budgets page instead.
+It can also change the plan: set what a category may cost per month, and start a new budget, which can only start today or later. A budget that has already finished is off limits to an assistant — correct one of those on the budgets page instead.
 
 Each user has their own token. Read yours with `bin/kamal console`:
 
@@ -48,13 +38,9 @@ claude mcp add --transport http journal http://finances.home.arpa/mcp \
 
 ## Things todo when going to production
 
-Nothing by hand. `bin/start-app` runs `db:prepare` on every boot, so the extra
-databases holding the cache, the job queue and live updates are created on the
-first deploy that needs them.
+Nothing by hand. `bin/start-app` runs `db:prepare` on every boot, so the extra databases holding the cache, the job queue and live updates are created on the first deploy that needs them.
 
-Do check the volume. All four SQLite files live under `storage/db/`, which
-`config/deploy.yml` mounts as persistent storage — without that mount every
-deploy starts from an empty database.
+Do check the volume. All four SQLite files live under `storage/db/`, which `config/deploy.yml` mounts as persistent storage — without that mount every deploy starts from an empty database.
 
 ## Releasing
 
