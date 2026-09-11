@@ -195,6 +195,12 @@ class AssistantTest < ActionDispatch::IntegrationTest
     assert_includes answer, "No budget covers 2001-01-01 to 2001-01-30"
   end
 
+  test "the assistant asking about a period that ends before it starts is refused" do
+    answer = ask_assistant("budget_status", start_date: "2026-09-30", end_date: "2026-09-01")
+
+    assert_includes answer, "cannot end before it starts"
+  end
+
   test "the assistant giving one day of a period is asked for both" do
     answer = ask_assistant("budget_status", start_date: Date.current.to_s)
 
