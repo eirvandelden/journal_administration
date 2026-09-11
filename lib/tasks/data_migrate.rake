@@ -3,6 +3,11 @@
 # runs `db:prepare`) and everyday `db:migrate` both skip them. Both are taught to run them here,
 # rather than in every script that migrates.
 #
+# That gem task does the running, rather than the bare `data:migrate`, because of the order it
+# works in: it migrates first and writes `db/schema.rb` afterwards, so the schema file describes a
+# database the data migrations have run on. Migrating and dumping before them records a database
+# without the `data_migrations` table and quietly drops that table from the file.
+#
 # A database built from `db/schema.rb` has recorded the schema version but no data version, so it
 # would replay fixes to data that no longer exists — and some of those cannot run against an empty
 # database. Such a database adopts the recorded data version first, the way loading the schema
@@ -11,6 +16,6 @@
   Rake::Task[schema_task].enhance do
     load Rails.root.join("db/data_schema.rb") if DataMigrate::DataMigrator.current_version.zero?
 
-    Rake::Task["data:migrate"].invoke
+    Rake::Task["db:migrate:with_data"].invoke
   end
 end
