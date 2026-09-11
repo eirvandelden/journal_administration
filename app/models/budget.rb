@@ -4,6 +4,8 @@
 # creating or updating a budget automatically closes the predecessor.
 class Budget < ApplicationRecord
   belongs_to :closed_by_budget, class_name: "Budget", optional: true
+  has_one :closed_predecessor, class_name: "Budget", foreign_key: "closed_by_budget_id",
+    inverse_of: :closed_by_budget, dependent: nil
 
   has_many :budget_categories, dependent: :destroy
   has_many :categories, through: :budget_categories
@@ -36,6 +38,22 @@ class Budget < ApplicationRecord
 
   # @return [Boolean]
   def past? = ends_at.present? && ends_at <= Time.current
+
+  # Plans what a category may cost per month, replacing whatever was planned for it before.
+  #
+  # A refused allocation is not left behind on the budget: built through the association, it would
+  # stay in the collection and make every later save of the budget fail on its behalf.
+  #
+  # @param category [Category] The category to plan for
+  # @param amount [Numeric] What it may cost per month
+  # @return [BudgetCategory] The allocation, carrying its errors when it could not be saved
+  def plan(category:, amount:)
+    allocation = BudgetCategory.find_or_initialize_by(budget: self, category: category)
+    allocation.amount = amount
+    allocation.save
+
+    allocation
+  end
 
   # Returns suggested budget amounts per parent category based on 36-month historical averages.
   #

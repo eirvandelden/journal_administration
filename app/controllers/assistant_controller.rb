@@ -63,7 +63,9 @@ class AssistantController < ActionController::API
       Assistant::FindUncategorizedTransactions,
       Assistant::ListBudgets,
       Assistant::ListCategories,
-      Assistant::SetTransactionCategory
+      Assistant::SetBudgetAmount,
+      Assistant::SetTransactionCategory,
+      Assistant::StartBudget
     ]
   end
 end
