@@ -36,11 +36,6 @@ module Assistant
     end
     private_class_method :unreadable
 
-    def self.backwards(first_day, last_day)
-      "A period cannot end before it starts, and #{last_day} comes before #{first_day}."
-    end
-    private_class_method :backwards
-
     def self.report(dashboard)
       return answer("No budget covers #{covering(dashboard)}.") if dashboard.active_budget.nil?
 

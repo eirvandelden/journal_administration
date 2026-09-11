@@ -21,6 +21,7 @@ module Assistant
       if ends_on.present?
         last_day = day(ends_on)
         return problem(unreadable(ends_on)) if last_day.nil?
+        return problem(backwards(first_day, last_day)) if last_day < first_day
       end
 
       blocked_by = Budget.starting_after(first_day).first if last_day.nil?
