@@ -81,6 +81,17 @@ class AssistantTest < ActionDispatch::IntegrationTest
     assert_includes answer, "runs to #{ends_on}"
   end
 
+  test "the assistant is asked for a last day when another budget starts later" do
+    later = Budget.create!(starts_at: Date.current + 2.months)
+
+    answer = assert_no_difference("Budget.count") do
+      ask_assistant("start_budget", starts_on: Date.current.to_s)
+    end
+
+    assert_includes answer, "needs a last day"
+    assert_includes answer, "##{later.id}"
+  end
+
   test "the assistant is told when the day it gave to end on cannot be read" do
     answer = assert_no_difference("Budget.count") do
       ask_assistant("start_budget", starts_on: Date.current.to_s, ends_on: "whenever")
