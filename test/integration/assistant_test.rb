@@ -124,6 +124,14 @@ class AssistantTest < ActionDispatch::IntegrationTest
     assert_includes answer, "has already been taken"
   end
 
+  test "the assistant hedging about the day it means is refused rather than taken literally" do
+    answer = assert_no_difference("Budget.count") do
+      ask_assistant("start_budget", starts_on: "#{Date.current} or next Monday")
+    end
+
+    assert_includes answer, "Could not read"
+  end
+
   test "the assistant is told when the day it gave to start from cannot be read" do
     answer = assert_no_difference("Budget.count") do
       ask_assistant("start_budget", starts_on: "next Monday")

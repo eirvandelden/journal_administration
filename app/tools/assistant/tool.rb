@@ -12,9 +12,14 @@ module Assistant
     private_class_method :problem
 
     # Read a day strictly rather than leniently: Date.parse turns "next Monday" into a real day,
-    # so loose phrasing would quietly become a period, or a budget, nobody named.
+    # so loose phrasing would quietly become a period, or a budget, nobody named. The whole text
+    # has to be the day, because reading only the front of it accepts "2026-09-08 or next Monday"
+    # and silently drops the half that says the assistant was unsure.
     def self.day(text)
-      Date.strptime(text.to_s, "%Y-%m-%d")
+      written = text.to_s.strip
+      read = Date.strptime(written, "%Y-%m-%d")
+
+      read if read.strftime("%Y-%m-%d") == written
     rescue Date::Error
       nil
     end
