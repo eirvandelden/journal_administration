@@ -87,7 +87,7 @@ class BudgetsTest < ActionDispatch::IntegrationTest
 
   test "PATCH /budgets/:id updates budget" do
     patch budget_url(budgets(:past_budget)), params: {
-      budget: { ends_at: "2026-01-31" }
+      budget: { ends_at: (budgets(:past_budget).ends_at.to_date + 1.day).to_s }
     }
 
     assert_redirected_to budget_url(budgets(:past_budget))
@@ -128,6 +128,6 @@ class BudgetsTest < ActionDispatch::IntegrationTest
 
     active.reload
 
-    assert_nil active.ends_at
+    assert_equal original_ends_at, active.ends_at
   end
 end

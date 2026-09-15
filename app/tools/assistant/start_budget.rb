@@ -2,8 +2,8 @@
 module Assistant
   class StartBudget < Tool
     description "Start a budget running from a day, and optionally until another day. It can only " \
-      "start today or later. Starting one closes whichever budget was running, the day before the " \
-      "new one starts."
+      "start today or later, and needs a last day when another budget starts later than it. " \
+      "Starting one closes whichever budget was running, the day before the new one starts."
     annotations destructive_hint: true
     input_schema(
       properties: {
@@ -21,10 +21,23 @@ module Assistant
       if ends_on.present?
         last_day = day(ends_on)
         return problem(unreadable(ends_on)) if last_day.nil?
+        return problem(backwards(first_day, last_day)) if last_day < first_day
       end
+
+      blocked_by = Budget.starting_after(first_day).first if last_day.nil?
+      return problem(needs_a_last_day(blocked_by)) if blocked_by
 
       start(first_day, last_day)
     end
+
+    # A budget running until further notice cannot overlap one that starts later, and the model
+    # says so in words written for a person filling in a form: "End date must have an end date".
+    # An assistant reading that has no way to know it must name a last day, so it is told here.
+    def self.needs_a_last_day(blocked_by)
+      "Budget ##{blocked_by.id} starts on #{blocked_by.starts_at.to_date}, so this one needs a " \
+        "last day before then. Give ends_on."
+    end
+    private_class_method :needs_a_last_day
 
     # Starting a budget on a day gone by closes whatever was running then, and a budget that has
     # already finished is closed with its validations skipped. A person correcting the record on
