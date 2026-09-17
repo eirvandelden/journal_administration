@@ -29,6 +29,7 @@ class Budget < ApplicationRecord
   scope :future, -> { where("starts_at > ?", Time.current) }
   scope :past,   -> { where("ends_at IS NOT NULL AND ends_at <= ?", Time.current) }
   scope :chronological, -> { order(starts_at: :asc) }
+  scope :starting_after, ->(day) { where("starts_at > ?", day.in_time_zone.end_of_day).chronological }
 
   # @return [Boolean]
   def active? = starts_at <= Time.current && (ends_at.nil? || ends_at > Time.current)

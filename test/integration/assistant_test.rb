@@ -31,10 +31,15 @@ class AssistantTest < ActionDispatch::IntegrationTest
   end
 
   test "the assistant lists the budgets and when each one runs" do
+    running = budgets(:active_budget)
+    finished = budgets(:past_budget)
+
     answer = ask_assistant("list_budgets")
 
-    assert_includes answer, "#{budgets(:active_budget).id}: 2026-03-01 onwards, running now, 2 categories planned"
-    assert_includes answer, "#{budgets(:past_budget).id}: 2026-01-01 to 2026-01-31, finished, nothing planned"
+    assert_includes answer, "#{running.id}: #{running.starts_at.to_date} to #{running.ends_at.to_date}, " \
+      "running now, 2 categories planned"
+    assert_includes answer, "#{finished.id}: #{finished.starts_at.to_date} to #{finished.ends_at.to_date}, " \
+      "finished, nothing planned"
   end
 
   test "the assistant changes what a category may cost" do
@@ -48,13 +53,14 @@ class AssistantTest < ActionDispatch::IntegrationTest
   end
 
   test "the assistant starts a budget and says which one that closed" do
-    starts_on = Date.current.to_s
+    starts_on = Date.current
+    ends_on = budgets(:future_budget).starts_at.to_date - 1.day
 
-    answer = ask_assistant("start_budget", starts_on: starts_on)
+    answer = ask_assistant("start_budget", starts_on: starts_on.to_s, ends_on: ends_on.to_s)
 
-    assert Budget.exists?(starts_at: Date.current.beginning_of_day)
+    assert Budget.exists?(starts_at: starts_on.beginning_of_day)
     assert_includes answer, "starts #{starts_on}"
-    assert_includes answer, "closed budget ##{budgets(:future_budget).id}"
+    assert_includes answer, "closed budget ##{budgets(:active_budget).id}"
   end
 
   test "starting a budget warns a client that it changes what other budgets cover" do
@@ -65,20 +71,33 @@ class AssistantTest < ActionDispatch::IntegrationTest
     assert listed.dig("annotations", "destructiveHint"), "start_budget should say it changes things"
   end
 
-  test "a budget started without a last day runs until further notice" do
-    answer = ask_assistant("start_budget", starts_on: Date.current.to_s)
+  test "a budget started after every other one runs until further notice" do
+    starts_on = budgets(:future_budget).starts_at.to_date + 1.month
+
+    answer = ask_assistant("start_budget", starts_on: starts_on.to_s)
 
     assert_includes answer, "runs until further notice"
   end
 
   test "the assistant starts a budget that ends on the day it named" do
     starts_on = Date.current
-    ends_on = starts_on + 2.months
+    ends_on = starts_on + 2.weeks
 
     answer = ask_assistant("start_budget", starts_on: starts_on.to_s, ends_on: ends_on.to_s)
 
     assert_equal ends_on, Budget.find_by(starts_at: starts_on.beginning_of_day).ends_at.to_date
     assert_includes answer, "runs to #{ends_on}"
+  end
+
+  test "the assistant is asked for a last day when another budget starts later" do
+    later = budgets(:future_budget)
+
+    answer = assert_no_difference("Budget.count") do
+      ask_assistant("start_budget", starts_on: Date.current.to_s)
+    end
+
+    assert_includes answer, "needs a last day"
+    assert_includes answer, "##{later.id}"
   end
 
   test "the assistant is told when the day it gave to end on cannot be read" do
@@ -102,26 +121,59 @@ class AssistantTest < ActionDispatch::IntegrationTest
   end
 
   test "the assistant may not start a budget on a day that has passed" do
-    finished = budgets(:past_budget)
-    ended_on = finished.ends_at
+    yesterday = Date.yesterday
 
     answer = assert_no_difference("Budget.count") do
-      ask_assistant("start_budget", starts_on: "2026-01-15", ends_on: "2026-01-20")
+      ask_assistant("start_budget", starts_on: yesterday.to_s)
     end
 
-    assert_includes answer, "has passed"
-    assert_equal ended_on, finished.reload.ends_at
+    assert_includes answer, "#{yesterday} has passed"
+  end
+
+  test "the assistant is refused a budget that ends before it starts" do
+    starts_on = Date.current
+
+    answer = assert_no_difference("Budget.count") do
+      ask_assistant("start_budget", starts_on: starts_on.to_s, ends_on: (starts_on - 1.day).to_s)
+    end
+
+    assert_includes answer, "cannot end before it starts"
+  end
+
+  test "the assistant may not plan nothing at all for a category" do
+    budget = budgets(:active_budget)
+
+    answer = ask_assistant("set_budget_amount",
+      budget_id: budget.id, category_id: categories(:housing).id, amount: 0)
+
+    assert_nil planned_for(budget, :housing)
+    assert_includes answer, "must be greater than 0"
+  end
+
+  test "the assistant plans for a budget that has not started yet" do
+    budget = budgets(:future_budget)
+
+    ask_assistant("set_budget_amount", budget_id: budget.id, category_id: categories(:groceries).id, amount: 120)
+
+    assert_equal 120, planned_for(budget, :groceries)
   end
 
   test "the assistant cannot start a second budget on a day one already starts" do
-    taken = Date.current + 1.month
-    Budget.create!(starts_at: taken)
+    taken = budgets(:future_budget).starts_at.to_date
 
     answer = assert_no_difference("Budget.count") do
-      ask_assistant("start_budget", starts_on: taken.to_s)
+      ask_assistant("start_budget", starts_on: taken.to_s, ends_on: (taken + 10.days).to_s)
     end
 
     assert_includes answer, "has already been taken"
+  end
+
+  test "the assistant hedging about the day it means is refused rather than taken literally" do
+    answer = assert_no_difference("Budget.count") do
+      ask_assistant("start_budget", starts_on: "#{Date.current} or next Monday")
+    end
+
+    assert_includes answer, "Could not read"
   end
 
   test "the assistant is told when the day it gave to start from cannot be read" do
@@ -185,6 +237,12 @@ class AssistantTest < ActionDispatch::IntegrationTest
     answer = ask_assistant("budget_status", start_date: "2001-01-01", end_date: "2001-01-30")
 
     assert_includes answer, "No budget covers 2001-01-01 to 2001-01-30"
+  end
+
+  test "the assistant asking about a period that ends before it starts is refused" do
+    answer = ask_assistant("budget_status", start_date: "2026-09-30", end_date: "2026-09-01")
+
+    assert_includes answer, "cannot end before it starts"
   end
 
   test "the assistant giving one day of a period is asked for both" do
