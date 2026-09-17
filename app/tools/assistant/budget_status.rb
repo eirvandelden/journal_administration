@@ -13,12 +13,17 @@ module Assistant
 
     def self.call(server_context:, start_date: nil, end_date: nil)
       return problem(half_a_period) if [ start_date, end_date ].select(&:present?).one?
+      return report(Dashboard.new) if start_date.blank? && end_date.blank?
 
-      unless period(start_date, end_date)
-        return problem("Could not read #{start_date} to #{end_date} as a period. Write dates as 2026-08-01.")
-      end
+      first_day = day(start_date)
+      last_day = day(end_date)
 
-      report(Dashboard.new(start_date: start_date, end_date: end_date))
+      # An unreadable day must not quietly become the current month: the assistant would answer a
+      # question nobody asked and have no way of noticing.
+      return problem(unreadable(start_date, end_date)) if first_day.nil? || last_day.nil?
+      return problem(backwards(first_day, last_day)) if last_day < first_day
+
+      report(Dashboard.new(start_date: first_day, end_date: last_day))
     end
 
     def self.half_a_period
@@ -26,15 +31,10 @@ module Assistant
     end
     private_class_method :half_a_period
 
-    # An unreadable date must not quietly become the current month: the assistant would answer a
-    # question nobody asked and have no way of noticing.
-    def self.period(start_date, end_date)
-      return DateRange.from_filter(nil) if start_date.blank? && end_date.blank?
-      return nil unless day(start_date) && day(end_date)
-
-      DateRange.from_dates(start_date, end_date)
+    def self.unreadable(start_date, end_date)
+      "Could not read #{start_date} to #{end_date} as a period. Write days as 2026-08-01."
     end
-    private_class_method :period
+    private_class_method :unreadable
 
     def self.report(dashboard)
       return answer("No budget covers #{covering(dashboard)}.") if dashboard.active_budget.nil?

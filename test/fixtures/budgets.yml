@@ -1,11 +1,13 @@
-active_budget:
-  starts_at: 2026-03-01 00:00:00
-  ends_at:
-
+# Dated relative to today so each name stays true: a budget fixed to a calendar day drifts into
+# the past and quietly starts standing for something else.
 past_budget:
-  starts_at: 2026-01-01 00:00:00
-  ends_at: 2026-01-31 23:59:59
+  starts_at: <%= 3.months.ago.beginning_of_day.to_fs(:db) %>
+  ends_at: <%= 2.months.ago.end_of_day.to_fs(:db) %>
+
+active_budget:
+  starts_at: <%= 1.month.ago.beginning_of_day.to_fs(:db) %>
+  ends_at: <%= (1.month.from_now.beginning_of_day - 1.day).end_of_day.to_fs(:db) %>
 
 future_budget:
-  starts_at: 2026-04-01 00:00:00
+  starts_at: <%= 1.month.from_now.beginning_of_day.to_fs(:db) %>
   ends_at:
