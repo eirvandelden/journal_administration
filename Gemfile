@@ -35,7 +35,6 @@ gem "stimulus-rails"
 gem "turbo-rails" # Turbo makes navigating your web application faster.
 
 # Other
-gem "json", "< 3.0" # 3.x changed JSON.parse's arity and breaks ActiveSupport::JSON.decode
 gem "bcrypt", "~> 3.1"
 gem "bootsnap", require: false    # Reduces boot times through caching; required in config/boot.rb
 gem "bundler-audit"
