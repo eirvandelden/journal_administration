@@ -243,6 +243,9 @@ en:
   appropriations:
     balance:
       overspent: Overspent
+    charge_form:
+      charge: Charge
+      remove: Remove charge
     create:
       success: "✅ Appropriation was set."
     destroy:
@@ -756,6 +759,11 @@ en:
       title: Suggested transfers
     unlink: Unlink
   transaction_splits:
+    appropriation_charges:
+      destroy:
+        success: "✅ Charge removed from the part."
+      update:
+        success: "✅ Part charged to the appropriation."
     create:
       success: "✅ Split added."
     destroy:
@@ -773,6 +781,13 @@ en:
     update:
       success: "✅ Split updated."
   transactions:
+    appropriation:
+      not_charged: Not charged to an appropriation
+    appropriation_charges:
+      destroy:
+        success: "✅ Charge removed."
+      update:
+        success: "✅ Charged to the appropriation."
     create:
       success: "✅ Transaction was successfully created."
     destroy:

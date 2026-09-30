@@ -243,6 +243,9 @@ nl:
   appropriations:
     balance:
       overspent: Overschreden
+    charge_form:
+      charge: Boeken
+      remove: Boeking weghalen
     create:
       success: "✅ Begrotingspost vastgelegd."
     destroy:
@@ -756,6 +759,11 @@ nl:
       title: Voorgestelde overboekingen
     unlink: Ontkoppelen
   transaction_splits:
+    appropriation_charges:
+      destroy:
+        success: "✅ Boeking van het deel weggehaald."
+      update:
+        success: "✅ Deel op de begrotingspost geboekt."
     create:
       success: "✅ Splitsing toegevoegd."
     destroy:
@@ -773,6 +781,13 @@ nl:
     update:
       success: "✅ Splitsing bijgewerkt."
   transactions:
+    appropriation:
+      not_charged: Niet op een begrotingspost geboekt
+    appropriation_charges:
+      destroy:
+        success: "✅ Boeking weggehaald."
+      update:
+        success: "✅ Op de begrotingspost geboekt."
     create:
       success: "✅ Transactie succesvol aangemaakt."
     destroy:
