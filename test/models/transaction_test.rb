@@ -459,3 +459,52 @@ class TransactionSplittableTest < ActiveSupport::TestCase
     end
   end
 end
+
+class TransactionChargingTest < ActiveSupport::TestCase
+  setup do
+    @appropriation = appropriations(:birthday_etienne)
+  end
+
+  test "a transfer cannot be charged" do
+    assert_not transactions(:transfer_savings).update(appropriation: @appropriation)
+  end
+
+  test "a split transaction cannot be charged as a whole" do
+    payment = transactions(:gift_payment)
+    payment.transaction_splits.create!(amount: 10, category: categories(:gifts))
+
+    assert_not payment.update(appropriation: @appropriation)
+  end
+
+  test "a charged transaction cannot become a transfer" do
+    payment = payment_between_our_own_accounts(appropriation: @appropriation)
+
+    assert_not payment.update(type: "Transfer")
+  end
+
+  test "a transaction with charged parts cannot become a transfer" do
+    payment = payment_between_our_own_accounts
+    payment.transaction_splits.create!(amount: 10, appropriation: @appropriation)
+
+    assert_not payment.update(type: "Transfer")
+  end
+
+  test "#charged? when whole or any part is charged" do
+    charged_part = payment_between_our_own_accounts
+    charged_part.transaction_splits.create!(amount: 10, appropriation: @appropriation)
+
+    assert_not payment_between_our_own_accounts.charged?
+    assert_predicate payment_between_our_own_accounts(appropriation: @appropriation), :charged?
+    assert_predicate charged_part, :charged?
+  end
+
+  private
+
+  # Booked as a Debit although both accounts are ours, so only the charge can stop it becoming a Transfer.
+  def payment_between_our_own_accounts(appropriation: nil)
+    Transaction.create!(
+      type: "Debit", debitor: accounts(:checking), creditor: accounts(:savings), amount: 40,
+      booked_at: Time.current, interest_at: Time.current, appropriation:
+    )
+  end
+end

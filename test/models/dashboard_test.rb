@@ -263,5 +263,16 @@ class DashboardTest < ActiveSupport::TestCase
 
       assert_equal 60, dashboard.budget_actuals[categories(:groceries)]
     end
+
+    test "charging a payment leaves its category and what it counts in the monthly budget unchanged" do
+      payment = transactions(:gift_payment)
+
+      payment.update!(appropriation: appropriations(:birthday_etienne))
+
+      dashboard = Dashboard.new(start_date: "2026-11-20", end_date: "2026-11-20")
+
+      assert_equal categories(:gifts), payment.reload.category
+      assert_equal 40, dashboard.budget_actuals[categories(:gifts)]
+    end
   end
 end
