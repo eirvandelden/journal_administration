@@ -51,6 +51,11 @@ nl:
         iban: IBAN
         name: Naam
         number: Nummer
+      appropriation:
+        amount: Begroot bedrag
+        budget_year: Begrotingsjaar
+        purpose: Doel
+        recipient: Ontvanger
       budget:
         ends_at: Einddatum
         starts_at: Startdatum
@@ -104,6 +109,10 @@ nl:
               must_be_external: moet bij een externe rekening horen
             pattern:
               invalid_like_characters: mag geen %% of _ tekens bevatten
+        appropriation:
+          attributes:
+            purpose:
+              already_appropriated: heeft al een begrotingspost voor deze ontvanger en dit begrotingsjaar
         budget:
           attributes:
             ends_at:
@@ -141,6 +150,9 @@ nl:
               must_not_be_transfer: mag geen overboeking zijn
     models:
       account: Rekening
+      appropriation:
+        one: Begrotingspost
+        other: Begrotingsposten
       category: Categorie
       chattel: Bezitting
       product:

@@ -51,6 +51,11 @@ it:
         iban: IBAN
         name: Nome
         number: Numero
+      appropriation:
+        amount: Importo stanziato
+        budget_year: Anno di bilancio
+        purpose: Scopo
+        recipient: Destinatario
       budget:
         ends_at: Data di fine
         starts_at: Data di inizio
@@ -104,6 +109,10 @@ it:
               must_be_external: deve appartenere a un conto esterno
             pattern:
               invalid_like_characters: non deve contenere i caratteri %% o _
+        appropriation:
+          attributes:
+            purpose:
+              already_appropriated: ha già uno stanziamento per questo destinatario e anno di bilancio
         budget:
           attributes:
             ends_at:
@@ -141,6 +150,9 @@ it:
               must_not_be_transfer: non deve essere una transazione di trasferimento
     models:
       account: Conto
+      appropriation:
+        one: Stanziamento
+        other: Stanziamenti
       category: Categoria
       chattel: Bene
       product:

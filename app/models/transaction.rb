@@ -5,6 +5,7 @@
 class Transaction < ApplicationRecord
   include Accountable
   include Categorizable
+  include Chargeable
   include Importable
   include Linkable
   include Searchable

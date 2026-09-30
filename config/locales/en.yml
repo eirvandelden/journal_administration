@@ -51,6 +51,11 @@ en:
         iban: IBAN
         name: Name
         number: Number
+      appropriation:
+        amount: Amount appropriated
+        budget_year: Budget year
+        purpose: Purpose
+        recipient: Recipient
       budget:
         ends_at: End date
         starts_at: Start date
@@ -104,6 +109,10 @@ en:
               must_be_external: must belong to an external account
             pattern:
               invalid_like_characters: must not contain %% or _ characters
+        appropriation:
+          attributes:
+            purpose:
+              already_appropriated: already has an appropriation for this recipient and budget year
         budget:
           attributes:
             ends_at:
@@ -141,6 +150,9 @@ en:
               must_not_be_transfer: must not be a Transfer transaction
     models:
       account: Account
+      appropriation:
+        one: Appropriation
+        other: Appropriations
       category: Category
       chattel: Chattel
       product:
