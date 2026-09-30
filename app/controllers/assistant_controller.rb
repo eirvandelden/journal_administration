@@ -64,6 +64,7 @@ class AssistantController < ActionController::API
       Assistant::ListAppropriations,
       Assistant::ListBudgets,
       Assistant::ListCategories,
+      Assistant::SetAppropriation,
       Assistant::SetBudgetAmount,
       Assistant::SetTransactionCategory,
       Assistant::StartBudget
