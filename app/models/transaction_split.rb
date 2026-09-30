@@ -4,8 +4,12 @@
 # categories. Each split must have a positive amount, and the total of all
 # splits for a transaction must not exceed the transaction's amount.
 class TransactionSplit < ApplicationRecord
+  include Chargeable
+
   belongs_to :financial_transaction, class_name: "Transaction", foreign_key: :transaction_id
   belongs_to :category, optional: true
+
+  delegate :booked_at, to: :financial_transaction
 
   validates :amount, presence: true, numericality: { greater_than: 0 }
   validate :amount_does_not_exceed_balance
