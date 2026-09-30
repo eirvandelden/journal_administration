@@ -84,6 +84,16 @@ class AppropriationsTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "a year that is not a number shows this year's appropriations" do
+    travel_to Date.new(2026, 6, 15) do
+      [ "", "next" ].each do |year|
+        get appropriations_path(year:)
+
+        assert_appropriation_row "Christmas", "Serena", 50, 0, 50
+      end
+    end
+  end
+
   test "an appropriation lists the payments and split parts charged to it" do
     appropriation = appropriations(:sinterklaas_chiara)
     part = transactions(:webshop_sinterklaas).transaction_splits.create!(

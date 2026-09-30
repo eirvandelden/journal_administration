@@ -8,7 +8,7 @@ class AppropriationsController < ApplicationController
   # @route /appropriations
   # @return [void]
   def index
-    @year = params.fetch(:year, Date.current.year).to_i
+    @year = chosen_year
     @appropriations = Appropriation.of_year(@year).order(:purpose, :recipient)
   end
 
@@ -82,6 +82,9 @@ class AppropriationsController < ApplicationController
   def set_appropriation
     @appropriation = Appropriation.find(params[:id])
   end
+
+  # The budget year asked for, or this year when none or no number was given
+  def chosen_year = Integer(params[:year], exception: false) || Date.current.year
 
   # The fields a person may set on an appropriation
   def appropriation_params
