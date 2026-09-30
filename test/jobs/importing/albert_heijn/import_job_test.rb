@@ -79,6 +79,24 @@ class Importing::AlbertHeijn::ImportJobTest < ActiveJob::TestCase
     assert_equal BigDecimal("2.49"), receipt.payment.reload.explicit_transaction_splits.sum(:amount)
   end
 
+  test "re-importing a charged payment's packing slip keeps its splits and charges" do
+    Importing::AlbertHeijn::ImportJob.perform_now(@slip)
+    receipt = Receipt.find_by(order_number: "100000001")
+    Product.find_by(name: "AH Broccoliroosjes").update!(brand: "AH", product_type: product_types(:naturel_chips))
+    receipt.update!(payment: big_enough_payment(receipt))
+    receipt.rewrite_payment_splits
+    part = receipt.payment.explicit_transaction_splits.first
+    part.update!(appropriation: appropriations(:birthday_etienne))
+
+    dearer = @slip.sub(" AH Broccoliroosjes \n\n 1 \n\n 1.49 \n\n 1.49 ",
+                       " AH Broccoliroosjes \n\n 1 \n\n 2.49 \n\n 2.49 ")
+    Importing::AlbertHeijn::ImportJob.perform_now(dearer)
+
+    assert_equal [ part ], receipt.payment.reload.explicit_transaction_splits.to_a
+    assert_equal BigDecimal("1.49"), part.reload.amount
+    assert_equal appropriations(:birthday_etienne), part.appropriation
+  end
+
   private
 
   def big_enough_payment(receipt)
