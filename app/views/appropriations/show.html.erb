@@ -34,7 +34,7 @@
       <tbody>
         <% charges.each do |charge| %>
           <tr>
-            <td><%= l(charge.booked_at.to_date) %></td>
+            <td><%= charge.booked_at ? l(charge.booked_at.to_date) : "-" %></td>
             <td><%= charge.note %></td>
             <td><%= number_to_currency(charge.amount) %></td>
           </tr>
