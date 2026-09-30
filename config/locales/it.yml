@@ -244,6 +244,9 @@ it:
   appropriations:
     balance:
       overspent: Superato
+    charge_form:
+      charge: Imputa
+      remove: Rimuovi imputazione
     create:
       success: "✅ Stanziamento impostato."
     destroy:
@@ -757,6 +760,11 @@ it:
       title: Trasferimenti suggeriti
     unlink: Scollega
   transaction_splits:
+    appropriation_charges:
+      destroy:
+        success: "✅ Imputazione della parte rimossa."
+      update:
+        success: "✅ Parte imputata allo stanziamento."
     create:
       success: "✅ Divisione aggiunta."
     destroy:
@@ -774,6 +782,13 @@ it:
     update:
       success: "✅ Divisione aggiornata."
   transactions:
+    appropriation:
+      not_charged: Non imputato a uno stanziamento
+    appropriation_charges:
+      destroy:
+        success: "✅ Imputazione rimossa."
+      update:
+        success: "✅ Imputato allo stanziamento."
     create:
       success: "✅ Transazione creata con successo."
     destroy:

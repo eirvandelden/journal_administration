@@ -34,9 +34,19 @@
     <dd>
       <ul>
         <% @transaction.explicit_transaction_splits.each do |split| %>
-          <li><%= split.category&.to_s %> — <%= number_to_currency(split.amount) %><%= " (#{split.note})" if split.note.present? %></li>
+          <li>
+            <%= split.category&.to_s %> — <%= number_to_currency(split.amount) %><%= " (#{split.note})" if split.note.present? %>
+            <%= render "transactions/appropriation", chargeable: split,
+                  url: transaction_transaction_split_appropriation_charge_path(@transaction, split) %>
+          </li>
         <% end %>
       </ul>
+    </dd>
+  <% elsif !@transaction.is_a?(Transfer) %>
+    <dt><%= Appropriation.model_name.human %></dt>
+    <dd>
+      <%= render "transactions/appropriation", chargeable: @transaction,
+            url: transaction_appropriation_charge_path(@transaction) %>
     </dd>
   <% end %>
 
