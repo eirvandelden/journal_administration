@@ -42,6 +42,7 @@ Rails.application.routes.draw do
   resources :budgets do
     resource :suggestion, only: %i[create update], module: :budgets
   end
+  resources :appropriations
   resources :categories
   resources :searches, only: [ :index ]
   get "dashboard/index"

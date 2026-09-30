@@ -114,6 +114,9 @@ en:
               invalid_like_characters: must not contain %% or _ characters
         appropriation:
           attributes:
+            base:
+              restrict_dependent_destroy:
+                has_many: This appropriation cannot be removed while payments are charged to it; remove those charges first
             purpose:
               already_appropriated: already has an appropriation for this recipient and budget year
         budget:
@@ -238,6 +241,39 @@ en:
         title: User Details
       update:
         success: "✅ User updated successfully"
+  appropriations:
+    balance:
+      overspent: Overspent
+    create:
+      success: "✅ Appropriation was set."
+    destroy:
+      success: "✅ Appropriation was removed."
+    edit:
+      title: Change appropriation
+    index:
+      balance: Left
+      charged: Charged
+      confirm_destroy: Remove this appropriation?
+      delete: Remove
+      edit: Change
+      empty: No appropriations for %{year} yet.
+      heading: Appropriations %{year}
+      new: "➕ New appropriation"
+      next_year: "%{year} →"
+      previous_year: "← %{year}"
+      total: Total
+    new:
+      title: "➕ New appropriation"
+    show:
+      amount: Amount
+      balance: Left
+      charged: Charged
+      date: Date
+      edit: Change
+      no_charges: Nothing is charged to this appropriation yet.
+      note: Note
+    update:
+      success: "✅ Appropriation was changed."
   balance:
     budget: Budget
     category_name: Category Name
@@ -507,6 +543,7 @@ en:
   main_nav:
     accounts: "🏦 %{model}"
     admin: "🥷 Admin"
+    appropriations: "🎁 %{model}"
     budgets: "💰 %{model}"
     categories: "🏷️ %{model}"
     chattels: "📦 %{model}"

@@ -13,6 +13,21 @@ class Appropriation < ApplicationRecord
 
   scope :of_year, ->(year) { where(budget_year: year) }
 
+  # Total appropriated over these appropriations
+  #
+  # @return [BigDecimal]
+  def self.total_amount = sum(:amount)
+
+  # Total charged over these appropriations
+  #
+  # @return [BigDecimal]
+  def self.total_charged = all.sum(&:charged)
+
+  # Total left over these appropriations
+  #
+  # @return [BigDecimal]
+  def self.total_balance = total_amount - total_charged
+
   # The name a person recognises it by, e.g. "Birthday Etienne 2026"
   #
   # @return [String]

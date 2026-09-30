@@ -114,6 +114,9 @@ it:
               invalid_like_characters: non deve contenere i caratteri %% o _
         appropriation:
           attributes:
+            base:
+              restrict_dependent_destroy:
+                has_many: Questo stanziamento non può essere rimosso finché vi sono pagamenti imputati; rimuovi prima quelle imputazioni
             purpose:
               already_appropriated: ha già uno stanziamento per questo destinatario e anno di bilancio
         budget:
@@ -238,6 +241,39 @@ it:
         title: Dettagli utente
       update:
         success: "✅ Utente aggiornato con successo"
+  appropriations:
+    balance:
+      overspent: Superato
+    create:
+      success: "✅ Stanziamento impostato."
+    destroy:
+      success: "✅ Stanziamento rimosso."
+    edit:
+      title: Modifica stanziamento
+    index:
+      balance: Residuo
+      charged: Imputato
+      confirm_destroy: Rimuovere questo stanziamento?
+      delete: Rimuovi
+      edit: Modifica
+      empty: Nessuno stanziamento per il %{year}.
+      heading: Stanziamenti %{year}
+      new: "➕ Nuovo stanziamento"
+      next_year: "%{year} →"
+      previous_year: "← %{year}"
+      total: Totale
+    new:
+      title: "➕ Nuovo stanziamento"
+    show:
+      amount: Importo
+      balance: Residuo
+      charged: Imputato
+      date: Data
+      edit: Modifica
+      no_charges: Nulla è ancora imputato a questo stanziamento.
+      note: Nota
+    update:
+      success: "✅ Stanziamento modificato."
   balance:
     budget: Budget
     category_name: Nome categoria
@@ -507,6 +543,7 @@ it:
   main_nav:
     accounts: "🏦 %{model}"
     admin: "🥷 Amministrazione"
+    appropriations: "🎁 %{model}"
     budgets: "💰 %{model}"
     categories: "🏷️ %{model}"
     chattels: "📦 %{model}"
