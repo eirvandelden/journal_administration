@@ -86,10 +86,13 @@ it:
       transaction:
         account: Conto
         amount: Importo
+        appropriation: Stanziamento
         category: Categoria
         date: Data
         description: Descrizione
         proof_of_purchase: Prova d'acquisto
+      transaction_split:
+        appropriation: Stanziamento
     errors:
       messages:
         must_be_pdf: deve essere un documento PDF
@@ -135,6 +138,11 @@ it:
           attributes:
             amount:
               must_cover_splits: deve coprire il totale delle suddivisioni esplicite
+            appropriation:
+              charge_parts_instead: non può coprire un pagamento suddiviso per intero; imputa invece le sue parti
+              must_not_be_transfer: non può essere imputato a un trasferimento
+            type:
+              has_charged_parts: non può diventare un trasferimento finché le sue parti sono imputate a uno stanziamento
         transaction_link:
           attributes:
             source:
@@ -145,7 +153,10 @@ it:
           attributes:
             amount:
               exceeds_transaction: supera l'importo residuo della transazione
+            appropriation:
+              remainder: non può essere imputato al residuo; rendilo prima una parte esplicita
             financial_transaction:
+              charged_as_a_whole: è imputata per intero a uno stanziamento; rimuovi prima quell'imputazione
               must_not_be_transfer: non deve essere una transazione di trasferimento
     models:
       account: Conto

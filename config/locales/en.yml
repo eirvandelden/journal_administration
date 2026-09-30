@@ -86,10 +86,13 @@ en:
       transaction:
         account: Account
         amount: Amount
+        appropriation: Appropriation
         category: Category
         date: Date
         description: Description
         proof_of_purchase: Proof of purchase
+      transaction_split:
+        appropriation: Appropriation
     errors:
       messages:
         must_be_pdf: must be a PDF document
@@ -135,6 +138,11 @@ en:
           attributes:
             amount:
               must_cover_splits: must cover the total of the explicit splits
+            appropriation:
+              charge_parts_instead: cannot take a split payment as a whole; charge its parts instead
+              must_not_be_transfer: cannot be charged on a Transfer transaction
+            type:
+              has_charged_parts: cannot become Transfer while its parts are charged to an appropriation
         transaction_link:
           attributes:
             source:
@@ -145,7 +153,10 @@ en:
           attributes:
             amount:
               exceeds_transaction: exceeds the remaining transaction amount
+            appropriation:
+              remainder: cannot be charged on the remainder; make it an explicit part first
             financial_transaction:
+              charged_as_a_whole: is charged to an appropriation as a whole; remove that charge first
               must_not_be_transfer: must not be a Transfer transaction
     models:
       account: Account

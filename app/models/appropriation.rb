@@ -42,17 +42,20 @@ class Appropriation < ApplicationRecord
 
   private
 
+  # Refuses a second appropriation for the same purpose, recipient and year, ignoring letter case
   def one_per_purpose_recipient_and_year
     return unless namesake.exists?
 
     errors.add(:purpose, :already_appropriated)
   end
 
+  # Other appropriations with this purpose, recipient and year
   def namesake
     Appropriation.where.not(id:).where(budget_year:)
       .where("LOWER(purpose) = LOWER(?) AND LOWER(recipient) = LOWER(?)", purpose, recipient)
   end
 
+  # What is charged from payments of one type, whole or in parts
   def charged_on(type)
     transactions.unscope(:order).where(type:).sum(:amount) +
       transaction_splits.joins(:financial_transaction).where(transactions: { type: }).sum(:amount)
