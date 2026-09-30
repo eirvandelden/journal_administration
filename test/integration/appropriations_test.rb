@@ -94,6 +94,12 @@ class AppropriationsTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "the year page works out what is charged once per appropriation" do
+    reads = split_part_reads { get appropriations_path(year: 2026) }
+
+    assert_operator reads, :<=, 2 * Appropriation.of_year(2026).count
+  end
+
   test "an appropriation lists the payments and split parts charged to it" do
     appropriation = appropriations(:sinterklaas_chiara)
     part = transactions(:webshop_sinterklaas).transaction_splits.create!(
@@ -128,6 +134,14 @@ class AppropriationsTest < ActionDispatch::IntegrationTest
   end
 
   private
+
+  # How many queries read split parts while the block runs
+  def split_part_reads(&)
+    reads = 0
+    counter = ->(*, payload) { reads += 1 if payload[:sql].include?("transaction_splits") }
+    ActiveSupport::Notifications.subscribed(counter, "sql.active_record", &)
+    reads
+  end
 
   def new_appropriation(purpose: "Birthday", recipient: "Etienne", budget_year: 2026, amount: 150)
     { purpose:, recipient:, budget_year:, amount: }

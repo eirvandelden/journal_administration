@@ -16,21 +16,6 @@ class Appropriation < ApplicationRecord
     of_year(budget_year).where("LOWER(purpose) = LOWER(?) AND LOWER(recipient) = LOWER(?)", purpose, recipient)
   }
 
-  # Total appropriated over these appropriations
-  #
-  # @return [BigDecimal]
-  def self.total_amount = sum(:amount)
-
-  # Total charged over these appropriations
-  #
-  # @return [BigDecimal]
-  def self.total_charged = all.sum(&:charged)
-
-  # Total left over these appropriations
-  #
-  # @return [BigDecimal]
-  def self.total_balance = total_amount - total_charged
-
   # The name a person recognises it by, e.g. "Birthday Etienne 2026"
   #
   # @return [String]
@@ -39,7 +24,15 @@ class Appropriation < ApplicationRecord
   # Charged payments and split parts, minus charged refunds
   #
   # @return [BigDecimal]
-  def charged = charged_on("Debit") - charged_on("Credit")
+  def charged = @charged ||= charged_on("Debit") - charged_on("Credit")
+
+  # Reloads the record and forgets what was worked out as charged
+  #
+  # @return [Appropriation]
+  def reload(*)
+    @charged = nil
+    super
+  end
 
   # What is left of the amount appropriated; negative when overspent
   #
