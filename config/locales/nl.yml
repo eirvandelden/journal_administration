@@ -87,10 +87,13 @@ nl:
       transaction:
         account: Rekening
         amount: Bedrag
+        appropriation: Begrotingspost
         category: Categorie
         date: Datum
         description: Omschrijving
         proof_of_purchase: Aankoopbewijs
+      transaction_split:
+        appropriation: Begrotingspost
     errors:
       messages:
         must_be_pdf: moet een PDF-document zijn
@@ -136,6 +139,11 @@ nl:
           attributes:
             amount:
               must_cover_splits: moet het totaal van de expliciete splits dekken
+            appropriation:
+              charge_parts_instead: kan geen gesplitste betaling als geheel dragen; boek de delen afzonderlijk
+              must_not_be_transfer: kan niet op een overboeking worden geboekt
+            type:
+              has_charged_parts: kan geen overboeking worden zolang delen op een begrotingspost zijn geboekt
         transaction_link:
           attributes:
             source:
@@ -146,7 +154,10 @@ nl:
           attributes:
             amount:
               exceeds_transaction: overschrijdt het resterende transactiebedrag
+            appropriation:
+              remainder: kan niet op het restant worden geboekt; maak er eerst een expliciet deel van
             financial_transaction:
+              charged_as_a_whole: is als geheel op een begrotingspost geboekt; haal die boeking eerst weg
               must_not_be_transfer: mag geen overboeking zijn
     models:
       account: Rekening
