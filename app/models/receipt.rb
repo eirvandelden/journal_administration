@@ -28,9 +28,11 @@ class Receipt < ApplicationRecord
   # payment divides up: a basket costing more than the payment would not add up,
   # and a basket whose products nobody has classified yet says nothing at all.
   # Wiping the payment's splits on the strength of that would throw away work
-  # this receipt never did.
+  # this receipt never did. A payment charged to an appropriation, whole or in
+  # parts, is refused too: rewriting its splits would drop those charges.
   def rewrite_payment_splits
     return false unless basket_fits?(payment)
+    return false if payment.charged?
     return false if splittable_totals.empty?
 
     transaction do
