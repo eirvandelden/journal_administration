@@ -12,6 +12,9 @@ class Appropriation < ApplicationRecord
   validate :one_per_purpose_recipient_and_year
 
   scope :of_year, ->(year) { where(budget_year: year) }
+  scope :named, ->(purpose:, recipient:, budget_year:) {
+    of_year(budget_year).where("LOWER(purpose) = LOWER(?) AND LOWER(recipient) = LOWER(?)", purpose, recipient)
+  }
 
   # Total appropriated over these appropriations
   #
@@ -65,10 +68,7 @@ class Appropriation < ApplicationRecord
   end
 
   # Other appropriations with this purpose, recipient and year
-  def namesake
-    Appropriation.where.not(id:).where(budget_year:)
-      .where("LOWER(purpose) = LOWER(?) AND LOWER(recipient) = LOWER(?)", purpose, recipient)
-  end
+  def namesake = Appropriation.named(purpose:, recipient:, budget_year:).where.not(id:)
 
   # What is charged from payments of one type, whole or in parts
   def charged_on(type)
