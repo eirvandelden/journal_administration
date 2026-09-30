@@ -59,6 +59,7 @@ class AssistantController < ActionController::API
     [
       Assistant::AddAccountAlias,
       Assistant::BudgetStatus,
+      Assistant::ChargeToAppropriation,
       Assistant::FindAccounts,
       Assistant::FindUncategorizedTransactions,
       Assistant::ListAppropriations,
