@@ -98,6 +98,16 @@ class AppropriationsTest < ActionDispatch::IntegrationTest
     assert_select "tr", text: /2026-11-20.*Birthday present.*#{Regexp.escape(currency(40))}/m
   end
 
+  test "an appropriation lists a charged payment that has no booking date" do
+    appropriation = appropriations(:birthday_etienne)
+    transactions(:gift_payment).update!(appropriation:, booked_at: nil)
+
+    get appropriation_path(appropriation)
+
+    assert_response :success
+    assert_select "tr", text: /-.*Birthday present/m
+  end
+
   test "in Dutch the page is called Begrotingsposten" do
     sign_in_as(users(:admin))
 

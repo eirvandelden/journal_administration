@@ -51,11 +51,14 @@ class Appropriation < ApplicationRecord
   # @return [Boolean]
   def overspent? = balance.negative?
 
-  # The payments and split parts charged to it, earliest payment first
+  # The payments and split parts charged to it, earliest payment first and undated ones last
   #
   # @return [Array<Transaction, TransactionSplit>]
   def charges
-    (transactions.unscope(:order).to_a + transaction_splits.includes(:financial_transaction).to_a).sort_by(&:booked_at)
+    dated, undated = (transactions.unscope(:order).to_a +
+      transaction_splits.includes(:financial_transaction).to_a).partition(&:booked_at)
+
+    dated.sort_by(&:booked_at) + undated
   end
 
   private

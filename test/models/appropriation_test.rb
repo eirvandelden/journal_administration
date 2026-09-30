@@ -62,6 +62,13 @@ class AppropriationTest < ActiveSupport::TestCase
       assert_equal [ transactions(:large_gift_payment), transactions(:gift_payment), part ], @appropriation.charges
     end
 
+    test "#charges lists a payment without a booking date last" do
+      transactions(:gift_payment).update!(appropriation: @appropriation, booked_at: nil)
+      transactions(:large_gift_payment).update!(appropriation: @appropriation)
+
+      assert_equal [ transactions(:large_gift_payment), transactions(:gift_payment) ], @appropriation.charges
+    end
+
     private
 
     def webshop_part(amount:)
