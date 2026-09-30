@@ -686,6 +686,7 @@ it:
       create:
         basket_exceeds_payment: Il carrello costa più del pagamento, quindi il pagamento è rimasto invariato.
         nothing_to_split: Collegato. Il pagamento mantiene le sue categorie finché questi prodotti non sono classificati.
+        payment_is_charged: Il pagamento è imputato a uno stanziamento, quindi le suddivisioni sono rimaste invariate. Rimuovi prima quell'imputazione.
         success: Il pagamento è stato diviso come si divide il carrello.
       destroy:
         success: La fattura non è più saldata con quel pagamento.
