@@ -43,9 +43,9 @@
         <tr>
           <th><%= t(".total") %></th>
           <td></td>
-          <td><%= number_to_currency(@appropriations.total_amount) %></td>
-          <td><%= number_to_currency(@appropriations.total_charged) %></td>
-          <td><%= number_to_currency(@appropriations.total_balance) %></td>
+          <td><%= number_to_currency(@appropriations.sum(&:amount)) %></td>
+          <td><%= number_to_currency(@appropriations.sum(&:charged)) %></td>
+          <td><%= number_to_currency(@appropriations.sum(&:balance)) %></td>
           <td></td>
         </tr>
       </tfoot>
