@@ -113,6 +113,9 @@ nl:
               invalid_like_characters: mag geen %% of _ tekens bevatten
         appropriation:
           attributes:
+            base:
+              restrict_dependent_destroy:
+                has_many: Deze begrotingspost kan niet worden verwijderd zolang er betalingen op geboekt zijn; haal die boekingen eerst weg
             purpose:
               already_appropriated: heeft al een begrotingspost voor deze ontvanger en dit begrotingsjaar
         budget:
@@ -237,6 +240,39 @@ nl:
         title: Gebruikersdetails
       update:
         success: "✅ Gebruiker succesvol bijgewerkt"
+  appropriations:
+    balance:
+      overspent: Overschreden
+    create:
+      success: "✅ Begrotingspost vastgelegd."
+    destroy:
+      success: "✅ Begrotingspost verwijderd."
+    edit:
+      title: Begrotingspost wijzigen
+    index:
+      balance: Resterend
+      charged: Geboekt
+      confirm_destroy: Deze begrotingspost verwijderen?
+      delete: Verwijderen
+      edit: Wijzigen
+      empty: Nog geen begrotingsposten voor %{year}.
+      heading: Begrotingsposten %{year}
+      new: "➕ Nieuwe begrotingspost"
+      next_year: "%{year} →"
+      previous_year: "← %{year}"
+      total: Totaal
+    new:
+      title: "➕ Nieuwe begrotingspost"
+    show:
+      amount: Bedrag
+      balance: Resterend
+      charged: Geboekt
+      date: Datum
+      edit: Wijzigen
+      no_charges: Er is nog niets op deze begrotingspost geboekt.
+      note: Opmerking
+    update:
+      success: "✅ Begrotingspost gewijzigd."
   balance:
     budget: Budget
     category_name: Categorienaam
@@ -506,6 +542,7 @@ nl:
   main_nav:
     accounts: "🏦 %{model}"
     admin: "🥷 Beheer"
+    appropriations: "🎁 %{model}"
     budgets: "💰 %{model}"
     categories: "🏷️ %{model}"
     chattels: "📦 %{model}"
