@@ -63,6 +63,12 @@ class SearchTest < ActiveSupport::TestCase
     assert_includes search.results[:chattels], chattels(:one)
   end
 
+  test "results includes chattels matching by brand" do
+    search = Search.new(query: "Dell")
+
+    assert_includes search.results[:chattels], chattels(:one)
+  end
+
   # -- category results -------------------------------------------------------
 
   test "results includes categories matching by name" do
