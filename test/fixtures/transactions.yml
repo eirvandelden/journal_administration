@@ -85,3 +85,43 @@ credit_from_ah_duplicate:
   creditor: checking
   category: rent
   note: Refund from AH duplicate
+
+gift_payment:
+  type: Debit
+  amount: 40.00
+  booked_at: 2026-11-20 12:00:00
+  interest_at: 2026-11-20 12:00:00
+  debitor: savings
+  creditor: unknown
+  category: gifts
+  note: Birthday present
+
+large_gift_payment:
+  type: Debit
+  amount: 90.00
+  booked_at: 2026-10-05 12:00:00
+  interest_at: 2026-10-05 12:00:00
+  debitor: savings
+  creditor: unknown
+  category: gifts
+  note: Birthday bicycle
+
+gift_refund:
+  type: Credit
+  amount: 20.00
+  booked_at: 2026-10-12 12:00:00
+  interest_at: 2026-10-12 12:00:00
+  debitor: unknown
+  creditor: savings
+  category: gifts
+  note: Refund for a returned present
+
+webshop_sinterklaas:
+  type: Debit
+  amount: 100.00
+  booked_at: 2026-11-28 12:00:00
+  interest_at: 2026-11-28 12:00:00
+  debitor: savings
+  creditor: unknown
+  category: gifts
+  note: Webshop order for Sinterklaas

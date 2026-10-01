@@ -51,6 +51,11 @@ nl:
         iban: IBAN
         name: Naam
         number: Nummer
+      appropriation:
+        amount: Begroot bedrag
+        budget_year: Begrotingsjaar
+        purpose: Doel
+        recipient: Ontvanger
       budget:
         ends_at: Einddatum
         starts_at: Startdatum
@@ -81,10 +86,13 @@ nl:
       transaction:
         account: Rekening
         amount: Bedrag
+        appropriation: Begrotingspost
         category: Categorie
         date: Datum
         description: Omschrijving
         proof_of_purchase: Aankoopbewijs
+      transaction_split:
+        appropriation: Begrotingspost
     errors:
       messages:
         must_be_pdf: moet een PDF-document zijn
@@ -103,6 +111,13 @@ nl:
               must_be_external: moet bij een externe rekening horen
             pattern:
               invalid_like_characters: mag geen %% of _ tekens bevatten
+        appropriation:
+          attributes:
+            base:
+              restrict_dependent_destroy:
+                has_many: Deze begrotingspost kan niet worden verwijderd zolang er betalingen op geboekt zijn; haal die boekingen eerst weg
+            purpose:
+              already_appropriated: heeft al een begrotingspost voor deze ontvanger en dit begrotingsjaar
         budget:
           attributes:
             ends_at:
@@ -126,6 +141,11 @@ nl:
           attributes:
             amount:
               must_cover_splits: moet het totaal van de expliciete splits dekken
+            appropriation:
+              charge_parts_instead: kan geen gesplitste betaling als geheel dragen; boek de delen afzonderlijk
+              must_not_be_transfer: kan niet op een overboeking worden geboekt
+            type:
+              has_charged_parts: kan geen overboeking worden zolang delen op een begrotingspost zijn geboekt
         transaction_link:
           attributes:
             source:
@@ -136,10 +156,16 @@ nl:
           attributes:
             amount:
               exceeds_transaction: overschrijdt het resterende transactiebedrag
+            appropriation:
+              remainder: kan niet op het restant worden geboekt; maak er eerst een expliciet deel van
             financial_transaction:
+              charged_as_a_whole: is als geheel op een begrotingspost geboekt; haal die boeking eerst weg
               must_not_be_transfer: mag geen overboeking zijn
     models:
       account: Rekening
+      appropriation:
+        one: Begrotingspost
+        other: Begrotingsposten
       category: Categorie
       chattel: Bezitting
       product:
@@ -214,6 +240,42 @@ nl:
         title: Gebruikersdetails
       update:
         success: "✅ Gebruiker succesvol bijgewerkt"
+  appropriations:
+    balance:
+      overspent: Overschreden
+    charge_form:
+      charge: Boeken
+      remove: Boeking weghalen
+    create:
+      success: "✅ Begrotingspost vastgelegd."
+    destroy:
+      success: "✅ Begrotingspost verwijderd."
+    edit:
+      title: Begrotingspost wijzigen
+    index:
+      balance: Resterend
+      charged: Geboekt
+      confirm_destroy: Deze begrotingspost verwijderen?
+      delete: Verwijderen
+      edit: Wijzigen
+      empty: Nog geen begrotingsposten voor %{year}.
+      heading: Begrotingsposten %{year}
+      new: "➕ Nieuwe begrotingspost"
+      next_year: "%{year} →"
+      previous_year: "← %{year}"
+      total: Totaal
+    new:
+      title: "➕ Nieuwe begrotingspost"
+    show:
+      amount: Bedrag
+      balance: Resterend
+      charged: Geboekt
+      date: Datum
+      edit: Wijzigen
+      no_charges: Er is nog niets op deze begrotingspost geboekt.
+      note: Opmerking
+    update:
+      success: "✅ Begrotingspost gewijzigd."
   balance:
     budget: Budget
     category_name: Categorienaam
@@ -483,6 +545,7 @@ nl:
   main_nav:
     accounts: "🏦 %{model}"
     admin: "🥷 Beheer"
+    appropriations: "🎁 %{model}"
     budgets: "💰 %{model}"
     categories: "🏷️ %{model}"
     chattels: "📦 %{model}"
@@ -622,6 +685,7 @@ nl:
       create:
         basket_exceeds_payment: Het mandje kost meer dan de betaling, dus de betaling is ongewijzigd gelaten.
         nothing_to_split: Gekoppeld. De betaling houdt haar eigen categorieën tot deze producten zijn ingedeeld.
+        payment_is_charged: De betaling is op een begrotingspost geboekt, dus de splitsingen zijn gebleven zoals ze waren. Haal die boeking eerst weg.
         success: De betaling is verdeeld zoals het mandje verdeeld is.
       destroy:
         success: Deze factuur is niet meer met die betaling afgerekend.
@@ -696,6 +760,11 @@ nl:
       title: Voorgestelde overboekingen
     unlink: Ontkoppelen
   transaction_splits:
+    appropriation_charges:
+      destroy:
+        success: "✅ Boeking van het deel weggehaald."
+      update:
+        success: "✅ Deel op de begrotingspost geboekt."
     create:
       success: "✅ Splitsing toegevoegd."
     destroy:
@@ -713,6 +782,13 @@ nl:
     update:
       success: "✅ Splitsing bijgewerkt."
   transactions:
+    appropriation:
+      not_charged: Niet op een begrotingspost geboekt
+    appropriation_charges:
+      destroy:
+        success: "✅ Boeking weggehaald."
+      update:
+        success: "✅ Op de begrotingspost geboekt."
     create:
       success: "✅ Transactie succesvol aangemaakt."
     destroy:

@@ -5,6 +5,7 @@
 class Transaction < ApplicationRecord
   include Accountable
   include Categorizable
+  include Chargeable
   include Importable
   include Linkable
   include Searchable
@@ -59,11 +60,18 @@ class Transaction < ApplicationRecord
   validates :type, inclusion: { in: TYPES, message: "%{value} is not a valid type" }, presence: true
   validates_pdf_attachment_of :proof_of_purchase
   validate :check_transfer_type_through_account_owners
+  validate :transfer_must_not_be_charged
+  validate :split_must_be_charged_per_part
 
   # Returns true when some portion of the transaction remains uncategorized.
   #
   # @return [Boolean]
   def consolidatable? = uncategorized_amount.positive?
+
+  # Whether the transaction, or any of its parts, counts against an appropriation
+  #
+  # @return [Boolean]
+  def charged? = appropriation_id.present? || charged_parts.exists?
 
   # Returns an emoji representation of the transaction type
   #
@@ -147,5 +155,22 @@ class Transaction < ApplicationRecord
         errors.add(:type, "must be Credit only if creditor is a family account")
       end
     end
+  end
+
+  # Refuses a charge on a Transfer, including a charged transaction becoming one.
+  # Checks the type string: after update(type: "Transfer") the object in memory is still a Debit.
+  def transfer_must_not_be_charged
+    return unless type == "Transfer"
+
+    errors.add(:appropriation, :must_not_be_transfer) if appropriation_id.present?
+    errors.add(:type, :has_charged_parts) if charged_parts.exists?
+  end
+
+  # Parts of this transaction that count against an appropriation
+  def charged_parts = transaction_splits.where.not(appropriation_id: nil)
+
+  # Refuses charging a split transaction whole, so the same euro is not charged twice
+  def split_must_be_charged_per_part
+    errors.add(:appropriation, :charge_parts_instead) if appropriation_id.present? && split?
   end
 end

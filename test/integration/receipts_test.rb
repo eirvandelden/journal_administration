@@ -110,6 +110,20 @@ class ReceiptsTest < ActionDispatch::IntegrationTest
     assert_nil @receipt.reload.payment
   end
 
+  test "a receipt cannot be settled against a charged payment" do
+    payment = Transaction.create!(
+      type: "Debit", debitor: accounts(:checking), creditor: accounts(:albert_heijn), amount: 50,
+      booked_at: @receipt.issued_on, interest_at: @receipt.issued_on, appropriation: appropriations(:birthday_etienne)
+    )
+
+    post receipt_payment_link_path(@receipt), params: { receipt: { payment_id: payment.id } }
+
+    assert_redirected_to receipt_path(@receipt)
+    assert_nil @receipt.reload.payment
+    assert_empty payment.transaction_splits
+    assert_predicate flash[:alert], :present?
+  end
+
   test "a receipt settled by mistake can be unsettled" do
     @receipt.update!(payment: transactions(:debit_grocery))
 

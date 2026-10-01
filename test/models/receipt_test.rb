@@ -155,4 +155,40 @@ class ReceiptTest < ActiveSupport::TestCase
     assert_not receipt.rewrite_payment_splits
     assert_equal splits_before, transactions(:debit_grocery).reload.transaction_splits.map(&:attributes)
   end
+
+  class ChargedPayment < ActiveSupport::TestCase
+    setup do
+      @receipt = receipts(:albert_heijn_friday)
+      @appropriation = appropriations(:birthday_etienne)
+    end
+
+    test "rewrite_payment_splits refuses a payment charged as a whole" do
+      @receipt.update!(payment: grocery_payment(appropriation: @appropriation))
+
+      assert_not @receipt.rewrite_payment_splits
+      assert_empty @receipt.payment.reload.transaction_splits
+      assert_equal @appropriation, @receipt.payment.appropriation
+    end
+
+    test "refuses a payment with a charged part" do
+      payment = grocery_payment
+      part = payment.transaction_splits.create!(
+        amount: 10, category: categories(:supermarket), appropriation: @appropriation
+      )
+      @receipt.update!(payment:)
+
+      assert_not @receipt.rewrite_payment_splits
+      assert_equal [ part ], payment.reload.explicit_transaction_splits.to_a
+      assert_equal @appropriation, part.reload.appropriation
+    end
+
+    private
+
+    def grocery_payment(appropriation: nil)
+      Transaction.create!(
+        type: "Debit", debitor: accounts(:checking), creditor: accounts(:albert_heijn), amount: 50,
+        booked_at: @receipt.issued_on, interest_at: @receipt.issued_on, appropriation:
+      )
+    end
+  end
 end

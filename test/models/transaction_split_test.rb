@@ -96,4 +96,28 @@ I18n.t("activerecord.errors.models.transaction_split.attributes.financial_transa
 I18n.t("activerecord.errors.models.transaction_split.attributes.amount.exceeds_transaction")
     end
   end
+
+  class Charging < ActiveSupport::TestCase
+    setup do
+      @appropriation = appropriations(:birthday_etienne)
+      @payment = transactions(:gift_payment)
+    end
+
+    test "a remainder split cannot be charged" do
+      @payment.transaction_splits.create!(amount: 10, category: categories(:gifts))
+      @payment.ensure_remainder_split
+      remainder = @payment.transaction_splits.find_by!(remainder: true)
+
+      assert_not remainder.update(appropriation: @appropriation)
+    end
+
+    test "a split cannot be added to a transaction charged as a whole" do
+      @payment.update!(appropriation: @appropriation)
+
+      split = @payment.transaction_splits.build(amount: 10, category: categories(:gifts))
+
+      assert_not split.valid?
+      assert_includes split.errors.attribute_names, :financial_transaction
+    end
+  end
 end
