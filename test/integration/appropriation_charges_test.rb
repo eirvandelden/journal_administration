@@ -130,6 +130,13 @@ class AppropriationChargesTest < ActionDispatch::IntegrationTest
     assert_select "li", text: /Sinterklaas present for Chiara.*Birthday Etienne 2026/m
   end
 
+  test "an uncharged payment's page proposes no appropriation" do
+    get transaction_path(transactions(:gift_payment))
+
+    assert_select "select[name='appropriation_charge[appropriation_id]'] option[value='']"
+    assert_select "select[name='appropriation_charge[appropriation_id]'] option[selected]", count: 0
+  end
+
   private
 
   def charge(payment, to:)
