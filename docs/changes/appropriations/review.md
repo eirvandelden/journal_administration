@@ -29,3 +29,17 @@ Round-1 outcomes checked:
 - [x] Nit: The `reload` override has no caller and no test. Nothing in `app/` or `test/` calls `reload` on an `Appropriation`, so nothing proves that reloading clears the stored charged amount, and removing the override would leave the suite green. The stored amount is also not cleared when charges are added through the association (for example `appropriation.transactions << payment`). Nothing does that today — `app/models/appropriation.rb:32` → fixed (refactor(appropriations): drop the unused reload override)
 - [x] Nit: `Integer(params[:year], exception: false)` reads the year the way Ruby reads number literals, so `?year=02026` becomes octal 1046 and `?year=0x7EA` becomes 2026. You only get these by typing the URL by hand. The previous/next links are built from the parsed year, so they never produce such values — `app/controllers/appropriations_controller.rb:87` → fixed (fix(appropriations): read the chosen year as a plain number)
 - [x] Nit: The dismissal of the blank-option finding depends on a request test that was run but not committed. No committed test checks that the charge select on an uncharged payment starts with a blank option, so if `required: true` were dropped, the first appropriation would be preselected again and the suite would stay green — `app/views/appropriations/_charge_form.html.erb:4` → fixed (test(appropriations): an uncharged payment proposes no appropriation)
+
+## Round 3 — 2026-10-01 09:21 UTC — 21abd9c
+
+Base: `origin/fix-json-gem-arity`. No uncommitted changes. Suite green (879 runs, 0 failures); rubocop, herb-lint and brakeman clean; `i18n-tasks normalize` leaves no diff. The diff under `test/` still only adds lines; no test was weakened, skipped or deleted.
+
+Round-2 outcomes checked:
+
+- Reload override (40b4a4a): holds. Nothing in `app/` or `test/` calls `reload` on an `Appropriation`, and the `reload` calls in tests are all on transactions or split parts, followed by `.appropriation`, never by `.charged`. Suite green without the override.
+- Year read in base 10 (0d63f04): holds. `Integer(params[:year], 10, exception: false)` still returns nil for a missing year and for array or hash params, so the default to this year is unchanged; "0x7EA" is now refused and "02027" reads as 2027. The new test would have failed before the fix ("02027" in octal is 1047, which has no appropriations).
+- Blank-option test (21abd9c): holds. In a throwaway copy of HEAD with `required: true` removed from `_charge_form`, the new test fails on its first assertion (`option[value='']` expected at least 1, found 0). The working tree was not touched.
+
+Nothing new was introduced by the three fixes.
+
+- [ ] Nit: Carried from rounds 1 and 2, left open by the user: `plan.md` "Files that change" does not list `Appropriation.named`, `TransactionSplit#booked_at` delegation, `appropriations/_balance.html.erb` or `transactions/_appropriation.html.erb` — `docs/changes/appropriations/plan.md:1` →
