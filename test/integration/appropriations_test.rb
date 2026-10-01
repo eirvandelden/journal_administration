@@ -100,6 +100,12 @@ class AppropriationsTest < ActionDispatch::IntegrationTest
     assert_operator reads, :<=, 2 * Appropriation.of_year(2026).count
   end
 
+  test "a year written with a leading zero is read as that year" do
+    get appropriations_path(year: "02027")
+
+    assert_appropriation_row "Birthday", "Chiara", 60, 0, 60
+  end
+
   test "an appropriation lists the payments and split parts charged to it" do
     appropriation = appropriations(:sinterklaas_chiara)
     part = transactions(:webshop_sinterklaas).transaction_splits.create!(
