@@ -26,14 +26,6 @@ class Appropriation < ApplicationRecord
   # @return [BigDecimal]
   def charged = @charged ||= charged_on("Debit") - charged_on("Credit")
 
-  # Reloads the record and forgets what was worked out as charged
-  #
-  # @return [Appropriation]
-  def reload(*)
-    @charged = nil
-    super
-  end
-
   # What is left of the amount appropriated; negative when overspent
   #
   # @return [BigDecimal]
