@@ -84,7 +84,7 @@ class AppropriationsController < ApplicationController
   end
 
   # The budget year asked for, or this year when none or no number was given
-  def chosen_year = Integer(params[:year], exception: false) || Date.current.year
+  def chosen_year = Integer(params[:year], 10, exception: false) || Date.current.year
 
   # The fields a person may set on an appropriation
   def appropriation_params
