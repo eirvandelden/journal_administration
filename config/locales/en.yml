@@ -61,6 +61,7 @@ en:
         kind: Kind
         name: Name
       chattel:
+        brand: Brand
         kind: Kind
         left_possession_at: Left possession at
         model_number: Model number
