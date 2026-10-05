@@ -43,3 +43,15 @@ Round-2 outcomes checked:
 Nothing new was introduced by the three fixes.
 
 - [ ] Nit: Carried from rounds 1 and 2, left open by the user: `plan.md` "Files that change" does not list `Appropriation.named`, `TransactionSplit#booked_at` delegation, `appropriations/_balance.html.erb` or `transactions/_appropriation.html.erb` — `docs/changes/appropriations/plan.md:1` →
+
+## Round 4 — 2026-10-05 12:27 UTC — 09f204d
+
+Base: `origin/main` (99d59b9). The branch was rebased since round 3: its old base `fix-json-gem-arity` landed on main through the Rails 8.1.4 bump. `git range-diff` shows all 20 branch commits unchanged (`=`); only the base commit dropped out. No uncommitted changes. Suite green (879 runs, 0 failures); rubocop, herb-lint, brakeman and bundler-audit clean; `i18n-tasks normalize` leaves no diff. `db/schema.rb` against main adds only the appropriations table and the two `appropriation_id` columns, at version 2026_09_28_120100.
+
+Bugs: re-read the controllers, models, the `Chargeable` concern and the three assistant tools on the new base. Nothing new. The assistant's `part_of` looks up the remainder too, but `remainder_must_not_be_charged` refuses that charge with a message.
+
+Security: every query goes through bound parameters (`Appropriation.named` included); both charge controllers and the appropriations controller use `params.expect`; a split part is found only among its own payment's explicit parts. Brakeman reports nothing.
+
+Compliance: the diff under `test/` is identical to round 3, so the round-1 mapping of R1–R18 to tests and the `plan.md` Proof list still hold. No test was weakened, skipped or deleted.
+
+- [ ] Nit: Carried from rounds 1–3, left open by the user: `plan.md` "Files that change" does not list `Appropriation.named`, `TransactionSplit#booked_at` delegation, `appropriations/_balance.html.erb` or `transactions/_appropriation.html.erb` — `docs/changes/appropriations/plan.md:1` →
