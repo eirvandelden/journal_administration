@@ -1,6 +1,6 @@
 # Plan: Appropriations per purpose per budget year
 
-From `intent.md` and `spec.md` (2026-09-28). Status: accepted.
+From `intent.md` and `spec.md` (2026-09-28). Status: accepted; amendment 1 accepted.
 
 Change folder: `docs/changes/appropriations/` in worktree `.worktrees/appropriations` (branch `appropriations`). This plan is copied there as `plan.md` once accepted.
 
@@ -107,3 +107,35 @@ Per changed file, the unit tests expected:
 - Assistant tools (`test/integration/assistant_test.rb`): `listing a year without appropriations says so`, `charging a split payment without naming a part lists its parts`, `charging a part of another payment is refused`, `charging a remainder part is refused`, `charging to an unknown appropriation is refused`.
 
 Test setup: new `test/fixtures/appropriations.yml` with literal years: `birthday_etienne` (2026, €150), `christmas_etienne` (2026, €100), `sinterklaas_chiara` and `sinterklaas_cosimo` (2026, €75), `christmas_serena` (2026, €50, never charged), `birthday_chiara_next_year` (2027, €60), `birthday_etienne_next_year` (2027, €150); it sets `created_at`/`updated_at` itself. New root category fixture `gifts`. New transaction fixtures on the `savings` account (on `checking` they pushed other fixtures out of its recent list): `gift_payment` (Debit €40, 2026-11-20), `large_gift_payment` (Debit €90), `gift_refund` (Credit €20), `webshop_sinterklaas` (Debit €100). Its €60/€40 split parts are created inside the tests that need them: as fixtures they changed the split row count in `transactions_index_test`. Nothing is charged in fixtures; each test charges what it needs. Shared row reader: `test/test_helpers/appropriation_assertions.rb`. The R1 acceptance test creates "Birthday Michelle 2026", because "Birthday Etienne 2026" is a fixture. Only R13 depends on today, so it uses `travel_to`. Integration tests sign in with `sign_in_as(users(:member))`; assistant tests use `ask_assistant`. No external boundaries to fake.
+
+## Amendment 1 (2026-10-06): charge on the edit page, recipient suggestions
+
+Status: accepted. Implements spec amendment 1 (R15 reworded, R19 added). Everything above stays as built; this section only lists what changes.
+
+Files that change:
+- `app/views/transactions/show.html.erb` and `app/views/transactions/_appropriation.html.erb` — show page only displays the current appropriation (name, linked to its page) for the whole payment or per split part; no form.
+- `app/views/transactions/edit.html.erb` — for an unsplit Debit/Credit, `appropriations/_charge_form` for the whole payment, next to the split section. Nothing for Transfer.
+- `app/views/transaction_splits/_table.html.erb` — new column with `appropriations/_charge_form` in each explicit part's row; none on the remainder row. The `create`/`update`/`destroy` turbo-stream responses re-render this table, so the column stays after split changes.
+- `app/controllers/transactions/appropriation_charges_controller.rb` and `app/controllers/transaction_splits/appropriation_charges_controller.rb` — redirect to `edit_transaction_path` instead of the show page, success and refusal alike.
+- `app/models/appropriation.rb` — `.recipient_suggestions`: household member names (`Account::FAMILY_OWNERS` without `samen`, humanized) plus distinct recipients already used, sorted, without duplicates ignoring letter case.
+- `app/views/appropriations/_form.html.erb` — recipient text field gets `list:` pointing at a `<datalist>` of `Appropriation.recipient_suggestions`. No JavaScript.
+- `config/locales/{en,nl,it}.yml` — keys for the new column header, if any.
+
+Order of work:
+1. Change the R15 acceptance tests in `test/integration/appropriation_charges_test.rb` to the three new R15 criteria; run; watch the edit-page ones fail (no charge select on the edit page) and the show-page one fail (a form is still there).
+2. Move the forms and the redirects until they pass; existing charge tests that post to the charge routes keep passing, with redirect assertions changed to the edit page.
+3. R19: model test for `.recipient_suggestions`, then the form datalist through the R19 acceptance test.
+4. Full suite, rubocop, herb, brakeman, i18n-tasks normalize; re-read the diff; click through on the edit page with `DISABLE_SSL=1`.
+
+Risks:
+- The split table is rendered by turbo-stream responses as well as the edit page; a form inside each row must not break the existing split form or nest forms. `_charge_form` uses `button_to` for removal, which renders its own form, so it sits in a table cell, never inside the split form.
+- `samen` is excluded by name; when #341 replaces the owner list with people, `.recipient_suggestions` moves to that model.
+
+Proof:
+- R15 show → `test/integration/appropriation_charges_test.rb` `a payment's page shows its appropriation, per part when split, without a way to change it`
+- R15 whole → same file `charging an unsplit payment on its edit page makes it count there`
+- R15 part → same file `charging one part on a split payment's edit page counts only that part`
+- R19 → `test/integration/appropriations_test.rb` `the new-appropriation form suggests household members and earlier recipients`
+- `app/models/appropriation.rb` (`test/models/appropriation_test.rb`): `.recipient_suggestions lists household members but not the shared account`, `.recipient_suggestions adds earlier recipients once regardless of letter case`.
+
+Test setup: existing fixtures; R19 tests create a "Grandma" appropriation inside the test.

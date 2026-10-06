@@ -1,6 +1,6 @@
 # Spec: Appropriations per purpose per budget year
 
-From `intent.md` (2026-09-28). Status: accepted.
+From `intent.md` (2026-09-28). Status: accepted; amendment 1 (2026-10-06) accepted.
 
 ## Flagged concerns
 
@@ -23,10 +23,11 @@ From `intent.md` (2026-09-28). Status: accepted.
 12. **R12 Lapse.** Balances never carry over to another budget year.
 13. **R13 Overview per budget year.** A page "Appropriations" (nl: "Begrotingsposten") lists the appropriations of one budget year, defaulting to the current year, with amount appropriated, charged and balance, plus the year's totals. Other years can be chosen.
 14. **R14 Charges of one appropriation.** Opening an appropriation lists its charged transactions and split parts with payment date, note and amount.
-15. **R15 Charge from the transaction page.** On a transaction's page the whole transaction, or each explicit split part, can be charged to an appropriation, and its current charge is shown.
+15. **R15 Charge from the transaction's edit page.** On a transaction's edit page the whole transaction, or each explicit split part in the split table, can be charged to an appropriation or have its charge removed. The show page only displays the current charge, for the whole transaction or next to each split part.
 16. **R16 Assistant.** Through `/mcp` the assistant can list a year's appropriations with their totals, set an appropriation (create, or change the amount of an existing one), and charge a transaction or split part to one.
 17. **R17 Monthly budget unchanged.** Charges do not change a transaction's category or how the monthly `Budget` counts it.
 18. **R18 Translations.** Every label exists in English and Dutch; the Dutch term is "Begrotingspost" / "Begrotingsposten".
+19. **R19 Recipient suggestions.** The recipient stays free text. While typing it, the form suggests the household members (the family account owners except the shared `samen`) and every recipient already used on an appropriation.
 
 ## Design decisions
 
@@ -68,12 +69,17 @@ From `intent.md` (2026-09-28). Status: accepted.
 - **R12:** "Birthday Etienne 2026" with €30 balance left does not raise "Birthday Etienne 2027".
 - **R13:** The appropriations page opened in 2026 without choosing a year shows the 2026 appropriations and their totals; choosing 2027 shows only the 2027 ones.
 - **R14:** Opening "Sinterklaas Chiara 2026" lists the €60 split part with its payment date and note.
-- **R15:** On a payment's page the current appropriation "Birthday Etienne 2026" is shown next to the payment, and next to each split part for a split payment.
+- **R15:** A payment's page shows "Birthday Etienne 2026" next to the payment, and next to each split part for a split payment, without a way to change it.
+- **R15:** On an unsplit payment's edit page, choosing "Birthday Etienne 2026" and charging makes the payment count there.
+- **R15:** On a split payment's edit page, each part's row has its own charge, and charging the €60 part to "Sinterklaas Chiara 2026" counts only €60 there.
 - **R16:** The assistant asked for 2026 appropriations receives each one with amount appropriated, charged and balance.
 - **R16:** The assistant setting "Christmas Michelle 2026" at €80 creates it; setting it again at €100 changes the amount to €100.
 - **R16:** The assistant charging a payment to "Birthday Etienne 2026" makes it count there.
 - **R17:** A €40 payment in category "Gifts" still counts €40 in the monthly budget for "Gifts" after it is charged to an appropriation.
 - **R18:** With Dutch as the chosen language, the navigation and page title read "Begrotingsposten".
+- **R19:** The new-appropriation form suggests "Etienne" and "Chiara" as recipients but not "Samen", and suggests "Grandma" once an appropriation for Grandma exists.
 
 ---
+Amendment 1 (2026-10-06): R15 moved charging to the edit page after trying the app; R19 added recipient suggestions until #341 replaces free-text recipients with people.
+
 Domain skills applied: rails-architecture, rails-ui.
