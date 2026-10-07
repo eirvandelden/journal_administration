@@ -16,6 +16,18 @@ class Appropriation < ApplicationRecord
     of_year(budget_year).where("LOWER(purpose) = LOWER(?) AND LOWER(recipient) = LOWER(?)", purpose, recipient)
   }
 
+  # Names to suggest as recipient: the household members and everyone given an appropriation before
+  #
+  # @return [Array<String>]
+  def self.recipient_suggestions
+    (household_members + distinct.pluck(:recipient)).uniq(&:downcase).sort
+  end
+
+  # The family account owners who are people, leaving out the shared account
+  #
+  # @return [Array<String>]
+  def self.household_members = (Account::FAMILY_OWNERS - %w[samen]).map(&:humanize)
+
   # The name a person recognises it by, e.g. "Birthday Etienne 2026"
   #
   # @return [String]

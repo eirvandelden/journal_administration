@@ -26,6 +26,23 @@ class AppropriationTest < ActiveSupport::TestCase
     end
   end
 
+  class RecipientSuggestions < ActiveSupport::TestCase
+    test ".recipient_suggestions lists household members but not the shared account" do
+      suggestions = Appropriation.recipient_suggestions
+
+      assert_includes suggestions, "Chiara"
+      assert_not_includes suggestions, "Samen"
+    end
+
+    test ".recipient_suggestions adds earlier recipients once regardless of letter case" do
+      Appropriation.create!(purpose: "Birthday", recipient: "Grandma", budget_year: 2026, amount: 40)
+      Appropriation.create!(purpose: "Christmas", recipient: "grandma", budget_year: 2026, amount: 30)
+
+      assert_equal 1, Appropriation.recipient_suggestions.count { |name| name.casecmp?("grandma") }
+      assert_equal 1, Appropriation.recipient_suggestions.count { |name| name.casecmp?("etienne") }
+    end
+  end
+
   class Totals < ActiveSupport::TestCase
     setup do
       @appropriation = appropriations(:birthday_etienne)

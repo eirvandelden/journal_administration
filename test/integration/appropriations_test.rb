@@ -130,6 +130,20 @@ class AppropriationsTest < ActionDispatch::IntegrationTest
     assert_select "tr", text: /-.*Birthday present/m
   end
 
+  test "the new-appropriation form suggests household members and earlier recipients" do
+    get new_appropriation_path
+
+    assert_select "datalist option[value=?]", "Etienne"
+    assert_select "datalist option[value=?]", "Chiara"
+    assert_select "datalist option[value=?]", "Samen", count: 0
+    assert_select "datalist option[value=?]", "Grandma", count: 0
+
+    Appropriation.create!(purpose: "Birthday", recipient: "Grandma", budget_year: 2026, amount: 40)
+    get new_appropriation_path
+
+    assert_select "datalist option[value=?]", "Grandma"
+  end
+
   test "in Dutch the page is called Begrotingsposten" do
     sign_in_as(users(:admin))
 

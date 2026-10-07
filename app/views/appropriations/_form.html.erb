@@ -13,7 +13,12 @@
     <%= f.text_field :purpose, required: true %>
 
     <%= f.label :recipient %>
-    <%= f.text_field :recipient, required: true %>
+    <%= f.text_field :recipient, required: true, list: "recipient_suggestions" %>
+    <datalist id="recipient_suggestions">
+      <% Appropriation.recipient_suggestions.each do |name| %>
+        <option value="<%= name %>"></option>
+      <% end %>
+    </datalist>
 
     <%= f.label :budget_year %>
     <%= f.number_field :budget_year, step: 1, required: true %>
