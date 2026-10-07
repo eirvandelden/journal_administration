@@ -28,12 +28,12 @@ module Transactions
       @transaction = Transaction.find(params[:transaction_id])
     end
 
-    # Saves the charge and returns to the payment, naming why when it is refused
+    # Saves the charge and returns to editing the payment, naming why when it is refused
     def charge_to(appropriation, notice:)
       if @transaction.update(appropriation:)
-        redirect_to transaction_path(@transaction), notice:
+        redirect_to edit_transaction_path(@transaction), notice:
       else
-        redirect_to transaction_path(@transaction), alert: @transaction.errors.full_messages.to_sentence
+        redirect_to edit_transaction_path(@transaction), alert: @transaction.errors.full_messages.to_sentence
       end
     end
 

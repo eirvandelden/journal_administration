@@ -1,3 +1,6 @@
-<%# locals: (chargeable:, url:) %>
-<p><%= chargeable.appropriation&.to_s || t("transactions.appropriation.not_charged") %></p>
-<%= render "appropriations/charge_form", url: url, chargeable: chargeable %>
+<%# locals: (chargeable:) %>
+<% if chargeable.appropriation %>
+  <%= link_to chargeable.appropriation.to_s, chargeable.appropriation %>
+<% else %>
+  <%= t("transactions.appropriation.not_charged") %>
+<% end %>

@@ -34,7 +34,7 @@ class AppropriationChargesTest < ActionDispatch::IntegrationTest
   test "a transfer offers no charge" do
     transfer = transactions(:transfer_savings)
 
-    get transaction_path(transfer)
+    get edit_transaction_path(transfer)
 
     assert_response :success
     assert_select "form[action=?]", transaction_appropriation_charge_path(transfer), count: 0
@@ -115,7 +115,7 @@ class AppropriationChargesTest < ActionDispatch::IntegrationTest
     assert_select "tbody tr mark", text: currency(-30)
   end
 
-  test "a payment's page shows its appropriation, per part when split" do
+  test "a payment's page shows its appropriation, per part when split, without a way to change it" do
     payment = transactions(:gift_payment)
     payment.update!(appropriation: appropriations(:birthday_etienne))
     chiara_part, = split_webshop_payment
@@ -124,14 +124,46 @@ class AppropriationChargesTest < ActionDispatch::IntegrationTest
     get transaction_path(payment)
 
     assert_select "dd", text: /Birthday Etienne 2026/
+    assert_select "form[action=?]", transaction_appropriation_charge_path(payment), count: 0
 
-    get transaction_path(transactions(:webshop_sinterklaas))
+    get transaction_path(chiara_part.financial_transaction)
 
     assert_select "li", text: /Sinterklaas present for Chiara.*Birthday Etienne 2026/m
+    assert_select "form[action=?]",
+      transaction_transaction_split_appropriation_charge_path(chiara_part.financial_transaction, chiara_part), count: 0
+  end
+
+  test "charging an unsplit payment on its edit page makes it count there" do
+    payment = transactions(:gift_payment)
+
+    get edit_transaction_path(payment)
+
+    assert_select "form[action=?]", transaction_appropriation_charge_path(payment)
+
+    charge payment, to: appropriations(:birthday_etienne)
+
+    assert_redirected_to edit_transaction_path(payment)
+    assert_equal 40, appropriations(:birthday_etienne).charged
+  end
+
+  test "charging one part on a split payment's edit page counts only that part" do
+    chiara_part, = split_webshop_payment
+    webshop = chiara_part.financial_transaction
+
+    get edit_transaction_path(webshop)
+
+    assert_select "tr", text: /Sinterklaas present for Chiara/ do
+      assert_select "form[action=?]", transaction_transaction_split_appropriation_charge_path(webshop, chiara_part)
+    end
+
+    charge_part chiara_part, to: appropriations(:sinterklaas_chiara)
+
+    assert_redirected_to edit_transaction_path(webshop)
+    assert_equal 60, appropriations(:sinterklaas_chiara).charged
   end
 
   test "an uncharged payment's page proposes no appropriation" do
-    get transaction_path(transactions(:gift_payment))
+    get edit_transaction_path(transactions(:gift_payment))
 
     assert_select "select[name='appropriation_charge[appropriation_id]'] option[value='']"
     assert_select "select[name='appropriation_charge[appropriation_id]'] option[selected]", count: 0

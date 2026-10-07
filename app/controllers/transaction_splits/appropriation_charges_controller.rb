@@ -29,12 +29,12 @@ module TransactionSplits
       @transaction_split = @transaction.explicit_transaction_splits.find(params[:transaction_split_id])
     end
 
-    # Saves the charge and returns to the payment, naming why when it is refused
+    # Saves the charge and returns to editing the payment, naming why when it is refused
     def charge_to(appropriation, notice:)
       if @transaction_split.update(appropriation:)
-        redirect_to transaction_path(@transaction), notice:
+        redirect_to edit_transaction_path(@transaction), notice:
       else
-        redirect_to transaction_path(@transaction), alert: @transaction_split.errors.full_messages.to_sentence
+        redirect_to edit_transaction_path(@transaction), alert: @transaction_split.errors.full_messages.to_sentence
       end
     end
 
