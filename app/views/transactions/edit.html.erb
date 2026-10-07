@@ -11,14 +11,6 @@
 </article>
 
 <% unless @transaction.type == "Transfer" %>
-  <% unless @transaction.split? %>
-    <article>
-      <h2><%= Appropriation.model_name.human %></h2>
-      <%= render "appropriations/charge_form",
-                 url: transaction_appropriation_charge_path(@transaction), chargeable: @transaction %>
-    </article>
-  <% end %>
-
   <article>
     <h2><%= t('transactions.edit.split_heading') %></h2>
     <%= render "transaction_splits/frame",

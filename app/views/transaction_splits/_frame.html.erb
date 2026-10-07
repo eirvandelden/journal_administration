@@ -1,4 +1,11 @@
 <%# locals: (transaction:, transaction_split: nil) %>
 <%= turbo_frame_tag "transaction_splits" do %>
+  <% unless transaction.split? %>
+    <section>
+      <h3><%= Appropriation.model_name.human %></h3>
+      <%= render "appropriations/charge_form",
+                 url: transaction_appropriation_charge_path(transaction), chargeable: transaction %>
+    </section>
+  <% end %>
   <%= render "transaction_splits/table", transaction: transaction, transaction_split: transaction_split %>
 <% end %>

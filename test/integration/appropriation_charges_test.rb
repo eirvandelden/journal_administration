@@ -152,14 +152,50 @@ class AppropriationChargesTest < ActionDispatch::IntegrationTest
 
     get edit_transaction_path(webshop)
 
-    assert_select "tr", text: /Sinterklaas present for Chiara/ do
-      assert_select "form[action=?]", transaction_transaction_split_appropriation_charge_path(webshop, chiara_part)
+    webshop.explicit_transaction_splits.each do |part|
+      assert_select "tr", text: /#{part.note}/ do
+        assert_select "form[action=?]", transaction_transaction_split_appropriation_charge_path(webshop, part)
+      end
     end
 
     charge_part chiara_part, to: appropriations(:sinterklaas_chiara)
 
     assert_redirected_to edit_transaction_path(webshop)
     assert_equal 60, appropriations(:sinterklaas_chiara).charged
+  end
+
+  test "a split payment's edit page offers no charge for the whole payment or its remainder" do
+    webshop = transactions(:webshop_sinterklaas)
+    webshop.transaction_splits.create!(amount: 60, category: categories(:gifts), note: "Sinterklaas present for Chiara")
+    webshop.ensure_remainder_split
+
+    get edit_transaction_path(webshop)
+
+    assert_select "form[action=?]", transaction_appropriation_charge_path(webshop), count: 0
+    assert_equal webshop.explicit_transaction_splits.count, css_select("form[action*='appropriation_charge']").size
+  end
+
+  test "splitting a payment on its edit page stops offering to charge it as a whole" do
+    payment = transactions(:gift_payment)
+
+    get edit_transaction_path(payment)
+
+    assert_select "turbo-frame#transaction_splits form[action=?]", transaction_appropriation_charge_path(payment)
+
+    post transaction_transaction_splits_url(payment),
+      params: { transaction_split: { category_id: categories(:gifts).id, amount: 10 } },
+      headers: { "Accept" => "text/vnd.turbo-stream.html" }
+
+    assert_no_match transaction_appropriation_charge_path(payment), response.body
+  end
+
+  test "removing the last part on the edit page offers to charge the whole payment again" do
+    part = transactions(:gift_payment).transaction_splits.create!(amount: 10, category: categories(:gifts))
+
+    delete transaction_transaction_split_url(part.financial_transaction, part),
+      headers: { "Accept" => "text/vnd.turbo-stream.html" }
+
+    assert_match transaction_appropriation_charge_path(part.financial_transaction), response.body
   end
 
   test "an uncharged payment's page proposes no appropriation" do
