@@ -189,6 +189,7 @@ class AppropriationChargesTest < ActionDispatch::IntegrationTest
       params: { transaction_split: { category_id: categories(:gifts).id, amount: 10 } },
       headers: { "Accept" => "text/vnd.turbo-stream.html" }
 
+    assert_turbo_stream action: :replace, target: "whole_payment_charge"
     assert_no_match transaction_appropriation_charge_path(payment), response.body
   end
 
