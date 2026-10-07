@@ -180,13 +180,26 @@ class AppropriationChargesTest < ActionDispatch::IntegrationTest
 
     get edit_transaction_path(payment)
 
-    assert_select "turbo-frame#transaction_splits form[action=?]", transaction_appropriation_charge_path(payment)
+    assert_select "article#whole_payment_charge" do
+      assert_select "h2", Appropriation.model_name.human
+      assert_select "form[action=?]", transaction_appropriation_charge_path(payment)
+    end
 
     post transaction_transaction_splits_url(payment),
       params: { transaction_split: { category_id: categories(:gifts).id, amount: 10 } },
       headers: { "Accept" => "text/vnd.turbo-stream.html" }
 
     assert_no_match transaction_appropriation_charge_path(payment), response.body
+  end
+
+  test "splitting a transfer never offers to charge it" do
+    transfer = transactions(:transfer_savings)
+
+    post transaction_transaction_splits_url(transfer),
+      params: { transaction_split: { category_id: categories(:gifts).id, amount: 10 } },
+      headers: { "Accept" => "text/vnd.turbo-stream.html" }
+
+    assert_no_match transaction_appropriation_charge_path(transfer), response.body
   end
 
   test "removing the last part on the edit page offers to charge the whole payment again" do
