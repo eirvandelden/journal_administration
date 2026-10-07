@@ -55,3 +55,24 @@ Security: every query goes through bound parameters (`Appropriation.named` inclu
 Compliance: the diff under `test/` is identical to round 3, so the round-1 mapping of R1–R18 to tests and the `plan.md` Proof list still hold. No test was weakened, skipped or deleted.
 
 - [x] Nit: Carried from rounds 1–3, left open by the user: `plan.md` "Files that change" does not list `Appropriation.named`, `TransactionSplit#booked_at` delegation, `appropriations/_balance.html.erb` or `transactions/_appropriation.html.erb` — `docs/changes/appropriations/plan.md:1` → fixed (docs(appropriations): list what the build added in the plan)
+
+## Round 5 — 2026-10-07 11:12 UTC — 3aea826
+
+Base: `origin/main` (de7eded). The branch was rebased since round 4. `git range-diff` shows the round-4 commits unchanged, except the schema version in the context lines of "Tests for appropriations": main moved from 2026_09_02_090000 to 2026_09_03_151125. `db/schema.rb` against main still adds only the appropriations table and the two `appropriation_id` columns. New since round 4: amendment 1 (`30dcc24`, `e39b1e2`, `3aea826`) and the plan update (`569fedd`). No uncommitted changes. Suite green (887 runs, 0 failures); rubocop, herb-lint, brakeman and bundler-audit clean; `i18n-tasks normalize` leaves no diff; `i18n-tasks missing` finds nothing and no appropriation key is unused.
+
+Bugs: the split-part charge forms sit in their own table cells, and the add-split form follows the table, so no form is nested. Both charge forms target `_top`, so a charge from inside the `transaction_splits` frame loads the full edit page with its flash. The create, update and destroy turbo-stream responses render the new column through `_frame`, and the HTML fallback renders `transactions/edit`. `transactions/_appropriation` has strict locals `(chargeable:)`, and the show page is its only caller.
+
+Security: no new parameters. Both charge controllers only changed their redirect target, which comes from the record found, not from a parameter. The datalist values go through `<%= %>` and are escaped. Brakeman reports nothing.
+
+Compliance:
+
+- R15 show → `a payment's page shows its appropriation, per part when split, without a way to change it`
+- R15 whole → `charging an unsplit payment on its edit page makes it count there`
+- R15 part → `charging one part on a split payment's edit page counts only that part` (checks only Chiara's row, see below)
+- R19 → `the new-appropriation form suggests household members and earlier recipients`
+- Every test in the amendment's Proof list exists, including both `.recipient_suggestions` model tests. The R1–R18 mapping from round 1 still holds.
+- Changed tests: `a transfer offers no charge` and `an uncharged payment's page proposes no appropriation` now open the edit page instead of the show page. The show page no longer has a form, so the edit page is the place to check; neither test is weaker. The R15 show test kept its assertions and adds two `count: 0` checks. No test was skipped or deleted.
+
+- [ ] Nit: The whole-payment charge section on the edit page is outside the `transaction_splits` frame, so the split turbo streams do not update it. After the first part is added on the page, it still offers to charge the whole payment; the model refuses that on submit with "charge its parts instead". After the last part is removed, it offers no whole-payment charge until the page reloads. No wrong charge can result — `app/views/transactions/edit.html.erb:14` →
+- [ ] Nit: No test checks the edit page of a split payment for what it must not offer. Nothing asserts that the whole-payment charge form is absent there, or that the remainder row has no charge form (amendment: "none on the remainder row"). If someone removes `unless @transaction.split?` or adds a form to the remainder row, the suite stays green. The R15 part test also checks only Chiara's row, while the criterion says "each part's row" — `test/integration/appropriation_charges_test.rb:150` →
+- [ ] Nit: `recipient_suggestions` sorts case-sensitively, so an earlier lowercase recipient such as "grandma" comes after every capitalised name. When "Grandma" and "grandma" both exist, the spelling that `uniq` keeps depends on the order SQLite returns the rows, because `distinct.pluck` has no order — `app/models/appropriation.rb:23` →
