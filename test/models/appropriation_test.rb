@@ -41,6 +41,18 @@ class AppropriationTest < ActiveSupport::TestCase
       assert_equal 1, Appropriation.recipient_suggestions.count { |name| name.casecmp?("grandma") }
       assert_equal 1, Appropriation.recipient_suggestions.count { |name| name.casecmp?("etienne") }
     end
+
+    test ".recipient_suggestions sorts ignoring letter case and keeps the latest spelling" do
+      Appropriation.create!(purpose: "Birthday", recipient: "grandma", budget_year: 2026, amount: 40)
+      Appropriation.create!(purpose: "Christmas", recipient: "Grandma", budget_year: 2026, amount: 30)
+      Appropriation.create!(purpose: "Birthday", recipient: "bob", budget_year: 2026, amount: 20)
+
+      suggestions = Appropriation.recipient_suggestions
+
+      assert_includes suggestions, "Grandma"
+      assert_not_includes suggestions, "grandma"
+      assert_operator suggestions.index("bob"), :<, suggestions.index("Chiara")
+    end
   end
 
   class Totals < ActiveSupport::TestCase

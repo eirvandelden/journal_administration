@@ -136,6 +136,7 @@ Proof:
 - R15 whole → same file `charging an unsplit payment on its edit page makes it count there`
 - R15 part → same file `charging one part on a split payment's edit page counts only that part`
 - R19 → `test/integration/appropriations_test.rb` `the new-appropriation form suggests household members and earlier recipients`
+- Added during review round 5 → `test/integration/appropriation_charges_test.rb` `a split payment's edit page offers no charge for the whole payment or its remainder`, `splitting a payment on its edit page stops offering to charge it as a whole`, `removing the last part on the edit page offers to charge the whole payment again`; `test/models/appropriation_test.rb` `.recipient_suggestions sorts ignoring letter case and keeps the latest spelling`. The whole-payment charge lives inside the `transaction_splits` frame (`transaction_splits/_frame.html.erb`), so split changes update it.
 - `app/models/appropriation.rb` (`test/models/appropriation_test.rb`): `.recipient_suggestions lists household members but not the shared account`, `.recipient_suggestions adds earlier recipients once regardless of letter case`.
 
 Test setup: existing fixtures; R19 tests create a "Grandma" appropriation inside the test.

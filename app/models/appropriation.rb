@@ -16,11 +16,12 @@ class Appropriation < ApplicationRecord
     of_year(budget_year).where("LOWER(purpose) = LOWER(?) AND LOWER(recipient) = LOWER(?)", purpose, recipient)
   }
 
-  # Names to suggest as recipient: the household members and everyone given an appropriation before
+  # Names to suggest as recipient: the household members and everyone given an appropriation before,
+  # in the spelling used most recently
   #
   # @return [Array<String>]
   def self.recipient_suggestions
-    (household_members + distinct.pluck(:recipient)).uniq(&:downcase).sort
+    (household_members + order(id: :desc).pluck(:recipient)).uniq(&:downcase).sort_by(&:downcase)
   end
 
   # The family account owners who are people, leaving out the shared account
