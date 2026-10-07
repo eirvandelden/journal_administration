@@ -16,8 +16,8 @@ class Appropriation < ApplicationRecord
     of_year(budget_year).where("LOWER(purpose) = LOWER(?) AND LOWER(recipient) = LOWER(?)", purpose, recipient)
   }
 
-  # Names to suggest as recipient: the household members and everyone given an appropriation before,
-  # in the spelling used most recently
+  # Names to suggest as recipient: the household members and everyone given an appropriation before.
+  # A household member keeps their own spelling; any other name keeps the spelling of its newest appropriation.
   #
   # @return [Array<String>]
   def self.recipient_suggestions
