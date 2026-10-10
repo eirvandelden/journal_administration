@@ -122,3 +122,10 @@ Test setup: no new fixtures. The new configuration test reads `Dockerfile` and `
 
 ---
 Domain skills applied: dependencies. Named for the implementer: using-sqlite-worktrees (step 5).
+
+## Implementation notes
+
+- herb 0.11 flagged `form_with` inside `turbo_frame_tag` in `app/views/budgets/_form.html.erb` as a nested form. The view now uses the literal `<turbo-frame>` tag, which renders the same HTML.
+- Newer releases appeared during implementation: `selenium-webdriver` 4.51.0, `lefthook` 2.2.1, `date` 3.6.0. The branch carries them.
+- `docker build --platform linux/amd64` failed in `apt-get` with "not enough free space" inside the Rancher Desktop VM, before any Bundler step. The image build is not verified.
+- `bin/rails test:system` errors on the untouched branch too: ChromeDriver wants Chrome 155, the cached Chrome for Testing is 150. This is a toolchain issue, not fixed here.
