@@ -51,6 +51,11 @@ en:
         iban: IBAN
         name: Name
         number: Number
+      appropriation:
+        amount: Amount appropriated
+        budget_year: Budget year
+        purpose: Purpose
+        recipient: Recipient
       budget:
         ends_at: End date
         starts_at: Start date
@@ -82,10 +87,13 @@ en:
       transaction:
         account: Account
         amount: Amount
+        appropriation: Appropriation
         category: Category
         date: Date
         description: Description
         proof_of_purchase: Proof of purchase
+      transaction_split:
+        appropriation: Appropriation
     errors:
       messages:
         must_be_pdf: must be a PDF document
@@ -104,6 +112,13 @@ en:
               must_be_external: must belong to an external account
             pattern:
               invalid_like_characters: must not contain %% or _ characters
+        appropriation:
+          attributes:
+            base:
+              restrict_dependent_destroy:
+                has_many: This appropriation cannot be removed while payments are charged to it; remove those charges first
+            purpose:
+              already_appropriated: already has an appropriation for this recipient and budget year
         budget:
           attributes:
             ends_at:
@@ -127,6 +142,11 @@ en:
           attributes:
             amount:
               must_cover_splits: must cover the total of the explicit splits
+            appropriation:
+              charge_parts_instead: cannot take a split payment as a whole; charge its parts instead
+              must_not_be_transfer: cannot be charged on a Transfer transaction
+            type:
+              has_charged_parts: cannot become Transfer while its parts are charged to an appropriation
         transaction_link:
           attributes:
             source:
@@ -137,10 +157,16 @@ en:
           attributes:
             amount:
               exceeds_transaction: exceeds the remaining transaction amount
+            appropriation:
+              remainder: cannot be charged on the remainder; make it an explicit part first
             financial_transaction:
+              charged_as_a_whole: is charged to an appropriation as a whole; remove that charge first
               must_not_be_transfer: must not be a Transfer transaction
     models:
       account: Account
+      appropriation:
+        one: Appropriation
+        other: Appropriations
       category: Category
       chattel: Chattel
       product:
@@ -215,6 +241,42 @@ en:
         title: User Details
       update:
         success: "✅ User updated successfully"
+  appropriations:
+    balance:
+      overspent: Overspent
+    charge_form:
+      charge: Charge
+      remove: Remove charge
+    create:
+      success: "✅ Appropriation was set."
+    destroy:
+      success: "✅ Appropriation was removed."
+    edit:
+      title: Change appropriation
+    index:
+      balance: Left
+      charged: Charged
+      confirm_destroy: Remove this appropriation?
+      delete: Remove
+      edit: Change
+      empty: No appropriations for %{year} yet.
+      heading: Appropriations %{year}
+      new: "➕ New appropriation"
+      next_year: "%{year} →"
+      previous_year: "← %{year}"
+      total: Total
+    new:
+      title: "➕ New appropriation"
+    show:
+      amount: Amount
+      balance: Left
+      charged: Charged
+      date: Date
+      edit: Change
+      no_charges: Nothing is charged to this appropriation yet.
+      note: Note
+    update:
+      success: "✅ Appropriation was changed."
   balance:
     budget: Budget
     category_name: Category Name
@@ -484,6 +546,7 @@ en:
   main_nav:
     accounts: "🏦 %{model}"
     admin: "🥷 Admin"
+    appropriations: "🎁 %{model}"
     budgets: "💰 %{model}"
     categories: "🏷️ %{model}"
     chattels: "📦 %{model}"
@@ -623,6 +686,7 @@ en:
       create:
         basket_exceeds_payment: The basket costs more than the payment, so the payment was left as it was.
         nothing_to_split: Settled. The payment keeps its own categories until these products are classified.
+        payment_is_charged: The payment is charged to an appropriation, so its splits were left as they were. Remove that charge first.
         success: The payment was split the way the basket divides up.
       destroy:
         success: The invoice is no longer settled by that payment.
@@ -697,6 +761,11 @@ en:
       title: Suggested transfers
     unlink: Unlink
   transaction_splits:
+    appropriation_charges:
+      destroy:
+        success: "✅ Charge removed from the part."
+      update:
+        success: "✅ Part charged to the appropriation."
     create:
       success: "✅ Split added."
     destroy:
@@ -714,6 +783,13 @@ en:
     update:
       success: "✅ Split updated."
   transactions:
+    appropriation:
+      not_charged: Not charged to an appropriation
+    appropriation_charges:
+      destroy:
+        success: "✅ Charge removed."
+      update:
+        success: "✅ Charged to the appropriation."
     create:
       success: "✅ Transaction was successfully created."
     destroy:

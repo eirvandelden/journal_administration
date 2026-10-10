@@ -39,3 +39,7 @@ salary:
 household:
   name: Household
   direction: debit
+
+gifts:
+  name: Gifts
+  direction: debit

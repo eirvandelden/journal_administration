@@ -9,6 +9,7 @@ module Receipts
     def create
       payment = chosen_payment
       return redirect_to @receipt, alert: t(".basket_exceeds_payment") unless @receipt.basket_fits?(payment)
+      return redirect_to @receipt, alert: t(".payment_is_charged") if payment.charged?
 
       settled = Receipt.transaction do
         @receipt.update!(payment: payment)

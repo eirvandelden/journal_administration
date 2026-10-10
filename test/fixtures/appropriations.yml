@@ -1,0 +1,52 @@
+DEFAULTS: &DEFAULTS
+  created_at: <%= Time.current.to_fs(:db) %>
+  updated_at: <%= Time.current.to_fs(:db) %>
+
+birthday_etienne:
+  <<: *DEFAULTS
+  purpose: Birthday
+  recipient: Etienne
+  budget_year: 2026
+  amount: 150.00
+
+christmas_etienne:
+  <<: *DEFAULTS
+  purpose: Christmas
+  recipient: Etienne
+  budget_year: 2026
+  amount: 100.00
+
+sinterklaas_chiara:
+  <<: *DEFAULTS
+  purpose: Sinterklaas
+  recipient: Chiara
+  budget_year: 2026
+  amount: 75.00
+
+sinterklaas_cosimo:
+  <<: *DEFAULTS
+  purpose: Sinterklaas
+  recipient: Cosimo
+  budget_year: 2026
+  amount: 75.00
+
+christmas_serena:
+  <<: *DEFAULTS
+  purpose: Christmas
+  recipient: Serena
+  budget_year: 2026
+  amount: 50.00
+
+birthday_chiara_next_year:
+  <<: *DEFAULTS
+  purpose: Birthday
+  recipient: Chiara
+  budget_year: 2027
+  amount: 60.00
+
+birthday_etienne_next_year:
+  <<: *DEFAULTS
+  purpose: Birthday
+  recipient: Etienne
+  budget_year: 2027
+  amount: 150.00

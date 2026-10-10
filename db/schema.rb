@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_03_151125) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_28_120100) do
   create_table "account_aliases", force: :cascade do |t|
     t.integer "account_id", null: false
     t.datetime "created_at", null: false
@@ -70,6 +70,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_03_151125) do
     t.integer "user_id", null: false
     t.index ["endpoint"], name: "index_appkit_push_subscriptions_on_endpoint", unique: true
     t.index ["user_id"], name: "index_appkit_push_subscriptions_on_user_id"
+  end
+
+  create_table "appropriations", force: :cascade do |t|
+    t.string "purpose", null: false
+    t.string "recipient", null: false
+    t.integer "budget_year", null: false
+    t.decimal "amount", precision: 10, scale: 2, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index "LOWER(purpose), LOWER(recipient), budget_year", name: "index_appropriations_on_lower_purpose_recipient_and_year", unique: true
+    t.check_constraint "amount > 0", name: "check_appropriation_amount_positive"
   end
 
   create_table "budget_categories", force: :cascade do |t|
@@ -200,6 +211,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_03_151125) do
     t.boolean "remainder", default: false, null: false
     t.integer "transaction_id", null: false
     t.datetime "updated_at", null: false
+    t.integer "appropriation_id"
+    t.index ["appropriation_id"], name: "index_transaction_splits_on_appropriation_id"
     t.index ["category_id"], name: "index_transaction_splits_on_category_id"
     t.index ["transaction_id"], name: "index_transaction_splits_on_transaction_id"
     t.check_constraint "amount > 0", name: "transaction_splits_amount_positive"
@@ -219,6 +232,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_03_151125) do
     t.string "original_tag"
     t.string "type"
     t.datetime "updated_at", null: false
+    t.integer "appropriation_id"
+    t.index ["appropriation_id"], name: "index_transactions_on_appropriation_id"
     t.index ["category_id"], name: "index_transactions_on_category_id"
     t.index ["id"], name: "index_transactions_on_id"
   end
@@ -259,7 +274,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_03_151125) do
   add_foreign_key "sessions", "users"
   add_foreign_key "transaction_links", "transactions", column: "source_transaction_id"
   add_foreign_key "transaction_links", "transactions", column: "transfer_id"
+  add_foreign_key "transaction_splits", "appropriations"
   add_foreign_key "transaction_splits", "categories"
   add_foreign_key "transaction_splits", "transactions"
+  add_foreign_key "transactions", "appropriations"
   add_foreign_key "transactions", "categories"
 end

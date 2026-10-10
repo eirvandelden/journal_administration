@@ -51,6 +51,11 @@ it:
         iban: IBAN
         name: Nome
         number: Numero
+      appropriation:
+        amount: Importo stanziato
+        budget_year: Anno di bilancio
+        purpose: Scopo
+        recipient: Destinatario
       budget:
         ends_at: Data di fine
         starts_at: Data di inizio
@@ -82,10 +87,13 @@ it:
       transaction:
         account: Conto
         amount: Importo
+        appropriation: Stanziamento
         category: Categoria
         date: Data
         description: Descrizione
         proof_of_purchase: Prova d'acquisto
+      transaction_split:
+        appropriation: Stanziamento
     errors:
       messages:
         must_be_pdf: deve essere un documento PDF
@@ -104,6 +112,13 @@ it:
               must_be_external: deve appartenere a un conto esterno
             pattern:
               invalid_like_characters: non deve contenere i caratteri %% o _
+        appropriation:
+          attributes:
+            base:
+              restrict_dependent_destroy:
+                has_many: Questo stanziamento non può essere rimosso finché vi sono pagamenti imputati; rimuovi prima quelle imputazioni
+            purpose:
+              already_appropriated: ha già uno stanziamento per questo destinatario e anno di bilancio
         budget:
           attributes:
             ends_at:
@@ -127,6 +142,11 @@ it:
           attributes:
             amount:
               must_cover_splits: deve coprire il totale delle suddivisioni esplicite
+            appropriation:
+              charge_parts_instead: non può coprire un pagamento suddiviso per intero; imputa invece le sue parti
+              must_not_be_transfer: non può essere imputato a un trasferimento
+            type:
+              has_charged_parts: non può diventare un trasferimento finché le sue parti sono imputate a uno stanziamento
         transaction_link:
           attributes:
             source:
@@ -137,10 +157,16 @@ it:
           attributes:
             amount:
               exceeds_transaction: supera l'importo residuo della transazione
+            appropriation:
+              remainder: non può essere imputato al residuo; rendilo prima una parte esplicita
             financial_transaction:
+              charged_as_a_whole: è imputata per intero a uno stanziamento; rimuovi prima quell'imputazione
               must_not_be_transfer: non deve essere una transazione di trasferimento
     models:
       account: Conto
+      appropriation:
+        one: Stanziamento
+        other: Stanziamenti
       category: Categoria
       chattel: Bene
       product:
@@ -215,6 +241,42 @@ it:
         title: Dettagli utente
       update:
         success: "✅ Utente aggiornato con successo"
+  appropriations:
+    balance:
+      overspent: Superato
+    charge_form:
+      charge: Imputa
+      remove: Rimuovi imputazione
+    create:
+      success: "✅ Stanziamento impostato."
+    destroy:
+      success: "✅ Stanziamento rimosso."
+    edit:
+      title: Modifica stanziamento
+    index:
+      balance: Residuo
+      charged: Imputato
+      confirm_destroy: Rimuovere questo stanziamento?
+      delete: Rimuovi
+      edit: Modifica
+      empty: Nessuno stanziamento per il %{year}.
+      heading: Stanziamenti %{year}
+      new: "➕ Nuovo stanziamento"
+      next_year: "%{year} →"
+      previous_year: "← %{year}"
+      total: Totale
+    new:
+      title: "➕ Nuovo stanziamento"
+    show:
+      amount: Importo
+      balance: Residuo
+      charged: Imputato
+      date: Data
+      edit: Modifica
+      no_charges: Nulla è ancora imputato a questo stanziamento.
+      note: Nota
+    update:
+      success: "✅ Stanziamento modificato."
   balance:
     budget: Budget
     category_name: Nome categoria
@@ -484,6 +546,7 @@ it:
   main_nav:
     accounts: "🏦 %{model}"
     admin: "🥷 Amministrazione"
+    appropriations: "🎁 %{model}"
     budgets: "💰 %{model}"
     categories: "🏷️ %{model}"
     chattels: "📦 %{model}"
@@ -623,6 +686,7 @@ it:
       create:
         basket_exceeds_payment: Il carrello costa più del pagamento, quindi il pagamento è rimasto invariato.
         nothing_to_split: Collegato. Il pagamento mantiene le sue categorie finché questi prodotti non sono classificati.
+        payment_is_charged: Il pagamento è imputato a uno stanziamento, quindi le suddivisioni sono rimaste invariate. Rimuovi prima quell'imputazione.
         success: Il pagamento è stato diviso come si divide il carrello.
       destroy:
         success: La fattura non è più saldata con quel pagamento.
@@ -697,6 +761,11 @@ it:
       title: Trasferimenti suggeriti
     unlink: Scollega
   transaction_splits:
+    appropriation_charges:
+      destroy:
+        success: "✅ Imputazione della parte rimossa."
+      update:
+        success: "✅ Parte imputata allo stanziamento."
     create:
       success: "✅ Divisione aggiunta."
     destroy:
@@ -714,6 +783,13 @@ it:
     update:
       success: "✅ Divisione aggiornata."
   transactions:
+    appropriation:
+      not_charged: Non imputato a uno stanziamento
+    appropriation_charges:
+      destroy:
+        success: "✅ Imputazione rimossa."
+      update:
+        success: "✅ Imputato allo stanziamento."
     create:
       success: "✅ Transazione creata con successo."
     destroy:

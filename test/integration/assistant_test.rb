@@ -357,6 +357,90 @@ class AssistantTest < ActionDispatch::IntegrationTest
     assert_includes answer, "must belong to an external account"
   end
 
+  test "listing a year without appropriations says so" do
+    answer = ask_assistant("list_appropriations", budget_year: 2030)
+
+    assert_match(/no appropriation/i, answer)
+  end
+
+  test "the assistant lists a year's appropriations with what is left of each" do
+    birthday = appropriations(:birthday_etienne)
+    transactions(:gift_payment).update!(appropriation: birthday)
+
+    answer = ask_assistant("list_appropriations", budget_year: 2026)
+    line = answer.lines.find { |candidate| candidate.start_with?("#{birthday.id}:") }
+
+    assert_match(/Birthday.*Etienne.*150\.00.*40\.00.*110\.00/, line)
+    assert_not_includes answer, "#{appropriations(:birthday_chiara_next_year).id}:"
+  end
+
+  test "the assistant sets an appropriation and changes its amount when set again" do
+    christmas = { purpose: "Christmas", recipient: "Michelle", budget_year: 2026 }
+
+    ask_assistant("set_appropriation", **christmas, amount: 80)
+
+    assert_equal 80, Appropriation.find_by!(christmas).amount
+
+    assert_no_difference "Appropriation.count" do
+      ask_assistant("set_appropriation", **christmas, amount: 100)
+    end
+
+    assert_equal 100, Appropriation.find_by!(christmas).amount
+  end
+
+  test "the assistant charges a payment to an appropriation" do
+    birthday = appropriations(:birthday_etienne)
+
+    answer = ask_assistant("charge_to_appropriation",
+      appropriation_id: birthday.id, transaction_id: transactions(:gift_payment).id)
+
+    assert_equal birthday, transactions(:gift_payment).reload.appropriation
+    assert_includes answer, "Birthday Etienne 2026"
+  end
+
+  test "the assistant cannot charge a transfer" do
+    transfer = transactions(:transfer_savings)
+
+    assert refused?("charge_to_appropriation",
+      appropriation_id: appropriations(:birthday_etienne).id, transaction_id: transfer.id)
+    assert_nil transfer.reload.appropriation
+  end
+
+  test "charging a split payment without naming a part lists its parts" do
+    webshop = transactions(:webshop_sinterklaas)
+    parts = [ 60, 40 ].map { |amount| webshop.transaction_splits.create!(amount:, category: categories(:gifts)) }
+
+    answer = ask_assistant("charge_to_appropriation",
+      appropriation_id: appropriations(:sinterklaas_chiara).id, transaction_id: webshop.id)
+
+    parts.each { |part| assert_includes answer, part.id.to_s }
+    assert_nil webshop.reload.appropriation
+  end
+
+  test "charging a part of another payment is refused" do
+    part = transactions(:webshop_sinterklaas).transaction_splits.create!(amount: 60, category: categories(:gifts))
+
+    assert refused?("charge_to_appropriation", appropriation_id: appropriations(:sinterklaas_chiara).id,
+      transaction_id: transactions(:gift_payment).id, transaction_split_id: part.id)
+    assert_nil part.reload.appropriation
+  end
+
+  test "charging a remainder part is refused" do
+    payment = transactions(:gift_payment)
+    payment.transaction_splits.create!(amount: 10, category: categories(:gifts))
+    payment.ensure_remainder_split
+    remainder = payment.transaction_splits.find_by!(remainder: true)
+
+    assert refused?("charge_to_appropriation", appropriation_id: appropriations(:birthday_etienne).id,
+      transaction_id: payment.id, transaction_split_id: remainder.id)
+    assert_nil remainder.reload.appropriation
+  end
+
+  test "charging to an unknown appropriation is refused" do
+    assert refused?("charge_to_appropriation", appropriation_id: 0, transaction_id: transactions(:gift_payment).id)
+    assert_nil transactions(:gift_payment).reload.appropriation
+  end
+
   test "an assistant probing for an open stream is told the app does not offer one" do
     get "/mcp", headers: assistant_headers
 
