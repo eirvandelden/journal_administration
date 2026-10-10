@@ -1,5 +1,5 @@
 <%# locals: (budget:) %>
-<%= turbo_frame_tag "budget_form", target: "_top" do %>
+<turbo-frame id="budget_form" target="_top">
   <%= form_with model: budget, data: { controller: "budget-categories" } do |f| %>
     <% if budget.errors.any? %>
       <div>
@@ -47,4 +47,4 @@
 
     <%= link_to t("common.cancel"), budget.persisted? ? budget_path(budget) : budgets_path %>
   <% end %>
-<% end %>
+</turbo-frame>
