@@ -58,6 +58,14 @@ class ConfigurationTest < ActiveSupport::TestCase
     assert_equal %w[ primary ], databases_for("test").map(&:name)
   end
 
+  test "the production image and the lockfile pin the Ruby the tests run on" do
+    image = Rails.root.join("Dockerfile").read[/^ARG RUBY_VERSION=(\d+\.\d+\.\d+)/, 1]
+    locked = Bundler::LockfileParser.new(Rails.root.join("Gemfile.lock").read).ruby_version.to_s[/\d+\.\d+\.\d+/]
+
+    assert_equal RUBY_VERSION, image, "the production image should build on the Ruby the tests run on"
+    assert_equal RUBY_VERSION, locked, "Gemfile.lock should record the Ruby the tests run on"
+  end
+
   private
     def databases_for(environment)
       ActiveRecord::Base.configurations.configs_for(env_name: environment)
