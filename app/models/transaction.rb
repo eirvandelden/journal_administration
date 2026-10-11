@@ -142,6 +142,9 @@ class Transaction < ApplicationRecord
   end
 
   def check_transfer_type_through_account_owners
+    return unless will_save_change_to_type? || will_save_change_to_debitor_account_id? ||
+      will_save_change_to_creditor_account_id?
+
     if type == "Transfer"
       unless debitor_is_us? && creditor_is_us?
         errors.add(:type, "must be Transfer only if both debitor and creditor are family accounts")

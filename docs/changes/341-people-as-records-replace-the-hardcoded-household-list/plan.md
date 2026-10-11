@@ -4,7 +4,7 @@ From `intent.md` (2026-10-10). Status: accepted.
 
 ## Design decisions
 
-- Add `Person`, `Group`, and `GroupMembership` as ordinary resources. A person has a name and a household flag. A group has a name and selected person members. Nested groups remain unsupported.
+- Add `Person`, `Group`, and `GroupMembership` as ordinary resources. A person has a name and a household flag. A group has a name and selected person members. Nested groups remain unsupported. People and groups use persisted Unicode-aware lowercase name keys for durable case-insensitive uniqueness because SQLite `LOWER` does not fold accented characters.
 - Keep `accounts.owner` and `appropriations.recipient` unchanged as immutable legacy fields. Add nullable `person_id` and `group_id` to accounts, and nullable `person_id` to appropriations. New behavior reads the associations. The old values remain an audit-compatible record of imported history.
 - An account is household-owned when its linked person is a household member or its linked group has a household member. This replaces `Account::FAMILY_OWNERS` and the owner enum as the transaction-classification authority. An account with no linked household owner remains external, even if it is associated with a non-household person.
 - The account form offers every person and group as a mutually exclusive owner choice. It clears both references for an external account. Model validation and a database check constraint require zero or one owner reference. It refuses any ownership change that would reclassify an account with transactions.
@@ -24,7 +24,8 @@ From `intent.md` (2026-10-10). Status: accepted.
 
 ## Files that change
 
-- `db/migrate/<timestamp>_create_people_groups_and_memberships.rb` — create people, groups, memberships, foreign keys, uniqueness indexes, nullable account/appropriation association columns, the zero-or-one-account-owner constraint, and the new appropriation person uniqueness index; remove the legacy recipient-text uniqueness index.
+- `db/migrate/<timestamp>_create_people_groups_and_memberships.rb` and `<later-timestamp>_add_unicode_name_keys.rb` — create people, groups, memberships, foreign keys, uniqueness indexes, nullable account/appropriation association columns, the zero-or-one-account-owner constraint, and the new appropriation person uniqueness index; remove the legacy recipient-text uniqueness index; add persisted Unicode-aware uniqueness keys.
+- `db/data/<later-timestamp>_backfill_unicode_name_keys.rb` — backfill the people and group uniqueness keys.
 - `db/data/<later-timestamp>_migrate_people_groups_and_legacy_owners.rb` — use migration-local records and explicit legacy enum integer mapping to backfill canonical case-insensitive people, household status, `Samen`, memberships, and account/appropriation links without validation or legacy-value changes.
 - `app/models/person.rb` — validate case-insensitive unique names, expose household membership, and restrict deletion when referenced.
 - `app/models/group.rb` and `app/models/group_membership.rb` — own group membership selection, validate unique memberships, determine household ownership, and restrict referenced-group deletion.

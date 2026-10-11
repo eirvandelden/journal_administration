@@ -2,6 +2,8 @@
 #
 # Payments and split parts are charged to it; what is left never carries over to another year.
 class Appropriation < ApplicationRecord
+  belongs_to :person, optional: true
+
   has_many :transactions, dependent: :restrict_with_error
   has_many :transaction_splits, dependent: :restrict_with_error
 

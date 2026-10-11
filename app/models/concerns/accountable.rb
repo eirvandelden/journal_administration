@@ -8,14 +8,14 @@ module Accountable
   #
   # @return [Boolean] True if debitor is one of the family owners
   def debitor_is_us?
-    debitor&.owner&.in? Account::FAMILY_OWNERS
+    debitor&.household_owned?
   end
 
   # Checks if the creditor account is a family-owned account
   #
   # @return [Boolean] True if creditor is one of the family owners
   def creditor_is_us?
-    creditor&.owner&.in? Account::FAMILY_OWNERS
+    creditor&.household_owned?
   end
 
   # Checks if both accounts are family-owned

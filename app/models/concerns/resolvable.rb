@@ -37,9 +37,22 @@ module Resolvable
     # @param description [String] The transaction description
     # @return [Account, nil] The matched family account, or nil if no match
     def resolve_from_description(description)
-      our_accounts = where.not(owner: nil).pluck(:account_number).reject(&:blank?)
-      matched_account = our_accounts.find { |account| description.include?(account) }
-      find_by(account_number: matched_account) if matched_account.present?
+      resolve_by_account_number(description) || resolve_by_account_name(description)
+    end
+
+    # Finds a household account by its number embedded in a description.
+    # @return [Account, nil]
+    def resolve_by_account_number(description)
+      match = own.where.not(account_number: nil).pluck(:account_number).find { |number| description.include?(number) }
+      find_by(account_number: match) if match.present?
+    end
+
+    # Finds a household account by its name embedded in a description.
+    # @return [Account, nil]
+    def resolve_by_account_name(description)
+      match = own.where.not(name: nil).pluck(:name).sort_by { |name| -name.length }
+        .find { |name| description.include?(name) }
+      find_by(name: match) if match.present?
     end
   end
 end
