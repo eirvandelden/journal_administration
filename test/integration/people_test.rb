@@ -111,4 +111,15 @@ class PeopleTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_entity
     assert_nil account.reload.person_id
   end
+
+  test "the account form explains a refused owner change on an account with transactions" do
+    account = accounts(:checking)
+
+    patch account_path(account), params: { account: { managed_owner: "" } }
+
+    assert_response :unprocessable_entity
+    assert_select "#error_explanation li",
+      text: /cannot change its household ownership because it has transactions/
+    assert_equal groups(:samen), account.reload.group
+  end
 end
