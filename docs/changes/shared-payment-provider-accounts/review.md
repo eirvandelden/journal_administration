@@ -169,3 +169,7 @@ Nothing found.
 | Assistant marks and moves with the same results | `test/integration/assistant_test.rb` "the assistant marks a shared provider and moves its transactions to their merchants" |
 
 Every test named in `plan.md` `## Proof` exists in the diff, including all per-file unit tests (checked by name with `grep`).
+
+## Round 10 — 2026-10-11 06:53 UTC — 4141cf4 (codex)
+
+- [ ] Important: Preserve legitimate merchant names containing `by` or `via`: `PROVIDER_SUFFIX` strips from the first standalone `by`/`via` onward, so "By George" becomes blank and stays on the provider, and "Flowers by Nature" books on the wrong merchant (codex P2). — `app/models/concerns/payment_provider.rb:12` →
