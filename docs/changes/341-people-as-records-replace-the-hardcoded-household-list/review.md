@@ -43,3 +43,36 @@ Findings:
 
 - [x] Important: A refused household reclassification on the real account form shows no error. The form stays on edit with the submitted value and no alert, error text or field error, so the person cannot tell why Save failed — `app/views/accounts/_form.html.erb` → fixed (Reject unknown managed owners with a validation error — the account update now answers 422 so Turbo renders the error list; guarded by `Test the account form explains a refused owner change`)
 - [x] Important: The Unicode-case collision fix leaves the later appropriation with `person_id` NULL. Both rows must link to the same person, keep legacy text, amounts and charges, and show a later person rename, while new appropriations stay strictly unique — `db/data/20261011090001_migrate_people_groups_and_legacy_owners.rb` → fixed (Add legacy_duplicate to link case-variant appropriations; Enforce appropriation uniqueness around legacy duplicates)
+
+## Round 4 — 2026-10-11T12:12:46Z — ae037ea (claude)
+
+Suite state at review: `bin/rails test` 982 runs, 0 failures, 0 skips; RuboCop, Herb lint, Brakeman (0 warnings), Bundler Audit, `i18n-tasks missing` and `i18n-tasks check-normalized` clean.
+
+Closures from Rounds 1-3: each `fixed` closure matches code and a test in the diff. The Round 3 422 fix is in `61c3a82` and `test/integration/people_test.rb` "the account form explains a refused owner change on an account with transactions" asserts the 422 status and the rendered error. The `legacy_duplicate` closures match `0058106`/`ab9390c` and the migration tests. The two dismissals hold: no controller, tool or importer in `app/` sets `Account#owner`, and the unused suggestion methods stay as model API. No closure is reopened.
+
+Focus checks (verified by reading and by scratch tests run from outside the repository):
+
+- `legacy_duplicate`: `NOT NULL DEFAULT false`, partial unique index excludes flagged rows, no controller or tool permits it, validation checks new records and key changes against all rows, an unchanged legacy pair stays editable, and `Appropriation.named` prefers the unflagged row.
+- Data migration: idempotent on a second `up`. Both Unicode-case rows link to one person, the later row is flagged, and legacy recipient text, amounts, charges and transaction rows stay unchanged. It works in both deploy orders (schema 090002 before or after data 090001), because `name_key` is backfilled by 090003.
+- Account update: the refused reclassification answers 422 and renders the error list.
+- Classification both directions: household to outside and outside to household are refused for accounts, people and group memberships when transactions exist. A refused group destroy keeps its memberships.
+
+Compliance (acceptance criterion → proving test):
+
+- Add a household member and select them as an account owner → `test/integration/people_test.rb` "a user creates a household person and assigns that person to an account"; "the account form offers managed owners and assigns a person".
+- Create or edit `Samen`, see its members, assign it to a joint account → `test/integration/groups_test.rb` "a user edits Samen members and assigns Samen to an account"; "submitting a group as the managed owner assigns the group".
+- Record a grandparent outside the household and select them for an appropriation → `test/integration/appropriations_test.rb` "an appropriation selects an outside person".
+- Renaming a person updates appropriations and assistant answers; amounts and charges stay → `test/integration/appropriations_test.rb` "renaming a recipient updates displayed appropriations without changing charges"; `test/integration/assistant_test.rb` "the assistant reports a renamed appropriation recipient"; `test/data/migrate_people_groups_and_legacy_owners_test.rb` "a person rename shows the new name on both case-variant rows".
+- Individual owners stay linked; `samen` accounts stay household-owned through `Samen` (Etienne, Michelle) → `test/data/migrate_people_groups_and_legacy_owners_test.rb` "migrates named owners and Samen without changing legacy owners".
+- Free-text recipients stay represented; case variants do not duplicate → `test/data/migrate_people_groups_and_legacy_owners_test.rb` "migrates case-variant recipients to one person"; "links both Unicode case variants to one person and flags the later row".
+- Ownership still drives debit, credit and transfer; renames do not change history → `test/data/migrate_people_groups_and_legacy_owners_test.rb` "preserves household scopes and transaction types after migration"; `test/models/transaction_test.rb` "managed household owners determine transaction type after a rename".
+- Referenced people and groups cannot be deleted; removing a group or member keeps people → `test/models/person_test.rb` "refuses to destroy account, appropriation, and membership references"; `test/models/group_test.rb` "refuses to destroy a group that owns an account", "destroying an unused group keeps its people"; `test/models/group_membership_test.rb` "removing a membership keeps the person".
+- Tested, linted, independently reviewed PR → checks green at this SHA; this round plus the Codex review.
+- All 25 tests named in `plan.md` `## Proof` exist. No existing test was skipped or weakened; `account_number must be unique` moved, and the removed enum, datalist and "latest spelling" tests cover behaviour the plan replaces.
+
+Findings:
+
+- [ ] Nit: A flagged `legacy_duplicate` row whose purpose, person or year moves to a free key keeps `legacy_duplicate = true`. That row then stays outside the partial unique index for good, so only the model validation guards its new key, not the database — `app/models/appropriation.rb:111` →
+- [ ] Nit: Both rows of a migrated case-variant pair now render the same label (`Gift Élodie 2026` twice) in the charge select, because `to_s` uses the current person name. Before the migration the two spellings were distinguishable — `app/helpers/appropriations_helper.rb:20` →
+- [ ] Nit: Person and group names are not stripped before the name key is built. `" Etienne"` saves as a second person beside `Etienne`, and an assistant lookup for `"Etienne "` answers "No person named" — `app/models/person.rb:63`, `app/models/group.rb:76` →
+- [ ] Nit: A failed account create still renders `new` with status 200, the same silent Turbo failure that Round 3 fixed for update. This existed before the branch; fix it on a separate branch — `app/controllers/accounts_controller.rb:56` →
