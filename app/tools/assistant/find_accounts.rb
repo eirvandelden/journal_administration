@@ -11,7 +11,7 @@ module Assistant
     )
 
     def self.call(query:, server_context:)
-      accounts = Account.search(query)
+      accounts = Account.search(query).includes(:person, group: :people)
 
       return answer("No account matches #{query}.") if accounts.empty?
 

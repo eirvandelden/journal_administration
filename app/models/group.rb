@@ -26,6 +26,8 @@ class Group < ApplicationRecord
   # Whether at least one member belongs to the household.
   # @return [Boolean]
   def household?
+    return people.any?(&:household?) if people.loaded?
+
     people.where(household: true).exists?
   end
 
