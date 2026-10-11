@@ -29,5 +29,6 @@ module Assistant
 
       "Moved #{count} transactions from #{account} to their merchants."
     end
+    private_class_method :moved
   end
 end

@@ -114,7 +114,7 @@ Round-5 fixes verified:
 - Tool description: `move_transactions_to_merchants` now says a transaction on the provider's default category gets the merchant's default, or none. `assistant_test.rb` "the move tool warns that a default category follows the merchant" pins it. Holds.
 - Singular notice: `merchant_reassignments.create.success` has `one`/`other` in en, nl and it; the controller passes `count:`. The tool answers "Moved 1 transaction from Adyen to its merchant." for one. `merchant_reassignments_test.rb` "a single moved transaction is announced in the singular" and `assistant_test.rb` "the assistant hears about a single moved transaction in the singular" pin both. Holds.
 
-- [ ] Nit: The new helper `self.moved` is a public class method on the tool. Every other tool helper (`Tool.answer`, `Tool.problem`, all of `BudgetStatus`'s helpers) is marked `private_class_method`. — `app/tools/assistant/move_transactions_to_merchants.rb:27` →
+- [x] Nit: The new helper `self.moved` is a public class method on the tool. Every other tool helper (`Tool.answer`, `Tool.problem`, all of `BudgetStatus`'s helpers) is marked `private_class_method`. — `app/tools/assistant/move_transactions_to_merchants.rb:27` → fixed (Keep the move tool's message helper private, like other tool helpers)
 
 ### Compliance
 
