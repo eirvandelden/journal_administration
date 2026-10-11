@@ -34,10 +34,16 @@ en:
       account_number: 'Account number:'
       aliases: Recognition patterns
       category: 'Category:'
+      confirm_move_to_merchants: Move every transaction on this account to the merchant named in it?
       edit: Edit
       id: 'Id:'
+      mark_payment_provider: Mark as shared payment provider
+      move_to_merchants: Move transactions to their merchants
       name: 'Name:'
       owner: 'Owner:'
+      payment_provider_off: This account is not a shared payment provider.
+      payment_provider_on: 'This account is a shared payment provider: the merchant in each transaction decides the counterparty.'
+      unmark_payment_provider: Unmark as shared payment provider
       update_transactions: Update Transactions
     transactions_bulk:
       update:
@@ -562,6 +568,10 @@ en:
     todo_consolidatable_accounts: Consolidatable accounts
     todo_consolidatable_transactions: Consolidatable transactions
     todo_upload: Upload new transactions
+  merchant_reassignments:
+    create:
+      failure: 'Moving transactions failed: %{message}'
+      success: "%{count} transactions moved to their merchants."
   number:
     currency:
       format:
@@ -619,6 +629,11 @@ en:
   pagination:
     next: Next
     previous: Previous
+  payment_providers:
+    create:
+      success: Marked as a shared payment provider.
+    destroy:
+      success: No longer a shared payment provider.
   product_types:
     create:
       success: Product type added.
