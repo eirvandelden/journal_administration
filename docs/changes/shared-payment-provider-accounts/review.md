@@ -28,3 +28,7 @@ Checks at review time: `bin/rails test` 948 runs, 0 failures, 0 skips; `rubocop`
 | Assistant marks and moves with the same results | `test/integration/assistant_test.rb` "the assistant marks a shared provider and moves its transactions to their merchants" |
 
 Every test named in `plan.md` `## Proof` exists in the diff.
+
+## Round 2 — 2026-10-11 06:30 UTC — 817d3c4 (codex)
+
+`codex review --base origin/main`: no findings. Its focused run passed 124 tests, 345 assertions, no failures or errors.
