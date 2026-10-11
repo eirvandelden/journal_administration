@@ -69,3 +69,34 @@ Every test named in `plan.md` `## Proof` exists in the diff, including all per-f
 ## Round 4 — 2026-10-11 06:40 UTC — 2356054 (codex)
 
 - [x] Important: Cache provider aliases during bulk moves: `own_name?` reloads `account_aliases` for every transaction, and `move_counterparty` checks `split?` for every transaction, adding database round trips per row (codex P2). — `app/models/concerns/payment_provider.rb:81` → dismissed: does not hold at 2356054. A query count over a move of the four `adyen` fixtures shows one alias load for the provider (`account_aliases.map` loads the association once, from "Read a provider's names once per move, and query splits only when the category matters"), and `split?` runs only when the category equals the provider's default. The split queries left come from `Splittable`'s save validation and `after_save` remainder sync, which every save needs.
+
+## Round 5 — 2026-10-11 06:44 UTC — 59570d9
+
+Checks at review time: `bin/rails test` 951 runs, 2529 assertions, 0 failures, 0 errors, 0 skips; `rubocop` (309 files), herb-lint, Brakeman and bundler-audit clean; `i18n-tasks normalize` changes nothing; no translations missing. No uncommitted changes. No existing test was weakened, skipped or deleted (the diff removes no line under `test/`).
+
+Earlier closures verified:
+
+- Round 3 rollback test: `break_a_move_after_a_new_merchant` now sets `booked_at` so the new-merchant payment sorts first, and asserts that order on the same `by_account` scope the move uses. The test asserts "Brand New Shop" does not exist after the rollback. A separate test asserts the failing transaction keeps its debitor and its explicit split `[10, bakery]`. Holds.
+- Round 4 dismissal: `app/` is unchanged since 2356054. A query probe over a move of the four `adyen` fixtures at 59570d9 shows 23 queries, one `account_aliases` load for the provider, and 8 split queries for 3 saved moves (validation, remainder sync, and `split?` only where the category matches). The dismissal reason holds.
+
+- [ ] Nit: The `move_transactions_to_merchants` tool description says categories chosen by hand and splits are kept, but does not say that a payment on the provider's default category takes the merchant's default, or loses its category when the merchant has none. The web confirm text warns about this since round 1; the assistant gets no such warning before a destructive call. — `app/tools/assistant/move_transactions_to_merchants.rb:4` →
+- [ ] Nit: The move notice has no plural forms, so one moved payment reads "1 transactions moved to their merchants." (en), "1 transacties verplaatst" (nl), "1 transazioni spostate" (it), and the tool answers "Moved 1 transactions". The existing bulk-update notice has the same flaw, so this follows precedent. — `config/locales/en.yml:575`, `app/tools/assistant/move_transactions_to_merchants.rb:21` →
+
+### Compliance
+
+| Acceptance criterion | Proving test |
+| --- | --- |
+| Shared Adyen, "Naam: Kruidvat" books on Kruidvat | `test/jobs/importing/ing/import_job_test.rb` "a payment through a shared provider books on the merchant's existing account" |
+| "Naam: Kirovanni/Foodticket" creates and books on a new account | `import_job_test.rb` "a payment through a shared provider to an unknown merchant creates that merchant" |
+| Mollie "via" suffix dropped | `import_job_test.rb` "a via suffix is dropped from the merchant name" |
+| Buckaroo "by" suffix dropped | `import_job_test.rb` "a by suffix is dropped from the merchant name" |
+| "Naam: Adyen" stays on Adyen | `import_job_test.rb` "a payment naming the provider itself stays on the provider" |
+| AON (not shared) still books on AON | `import_job_test.rb` "a payment to an account that is not a shared provider books on that account" |
+| Newly shared: stays until the move, then moves | `test/integration/merchant_reassignments_test.rb` "marking a provider leaves its transactions until they are moved" |
+| Provider default category becomes merchant default | `merchant_reassignments_test.rb` "a moved transaction with the provider's default category gets the merchant's default" |
+| Hand-picked category and splits kept | `merchant_reassignments_test.rb` "a moved transaction keeps a category chosen by hand", "a moved split transaction keeps its splits" |
+| Second move moves nothing | `merchant_reassignments_test.rb` "moving a second time moves nothing" |
+| Unmark: new import books on Adyen, moved ones stay | `test/integration/payment_providers_test.rb` "unmarking a provider books new imports on it and leaves moved transactions" |
+| Assistant marks and moves with the same results | `test/integration/assistant_test.rb` "the assistant marks a shared provider and moves its transactions to their merchants" |
+
+Every test named in `plan.md` `## Proof` exists in the diff, including all per-file unit tests (checked by name with `grep`).
