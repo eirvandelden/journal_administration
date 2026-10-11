@@ -554,6 +554,18 @@ class AssistantTest < ActionDispatch::IntegrationTest
     assert_match(/default category/, tools.fetch("move_transactions_to_merchants")["description"])
   end
 
+  test "the assistant hears about a single moved transaction in the singular" do
+    accounts(:adyen).update!(payment_provider: true)
+    Transaction.by_account(accounts(:adyen).id).where.not(id: transactions(:kruidvat_through_adyen).id)
+      .update_all(original_note: "Naam: Adyen")
+
+    post_to_assistant(method: "tools/call",
+      params: { name: "move_transactions_to_merchants", arguments: { account_id: accounts(:adyen).id } })
+
+    assert_equal "Moved 1 transaction from Adyen to its merchant.",
+      JSON.parse(response.body).dig("result", "content", 0, "text")
+  end
+
   test "both new tools say they change things" do
     post_to_assistant
     tools = JSON.parse(response.body).dig("result", "tools").index_by { |tool| tool["name"] }

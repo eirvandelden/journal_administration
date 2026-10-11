@@ -572,7 +572,9 @@ en:
   merchant_reassignments:
     create:
       failure: 'Moving transactions failed: %{message}'
-      success: "%{count} transactions moved to their merchants."
+      success:
+        one: "%{count} transaction moved to its merchant."
+        other: "%{count} transactions moved to their merchants."
   number:
     currency:
       format:

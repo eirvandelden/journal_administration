@@ -80,7 +80,7 @@ Earlier closures verified:
 - Round 4 dismissal: `app/` is unchanged since 2356054. A query probe over a move of the four `adyen` fixtures at 59570d9 shows 23 queries, one `account_aliases` load for the provider, and 8 split queries for 3 saved moves (validation, remainder sync, and `split?` only where the category matches). The dismissal reason holds.
 
 - [x] Nit: The `move_transactions_to_merchants` tool description says categories chosen by hand and splits are kept, but does not say that a payment on the provider's default category takes the merchant's default, or loses its category when the merchant has none. The web confirm text warns about this since round 1; the assistant gets no such warning before a destructive call. — `app/tools/assistant/move_transactions_to_merchants.rb:4` → fixed (Tell the assistant that a default category follows the merchant)
-- [ ] Nit: The move notice has no plural forms, so one moved payment reads "1 transactions moved to their merchants." (en), "1 transacties verplaatst" (nl), "1 transazioni spostate" (it), and the tool answers "Moved 1 transactions". The existing bulk-update notice has the same flaw, so this follows precedent. — `config/locales/en.yml:575`, `app/tools/assistant/move_transactions_to_merchants.rb:21` →
+- [x] Nit: The move notice has no plural forms, so one moved payment reads "1 transactions moved to their merchants." (en), "1 transacties verplaatst" (nl), "1 transazioni spostate" (it), and the tool answers "Moved 1 transactions". The existing bulk-update notice has the same flaw, so this follows precedent. — `config/locales/en.yml:575`, `app/tools/assistant/move_transactions_to_merchants.rb:21` → fixed (Announce a single moved transaction in the singular)
 
 ### Compliance
 

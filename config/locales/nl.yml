@@ -572,7 +572,9 @@ nl:
   merchant_reassignments:
     create:
       failure: 'Verplaatsen van transacties mislukt: %{message}'
-      success: "%{count} transacties verplaatst naar hun winkels."
+      success:
+        one: "%{count} transactie verplaatst naar de winkel."
+        other: "%{count} transacties verplaatst naar hun winkels."
   number:
     currency:
       format:

@@ -70,6 +70,15 @@ class MerchantReassignmentsTest < ActionDispatch::IntegrationTest
     assert_equal I18n.t("merchant_reassignments.create.success", count: 3), flash[:notice]
   end
 
+  test "a single moved transaction is announced in the singular" do
+    Transaction.by_account(@account.id).where.not(id: transactions(:kruidvat_through_adyen).id)
+      .update_all(original_note: "Naam: Adyen")
+
+    post account_merchant_reassignment_path(@account)
+
+    assert_equal "1 transaction moved to its merchant.", flash[:notice]
+  end
+
   test "redirects with an alert when a move fails" do
     failing = transactions(:kruidvat_through_adyen)
     failing.transaction_splits.create!(amount: 10, category: categories(:bakery))

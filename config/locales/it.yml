@@ -572,7 +572,9 @@ it:
   merchant_reassignments:
     create:
       failure: 'Spostamento delle transazioni non riuscito: %{message}'
-      success: "%{count} transazioni spostate sui loro negozi."
+      success:
+        one: "%{count} transazione spostata sul suo negozio."
+        other: "%{count} transazioni spostate sui loro negozi."
   number:
     currency:
       format:
