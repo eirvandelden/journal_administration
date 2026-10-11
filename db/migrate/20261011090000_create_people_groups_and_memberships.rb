@@ -29,7 +29,8 @@ class CreatePeopleGroupsAndMemberships < ActiveRecord::Migration[8.1]
       name: "accounts_have_at_most_one_managed_owner"
 
     add_reference :appropriations, :person, foreign_key: { on_delete: :restrict }
-    remove_index :appropriations, name: "index_appropriations_on_lower_purpose_recipient_and_year"
+    remove_index :appropriations, "LOWER(purpose), LOWER(recipient), budget_year", unique: true,
+      name: "index_appropriations_on_lower_purpose_recipient_and_year"
     add_index :appropriations, "LOWER(purpose), person_id, budget_year", unique: true,
       where: "person_id IS NOT NULL", name: "index_appropriations_on_person_and_purpose_and_year"
   end
