@@ -6,7 +6,22 @@ class Group < ApplicationRecord
 
   validates :name, presence: true
   validate :name_key_is_unique
+  validate :preserve_transaction_classification
   before_validation :normalize_name_key
+  after_save :apply_selected_people
+
+  # The selected member ids submitted with this group.
+  # @return [Array<Integer>]
+  def person_ids
+    @selected_person_ids || people.ids
+  end
+
+  # Defers member replacement until group validation succeeds.
+  # @param ids [Array<String, Integer>]
+  # @return [void]
+  def person_ids=(ids)
+    @selected_person_ids = Array(ids).reject(&:blank?).map(&:to_i).uniq
+  end
 
   # Whether at least one member belongs to the household.
   # @return [Boolean]
@@ -29,9 +44,36 @@ class Group < ApplicationRecord
     errors.add(:name, :taken)
   end
 
+  # Refuses member changes that alter account classification with history.
+  # @return [void]
+  def preserve_transaction_classification
+    return unless @selected_person_ids && accounts_with_transactions.exists?
+    return if household? == selected_people.where(household: true).exists?
+
+    errors.add(:base, :cannot_change_with_transactions)
+  end
+
+  # The people chosen for this update.
+  # @return [ActiveRecord::Relation<Person>]
+  def selected_people
+    Person.where(id: @selected_person_ids)
+  end
+
   # Stores the Unicode-aware key used by the unique database index.
   # @return [void]
   def normalize_name_key
     self.name_key = name.downcase if name.present?
+  end
+
+  # Applies member changes after all group validations pass.
+  # @return [void]
+  def apply_selected_people
+    return unless @selected_person_ids
+
+    (@selected_person_ids - group_memberships.pluck(:person_id)).each do |id|
+      group_memberships.create!(person_id: id)
+    end
+    group_memberships.where.not(person_id: @selected_person_ids).find_each(&:destroy!)
+    @selected_person_ids = nil
   end
 end

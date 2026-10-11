@@ -72,6 +72,28 @@ class Account < ApplicationRecord
     person&.household? || group&.household? || false
   end
 
+  # The current managed owner's name, or nil for an external account.
+  # @return [String, nil]
+  def owner_name = group&.name || person&.name
+
+  # Selects exactly one managed owner from the account form.
+  # @param value [String]
+  # @return [void]
+  def managed_owner=(value)
+    kind, id = value.to_s.split("_", 2)
+    self.person_id = kind == "person" ? id : nil
+    self.group_id = kind == "group" ? id : nil
+  end
+
+  # The managed owner selection shown by the account form.
+  # @return [String]
+  def managed_owner
+    return "group_#{group_id}" if group_id.present?
+    return "person_#{person_id}" if person_id.present?
+
+    ""
+  end
+
   # Returns human-readable string representation of the account
   #
   # @return [String] Account name if present, otherwise account number

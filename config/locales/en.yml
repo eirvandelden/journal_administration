@@ -13,6 +13,10 @@ en:
       success: "✅ Account was successfully created."
     destroy:
       success: "✅ Account was successfully destroyed."
+    form:
+      external_owner: External account
+      group_owner: "%{name} (group)"
+      person_owner: "%{name} (person)"
     index:
       account_number: Account number
       category: Category
@@ -55,6 +59,7 @@ en:
     attributes:
       account:
         iban: IBAN
+        managed_owner: Owner
         name: Name
         number: Number
         payment_provider: Payment provider
@@ -85,6 +90,11 @@ en:
         serial_number: Serial Number
         warranty_document: Warranty document
         warranty_expires_at: Warranty expires at
+      group:
+        name: Name
+      person:
+        household: Household member
+        name: Name
       product:
         brand: Brand
         name: Name
@@ -112,7 +122,9 @@ en:
         account:
           attributes:
             base:
+              cannot_reclassify_with_transactions: cannot change its household ownership because it has transactions
               has_transactions: cannot be deleted because it has associated transactions
+              one_owner_only: must have at most one owner
             payment_provider:
               must_be_external: must be an external account
         account_alias:
@@ -143,6 +155,18 @@ en:
             category:
               must_be_parent: must be a top-level category
               must_not_be_transfer: must not be the Transfer category
+        group:
+          attributes:
+            base:
+              cannot_change_with_transactions: would change account classification despite existing transactions
+        group_membership:
+          attributes:
+            base:
+              cannot_change_with_transactions: would change account classification despite existing transactions
+        person:
+          attributes:
+            household:
+              cannot_change_with_transactions: cannot change because an account classification uses it
         receipt_line:
           attributes:
             paid_amount:
@@ -178,6 +202,13 @@ en:
         other: Appropriations
       category: Category
       chattel: Chattel
+      group:
+        one: Group
+        other: Groups
+      group_membership: Group membership
+      person:
+        one: Person
+        other: People
       product:
         one: Product
         other: Products
@@ -538,6 +569,28 @@ en:
       header:
         one: "%{count} error prohibited this %{model} from being saved"
         other: "%{count} errors prohibited this %{model} from being saved"
+  groups:
+    create:
+      success: "✅ Group created."
+    destroy:
+      success: "✅ Group deleted."
+    edit:
+      heading: Edit %{name}
+    form:
+      members: Members
+    index:
+      edit: Edit
+      heading: Groups
+      members: Members
+      new: "➕ New group"
+    new:
+      heading: New group
+    show:
+      destroy: "🔥 Delete group"
+      edit: "✏️ Edit group"
+      members: Members
+    update:
+      success: "✅ Group updated."
   helpers:
     select:
       prompt: Please select
@@ -559,6 +612,8 @@ en:
     budgets: "💰 %{model}"
     categories: "🏷️ %{model}"
     chattels: "📦 %{model}"
+    groups: "👥 Groups"
+    people: "👤 People"
     preferences: "🎨 Preferences"
     product_types: "🥫 %{model}"
     products: "🛒 %{model}"
@@ -637,6 +692,27 @@ en:
       success: Marked as a shared payment provider.
     destroy:
       success: No longer a shared payment provider.
+  people:
+    create:
+      success: "✅ Person created."
+    destroy:
+      success: "✅ Person deleted."
+    edit:
+      heading: Edit %{name}
+    household:
+      'false': Outside household
+      'true': Household member
+    index:
+      edit: Edit
+      heading: People
+      new: "➕ New person"
+    new:
+      heading: New person
+    show:
+      destroy: "🔥 Delete person"
+      edit: "✏️ Edit person"
+    update:
+      success: "✅ Person updated."
   product_types:
     create:
       success: Product type added.

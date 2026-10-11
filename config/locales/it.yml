@@ -13,6 +13,10 @@ it:
       success: "✅ Conto creato con successo."
     destroy:
       success: "✅ Conto eliminato con successo."
+    form:
+      external_owner: Conto esterno
+      group_owner: "%{name} (gruppo)"
+      person_owner: "%{name} (persona)"
     index:
       account_number: Numero conto
       category: Categoria
@@ -55,6 +59,7 @@ it:
     attributes:
       account:
         iban: IBAN
+        managed_owner: Proprietario
         name: Nome
         number: Numero
         payment_provider: Fornitore di pagamenti
@@ -85,6 +90,11 @@ it:
         serial_number: Numero seriale
         warranty_document: Documento di garanzia
         warranty_expires_at: Garanzia fino al
+      group:
+        name: Nome
+      person:
+        household: Membro del nucleo familiare
+        name: Nome
       product:
         brand: Marca
         name: Nome
@@ -112,7 +122,9 @@ it:
         account:
           attributes:
             base:
+              cannot_reclassify_with_transactions: non può cambiare proprietà familiare perché ha transazioni
               has_transactions: non può essere eliminato perché ha transazioni associate
+              one_owner_only: deve avere al massimo un proprietario
             payment_provider:
               must_be_external: deve essere un conto esterno
         account_alias:
@@ -143,6 +155,18 @@ it:
             category:
               must_be_parent: deve essere una categoria principale
               must_not_be_transfer: non può essere la categoria Transfer
+        group:
+          attributes:
+            base:
+              cannot_change_with_transactions: cambierebbe la classificazione del conto nonostante le transazioni esistenti
+        group_membership:
+          attributes:
+            base:
+              cannot_change_with_transactions: cambierebbe la classificazione del conto nonostante le transazioni esistenti
+        person:
+          attributes:
+            household:
+              cannot_change_with_transactions: non può cambiare perché determina la classificazione del conto
         receipt_line:
           attributes:
             paid_amount:
@@ -538,6 +562,28 @@ it:
       header:
         one: 'Non posso salvare questo %{model}: %{count} errore'
         other: 'Non posso salvare questo %{model}: %{count} errori.'
+  groups:
+    create:
+      success: "✅ Gruppo creato."
+    destroy:
+      success: "✅ Gruppo eliminato."
+    edit:
+      heading: Modifica %{name}
+    form:
+      members: Membri
+    index:
+      edit: Modifica
+      heading: Gruppi
+      members: Membri
+      new: "➕ Nuovo gruppo"
+    new:
+      heading: Nuovo gruppo
+    show:
+      destroy: "🔥 Elimina gruppo"
+      edit: "✏️ Modifica gruppo"
+      members: Membri
+    update:
+      success: "✅ Gruppo aggiornato."
   helpers:
     select:
       prompt: Seleziona...
@@ -637,6 +683,27 @@ it:
       success: Segnato come fornitore di pagamenti condiviso.
     destroy:
       success: Non più un fornitore di pagamenti condiviso.
+  people:
+    create:
+      success: "✅ Persona creata."
+    destroy:
+      success: "✅ Persona eliminata."
+    edit:
+      heading: Modifica %{name}
+    household:
+      'false': Fuori dal nucleo familiare
+      'true': Membro del nucleo familiare
+    index:
+      edit: Modifica
+      heading: Persone
+      new: "➕ Nuova persona"
+    new:
+      heading: Nuova persona
+    show:
+      destroy: "🔥 Elimina persona"
+      edit: "✏️ Modifica persona"
+    update:
+      success: "✅ Persona aggiornata."
   product_types:
     create:
       success: Tipo di prodotto aggiunto.
