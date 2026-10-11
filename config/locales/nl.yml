@@ -106,6 +106,8 @@ nl:
           attributes:
             base:
               has_transactions: kan niet worden verwijderd omdat er transacties aan gekoppeld zijn
+            payment_provider:
+              must_be_external: moet een externe rekening zijn
         account_alias:
           attributes:
             account:

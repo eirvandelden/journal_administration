@@ -9,7 +9,8 @@ module Resolvable
     # Resolves or creates an account from import data
     #
     # Uses a cascade strategy:
-    # 1. Find by explicit account_number if provided
+    # 1. Find by explicit account_number if provided; a shared payment provider hands over to
+    #    the merchant named in the description
     # 2. Match account_number embedded in transaction description
     # 3. Create or find by normalized merchant name
     #
@@ -19,7 +20,7 @@ module Resolvable
     # @return [Account] An existing or newly created account
     def resolve_for_import(account_number:, description:, name:)
       if account_number.present?
-        return find_or_create_by(account_number: account_number)
+        return find_or_create_by(account_number: account_number).counterparty_for(description)
       end
 
       account = resolve_from_description(description)

@@ -38,4 +38,83 @@ class Importing::ING::ImportJobTest < ActiveJob::TestCase
       Importing::ING::ImportJob.perform_now(row)
     end
   end
+
+  test "a payment through a shared provider books on the merchant's existing account" do
+    accounts(:adyen).update!(payment_provider: true)
+
+    Importing::ING::ImportJob.perform_now(provider_row("Kruidvat"))
+
+    assert_equal accounts(:kruidvat), last_transaction.debitor
+  end
+
+  test "a payment through a shared provider to an unknown merchant creates that merchant" do
+    accounts(:adyen).update!(payment_provider: true)
+
+    assert_difference "Account.count", 1 do
+      Importing::ING::ImportJob.perform_now(provider_row("Kirovanni/Foodticket"))
+    end
+
+    assert_equal "Kirovanni/Foodticket", last_transaction.debitor.name
+  end
+
+  test "a via suffix is dropped from the merchant name" do
+    mollie = Account.create!(name: "Stichting Mollie Payments", account_number: "NL00MOLL0000000001",
+      payment_provider: true)
+
+    Importing::ING::ImportJob.perform_now(
+      provider_row("Partydeco", number: mollie.account_number, suffix: " via Stichting Mollie Payments")
+    )
+
+    assert_equal "Partydeco", last_transaction.debitor.name
+  end
+
+  test "a by suffix is dropped from the merchant name" do
+    buckaroo = Account.create!(name: "STICHTING DERDENGELDEN BUCKAROO", account_number: "NL00BUCK0000000001",
+      payment_provider: true)
+
+    Importing::ING::ImportJob.perform_now(
+      provider_row("Topbloemen", number: buckaroo.account_number, suffix: " by Buckaroo")
+    )
+
+    assert_equal "Topbloemen", last_transaction.debitor.name
+  end
+
+  test "a payment naming the provider itself stays on the provider" do
+    accounts(:adyen).update!(payment_provider: true)
+
+    Importing::ING::ImportJob.perform_now(provider_row("Adyen"))
+
+    assert_equal accounts(:adyen), last_transaction.debitor
+  end
+
+  test "a refund through a shared provider books on the merchant" do
+    accounts(:adyen).update!(payment_provider: true)
+
+    Importing::ING::ImportJob.perform_now(provider_row("Kruidvat", direction: "Bij"))
+
+    assert_equal [ "Debit", accounts(:kruidvat) ], [ last_transaction.type, last_transaction.creditor ]
+  end
+
+  test "a payment to an account that is not a shared provider books on that account" do
+    Importing::ING::ImportJob.perform_now(provider_row("Kruidvat", number: accounts(:aon).account_number))
+
+    assert_equal accounts(:aon), last_transaction.debitor
+  end
+
+  test "an unmarked provider books new payments on itself" do
+    Importing::ING::ImportJob.perform_now(provider_row("Kruidvat"))
+
+    assert_equal accounts(:adyen), last_transaction.debitor
+  end
+
+  private
+
+  def last_transaction = Transaction.reorder(:id).last
+
+  def provider_row(merchant, number: accounts(:adyen).account_number, direction: "Af", suffix: "")
+    description = "Naam: #{merchant}#{suffix} Omschrijving: Payment IBAN: #{number} Kenmerk: 99"
+
+    [ "20260815", merchant, accounts(:checking).account_number, number,
+      "GT", direction, "10,00", "Betaalautomaat", description, "1000,00", "" ]
+  end
 end

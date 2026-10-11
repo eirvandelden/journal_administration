@@ -5,6 +5,7 @@
 # transactions are debits, credits, or transfers.
 class Account < ApplicationRecord
   include Normalizable
+  include PaymentProvider
   include Resolvable
   include BulkUpdatable
   include Searchable

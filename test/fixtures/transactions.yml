@@ -125,3 +125,43 @@ webshop_sinterklaas:
   creditor: unknown
   category: gifts
   note: Webshop order for Sinterklaas
+
+kruidvat_through_adyen:
+  type: Credit
+  amount: 12.34
+  booked_at: 2026-08-10 12:00:00
+  interest_at: 2026-08-10 12:00:00
+  debitor: adyen
+  creditor: checking
+  category: gifts
+  original_note: "Naam: Kruidvat Omschrijving: Betaling IBAN: NL04ADYB2017400157 Kenmerk: 1 Valutadatum: 10-08-2026"
+
+hand_categorised_through_adyen:
+  type: Credit
+  amount: 8.00
+  booked_at: 2026-08-11 12:00:00
+  interest_at: 2026-08-11 12:00:00
+  debitor: adyen
+  creditor: checking
+  category: bakery
+  original_note: "Naam: Kruidvat Omschrijving: Betaling IBAN: NL04ADYB2017400157 Kenmerk: 2 Valutadatum: 11-08-2026"
+
+adyen_itself:
+  type: Credit
+  amount: 3.00
+  booked_at: 2026-08-12 12:00:00
+  interest_at: 2026-08-12 12:00:00
+  debitor: adyen
+  creditor: checking
+  category: gifts
+  original_note: "Naam: Adyen Omschrijving: Kosten IBAN: NL04ADYB2017400157 Kenmerk: 3 Valutadatum: 12-08-2026"
+
+refund_through_adyen:
+  type: Debit
+  amount: 5.00
+  booked_at: 2026-08-13 12:00:00
+  interest_at: 2026-08-13 12:00:00
+  debitor: checking
+  creditor: adyen
+  category: gifts
+  original_note: "Naam: Kruidvat Omschrijving: Terugbetaling IBAN: NL04ADYB2017400157 Kenmerk: 4 Valutadatum: 13-08-2026"

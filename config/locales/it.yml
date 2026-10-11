@@ -106,6 +106,8 @@ it:
           attributes:
             base:
               has_transactions: non può essere eliminato perché ha transazioni associate
+            payment_provider:
+              must_be_external: deve essere un conto esterno
         account_alias:
           attributes:
             account:

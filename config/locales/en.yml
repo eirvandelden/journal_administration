@@ -106,6 +106,8 @@ en:
           attributes:
             base:
               has_transactions: cannot be deleted because it has associated transactions
+            payment_provider:
+              must_be_external: must be an external account
         account_alias:
           attributes:
             account:
