@@ -9,7 +9,8 @@ module PaymentProvider
   # Labels ING writes after the merchant name in a description.
   NEXT_LABELS = [ "Omschrijving", "IBAN", "Kenmerk", "Machtiging ID", "Datum/Tijd", "Valutadatum" ].freeze
   MERCHANT = /(?:\A|\s)Naam: (.*?)(?=\s(?:#{NEXT_LABELS.map { |label| Regexp.escape(label) }.join("|")}):|\z)/m
-  PROVIDER_SUFFIX = /(?:\A|\s)(?:via|by)\s.*\z/i
+  # Only the last "via …"/"by …" clause names the provider: "Flowers by Nature via Mollie" keeps "Flowers by Nature".
+  PROVIDER_SUFFIX = /(?:\A|\s)(?:via|by)\s(?!.*\s(?:via|by)\s).*\z/i
 
   # Raised when one transaction cannot move; names that transaction so it can be found and fixed
   class MoveFailed < StandardError

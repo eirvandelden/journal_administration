@@ -47,6 +47,10 @@ class PaymentProviderTest < ActiveSupport::TestCase
     end
   end
 
+  test "counterparty_for drops only the last via or by clause" do
+    assert_equal "Flowers by Nature", @provider.counterparty_for(described("Flowers by Nature via Mollie")).name
+  end
+
   test "counterparty_for stays on the provider without a Naam field" do
     assert_equal @provider, @provider.counterparty_for("Omschrijving: Payment IBAN: NL04ADYB2017400157")
     assert_equal @provider, @provider.counterparty_for(nil)
