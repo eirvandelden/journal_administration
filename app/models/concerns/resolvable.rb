@@ -43,16 +43,17 @@ module Resolvable
     # Finds a household account by its number embedded in a description.
     # @return [Account, nil]
     def resolve_by_account_number(description)
-      match = own.where.not(account_number: nil).pluck(:account_number).find { |number| description.include?(number) }
-      find_by(account_number: match) if match.present?
+      candidates = own.where.not(account_number: nil).pluck(:account_number).reject(&:blank?)
+      match = candidates.find { |number| description.include?(number) }
+      own.find_by(account_number: match) if match
     end
 
     # Finds a household account by its name embedded in a description.
     # @return [Account, nil]
     def resolve_by_account_name(description)
-      match = own.where.not(name: nil).pluck(:name).sort_by { |name| -name.length }
-        .find { |name| description.include?(name) }
-      find_by(name: match) if match.present?
+      candidates = own.where.not(name: nil).pluck(:name).reject(&:blank?).sort_by { |name| -name.length }
+      match = candidates.find { |name| description.include?(name) }
+      own.find_by(name: match) if match
     end
   end
 end
