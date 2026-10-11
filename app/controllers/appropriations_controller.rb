@@ -9,7 +9,8 @@ class AppropriationsController < ApplicationController
   # @return [void]
   def index
     @year = chosen_year
-    @appropriations = Appropriation.of_year(@year).order(:purpose, :recipient)
+    @appropriations = Appropriation.of_year(@year).includes(:person).order(:purpose).to_a
+      .sort_by { |appropriation| [ appropriation.purpose.downcase, appropriation.recipient_name.downcase ] }
   end
 
   # Shows one appropriation with the payments and split parts charged to it.
@@ -88,6 +89,8 @@ class AppropriationsController < ApplicationController
 
   # The fields a person may set on an appropriation
   def appropriation_params
-    params.expect(appropriation: %i[purpose recipient budget_year amount])
+    fields = %i[purpose person_id budget_year amount]
+    fields << :recipient if action_name == "create"
+    params.expect(appropriation: fields)
   end
 end

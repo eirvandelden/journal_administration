@@ -11,9 +11,13 @@ module AppropriationsHelper
   private
 
   # Every appropriation as [label, id] pairs, keyed by its budget year
+  # @return [Hash{String => Array<Array(String, Integer)>}]
   def appropriations_per_year
-    Appropriation.order(budget_year: :desc, purpose: :asc, recipient: :asc)
+    Appropriation.includes(:person).order(budget_year: :desc, purpose: :asc).to_a
       .group_by { |appropriation| appropriation.budget_year.to_s }
-      .transform_values { |appropriations| appropriations.map { |choice| [ choice.to_s, choice.id ] } }
+      .transform_values do |appropriations|
+        appropriations.sort_by { |appropriation| appropriation.recipient_name.downcase }
+          .map { |choice| [ choice.to_s, choice.id ] }
+      end
   end
 end
