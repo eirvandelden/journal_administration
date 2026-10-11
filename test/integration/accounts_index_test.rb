@@ -81,4 +81,14 @@ class AccountsIndexTest < ActionDispatch::IntegrationTest
     assert_select "#own-accounts-table tbody td", text: accounts(:checking).name, count: 0
     assert_select "#external-accounts-table tbody td", text: accounts(:albert_heijn).name, count: 0
   end
+
+  test "own accounts show the current managed owner name" do
+    people(:etienne).update!(name: "E. van Delden")
+    groups(:samen).update!(name: "Delden Household")
+
+    get accounts_path
+
+    assert_select "#own-accounts-table tbody td", text: "E. van Delden"
+    assert_select "#own-accounts-table tbody td", text: "Delden Household"
+  end
 end

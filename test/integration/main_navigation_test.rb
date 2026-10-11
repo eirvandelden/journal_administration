@@ -57,4 +57,13 @@ class MainNavigationTest < ActionDispatch::IntegrationTest
     assert_select "header nav a[href='#{edit_user_profile_path(@admin)}']", count: 1
     assert_select "header nav a[href='#{admin_root_path}']", count: 1
   end
+
+  test "primary nav links to people and groups" do
+    sign_in_as(@member)
+
+    get dashboard_index_url
+
+    assert_select "header nav a[href='#{people_path}']", text: I18n.t("main_nav.people")
+    assert_select "header nav a[href='#{groups_path}']", text: I18n.t("main_nav.groups")
+  end
 end

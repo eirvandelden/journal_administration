@@ -73,4 +73,38 @@ class GroupsTest < ActionDispatch::IntegrationTest
     assert_select "form input[type=checkbox][value='#{people(:etienne).id}'][checked]"
     assert_select "form input[type=checkbox][value='#{people(:michelle).id}'][checked]", count: 0
   end
+
+  test "the group pages load" do
+    get groups_path
+
+    assert_response :success
+    assert_select "td a", text: "Samen"
+
+    get new_group_path
+
+    assert_response :success
+    assert_select "form input[name='group[name]']"
+
+    get edit_group_path(groups(:samen))
+
+    assert_response :success
+    assert_select "form input[name='group[name]'][value='Samen']"
+  end
+
+  test "deleting a group that owns an account is refused" do
+    assert_no_difference "Group.count" do
+      delete group_path(groups(:samen))
+    end
+
+    assert_predicate flash[:alert], :present?
+  end
+
+  test "submitting a group as the managed owner assigns the group" do
+    account = Account.create!(name: "Fresh joint account")
+
+    patch account_path(account), params: { account: { managed_owner: "group_#{groups(:samen).id}" } }
+
+    assert_equal groups(:samen), account.reload.group
+    assert_nil account.person
+  end
 end
