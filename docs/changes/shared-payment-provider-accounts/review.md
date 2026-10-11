@@ -68,4 +68,4 @@ Every test named in `plan.md` `## Proof` exists in the diff, including all per-f
 
 ## Round 4 — 2026-10-11 06:40 UTC — 2356054 (codex)
 
-- [ ] Important: Cache provider aliases during bulk moves: `own_name?` reloads `account_aliases` for every transaction, and `move_counterparty` checks `split?` for every transaction, adding database round trips per row (codex P2). — `app/models/concerns/payment_provider.rb:81` →
+- [x] Important: Cache provider aliases during bulk moves: `own_name?` reloads `account_aliases` for every transaction, and `move_counterparty` checks `split?` for every transaction, adding database round trips per row (codex P2). — `app/models/concerns/payment_provider.rb:81` → dismissed: does not hold at 2356054. A query count over a move of the four `adyen` fixtures shows one alias load for the provider (`account_aliases.map` loads the association once, from "Read a provider's names once per move, and query splits only when the category matters"), and `split?` runs only when the category equals the provider's default. The split queries left come from `Splittable`'s save validation and `after_save` remainder sync, which every save needs.
