@@ -52,7 +52,17 @@ class GroupMembership < ApplicationRecord
   # @return [Boolean]
   def leaving_changes_household?
     original = Group.find_by(id: group_id_was)
-    household_change_affects_transaction?(original, household_without(original, person_id_was))
+    household_change_affects_transaction?(original, household_after_leaving(original))
+  end
+
+  # Whether the original group is a household once this membership leaves it.
+  # Within the same group, the new person takes the old person's place.
+  # @return [Boolean]
+  def household_after_leaving(original)
+    remaining = household_without(original, person_id_was)
+    return remaining if group_id_changed?
+
+    remaining || person&.household? || false
   end
 
   # Prevents destroying a membership that would reclassify the group.
