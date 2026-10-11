@@ -144,15 +144,15 @@ class Transaction < ApplicationRecord
   def check_transfer_type_through_account_owners
     if type == "Transfer"
       unless debitor_is_us? && creditor_is_us?
-        errors.add(:type, "must be Transfer only if both debitor and creditor are family accounts")
+        errors.add(:type, "must be Transfer only if both accounts have household owners")
       end
     elsif type == "Debit"
       unless debitor_is_us?
-        errors.add(:type, "must be Debit only if debitor is a family account")
+        errors.add(:type, "must be Debit only if debitor has a household owner")
       end
     elsif type == "Credit"
       unless creditor_is_us?
-        errors.add(:type, "must be Credit only if creditor is a family account")
+        errors.add(:type, "must be Credit only if creditor has a household owner")
       end
     end
   end

@@ -1,7 +1,7 @@
 # Resolves counterparty accounts during CSV imports
 #
 # Implements a smart account resolution strategy: first by account number,
-# then by matching against known family accounts, finally by normalized name lookup.
+# then by matching against managed household accounts, finally by normalized name lookup.
 module Resolvable
   extend ActiveSupport::Concern
 
@@ -29,13 +29,13 @@ module Resolvable
       find_or_create_with_normalized_name(name)
     end
 
-    # Attempts to find a family account embedded in transaction description
+    # Attempts to find a managed household account embedded in the transaction description.
     #
-    # Searches the description for any family account number and returns that account.
-    # Used for detecting transfers between family accounts.
+    # Searches the description for a household-owned account number and returns that account.
+    # Household accounts may belong to managed people or groups.
     #
     # @param description [String] The transaction description
-    # @return [Account, nil] The matched family account, or nil if no match
+    # @return [Account, nil] The matched household account, or nil if no match
     def resolve_from_description(description)
       resolve_by_account_number(description) || resolve_by_account_name(description)
     end
