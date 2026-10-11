@@ -32,3 +32,36 @@ Every test named in `plan.md` `## Proof` exists in the diff.
 ## Round 2 — 2026-10-11 06:30 UTC — 817d3c4 (codex)
 
 `codex review --base origin/main`: no findings. Its focused run passed 124 tests, 345 assertions, no failures or errors.
+
+## Round 3 — 2026-10-11 06:39 UTC — 2356054
+
+Checks at review time: `bin/rails test` 950 runs, 0 failures, 0 errors, 0 skips; `rubocop` (309 files), herb-lint, Brakeman and bundler-audit clean; `i18n-tasks normalize` changes nothing; no translations missing. No uncommitted changes. No existing test was weakened, skipped or deleted.
+
+Round-1 fixes verified:
+
+- Category cleared at a merchant without a default: the confirm text in en/nl/it now warns about it, and `merchant_reassignments_test.rb` "a moved transaction with the provider's default category loses it at a merchant without a default" pins it. Holds.
+- Blocking transaction named: `PaymentProvider::MoveFailed` puts "<model> #<id>: <reason>" in its message. The controller alert and the tool's `problem` both carry it, and both tests assert `#<id>`. Holds.
+- Attribute name translated: `activerecord.attributes.account.payment_provider` exists in en, nl and it. `payment_provider_test.rb` asserts the Dutch full message. Holds.
+- Names read once per move: `own_name?` maps the loaded `account_aliases` association on the provider instance, so a move loads the aliases once. `follows_default_category_of?` checks the category first and calls `split?` only when the category matches. Holds.
+- Boolean switch removed: `update_and_redirect(attributes)` takes the value, and the notice key comes from `action_name`. Holds.
+
+- [ ] Nit: The rollback test only proves that a merchant created mid-move is rolled back if `refund_through_adyen` (booked 13 Aug) is processed before `kruidvat_through_adyen` (booked 10 Aug). That order comes only from `Transaction`'s `default_scope` (`booked_at: :desc`), and the test does not check that the move created the new merchant before it failed. If the order changes, the failing transaction runs first, "Brand New Shop" is never created, and `assert_no_difference "Account.count"` still passes. The test also does not check that the failing transaction's explicit split is unchanged, which the plan asks for. — `test/models/concerns/payment_provider_test.rb:147` →
+
+### Compliance
+
+| Acceptance criterion | Proving test |
+| --- | --- |
+| Shared Adyen, "Naam: Kruidvat" books on Kruidvat | `test/jobs/importing/ing/import_job_test.rb` "a payment through a shared provider books on the merchant's existing account" |
+| "Naam: Kirovanni/Foodticket" creates and books on a new account | `import_job_test.rb` "a payment through a shared provider to an unknown merchant creates that merchant" |
+| Mollie "via" suffix dropped | `import_job_test.rb` "a via suffix is dropped from the merchant name" |
+| Buckaroo "by" suffix dropped | `import_job_test.rb` "a by suffix is dropped from the merchant name" |
+| "Naam: Adyen" stays on Adyen | `import_job_test.rb` "a payment naming the provider itself stays on the provider" |
+| AON (not shared) still books on AON | `import_job_test.rb` "a payment to an account that is not a shared provider books on that account" |
+| Newly shared: stays until the move, then moves | `test/integration/merchant_reassignments_test.rb` "marking a provider leaves its transactions until they are moved" |
+| Provider default category becomes merchant default | `merchant_reassignments_test.rb` "a moved transaction with the provider's default category gets the merchant's default" |
+| Hand-picked category and splits kept | `merchant_reassignments_test.rb` "a moved transaction keeps a category chosen by hand", "a moved split transaction keeps its splits" |
+| Second move moves nothing | `merchant_reassignments_test.rb` "moving a second time moves nothing" |
+| Unmark: new import books on Adyen, moved ones stay | `test/integration/payment_providers_test.rb` "unmarking a provider books new imports on it and leaves moved transactions" |
+| Assistant marks and moves with the same results | `test/integration/assistant_test.rb` "the assistant marks a shared provider and moves its transactions to their merchants" |
+
+Every test named in `plan.md` `## Proof` exists in the diff, including all per-file unit tests.
