@@ -72,10 +72,10 @@ Compliance (acceptance criterion → proving test):
 
 Findings:
 
-- [ ] Nit: A flagged `legacy_duplicate` row whose purpose, person or year moves to a free key keeps `legacy_duplicate = true`. That row then stays outside the partial unique index for good, so only the model validation guards its new key, not the database — `app/models/appropriation.rb:111` →
+- [x] Nit: A flagged `legacy_duplicate` row whose purpose, person or year moves to a free key keeps `legacy_duplicate = true`. That row then stays outside the partial unique index for good, so only the model validation guards its new key, not the database — `app/models/appropriation.rb:111` → dismissed: moving a legacy row to a free key is a legitimate edit and the model validation still protects that key; the database index is defence in depth for new rows
 - [x] Nit: Both rows of a migrated case-variant pair now render the same label (`Gift Élodie 2026` twice) in the charge select, because `to_s` uses the current person name. Before the migration the two spellings were distinguishable — `app/helpers/appropriations_helper.rb:20` → dismissed: cosmetic and limited to migrated legacy pairs; each row stays identifiable by its amount and id, and changing labels is outside the accepted behaviour
-- [ ] Nit: Person and group names are not stripped before the name key is built. `" Etienne"` saves as a second person beside `Etienne`, and an assistant lookup for `"Etienne "` answers "No person named" — `app/models/person.rb:63`, `app/models/group.rb:76` →
-- [ ] Nit: A failed account create still renders `new` with status 200, the same silent Turbo failure that Round 3 fixed for update. This existed before the branch; fix it on a separate branch — `app/controllers/accounts_controller.rb:56` →
+- [x] Nit: Person and group names are not stripped before the name key is built. `" Etienne"` saves as a second person beside `Etienne`, and an assistant lookup for `"Etienne "` answers "No person named" — `app/models/person.rb:63`, `app/models/group.rb:76` → dismissed: out of scope for this issue; propose a separate branch for name trimming (playbook rule 21)
+- [x] Nit: A failed account create still renders `new` with status 200, the same silent Turbo failure that Round 3 fixed for update. This existed before the branch; fix it on a separate branch — `app/controllers/accounts_controller.rb:56` → dismissed: predates this branch and is unrelated to household ownership; propose a separate branch (playbook rule 21)
 
 ## Round 5 — 2026-10-11T12:00:00Z — ae037ea (codex)
 
