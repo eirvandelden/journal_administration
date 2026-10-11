@@ -57,4 +57,20 @@ class GroupsTest < ActionDispatch::IntegrationTest
     assert_equal [ membership.id, person.id ], group.group_memberships.pluck(:id, :person_id).sole
     assert_equal history, [ transaction.reload.id, transaction.type, transaction.amount ]
   end
+
+  test "a failed update with a blank name renders the edit form again" do
+    patch group_path(groups(:samen)), params: { group: { name: "", person_ids: [ people(:etienne).id ] } }
+
+    assert_response :unprocessable_entity
+    assert_select "form input[name='group[name]']"
+    assert_equal "Samen", groups(:samen).reload.name
+  end
+
+  test "a failed update keeps the submitted member selection in the edit form" do
+    patch group_path(groups(:samen)), params: { group: { name: "", person_ids: [ people(:etienne).id ] } }
+
+    assert_response :unprocessable_entity
+    assert_select "form input[type=checkbox][value='#{people(:etienne).id}'][checked]"
+    assert_select "form input[type=checkbox][value='#{people(:michelle).id}'][checked]", count: 0
+  end
 end

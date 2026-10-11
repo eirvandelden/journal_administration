@@ -15,4 +15,19 @@ class PeopleTest < ActionDispatch::IntegrationTest
     assert_equal person, account.reload.person
     assert_predicate account, :household_owned?
   end
+
+  test "a failed update with a blank name renders the edit form again" do
+    patch person_path(people(:grandma)), params: { person: { name: "", household: false } }
+
+    assert_response :unprocessable_entity
+    assert_select "form input[name='person[name]']"
+    assert_equal "Grandma", people(:grandma).reload.name
+  end
+
+  test "a failed update keeps the submitted value in the edit form" do
+    patch person_path(people(:grandma)), params: { person: { name: "Michelle", household: false } }
+
+    assert_response :unprocessable_entity
+    assert_select "form input[name='person[name]'][value='Michelle']"
+  end
 end
