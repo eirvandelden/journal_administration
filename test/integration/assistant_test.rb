@@ -547,6 +547,13 @@ class AssistantTest < ActionDispatch::IntegrationTest
     assert_equal accounts(:adyen), failing.reload.debitor
   end
 
+  test "the move tool warns that a default category follows the merchant" do
+    post_to_assistant
+    tools = JSON.parse(response.body).dig("result", "tools").index_by { |tool| tool["name"] }
+
+    assert_match(/default category/, tools.fetch("move_transactions_to_merchants")["description"])
+  end
+
   test "both new tools say they change things" do
     post_to_assistant
     tools = JSON.parse(response.body).dig("result", "tools").index_by { |tool| tool["name"] }

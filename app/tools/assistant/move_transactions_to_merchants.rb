@@ -2,7 +2,9 @@
 module Assistant
   class MoveTransactionsToMerchants < Tool
     description "Move every transaction on a shared payment provider to the merchant named in it. " \
-      "A transaction that names no merchant stays. Categories chosen by hand and splits are kept. " \
+      "A transaction that names no merchant stays. A transaction still on the provider's default category " \
+      "gets the merchant's default category, or none when the merchant has none. " \
+      "Categories chosen by hand and splits are kept. " \
       "Moving again moves nothing more."
     annotations destructive_hint: true
     input_schema(
