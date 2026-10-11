@@ -57,6 +57,7 @@ it:
         iban: IBAN
         name: Nome
         number: Numero
+        payment_provider: Fornitore di pagamenti
       appropriation:
         amount: Importo stanziato
         budget_year: Anno di bilancio

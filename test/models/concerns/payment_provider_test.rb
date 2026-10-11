@@ -15,6 +15,15 @@ class PaymentProviderTest < ActiveSupport::TestCase
     )
   end
 
+  test "a family account refused as payment provider is named in the user's language" do
+    family = accounts(:checking)
+
+    I18n.with_locale(:nl) { family.update(payment_provider: true) }
+
+    assert_equal "Betaaldienstverlener moet een externe rekening zijn",
+      I18n.with_locale(:nl) { family.errors.full_messages.first }
+  end
+
   test "counterparty_for returns the account itself when it is not a provider" do
     @provider.update!(payment_provider: false)
 

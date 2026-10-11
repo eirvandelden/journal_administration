@@ -57,6 +57,7 @@ en:
         iban: IBAN
         name: Name
         number: Number
+        payment_provider: Payment provider
       appropriation:
         amount: Amount appropriated
         budget_year: Budget year

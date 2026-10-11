@@ -57,6 +57,7 @@ nl:
         iban: IBAN
         name: Naam
         number: Nummer
+        payment_provider: Betaaldienstverlener
       appropriation:
         amount: Begroot bedrag
         budget_year: Begrotingsjaar
