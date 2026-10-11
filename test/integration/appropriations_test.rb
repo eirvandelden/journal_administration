@@ -35,6 +35,31 @@ class AppropriationsTest < ActionDispatch::IntegrationTest
     assert_appropriation_row "Birthday", "Michelle", 150, 0, 150
   end
 
+  test "an appropriation selects an outside person" do
+    post appropriations_path, params: {
+      appropriation: { purpose: "Visit", person_id: people(:grandma).id, budget_year: 2026, amount: 40 }
+    }
+
+    appropriation = Appropriation.find_by!(purpose: "Visit")
+
+    assert_equal people(:grandma), appropriation.person
+  end
+
+  test "renaming a recipient updates displayed appropriations without changing charges" do
+    appropriation = appropriations(:birthday_etienne)
+    transactions(:gift_payment).update!(appropriation:)
+    amount = appropriation.amount
+    charged = appropriation.charged
+
+    people(:etienne).update!(name: "E. van Delden")
+    get appropriations_path(year: 2026)
+
+    assert_appropriation_row "Birthday", "E. van Delden", amount, charged, amount - charged
+    assert_appropriation_row "Christmas", "E. van Delden", 100, 0, 100
+    assert_equal amount, appropriation.reload.amount
+    assert_equal charged, appropriation.charged
+  end
+
   test "raising an appropriation raises its balance by the same amount" do
     patch appropriation_path(appropriations(:birthday_etienne)), params: { appropriation: { amount: 200 } }
 

@@ -1,6 +1,16 @@
 require "test_helper"
 
 class TransactionTest < ActiveSupport::TestCase
+  test "managed household owners determine transaction type after a rename" do
+    person = people(:etienne)
+    person.update!(name: "E. van Delden")
+
+    assert_instance_of Debit, transactions(:debit_grocery).reload
+    assert_instance_of Credit, transactions(:credit_salary).reload
+    assert_instance_of Transfer, transactions(:transfer_savings).reload
+    assert_equal BigDecimal("50.00"), transactions(:debit_grocery).amount
+  end
+
   # -- type validation --------------------------------------------------------
 
   test "valid types are Credit, Debit, and Transfer" do

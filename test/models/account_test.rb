@@ -29,25 +29,47 @@ class AccountTest < ActiveSupport::TestCase
     assert_not_predicate accounts(:checking), :external?
   end
 
-  # -- owner enum -------------------------------------------------------------
-
-  test "owner enum defines all family members" do
-    expected = { "samen" => 0, "etienne" => 1, "michelle" => 2, "serena" => 3, "cosimo" => 4, "chiara" => 5 }
-
-    assert_equal expected, Account.owners
-  end
-
-  test "FAMILY_OWNERS matches owner enum keys" do
-    assert_equal Account.owners.keys, Account::FAMILY_OWNERS
-  end
-
-  # -- validations ------------------------------------------------------------
-
   test "account_number must be unique" do
     duplicate = Account.new(account_number: accounts(:checking).account_number)
 
     assert_not duplicate.valid?
     assert_includes duplicate.errors[:account_number], "has already been taken"
+  end
+
+  test "household_owned? follows linked household people and groups" do
+    %i[etienne michelle serena cosimo chiara].each do |name|
+      assert_predicate Account.new(person: people(name)), :household_owned?
+    end
+
+    assert_predicate accounts(:checking), :household_owned?
+    assert_not accounts(:albert_heijn).household_owned?
+    assert_not Account.new(person: people(:grandma)).household_owned?
+  end
+
+  test "existing individual owners stay linked to their managed people" do
+    assert_equal people(:etienne), accounts(:savings).person
+    assert_equal "etienne", accounts(:savings).owner
+  end
+
+  test "refuses both person and group as owners" do
+    account = Account.new(name: "Two owners", person: people(:etienne), group: groups(:samen))
+
+    assert_not account.valid?
+    assert_predicate account.errors[:base], :any?
+  end
+
+  test "refuses reclassification with transactions" do
+    account = accounts(:checking)
+
+    assert_not account.update(person: people(:grandma), group: nil)
+    assert_predicate account.reload, :household_owned?
+  end
+
+  test "keeps legacy owner when managed owner changes" do
+    account = accounts(:savings)
+
+    assert account.update!(person: people(:michelle))
+    assert_equal "etienne", account.reload.owner
   end
 
   test "account_number allows blank" do

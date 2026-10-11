@@ -1,6 +1,13 @@
 require "test_helper"
 
 class AccountableTest < ActiveSupport::TestCase
+  test "uses managed household ownership" do
+    transaction = Transaction.new(debitor: accounts(:checking), creditor: accounts(:albert_heijn))
+
+    assert_predicate transaction, :debitor_is_us?
+    assert_not transaction.creditor_is_us?
+  end
+
   test "debitor_is_us? returns true for family-owned debitor" do
     transaction = Transaction.new(debitor: accounts(:checking))
 

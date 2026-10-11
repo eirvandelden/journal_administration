@@ -31,6 +31,17 @@ class ResolvableTest < ActiveSupport::TestCase
     assert_equal accounts(:checking), account
   end
 
+  test "resolves a migrated household account from an import description" do
+    account = Account.resolve_for_import(
+      account_number: "",
+      description: "Payment to #{accounts(:checking).name}",
+      name: "Household account"
+    )
+
+    assert_equal accounts(:checking), account
+    assert_predicate account, :household_owned?
+  end
+
   test "resolve_for_import falls back to normalized name when no account number or description match" do
     account = Account.resolve_for_import(
       account_number: "",

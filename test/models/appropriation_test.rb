@@ -2,6 +2,12 @@ require "test_helper"
 
 class AppropriationTest < ActiveSupport::TestCase
   class Validations < ActiveSupport::TestCase
+    test "refuses duplicate purpose person and year" do
+      duplicate = Appropriation.new(purpose: "birthday", person: people(:etienne), budget_year: 2026, amount: 10)
+
+      assert_not duplicate.valid?
+    end
+
     test "requires purpose, recipient, budget year and a positive amount" do
       appropriation = Appropriation.new(amount: 0)
 
@@ -24,6 +30,29 @@ class AppropriationTest < ActiveSupport::TestCase
     test "refuses changing the year onto an existing purpose and recipient" do
       assert_not appropriations(:birthday_etienne).update(budget_year: 2027)
     end
+  end
+
+  test "sets the legacy recipient on create only" do
+    appropriation = Appropriation.create!(
+      purpose: "Graduation", person: people(:grandma), budget_year: 2026, amount: 25
+    )
+
+    assert_equal "Grandma", appropriation.recipient
+
+    appropriation.update!(person: people(:grandpa))
+
+    assert_equal "Grandma", appropriation.reload.recipient
+  end
+
+  test "renaming a person preserves appropriation amount and charges" do
+    appropriation = appropriations(:birthday_etienne)
+    transactions(:gift_payment).update!(appropriation:)
+    charged = appropriation.charged
+
+    people(:etienne).update!(name: "E. van Delden")
+
+    assert_equal BigDecimal("150.00"), appropriation.reload.amount
+    assert_equal charged, appropriation.charged
   end
 
   class RecipientSuggestions < ActiveSupport::TestCase
