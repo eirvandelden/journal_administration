@@ -48,6 +48,8 @@ class PeopleController < ApplicationController
   def update
     return redirect_to @person, notice: t("people.update.success") if @person.update(person_params)
 
+    return render :edit, status: :unprocessable_entity if @person.errors.key?(:name)
+
     redirect_to @person, alert: @person.errors.full_messages.to_sentence
   end
 

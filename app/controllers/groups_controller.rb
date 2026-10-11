@@ -48,6 +48,8 @@ class GroupsController < ApplicationController
   def update
     return redirect_to @group, notice: t("groups.update.success") if @group.update(group_params)
 
+    return render :edit, status: :unprocessable_entity if @group.errors.key?(:name)
+
     redirect_to @group, alert: @group.errors.full_messages.to_sentence
   end
 
