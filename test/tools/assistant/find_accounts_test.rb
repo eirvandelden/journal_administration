@@ -17,4 +17,23 @@ class Assistant::FindAccountsTest < ActiveSupport::TestCase
     assert_not_includes group_reply, "Samen"
     assert_not_includes person_reply, "Etienne"
   end
+
+  test "call does not query owners once per account" do
+    one = query_count_for_accounts(1)
+    many = query_count_for_accounts(4)
+
+    assert_equal one, many
+  end
+
+  private
+
+  def query_count_for_accounts(count)
+    count.times { |index| Account.create!(name: "Counted #{count} #{index}", person: people(:etienne)) }
+    queries = []
+    counter = ->(*, payload) { queries << payload[:sql] unless payload[:name] == "SCHEMA" }
+    ActiveSupport::Notifications.subscribed(counter, "sql.active_record") do
+      Assistant::FindAccounts.call(query: "Counted #{count}", server_context: nil)
+    end
+    queries.size
+  end
 end
