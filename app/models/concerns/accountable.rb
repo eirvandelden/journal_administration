@@ -44,6 +44,6 @@ module Accountable
   private
 
   def follows_default_category_of?(account)
-    !split? && category_id == account.category_id
+    category_id == account.category_id && !split?
   end
 end

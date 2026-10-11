@@ -78,7 +78,7 @@ module PaymentProvider
   end
 
   def own_name?(merchant)
-    names = [ name, *account_aliases.pluck(:pattern) ]
+    names = [ name, *account_aliases.map(&:pattern) ]
 
     names.compact.any? { |own| own.strip.casecmp?(merchant) }
   end
