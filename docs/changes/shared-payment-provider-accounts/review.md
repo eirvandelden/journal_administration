@@ -173,3 +173,33 @@ Every test named in `plan.md` `## Proof` exists in the diff, including all per-f
 ## Round 10 — 2026-10-11 06:53 UTC — 4141cf4 (codex)
 
 - [x] Important: Preserve legitimate merchant names containing `by` or `via`: `PROVIDER_SUFFIX` strips from the first standalone `by`/`via` onward, so "By George" becomes blank and stays on the provider, and "Flowers by Nature" books on the wrong merchant (codex P2). — `app/models/concerns/payment_provider.rb:12` → fixed (Drop only the last via or by clause from a merchant name) for a name with a clause before the provider suffix: "Flowers by Nature via Mollie" now keeps "Flowers by Nature". The rest dismissed: intent.md says a trailing "via …"/"by …" suffix is dropped, and plan.md records this risk as accepted and limited to accounts marked as a provider. "Flowers by Nature" without a provider suffix cannot be told apart from "Topbloemen by Buckaroo". "By George" cannot be told apart from "via Stichting Mollie Payments", which the plan's test "counterparty_for stays on the provider for a name left empty by the suffix" keeps on the provider. A misbooked payment can still be fixed with an alias.
+
+## Round 11 — 2026-10-11 06:56 UTC — 936b774
+
+Checks at review time: `bin/rails test` 955 runs, 2534 assertions, 0 failures, 0 errors, 0 skips; `rubocop` (309 files), herb-lint, Brakeman and bundler-audit clean; `i18n-tasks normalize` changes nothing; no translations missing. No uncommitted changes. `origin/main` is still the merge base (47e2474). No existing test was weakened, skipped or deleted (the diff removes no line under `test/`).
+
+Round-10 closure verified:
+
+- Fix: `PROVIDER_SUFFIX` now strips only the last ` via `/` by ` clause (negative lookahead for a later clause, case-insensitive). A probe of the regex gives "Flowers by Nature via Mollie" → "Flowers by Nature", "Stand by Me via Mollie" → "Stand by Me", "Flowers by Nature VIA Mollie" → "Flowers by Nature", while "Topbloemen by Buckaroo" → "Topbloemen", "Partydeco via Stichting Mollie Payments" → "Partydeco", "PICNIC BY BUCKAROO" → "PICNIC" and "via Stichting Mollie Payments" → "" still hold. The new test "counterparty_for drops only the last via or by clause" fails on the old regex ("Flowers") and passes now. Holds.
+- Dismissal: sound. intent.md puts "drops a trailing 'via …' or 'by …' provider suffix" in scope, and plan.md accepts the over-eager strip as a risk, limited to marked providers, and rejects tying the strip to the provider's name. Without that name, "Flowers by Nature" has the same shape as "Topbloemen by Buckaroo", and "By George" the same shape as "via Stichting Mollie Payments", which a plan-named test keeps on the provider. Keeping either would break an acceptance criterion or a plan-named test.
+
+- [ ] Nit: plan.md still describes the old rule. Its Name extraction decision says the suffix is dropped "from the first such word onward", and its Risks entry says "Stand by Me" gets cut; the code now drops only the last clause, so "Stand by Me via Mollie" keeps its name. The new rule also has a mirror risk the plan does not record: a provider suffix that itself holds " via " or " by " keeps its first part ("Shop via Pay by ING" → "Shop via Pay"). Record the changed rule and that risk where the plan's readers will see it (plan.md or the pull request body). — `docs/changes/shared-payment-provider-accounts/plan.md:16`, `docs/changes/shared-payment-provider-accounts/plan.md:79` →
+
+### Compliance
+
+| Acceptance criterion | Proving test |
+| --- | --- |
+| Shared Adyen, "Naam: Kruidvat" books on Kruidvat | `test/jobs/importing/ing/import_job_test.rb` "a payment through a shared provider books on the merchant's existing account" |
+| "Naam: Kirovanni/Foodticket" creates and books on a new account | `import_job_test.rb` "a payment through a shared provider to an unknown merchant creates that merchant" |
+| Mollie "via" suffix dropped | `import_job_test.rb` "a via suffix is dropped from the merchant name" |
+| Buckaroo "by" suffix dropped | `import_job_test.rb` "a by suffix is dropped from the merchant name" |
+| "Naam: Adyen" stays on Adyen | `import_job_test.rb` "a payment naming the provider itself stays on the provider" |
+| AON (not shared) still books on AON | `import_job_test.rb` "a payment to an account that is not a shared provider books on that account" |
+| Newly shared: stays until the move, then moves | `test/integration/merchant_reassignments_test.rb` "marking a provider leaves its transactions until they are moved" |
+| Provider default category becomes merchant default | `merchant_reassignments_test.rb` "a moved transaction with the provider's default category gets the merchant's default" |
+| Hand-picked category and splits kept | `merchant_reassignments_test.rb` "a moved transaction keeps a category chosen by hand", "a moved split transaction keeps its splits" |
+| Second move moves nothing | `merchant_reassignments_test.rb` "moving a second time moves nothing" |
+| Unmark: new import books on Adyen, moved ones stay | `test/integration/payment_providers_test.rb` "unmarking a provider books new imports on it and leaves moved transactions" |
+| Assistant marks and moves with the same results | `test/integration/assistant_test.rb` "the assistant marks a shared provider and moves its transactions to their merchants" |
+
+Every test named in `plan.md` `## Proof` exists in the diff, including all per-file unit tests (checked by name with `grep`).
