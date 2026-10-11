@@ -63,4 +63,48 @@ class ResolvableTest < ActiveSupport::TestCase
 
     assert_equal accounts(:kruidvat), account
   end
+
+  test "resolve_from_description ignores a household account with a blank account number" do
+    Account.create!(name: "Blank number household", person: people(:etienne), account_number: "")
+
+    assert_nil Account.resolve_from_description("No counterparty here")
+  end
+
+  test "resolve_for_import ignores a household account with a blank account number" do
+    Account.create!(name: "Blank number household", person: people(:etienne), account_number: "")
+
+    account = Account.resolve_for_import(account_number: "", description: "No counterparty here", name: "Corner Shop")
+
+    assert_predicate account, :external?
+  end
+
+  test "resolve_from_description still finds a numbered household account when a blank-number one is listed first" do
+    Account.create!(id: 1, name: "Blank number household", person: people(:etienne), account_number: "")
+
+    description = "Payment via #{accounts(:checking).account_number}"
+
+    assert_equal accounts(:checking), Account.resolve_from_description(description)
+  end
+
+  test "resolve_from_description ignores a household account with a blank name" do
+    Account.create!(account_number: "NL00BLANK0000000001", name: "", person: people(:etienne))
+    Account.where(name: "").update_all(account_number: nil)
+
+    assert_nil Account.resolve_from_description("No counterparty here")
+  end
+
+  test "resolve_for_import ignores a household account with a blank name" do
+    Account.create!(account_number: "NL00BLANK0000000002", name: "", person: people(:etienne))
+    Account.where(name: "").update_all(account_number: nil)
+
+    account = Account.resolve_for_import(account_number: "", description: "No counterparty here", name: "Corner Shop")
+
+    assert_predicate account, :external?
+  end
+
+  test "resolve_from_description prefers the household account over an external account with the same name" do
+    Account.create!(id: 1, name: accounts(:checking).name)
+
+    assert_equal accounts(:checking), Account.resolve_from_description("Payment to #{accounts(:checking).name}")
+  end
 end

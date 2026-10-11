@@ -246,4 +246,18 @@ class AccountTest < ActiveSupport::TestCase
         I18n.t("activerecord.errors.models.account.attributes.base.has_transactions")
     end
   end
+
+  test "managed_owner with an unknown person is invalid instead of failing on save" do
+    account = Account.new(name: "Tampered", managed_owner: "person_99999")
+
+    assert_not account.valid?
+    assert_not account.save
+  end
+
+  test "managed_owner with an unknown group is invalid instead of failing on save" do
+    account = Account.new(name: "Tampered", managed_owner: "group_99999")
+
+    assert_not account.valid?
+    assert_not account.save
+  end
 end
