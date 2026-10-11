@@ -68,7 +68,7 @@ class AccountsController < ApplicationController
         format.html { redirect_to @account, notice: t("accounts.update.success") }
         format.json { render :show, status: :ok, location: @account }
       else
-        format.html { render :edit }
+        format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @account.errors, status: :unprocessable_entity }
       end
     end

@@ -40,6 +40,7 @@ class Account < ApplicationRecord
 
   validates :account_number, uniqueness: true, allow_blank: true
   validate :one_managed_owner
+  validate :managed_owner_exists
   validate :preserve_transaction_classification
   validate :legacy_owner_is_unchanged
   before_validation :assign_legacy_owner, on: :create
@@ -120,6 +121,13 @@ class Account < ApplicationRecord
     return unless person_id.present? && group_id.present?
 
     errors.add(:base, :one_owner_only)
+  end
+
+  # Rejects a person or group id that points at no record.
+  # @return [void]
+  def managed_owner_exists
+    errors.add(:person, :required) if person_id.present? && !Person.exists?(person_id)
+    errors.add(:group, :required) if group_id.present? && !Group.exists?(group_id)
   end
 
   # Refuses ownership changes that would alter the classification of account history.
