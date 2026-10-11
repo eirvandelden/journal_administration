@@ -203,3 +203,7 @@ Round-10 closure verified:
 | Assistant marks and moves with the same results | `test/integration/assistant_test.rb` "the assistant marks a shared provider and moves its transactions to their merchants" |
 
 Every test named in `plan.md` `## Proof` exists in the diff, including all per-file unit tests (checked by name with `grep`).
+
+## Round 12 — 2026-10-11 06:56 UTC — 936b774 (codex)
+
+`codex review --base origin/main`: no findings. Its focused tests for provider resolution, imports, moves, web actions and assistant tools pass.
