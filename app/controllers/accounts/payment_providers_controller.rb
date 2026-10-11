@@ -7,7 +7,7 @@ class Accounts::PaymentProvidersController < ApplicationController
   # @action POST
   # @route /accounts/:account_id/payment_provider
   def create
-    change(true, "payment_providers.create.success")
+    update_and_redirect(payment_provider: true)
   end
 
   # Unmarks the account. Transactions already moved to merchants stay with them.
@@ -15,7 +15,7 @@ class Accounts::PaymentProvidersController < ApplicationController
   # @action DELETE
   # @route /accounts/:account_id/payment_provider
   def destroy
-    change(false, "payment_providers.destroy.success")
+    update_and_redirect(payment_provider: false)
   end
 
   private
@@ -24,9 +24,9 @@ class Accounts::PaymentProvidersController < ApplicationController
     @account = Account.find(params[:account_id])
   end
 
-  def change(provider, success_key)
-    if @account.update(payment_provider: provider)
-      redirect_to @account, notice: t(success_key)
+  def update_and_redirect(attributes)
+    if @account.update(attributes)
+      redirect_to @account, notice: t("payment_providers.#{action_name}.success")
     else
       redirect_to @account, alert: @account.errors.full_messages.to_sentence
     end
