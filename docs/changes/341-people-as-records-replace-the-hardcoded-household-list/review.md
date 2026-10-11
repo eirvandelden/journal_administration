@@ -32,3 +32,9 @@ Findings:
 - [ ] Nit: The `owners.each` loop, which creates only legacy owners in use, is dead. The later `LEGACY_OWNERS.except(0).each` loop creates Serena, Cosimo and Chiara as household people even when no account uses them — `db/data/20261011090001_migrate_people_groups_and_legacy_owners.rb:33` →
 
 3 more nits not listed: `remove_index` with only a name in a `change` migration is irreversible; `<legend>` is not the first child of its `<fieldset>` in the group form; `Assistant::FindAccounts` queries owner and household status per account (N+1).
+
+## Round 2 — 2026-10-11T10:20:00Z — e8dfe97 (codex)
+
+- [ ] Important: A household account with an empty `account_number` or `name` matches every import description because `description.include?("")` is true. Exclude blank values from both candidates — `app/models/concerns/resolvable.rb:45` →
+- [ ] Important: `resolve_by_account_name` selects a household name through `own`, then looks up `find_by(name:)` without that scope. An external account with the same name can win and turn a household transfer into a Debit or Credit — `app/models/concerns/resolvable.rb:54` →
+- [ ] Important: Appropriations whose recipients differ only by a Unicode case variant (`Élodie`, `élodie`) with the same purpose and year pass the old ASCII-only index, but map to one person. The second link violates the new unique index and aborts `db:migrate:with_data` — `db/data/20261011090001_migrate_people_groups_and_legacy_owners.rb:47` →
