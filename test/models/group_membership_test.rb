@@ -70,6 +70,22 @@ class GroupMembershipTest < ActiveSupport::TestCase
     assert_equal 25.to_d, transaction.amount
   end
 
+  test "allows replacing the last household member with another household member when the owner has transactions" do
+    group = Group.create!(name: "Used household group")
+    membership = group.group_memberships.create!(person: people(:etienne))
+    account = Account.create!(name: "Used household account", owner: nil, group:)
+    transaction = Debit.create!(
+      amount: 25, booked_at: Time.current, interest_at: Time.current,
+      debitor: account, creditor: accounts(:albert_heijn), category: categories(:groceries)
+    )
+
+    assert membership.update(person: people(:michelle))
+    assert_equal people(:michelle).id, membership.reload.person_id
+    assert_predicate group.reload, :household?
+    assert_equal "Debit", transaction.reload.type
+    assert_equal 25.to_d, transaction.amount
+  end
+
   test "allows replacing the last household member when the owner has no transactions" do
     group = Group.create!(name: "Unused household group")
     membership = group.group_memberships.create!(person: people(:etienne))
