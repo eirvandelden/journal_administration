@@ -9,8 +9,8 @@ class Assistant::FindAccountsTest < ActiveSupport::TestCase
     household.update!(name: "Delden Household")
     person.update!(name: "E. van Delden")
 
-    group_reply = Assistant::FindAccounts.call(query: group_account.name, server_context: nil).content.first.text
-    person_reply = Assistant::FindAccounts.call(query: person_account.name, server_context: nil).content.first.text
+    group_reply = Assistant::FindAccounts.call(query: group_account.name, server_context: nil).content.first[:text]
+    person_reply = Assistant::FindAccounts.call(query: person_account.name, server_context: nil).content.first[:text]
 
     assert_includes group_reply, "Delden Household"
     assert_includes person_reply, "E. van Delden"

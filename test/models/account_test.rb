@@ -72,6 +72,15 @@ class AccountTest < ActiveSupport::TestCase
     assert_equal "etienne", account.reload.owner
   end
 
+  test "clearing an outside managed owner keeps its legacy owner without making it household-owned" do
+    account = Account.create!(name: "Legacy outside account", owner: :etienne, person: people(:grandma))
+
+    assert account.update!(person: nil)
+
+    assert_predicate account.reload, :external?
+    assert_equal "etienne", account.owner
+  end
+
   test "account_number allows blank" do
     account = Account.new(name: "No Number")
 

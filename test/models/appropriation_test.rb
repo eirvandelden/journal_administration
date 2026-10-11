@@ -16,13 +16,13 @@ class AppropriationTest < ActiveSupport::TestCase
     end
 
     test "refuses a duplicate regardless of letter case" do
-      duplicate = Appropriation.new(purpose: "birthday", recipient: "ETIENNE", budget_year: 2026, amount: 10)
+      duplicate = Appropriation.new(purpose: "birthday", person: people(:etienne), budget_year: 2026, amount: 10)
 
       assert_not duplicate.valid?
     end
 
     test "allows the same purpose and recipient in another year" do
-      later = Appropriation.new(purpose: "Birthday", recipient: "Etienne", budget_year: 2028, amount: 10)
+      later = Appropriation.new(purpose: "Birthday", person: people(:etienne), budget_year: 2028, amount: 10)
 
       assert_predicate later, :valid?
     end
@@ -64,17 +64,18 @@ class AppropriationTest < ActiveSupport::TestCase
     end
 
     test ".recipient_suggestions adds earlier recipients once regardless of letter case" do
-      Appropriation.create!(purpose: "Birthday", recipient: "Grandma", budget_year: 2026, amount: 40)
-      Appropriation.create!(purpose: "Christmas", recipient: "grandma", budget_year: 2026, amount: 30)
+      Appropriation.create!(purpose: "Birthday", person: people(:grandma), budget_year: 2026, amount: 40)
+      Appropriation.create!(purpose: "Christmas", person: people(:grandma), budget_year: 2026, amount: 30)
 
       assert_equal 1, Appropriation.recipient_suggestions.count { |name| name.casecmp?("grandma") }
       assert_equal 1, Appropriation.recipient_suggestions.count { |name| name.casecmp?("etienne") }
     end
 
-    test ".recipient_suggestions sorts ignoring letter case and keeps the latest spelling" do
-      Appropriation.create!(purpose: "Birthday", recipient: "grandma", budget_year: 2026, amount: 40)
-      Appropriation.create!(purpose: "Christmas", recipient: "Grandma", budget_year: 2026, amount: 30)
-      Appropriation.create!(purpose: "Birthday", recipient: "bob", budget_year: 2026, amount: 20)
+    test ".recipient_suggestions sorts managed names ignoring letter case" do
+      Appropriation.create!(purpose: "Birthday", person: people(:grandma), budget_year: 2026, amount: 40)
+      Appropriation.create!(purpose: "Christmas", person: people(:grandma), budget_year: 2026, amount: 30)
+      bob = Person.create!(name: "bob", household: false)
+      Appropriation.create!(purpose: "Birthday", person: bob, budget_year: 2026, amount: 20)
 
       suggestions = Appropriation.recipient_suggestions
 

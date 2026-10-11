@@ -42,8 +42,18 @@ class MigratePeopleGroupsAndLegacyOwnersTest < ActiveSupport::TestCase
 
   test "migrates named owners and Samen without changing legacy owners" do
     clear_managed_links
-    michelle_account = Account.create!(name: "Michelle's legacy account", owner: :michelle)
-    serena_account = Account.create!(name: "Serena's legacy account", owner: :serena)
+    michelle_account = Account.create!(name: "Michelle's legacy account", owner: nil)
+    michelle_account.update_columns(owner: Account.owners.fetch("michelle"))
+    serena_account = Account.create!(name: "Serena's legacy account", owner: nil)
+    serena_account.update_columns(owner: Account.owners.fetch("serena"))
+    michelle_account.update!(name: "Edited Michelle legacy account")
+
+    assert_equal [ [], [], 0, 0 ], [
+      Person.pluck(:id), Group.pluck(:id),
+      Account.where("person_id IS NOT NULL OR group_id IS NOT NULL").count,
+      Appropriation.where.not(person_id: nil).count
+    ]
+
     legacy_owners = Account.order(:id).pluck(:id, :owner)
     legacy_recipients = Appropriation.order(:id).pluck(:id, :recipient)
 
@@ -60,7 +70,6 @@ class MigratePeopleGroupsAndLegacyOwnersTest < ActiveSupport::TestCase
   end
 
   test "preserves household scopes and transaction types after migration" do
-    clear_managed_links
     whole_payment = transactions(:gift_payment)
     whole_payment.update!(appropriation: appropriations(:birthday_etienne))
     split_payment = transactions(:webshop_sinterklaas)
@@ -70,7 +79,14 @@ class MigratePeopleGroupsAndLegacyOwnersTest < ActiveSupport::TestCase
     split_payment.ensure_remainder_split
 
     assert_equal BigDecimal("100"), appropriations(:birthday_etienne).charged
-    assert_nil appropriations(:birthday_etienne).person_id
+
+    clear_managed_links
+
+    assert_equal [ nil, 0, 0 ], [
+      appropriations(:birthday_etienne).reload.person_id,
+      Account.where("person_id IS NOT NULL OR group_id IS NOT NULL").count,
+      Appropriation.where.not(person_id: nil).count
+    ]
 
     legacy_history = legacy_history_snapshot
 

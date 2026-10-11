@@ -52,6 +52,22 @@ class PersonTest < ActiveSupport::TestCase
     assert_includes duplicate.errors[:name], "has already been taken"
   end
 
+  test "refuses renaming to an existing person's name regardless of letter case" do
+    person = people(:grandma)
+
+    assert_not person.update(name: "eTiEnNe")
+    assert_includes person.errors[:name], "has already been taken"
+    assert_equal "Grandma", person.reload.name
+  end
+
+  test "the database refuses accented case variants when validation is bypassed" do
+    Person.create!(name: "Élodie", household: false)
+
+    assert_raises ActiveRecord::RecordNotUnique do
+      Person.insert!({ name: "élodie", name_key: "élodie", household: false })
+    end
+  end
+
   test "renaming preserves appropriation amounts and charges" do
     person = people(:etienne)
     appropriation = appropriations(:birthday_etienne)

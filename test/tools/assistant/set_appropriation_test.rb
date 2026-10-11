@@ -13,7 +13,7 @@ class Assistant::SetAppropriationTest < ActiveSupport::TestCase
       purpose: "Birthday", recipient: "Nobody", budget_year: 2026, amount: 25, server_context: nil
     )
 
-    assert_predicate response, :isError
+    assert_predicate response, :error?
     assert_not Appropriation.exists?(purpose: "Birthday", budget_year: 2026, recipient: "Nobody")
   end
 end
