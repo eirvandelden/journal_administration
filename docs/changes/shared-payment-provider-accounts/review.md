@@ -138,3 +138,34 @@ Every test named in `plan.md` `## Proof` exists in the diff, including all per-f
 ## Round 8 — 2026-10-11 06:49 UTC — 169cc2e (codex)
 
 `codex review --base origin/main`: no findings. "The payment-provider import and reassignment paths preserve transaction types, categories, splits, and rollback behavior."
+
+## Round 9 — 2026-10-11 06:52 UTC — 4141cf4
+
+Checks at review time: `bin/rails test` 954 runs, 2533 assertions, 0 failures, 0 errors, 0 skips; `rubocop` (309 files), herb-lint, Brakeman and bundler-audit clean; `i18n-tasks normalize` changes nothing; no translations missing. No uncommitted changes. `origin/main` is still the merge base (47e2474). No existing test was weakened, skipped or deleted (the diff removes no line under `test/`).
+
+Round-7 fix verified:
+
+- Private helper: `Assistant::MoveTransactionsToMerchants.moved` is now marked `private_class_method :moved`, like the other tool helpers. `self.call` still reaches it from inside the class. The two assistant tests on the move message ("the assistant marks a shared provider and moves its transactions to their merchants", "the assistant hears about a single moved transaction in the singular") pass. Holds.
+
+Also checked: the `shared` input of `set_payment_provider` cannot arrive as the string `"false"`. The `mcp` gem (1.5.1) validates tool arguments against the input schema by default (`validate_tool_call_arguments: true`).
+
+Nothing found.
+
+### Compliance
+
+| Acceptance criterion | Proving test |
+| --- | --- |
+| Shared Adyen, "Naam: Kruidvat" books on Kruidvat | `test/jobs/importing/ing/import_job_test.rb` "a payment through a shared provider books on the merchant's existing account" |
+| "Naam: Kirovanni/Foodticket" creates and books on a new account | `import_job_test.rb` "a payment through a shared provider to an unknown merchant creates that merchant" |
+| Mollie "via" suffix dropped | `import_job_test.rb` "a via suffix is dropped from the merchant name" |
+| Buckaroo "by" suffix dropped | `import_job_test.rb` "a by suffix is dropped from the merchant name" |
+| "Naam: Adyen" stays on Adyen | `import_job_test.rb` "a payment naming the provider itself stays on the provider" |
+| AON (not shared) still books on AON | `import_job_test.rb` "a payment to an account that is not a shared provider books on that account" |
+| Newly shared: stays until the move, then moves | `test/integration/merchant_reassignments_test.rb` "marking a provider leaves its transactions until they are moved" |
+| Provider default category becomes merchant default | `merchant_reassignments_test.rb` "a moved transaction with the provider's default category gets the merchant's default" |
+| Hand-picked category and splits kept | `merchant_reassignments_test.rb` "a moved transaction keeps a category chosen by hand", "a moved split transaction keeps its splits" |
+| Second move moves nothing | `merchant_reassignments_test.rb` "moving a second time moves nothing" |
+| Unmark: new import books on Adyen, moved ones stay | `test/integration/payment_providers_test.rb` "unmarking a provider books new imports on it and leaves moved transactions" |
+| Assistant marks and moves with the same results | `test/integration/assistant_test.rb` "the assistant marks a shared provider and moves its transactions to their merchants" |
+
+Every test named in `plan.md` `## Proof` exists in the diff, including all per-file unit tests (checked by name with `grep`).
