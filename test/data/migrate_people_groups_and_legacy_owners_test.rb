@@ -40,6 +40,32 @@ class MigratePeopleGroupsAndLegacyOwnersTest < ActiveSupport::TestCase
     assert_equal first.person_id, second.person_id
   end
 
+  test "does not abort when Unicode case variants share a purpose and year, and links the earlier one" do
+    clear_managed_links
+    first = appropriations(:birthday_etienne)
+    second = appropriations(:christmas_etienne)
+    first.update_columns(recipient: "Élodie", purpose: "Gift")
+    second.update_columns(recipient: "élodie", purpose: "Gift")
+    snapshot = Appropriation.order(:id).pluck(:id, :recipient, :amount)
+
+    assert_nothing_raised { MigratePeopleGroupsAndLegacyOwners.new.up }
+
+    assert_equal snapshot, Appropriation.order(:id).pluck(:id, :recipient, :amount)
+    assert_not_nil first.reload.person_id
+  end
+
+  test "creates household people only for legacy owners used by an account" do
+    clear_managed_links
+    Appropriation.where(recipient: %w[Serena Cosimo Chiara]).find_each do |appropriation|
+      appropriation.update_columns(recipient: "Outsider #{appropriation.id}")
+    end
+
+    MigratePeopleGroupsAndLegacyOwners.new.up
+
+    assert_empty Person.where(name: %w[Serena Cosimo Chiara])
+    assert_equal %w[Etienne Michelle], Person.where(household: true).order(:name).pluck(:name)
+  end
+
   test "migrates named owners and Samen without changing legacy owners" do
     clear_managed_links
     michelle_account = Account.create!(name: "Michelle's legacy account", owner: nil)
