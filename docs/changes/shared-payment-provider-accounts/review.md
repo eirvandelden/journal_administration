@@ -207,3 +207,34 @@ Every test named in `plan.md` `## Proof` exists in the diff, including all per-f
 ## Round 12 — 2026-10-11 06:56 UTC — 936b774 (codex)
 
 `codex review --base origin/main`: no findings. Its focused tests for provider resolution, imports, moves, web actions and assistant tools pass.
+
+## Round 13 — 2026-10-11 06:59 UTC — 5564544
+
+Checks at review time: `bin/rails test` 955 runs, 2534 assertions, 0 failures, 0 errors, 0 skips; `rubocop` (309 files), herb-lint, Brakeman and bundler-audit clean; `i18n-tasks normalize` changes nothing; no translations missing. No uncommitted changes. `origin/main` is still the merge base (47e2474). No existing test was weakened, skipped or deleted (the diff removes no line under `test/`). No `REVIEW.md` or `REVIEW.local.md` exists, so the default passes (bugs, security, compliance) apply.
+
+Round-11 fix verified:
+
+- plan.md now states the last-clause rule in Name extraction ("the last ` via …` or ` by …` clause", with "Flowers by Nature via Mollie" → "Flowers by Nature"). Its Risks entry now says "Stand by Me" without a suffix gets cut, "Stand by Me via Mollie" keeps its name, and records the mirror risk "Shop via Pay by ING" → "Shop via Pay". This matches `PROVIDER_SUFFIX` in `app/models/concerns/payment_provider.rb`. Only plan.md and review.md changed since 936b774. Holds.
+
+Also checked: `Account.external.find_by_alias` keeps the `external` scope, because `find_by_alias` builds on the current relation (`joins(:account_aliases)`), so a merchant name never resolves to a family account through an alias. The new controllers take no request parameters other than `account_id`, sit behind the existing session authentication, and use `button_to` (CSRF token included).
+
+Nothing found.
+
+### Compliance
+
+| Acceptance criterion | Proving test |
+| --- | --- |
+| Shared Adyen, "Naam: Kruidvat" books on Kruidvat | `test/jobs/importing/ing/import_job_test.rb` "a payment through a shared provider books on the merchant's existing account" |
+| "Naam: Kirovanni/Foodticket" creates and books on a new account | `import_job_test.rb` "a payment through a shared provider to an unknown merchant creates that merchant" |
+| Mollie "via" suffix dropped | `import_job_test.rb` "a via suffix is dropped from the merchant name" |
+| Buckaroo "by" suffix dropped | `import_job_test.rb` "a by suffix is dropped from the merchant name" |
+| "Naam: Adyen" stays on Adyen | `import_job_test.rb` "a payment naming the provider itself stays on the provider" |
+| AON (not shared) still books on AON | `import_job_test.rb` "a payment to an account that is not a shared provider books on that account" |
+| Newly shared: stays until the move, then moves | `test/integration/merchant_reassignments_test.rb` "marking a provider leaves its transactions until they are moved" |
+| Provider default category becomes merchant default | `merchant_reassignments_test.rb` "a moved transaction with the provider's default category gets the merchant's default" |
+| Hand-picked category and splits kept | `merchant_reassignments_test.rb` "a moved transaction keeps a category chosen by hand", "a moved split transaction keeps its splits" |
+| Second move moves nothing | `merchant_reassignments_test.rb` "moving a second time moves nothing" |
+| Unmark: new import books on Adyen, moved ones stay | `test/integration/payment_providers_test.rb` "unmarking a provider books new imports on it and leaves moved transactions" |
+| Assistant marks and moves with the same results | `test/integration/assistant_test.rb` "the assistant marks a shared provider and moves its transactions to their merchants" |
+
+Every test named in `plan.md` `## Proof` exists in the diff, including all per-file unit tests (checked by name with `grep`).
