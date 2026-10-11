@@ -1,8 +1,7 @@
 # Represents a bank account with transactions and categorization
 #
-# Accounts can be family-owned (samen, etienne, michelle, serena, cosimo, chiara) or external
-# (e.g., Albert Heijn, creditors, other banks). The owner enum determines whether
-# transactions are debits, credits, or transfers.
+# Accounts belong to managed people or groups, or remain external.
+# Household ownership determines whether transactions are debits, credits, or transfers.
 class Account < ApplicationRecord
   include Normalizable
   include PaymentProvider
@@ -22,7 +21,7 @@ class Account < ApplicationRecord
   }.freeze
 
   # @!attribute [rw] owner
-  #   @return [String] The account owner (samen, etienne, michelle, serena, cosimo, chiara)
+  #   @return [String] The immutable legacy owner value.
   enum :owner, { samen: 0, etienne: 1, michelle: 2, serena: 3, cosimo: 4, chiara: 5 }
 
   scope :own, -> {
@@ -43,7 +42,7 @@ class Account < ApplicationRecord
   validate :one_managed_owner
   validate :preserve_transaction_classification
   validate :legacy_owner_is_unchanged
-  before_validation :assign_legacy_owner
+  before_validation :assign_legacy_owner, on: :create
 
   before_destroy :check_no_transactions_exist
 
@@ -59,7 +58,7 @@ class Account < ApplicationRecord
       .limit(limit)
   end
 
-  # Returns true when the account is not owned by a family member
+  # Returns true when the account has no household owner.
   #
   # @return [Boolean]
   def external?
