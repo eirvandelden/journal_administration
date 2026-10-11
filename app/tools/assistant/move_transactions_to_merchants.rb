@@ -18,7 +18,7 @@ module Assistant
       return problem("#{account} is not a shared payment provider, nothing was moved.") unless account.payment_provider?
 
       answer("Moved #{account.move_transactions_to_merchants} transactions from #{account} to their merchants.")
-    rescue ActiveRecord::RecordInvalid => error
+    rescue PaymentProvider::MoveFailed => error
       problem("Moving failed and nothing was moved: #{error.message}")
     end
   end

@@ -142,9 +142,11 @@ class PaymentProviderTest < ActiveSupport::TestCase
     failing.transaction_splits.create!(amount: 10, category: categories(:bakery))
     failing.update_column(:amount, 5)
 
-    assert_no_difference "Account.count" do
-      assert_raises(ActiveRecord::RecordInvalid) { @provider.move_transactions_to_merchants }
+    error = assert_no_difference "Account.count" do
+      assert_raises(PaymentProvider::MoveFailed) { @provider.move_transactions_to_merchants }
     end
+
+    assert_equal failing, error.payment
 
     assert_equal @provider, created_first.reload.creditor
     assert_equal categories(:gifts), created_first.category

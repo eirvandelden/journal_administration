@@ -11,6 +11,16 @@ module PaymentProvider
   MERCHANT = /(?:\A|\s)Naam: (.*?)(?=\s(?:#{NEXT_LABELS.map { |label| Regexp.escape(label) }.join("|")}):|\z)/m
   PROVIDER_SUFFIX = /(?:\A|\s)(?:via|by)\s.*\z/i
 
+  # Raised when one transaction cannot move; names that transaction so it can be found and fixed
+  class MoveFailed < StandardError
+    attr_reader :payment
+
+    def initialize(payment, reason)
+      @payment = payment
+      super("#{payment.model_name.human} ##{payment.id}: #{reason}")
+    end
+  end
+
   included do
     validate :payment_provider_must_be_external
   end
@@ -38,6 +48,7 @@ module PaymentProvider
   # saved nor counted, so a second run moves nothing.
   #
   # @return [Integer] Number of transactions moved
+  # @raise [MoveFailed] If one transaction cannot move; nothing has moved then
   def move_transactions_to_merchants
     return 0 unless payment_provider?
 
@@ -58,6 +69,8 @@ module PaymentProvider
 
     payment.move_counterparty(from: self, to: merchant)
     1
+  rescue ActiveRecord::RecordInvalid => error
+    raise MoveFailed.new(payment, error.message)
   end
 
   def merchant_name(description)

@@ -543,6 +543,7 @@ class AssistantTest < ActionDispatch::IntegrationTest
     failing.update_column(:amount, 5)
 
     assert refused?("move_transactions_to_merchants", account_id: accounts(:adyen).id)
+    assert_match(/##{failing.id}\b/, JSON.parse(response.body).dig("result", "content", 0, "text"))
     assert_equal accounts(:adyen), failing.reload.debitor
   end
 

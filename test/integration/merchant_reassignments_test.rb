@@ -79,6 +79,7 @@ class MerchantReassignmentsTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to account_path(@account)
     assert_match(/Amount/, flash[:alert])
+    assert_match(/##{failing.id}\b/, flash[:alert])
     assert_equal @account, failing.reload.debitor
   end
 
