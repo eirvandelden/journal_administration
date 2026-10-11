@@ -4,34 +4,63 @@ class GroupMembership < ApplicationRecord
   belongs_to :person
 
   validates :person_id, uniqueness: { scope: :group_id }
-  validate :preserve_transaction_classification
-  before_destroy :preserve_transaction_classification
+  validate :preserve_transaction_classification, on: :create
+  validate :preserve_transaction_classification_on_update, on: :update
+  before_destroy :preserve_transaction_classification_on_destroy
 
   private
 
-  # Prevents changing group household ownership when transactions already use it.
+  # Prevents adding a person to a group that owns accounts with transactions
+  # when that would change the group's household status.
   # @return [void]
   def preserve_transaction_classification
-    return unless household_change_affects_transaction?
+    return unless joining_changes_household?
 
     errors.add(:base, :cannot_change_with_transactions)
-    throw :abort if destroyed_by_association.nil? && !new_record?
   end
 
-  # Whether this membership change changes ownership of an account with history.
+  # Whether adding the new membership reclassifies the destination group.
   # @return [Boolean]
-  def household_change_affects_transaction?
-    return false unless group&.accounts_with_transactions&.exists?
-
-    group.household? != household_after_change?
+  def joining_changes_household?
+    after = household_without(group, person_id) || person&.household?
+    household_change_affects_transaction?(group, after)
   end
 
-  # Whether the group has a household person after this change.
+  # Whether the group keeps a household person once the given person is excluded.
   # @return [Boolean]
-  def household_after_change?
-    remaining = group.people.where(household: true).where.not(id: person_id)
-    return remaining.exists? unless new_record?
+  def household_without(owner, excluded_person_id)
+    owner.present? && owner.people.where(household: true).where.not(id: excluded_person_id).exists?
+  end
 
-    remaining.exists? || person.household?
+  # Whether a group with transaction history would change household status.
+  # @return [Boolean]
+  def household_change_affects_transaction?(owner, household_after)
+    return false unless owner&.accounts_with_transactions&.exists?
+
+    owner.household? != household_after
+  end
+
+  # Prevents a changed membership from reclassifying either group involved.
+  # @return [void]
+  def preserve_transaction_classification_on_update
+    return unless person_id_changed? || group_id_changed?
+
+    errors.add(:base, :cannot_change_with_transactions) if leaving_changes_household? || joining_changes_household?
+  end
+
+  # Whether removing the original membership reclassifies the original group.
+  # @return [Boolean]
+  def leaving_changes_household?
+    original = Group.find_by(id: group_id_was)
+    household_change_affects_transaction?(original, household_without(original, person_id_was))
+  end
+
+  # Prevents destroying a membership that would reclassify the group.
+  # @return [void]
+  def preserve_transaction_classification_on_destroy
+    return unless household_change_affects_transaction?(group, household_without(group, person_id))
+
+    errors.add(:base, :cannot_change_with_transactions)
+    throw :abort if destroyed_by_association.nil?
   end
 end
