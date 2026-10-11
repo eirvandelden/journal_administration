@@ -26,6 +26,24 @@ class PersonTest < ActiveSupport::TestCase
     assert_predicate person.reload, :household?
   end
 
+  test "refuses to make an outside person a household owner when transactions depend on it" do
+    account = Account.create!(name: "Grandma's account", owner: nil, person: people(:grandma))
+    Debit.create!(
+      amount: 25, booked_at: Time.current, interest_at: Time.current,
+      debitor: accounts(:savings), creditor: account, category: categories(:gifts)
+    )
+
+    assert_not people(:grandma).update(household: true)
+    assert_not_predicate people(:grandma).reload, :household?
+  end
+
+  test "allows making an outside person a household owner without transactions" do
+    Account.create!(name: "Grandma's unused account", owner: nil, person: people(:grandma))
+
+    assert people(:grandma).update(household: true)
+    assert_predicate people(:grandma).reload, :household?
+  end
+
   test "normalizes case-insensitive names" do
     Person.create!(name: "Élodie", household: false)
     duplicate = Person.new(name: "élodie", household: false)

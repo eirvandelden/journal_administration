@@ -61,20 +61,36 @@ class MigratePeopleGroupsAndLegacyOwnersTest < ActiveSupport::TestCase
 
   test "preserves household scopes and transaction types after migration" do
     clear_managed_links
-    transactions(:gift_payment).update!(appropriation: appropriations(:birthday_etienne))
+    whole_payment = transactions(:gift_payment)
+    whole_payment.update!(appropriation: appropriations(:birthday_etienne))
+    split_payment = transactions(:webshop_sinterklaas)
+    split_part = split_payment.transaction_splits.create!(
+      amount: 60, category: categories(:gifts), appropriation: appropriations(:birthday_etienne), remainder: false
+    )
+    split_payment.ensure_remainder_split
+
+    assert_equal BigDecimal("100"), appropriations(:birthday_etienne).charged
+    assert_nil appropriations(:birthday_etienne).person_id
+
     legacy_history = legacy_history_snapshot
 
     MigratePeopleGroupsAndLegacyOwners.new.up
     Current.user = users(:member)
 
     assert_equal accounts(:checking), Current.account
-    assert_includes Account.own, accounts(:checking)
-    assert_includes Account.own, accounts(:savings)
-    assert_instance_of Debit, transactions(:debit_grocery).reload
-    assert_instance_of Credit, transactions(:credit_salary).reload
-    assert_instance_of Transfer, transactions(:transfer_savings).reload
+    assert_empty [ accounts(:checking), accounts(:savings) ] - Account.own
+    assert_equal [ Debit, Credit, Transfer ], [
+      transactions(:debit_grocery).reload.class,
+      transactions(:credit_salary).reload.class,
+      transactions(:transfer_savings).reload.class
+    ]
     assert_equal BigDecimal("50.00"), transactions(:debit_grocery).amount
     assert_equal legacy_history, legacy_history_snapshot
+    assert_equal [ appropriations(:birthday_etienne), appropriations(:birthday_etienne), "Etienne" ], [
+      whole_payment.reload.appropriation,
+      split_part.reload.appropriation,
+      appropriations(:birthday_etienne).reload.person.name
+    ]
   ensure
     Current.reset
   end
@@ -101,7 +117,9 @@ class MigratePeopleGroupsAndLegacyOwnersTest < ActiveSupport::TestCase
         :id, :type, :amount, :category_id, :debitor_account_id, :creditor_account_id, :appropriation_id
       ),
       transaction_links: TransactionLink.order(:id).pluck(:id, :source_transaction_id, :transfer_id),
-      transaction_splits: TransactionSplit.order(:id).pluck(:id, :transaction_id, :category_id, :amount, :note)
+      transaction_splits: TransactionSplit.order(:id).pluck(
+        :id, :transaction_id, :category_id, :amount, :note, :appropriation_id, :remainder
+      )
     }
   end
 end
