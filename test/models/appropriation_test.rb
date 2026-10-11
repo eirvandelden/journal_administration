@@ -147,4 +147,57 @@ class AppropriationTest < ActiveSupport::TestCase
     assert_not appropriation.destroy
     assert Appropriation.exists?(appropriation.id)
   end
+
+  class LegacyDuplicates < ActiveSupport::TestCase
+    test "refuses a new appropriation that matches only a legacy duplicate row" do
+      original = appropriations(:birthday_etienne)
+      original.update_columns(legacy_duplicate: true)
+      Appropriation.where.not(id: original.id).where(purpose: "Birthday", person_id: original.person_id,
+        budget_year: 2026).delete_all
+      duplicate = Appropriation.new(purpose: "Birthday", person: original.person, budget_year: 2026, amount: 10)
+
+      assert_not duplicate.valid?
+      assert_includes duplicate.errors.attribute_names, :purpose
+    end
+
+    test "keeps an existing legacy pair updatable" do
+      first, second = legacy_pair
+
+      assert first.update(amount: 11)
+      assert second.update(amount: 12)
+    end
+
+    test "refuses moving a legacy row onto another existing key" do
+      _first, second = legacy_pair
+      clash = Appropriation.create!(purpose: "Other", person: second.person, budget_year: 2026, amount: 5)
+
+      assert_not clash.update(purpose: "Gift")
+    end
+
+    test "the database refuses two unflagged rows with the same key when validation is bypassed" do
+      original = appropriations(:birthday_etienne)
+      twin = Appropriation.new(purpose: "BIRTHDAY", recipient: "Etienne", person: original.person,
+        budget_year: 2026, amount: 10)
+
+      assert_raises(ActiveRecord::RecordNotUnique) { twin.save!(validate: false) }
+    end
+
+    test "the database allows a flagged row beside an unflagged one" do
+      original = appropriations(:birthday_etienne)
+      twin = Appropriation.new(purpose: "BIRTHDAY", recipient: "Etienne", person: original.person,
+        budget_year: 2026, amount: 10, legacy_duplicate: true)
+
+      assert_nothing_raised { twin.save!(validate: false) }
+    end
+
+    private
+
+    def legacy_pair
+      first = appropriations(:birthday_etienne)
+      second = Appropriation.new(purpose: "BIRTHDAY", recipient: "Etienne", person: first.person,
+        budget_year: 2026, amount: 20, legacy_duplicate: true)
+      second.save!(validate: false)
+      [ first, second ]
+    end
+  end
 end

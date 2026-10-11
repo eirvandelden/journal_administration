@@ -196,6 +196,24 @@ class AppropriationsTest < ActionDispatch::IntegrationTest
     assert_select "h1", text: /Begrotingsposten/
   end
 
+  test "legacy_duplicate cannot be set through the form params" do
+    post appropriations_path, params: {
+      appropriation: new_appropriation(purpose: "Graduation").merge(legacy_duplicate: "1")
+    }
+
+    created = Appropriation.find_by!(purpose: "Graduation")
+
+    assert_not created.legacy_duplicate
+  end
+
+  test "legacy_duplicate cannot be changed through update params" do
+    appropriation = appropriations(:birthday_etienne)
+
+    patch appropriation_path(appropriation), params: { appropriation: { amount: 151, legacy_duplicate: "1" } }
+
+    assert_not appropriation.reload.legacy_duplicate
+  end
+
   private
 
   # How many queries read split parts while the block runs
