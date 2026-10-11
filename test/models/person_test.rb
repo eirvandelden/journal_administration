@@ -6,11 +6,17 @@ class PersonTest < ActiveSupport::TestCase
     assert_not people(:grandma).household?
   end
 
-  test "cannot be destroyed when referenced by an account, appropriation, or membership" do
+  test "refuses to destroy account, appropriation, and membership references" do
     [ people(:etienne), people(:chiara), people(:michelle) ].each do |person|
       assert_not person.destroy
       assert Person.exists?(person.id)
     end
+
+    account_only_person = Person.create!(name: "Account-only owner", household: false)
+    Account.create!(name: "Account-only account", person: account_only_person)
+
+    assert_not account_only_person.destroy
+    assert Person.exists?(account_only_person.id)
   end
 
   test "refuses to drop household status from a used owner" do
@@ -21,7 +27,8 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   test "normalizes case-insensitive names" do
-    duplicate = Person.new(name: "ETIENNE", household: false)
+    Person.create!(name: "Élodie", household: false)
+    duplicate = Person.new(name: "élodie", household: false)
 
     assert_not duplicate.valid?
     assert_includes duplicate.errors[:name], "has already been taken"

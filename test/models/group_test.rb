@@ -9,7 +9,7 @@ class GroupTest < ActiveSupport::TestCase
     assert_not group.household?
   end
 
-  test "cannot be destroyed when owned by an account" do
+  test "refuses to destroy a group that owns an account" do
     assert_not groups(:samen).destroy
     assert Group.exists?(groups(:samen).id)
   end

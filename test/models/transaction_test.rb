@@ -4,11 +4,23 @@ class TransactionTest < ActiveSupport::TestCase
   test "managed household owners determine transaction type after a rename" do
     person = people(:etienne)
     person.update!(name: "E. van Delden")
+    first_account = Account.create!(name: "Renamed owner's first account", person:)
+    second_account = Account.create!(name: "Renamed owner's second account", person:)
+
+    assert_nil first_account.owner
+    assert_nil second_account.owner
 
     assert_instance_of Debit, transactions(:debit_grocery).reload
     assert_instance_of Credit, transactions(:credit_salary).reload
     assert_instance_of Transfer, transactions(:transfer_savings).reload
     assert_equal BigDecimal("50.00"), transactions(:debit_grocery).amount
+
+    debit = Transaction.new(debitor: first_account, creditor: accounts(:unknown), amount: 10)
+    credit = Transaction.new(debitor: accounts(:unknown), creditor: first_account, amount: 10)
+    transfer = Transaction.new(debitor: first_account, creditor: second_account, amount: 10)
+    [ debit, credit, transfer ].each(&:valid?)
+
+    assert_equal %w[Debit Credit Transfer], [ debit.type, credit.type, transfer.type ]
   end
 
   # -- type validation --------------------------------------------------------
