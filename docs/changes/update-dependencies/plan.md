@@ -127,5 +127,7 @@ Domain skills applied: dependencies. Named for the implementer: using-sqlite-wor
 
 - herb 0.11 flagged `form_with` inside `turbo_frame_tag` in `app/views/budgets/_form.html.erb` as a nested form. The view now uses the literal `<turbo-frame>` tag, which renders the same HTML.
 - Newer releases appeared during implementation: `selenium-webdriver` 4.51.0, `lefthook` 2.2.1, `date` 3.6.0. The branch carries them.
-- `docker build --platform linux/amd64` failed in `apt-get` with "not enough free space" inside the Rancher Desktop VM, before any Bundler step. The image build is not verified.
+- `docker build --platform linux/amd64` first failed in `apt-get` with "not enough free space" inside the Rancher Desktop VM. After a build-cache prune (2026-10-11) it succeeds on `ruby:4.0.7-slim`. The image boots Rails 8.1.4 on Ruby 4.0.7.
+- Bundler does not switch versions inside the image: it runs the image's default 4.0.20 against `BUNDLED WITH 4.0.22`. Install and boot still work. Pinning 4.0.22 in the image needs a Dockerfile change beyond `RUBY_VERSION` (rule 13), so it is left as is.
+- `bin/rails test:system` is left to CI, by Etienne's choice (2026-10-11).
 - `bin/rails test:system` errors on the untouched branch too: ChromeDriver wants Chrome 155, the cached Chrome for Testing is 150. This is a toolchain issue, not fixed here.
