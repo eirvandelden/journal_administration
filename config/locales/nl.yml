@@ -34,7 +34,7 @@ nl:
       account_number: 'Rekeningnummer:'
       aliases: Herkenningspatronen
       category: 'Categorie:'
-      confirm_move_to_merchants: Elke transactie op deze rekening verplaatsen naar de winkel die erin staat?
+      confirm_move_to_merchants: Elke transactie op deze rekening verplaatsen naar de winkel die erin staat? Een transactie met de standaardcategorie van deze rekening krijgt de standaardcategorie van de winkel, of geen.
       edit: Bewerken
       id: 'Id:'
       mark_payment_provider: Markeer als gedeelde betaaldienstverlener

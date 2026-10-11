@@ -34,7 +34,7 @@ en:
       account_number: 'Account number:'
       aliases: Recognition patterns
       category: 'Category:'
-      confirm_move_to_merchants: Move every transaction on this account to the merchant named in it?
+      confirm_move_to_merchants: Move every transaction on this account to the merchant named in it? A transaction still on this account's default category gets the merchant's default category, or none.
       edit: Edit
       id: 'Id:'
       mark_payment_provider: Mark as shared payment provider

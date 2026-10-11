@@ -26,6 +26,13 @@ class MerchantReassignmentsTest < ActionDispatch::IntegrationTest
     assert_equal categories(:household), transactions(:kruidvat_through_adyen).reload.category
   end
 
+  test "a moved transaction with the provider's default category loses it at a merchant without a default" do
+    post account_merchant_reassignment_path(@account)
+
+    assert_equal accounts(:kruidvat), transactions(:kruidvat_through_adyen).reload.debitor
+    assert_nil transactions(:kruidvat_through_adyen).category
+  end
+
   test "a moved transaction keeps a category chosen by hand" do
     accounts(:kruidvat).update!(category: categories(:household))
 

@@ -34,7 +34,7 @@ it:
       account_number: 'Numero conto:'
       aliases: Modelli di riconoscimento
       category: 'Categoria:'
-      confirm_move_to_merchants: Spostare ogni transazione di questo conto sul negozio indicato?
+      confirm_move_to_merchants: Spostare ogni transazione di questo conto sul negozio indicato? Una transazione con la categoria predefinita di questo conto riceve quella del negozio, o nessuna.
       edit: Modifica
       id: 'Id:'
       mark_payment_provider: Segna come fornitore di pagamenti condiviso
