@@ -168,10 +168,12 @@ class AppropriationTest < ActiveSupport::TestCase
     end
 
     test "refuses moving a legacy row onto another existing key" do
-      _first, second = legacy_pair
+      first, second = legacy_pair
+      Appropriation.where(id: first.id).update_all(legacy_duplicate: true)
       clash = Appropriation.create!(purpose: "Other", person: second.person, budget_year: 2026, amount: 5)
 
-      assert_not clash.update(purpose: "Gift")
+      assert_not clash.update(purpose: "Birthday")
+      assert_includes clash.errors.attribute_names, :purpose
     end
 
     test "the database refuses two unflagged rows with the same key when validation is bypassed" do
