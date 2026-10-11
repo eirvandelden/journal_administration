@@ -54,6 +54,42 @@ class MigratePeopleGroupsAndLegacyOwnersTest < ActiveSupport::TestCase
     assert_not_nil first.reload.person_id
   end
 
+  test "links both Unicode case variants to one person and flags the later row" do
+    clear_managed_links
+    first = appropriations(:birthday_etienne)
+    second = appropriations(:christmas_etienne)
+    first.update_columns(recipient: "Élodie", purpose: "Gift")
+    second.update_columns(recipient: "élodie", purpose: "Gift")
+    charge = transactions(:gift_payment)
+    charge.update_columns(appropriation_id: second.id)
+    snapshot = Appropriation.order(:id).pluck(:id, :recipient, :amount)
+
+    MigratePeopleGroupsAndLegacyOwners.new.up
+    MigratePeopleGroupsAndLegacyOwners.new.up
+
+    assert_equal snapshot, Appropriation.order(:id).pluck(:id, :recipient, :amount)
+    assert_not_nil first.reload.person_id
+    assert_equal first.person_id, second.reload.person_id
+    assert_equal [ false, true ], [ first.legacy_duplicate, second.legacy_duplicate ]
+    assert_equal second.id, charge.reload.appropriation_id
+    assert_equal [ charge ], second.charges
+    assert_equal charge.amount, second.charged
+  end
+
+  test "a person rename shows the new name on both case-variant rows" do
+    clear_managed_links
+    first = appropriations(:birthday_etienne)
+    second = appropriations(:christmas_etienne)
+    first.update_columns(recipient: "Élodie", purpose: "Gift")
+    second.update_columns(recipient: "élodie", purpose: "Gift")
+
+    MigratePeopleGroupsAndLegacyOwners.new.up
+    first.reload.person.update!(name: "Elodie Renamed")
+
+    assert_equal [ "Elodie Renamed", "Elodie Renamed" ], [ first.reload.recipient_name, second.reload.recipient_name ]
+    assert_equal [ "Élodie", "élodie" ], [ first.recipient, second.recipient ]
+  end
+
   test "creates household people only for legacy owners used by an account" do
     clear_managed_links
     Appropriation.where(recipient: %w[Serena Cosimo Chiara]).find_each do |appropriation|
