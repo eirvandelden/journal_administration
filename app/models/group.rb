@@ -25,7 +25,9 @@ class Group < ApplicationRecord
 
   # Whether at least one member belongs to the household.
   # @return [Boolean]
-  def household? = people.where(household: true).exists?
+  def household?
+    people.where(household: true).exists?
+  end
 
   # Accounts whose transactions depend on this group's household status.
   # @return [ActiveRecord::Relation]
@@ -47,7 +49,15 @@ class Group < ApplicationRecord
   # Refuses member changes that alter account classification with history.
   # @return [void]
   def preserve_transaction_classification
-    return unless @selected_person_ids && accounts_with_transactions.exists?
+    return unless @selected_person_ids
+
+    unless selected_people.count == @selected_person_ids.count
+      errors.add(:person_ids, :invalid)
+      return
+    end
+
+    return unless accounts_with_transactions.exists?
+
     return if household? == selected_people.where(household: true).exists?
 
     errors.add(:base, :cannot_change_with_transactions)

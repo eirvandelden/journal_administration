@@ -48,7 +48,7 @@ class Appropriation < ApplicationRecord
   # @param name [String]
   # @return [Person, nil]
   def self.person_named(name)
-    Person.find_by(name_key: name.downcase) || Person.all.find { |entry| entry.name.casecmp?(name) }
+    Person.find_by(name_key: name.downcase)
   end
 
   # The name a person recognises it by, e.g. "Birthday Etienne 2026"

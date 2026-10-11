@@ -159,6 +159,8 @@ en:
           attributes:
             base:
               cannot_change_with_transactions: would change account classification despite existing transactions
+            person_ids:
+              invalid: includes a person that no longer exists
         group_membership:
           attributes:
             base:

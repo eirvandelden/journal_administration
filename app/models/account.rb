@@ -73,7 +73,9 @@ class Account < ApplicationRecord
 
   # The current managed owner's name, or nil for an external account.
   # @return [String, nil]
-  def owner_name = group&.name || person&.name
+  def owner_name
+    group&.name || person&.name
+  end
 
   # Selects exactly one managed owner from the account form.
   # @param value [String]

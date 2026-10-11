@@ -159,6 +159,8 @@ it:
           attributes:
             base:
               cannot_change_with_transactions: cambierebbe la classificazione del conto nonostante le transazioni esistenti
+            person_ids:
+              invalid: include una persona che non esiste più
         group_membership:
           attributes:
             base:
@@ -202,6 +204,13 @@ it:
         other: Stanziamenti
       category: Categoria
       chattel: Bene
+      group:
+        one: Gruppo
+        other: Gruppi
+      group_membership: Membro del gruppo
+      person:
+        one: Persona
+        other: Persone
       product:
         one: Prodotto
         other: Prodotti
@@ -605,6 +614,8 @@ it:
     budgets: "💰 %{model}"
     categories: "🏷️ %{model}"
     chattels: "📦 %{model}"
+    groups: "👥 Gruppi"
+    people: "👤 Persone"
     preferences: "🎨 Preferenze"
     product_types: "🥫 %{model}"
     products: "🛒 %{model}"

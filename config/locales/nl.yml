@@ -159,6 +159,8 @@ nl:
           attributes:
             base:
               cannot_change_with_transactions: zou de rekeningclassificatie wijzigen ondanks bestaande transacties
+            person_ids:
+              invalid: bevat een persoon die niet meer bestaat
         group_membership:
           attributes:
             base:
@@ -202,6 +204,13 @@ nl:
         other: Begrotingsposten
       category: Categorie
       chattel: Bezitting
+      group:
+        one: Groep
+        other: Groepen
+      group_membership: Groepslidmaatschap
+      person:
+        one: Persoon
+        other: Personen
       product:
         one: Product
         other: Producten
@@ -605,6 +614,8 @@ nl:
     budgets: "💰 %{model}"
     categories: "🏷️ %{model}"
     chattels: "📦 %{model}"
+    groups: "👥 Groepen"
+    people: "👤 Personen"
     preferences: "🎨 Voorkeuren"
     product_types: "🥫 %{model}"
     products: "🛒 %{model}"
