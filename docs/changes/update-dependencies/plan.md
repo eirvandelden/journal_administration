@@ -125,7 +125,9 @@ Domain skills applied: dependencies. Named for the implementer: using-sqlite-wor
 
 ## Implementation notes
 
-- herb 0.11 flagged `form_with` inside `turbo_frame_tag` in `app/views/budgets/_form.html.erb` as a nested form. The view now uses the literal `<turbo-frame>` tag, which renders the same HTML.
+- herb 0.11's `html-no-nested-forms` flagged `form_with` inside `turbo_frame_tag` in `app/views/budgets/_form.html.erb`. This is a false positive: herb mistakes `turbo_frame_tag` for a form. The view now uses the literal `<turbo-frame>` tag, which renders the same HTML. Etienne chose to follow the latest herb rules this way (2026-10-11). `test/integration/budgets_test.rb` guards the frame's id and `target="_top"`.
+- Version bumps not named in the plan: `rubocop` 1.92 (with the rubocop-rails group), and `uri` 1.1.2 and `prettyprint` 0.2.1 (resolved in the solid_cable commit).
+- Bundler 4 keeps the patchlevel: the lockfile says `ruby 4.0.7p0`, not `ruby 4.0.7` as the plan expected. The guard test in `test/configuration_test.rb` accepts both forms.
 - Newer releases appeared during implementation: `selenium-webdriver` 4.51.0, `lefthook` 2.2.1, `date` 3.6.0. The branch carries them.
 - `docker build --platform linux/amd64` first failed in `apt-get` with "not enough free space" inside the Rancher Desktop VM. After a build-cache prune (2026-10-11) it succeeds on `ruby:4.0.7-slim`. The image boots Rails 8.1.4 on Ruby 4.0.7.
 - Bundler does not switch versions inside the image: it runs the image's default 4.0.20 against `BUNDLED WITH 4.0.22`. Install and boot still work. Pinning 4.0.22 in the image needs a Dockerfile change beyond `RUBY_VERSION` (rule 13), so it is left as is.
