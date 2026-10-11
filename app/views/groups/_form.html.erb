@@ -9,9 +9,9 @@
   <% end %>
 
   <fieldset>
+    <legend><%= t("groups.form.members") %></legend>
     <%= form.label :name %>
     <%= form.text_field :name, required: true %>
-    <legend><%= t("groups.form.members") %></legend>
     <%= form.collection_check_boxes :person_ids, Person.order(:name), :id, :name %>
   </fieldset>
 
