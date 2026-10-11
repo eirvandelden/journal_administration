@@ -85,8 +85,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_11_120000) do
     t.decimal "amount", precision: 10, scale: 2, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "legacy_duplicate", default: false, null: false
     t.integer "person_id"
-    t.index "LOWER(purpose), person_id, budget_year", name: "index_appropriations_on_person_and_purpose_and_year", unique: true, where: "person_id IS NOT NULL"
+    t.index "LOWER(purpose), person_id, budget_year", name: "index_appropriations_on_person_and_purpose_and_year", unique: true, where: "person_id IS NOT NULL AND legacy_duplicate = false"
     t.index ["person_id"], name: "index_appropriations_on_person_id"
     t.check_constraint "amount > 0", name: "check_appropriation_amount_positive"
   end

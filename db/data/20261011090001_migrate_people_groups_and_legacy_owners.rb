@@ -77,15 +77,15 @@ class MigratePeopleGroupsAndLegacyOwners < ActiveRecord::Migration[8.1]
     AccountRecord.where.not(owner: [ nil, 0 ]).distinct.order(:owner).pluck(:owner)
   end
 
-  # Links each appropriation to its person; a later case variant with the same
-  # purpose and year stays unlinked, because the unique index allows one.
+  # Links every appropriation to its person. A later case variant with the same
+  # purpose and year links to the same person and is flagged legacy_duplicate,
+  # because the unique index covers only unflagged rows.
   def link_appropriations
     linked = Set.new
     AppropriationRecord.order(:id).each do |appropriation|
       person = person_for(appropriation.recipient, household: false)
-      next unless linked.add?([ person.id, appropriation.purpose.to_s.downcase(:ascii), appropriation.budget_year ])
-
-      appropriation.update_columns(person_id: person.id)
+      key = [ person.id, appropriation.purpose.to_s.downcase(:ascii), appropriation.budget_year ]
+      appropriation.update_columns(person_id: person.id, legacy_duplicate: !linked.add?(key))
     end
   end
 end
