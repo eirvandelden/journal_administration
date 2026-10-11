@@ -28,7 +28,7 @@ class Appropriation < ApplicationRecord
     person = person_named(recipient)
     return none unless person
 
-    of_year(budget_year).where("LOWER(purpose) = LOWER(?)", purpose).where(person:)
+    of_year(budget_year).where("LOWER(purpose) = LOWER(?)", purpose).where(person:).order(:legacy_duplicate, :id)
   end
 
   # Names to suggest: household members and people with appropriations.
@@ -100,9 +100,16 @@ class Appropriation < ApplicationRecord
   # Refuses a second appropriation for the same purpose, person and year.
   # @return [void]
   def one_per_purpose_person_and_year
+    return unless key_changed?
     return unless namesake.exists?
 
     errors.add(:purpose, :already_appropriated)
+  end
+
+  # Whether this record is new or its purpose, person or year changes.
+  # @return [Boolean]
+  def key_changed?
+    new_record? || will_save_change_to_purpose? || will_save_change_to_person_id? || will_save_change_to_budget_year?
   end
 
   # Other appropriations with this purpose, person and year.
