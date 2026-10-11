@@ -134,3 +134,7 @@ Round-5 fixes verified:
 | Assistant marks and moves with the same results | `test/integration/assistant_test.rb` "the assistant marks a shared provider and moves its transactions to their merchants" |
 
 Every test named in `plan.md` `## Proof` exists in the diff, including all per-file unit tests (checked by name with `grep`).
+
+## Round 8 — 2026-10-11 06:49 UTC — 169cc2e (codex)
+
+`codex review --base origin/main`: no findings. "The payment-provider import and reassignment paths preserve transaction types, categories, splits, and rollback behavior."
