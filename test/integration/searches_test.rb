@@ -50,6 +50,27 @@ class SearchesTest < ActionDispatch::IntegrationTest
     assert_select "a", text: /Laptop/
   end
 
+  test "GET /searches with query shows matching transaction" do
+    get searches_url, params: { q: "Monthly salary" }
+
+    assert_response :success
+    assert_select "a[href='#{transaction_path(transactions(:credit_salary))}']"
+  end
+
+  test "GET /searches with query shows matching category" do
+    get searches_url, params: { q: "Housing" }
+
+    assert_response :success
+    assert_select "a[href='#{category_path(categories(:housing))}']"
+  end
+
+  test "GET /searches with query shows matching page" do
+    get searches_url, params: { q: I18n.t("journal") }
+
+    assert_response :success
+    assert_select "a[href='#{transactions_path}']", text: /#{I18n.t("journal")}/
+  end
+
   test "GET /searches with unmatched query shows no results message" do
     get searches_url, params: { q: "xyzzy_nonexistent_42" }
 
