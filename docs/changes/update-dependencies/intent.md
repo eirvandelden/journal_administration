@@ -59,3 +59,13 @@ One change brings every dependency to its newest release that the app's own and 
 ## Open questions
 
 None.
+
+## Amendment (2026-10-11)
+
+Status: accepted.
+
+- In scope: the production image runs the Bundler that `Gemfile.lock` names, not the image's default. Etienne approves the Dockerfile change this needs (rule 13). This replaces the out-of-scope line on Dockerfile changes beyond `RUBY_VERSION`, for this change only.
+- In scope: `.herb.yml` declares `framework: actionview`, as herb 0.11 suggests. Any new offense it brings gets fixed in `app/views`, with no rule disabled.
+- Out of scope: appkit's `rails-ci.yml` action versions. Etienne updates appkit separately.
+- Acceptance: in the built `linux/amd64` image, `bundle -v` prints 4.0.22.
+- Acceptance: herb lint on `app/views/` passes with `framework: actionview`, and prints no `herb-config-framework-option` notice.
