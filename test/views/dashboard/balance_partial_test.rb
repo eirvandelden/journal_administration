@@ -83,4 +83,24 @@ class Dashboard::BalancePartialTest < ActiveSupport::TestCase
     assert_match "budget-status--green", html
     assert_no_match "budget-status--orange", html
   end
+
+  test "budget status shows the share of the budget spent" do
+    dashboard = OpenStruct.new(
+      debit_transactions: { categories(:groceries) => 60 },
+      credit_transactions: {},
+      active_budget: OpenStruct.new,
+      budget_amounts: { categories(:groceries) => 100 },
+      budget_actuals: { categories(:groceries) => 60 },
+      debit_total: 60,
+      credit_total: 0,
+      profit_or_loss: 60
+    )
+
+    html = ApplicationController.render(
+      partial: "dashboard/balance",
+      locals: { dashboard: dashboard }
+    )
+
+    assert_match %r{<span class="budget-status budget-status--\w+">60%</span>}, html
+  end
 end
