@@ -143,3 +143,10 @@ Status: accepted.
 3. Verify: `docker build --platform linux/amd64`, then `docker run --rm --entrypoint sh <image> -c 'bundle -v; bundle exec ruby -e "puts Bundler::VERSION"; SECRET_KEY_BASE_DUMMY=1 bin/rails runner "puts Rails.version"'`. Both Bundler lines print 4.0.22 and Rails boots. Remove the image. Prune only the build cache if space runs out. Push with the worktree `bin/` and Ruby 4.0.7 first on `PATH`.
 
 Proof: the `docker run` output above; herb's summary with no failing offense and no framework notice; `bin/rails test` green. No new unit test: neither change alters app behaviour, and the image check exercises the Dockerfile directly.
+
+### Amendment notes
+
+- The image now installs Bundler 4.0.22 from the lockfile. In the amd64 build, `bundle -v` and `bundle exec` both report 4.0.22, and Rails 8.1.4 boots.
+- `framework: actionview` enabled 40 info and hint offenses, none failing. Etienne chose to fix all 40 here (2026-10-12), one commit per rule: qualified partial paths, explicit route helpers, explicit partials, the `label` local that shadowed the helper, and `form_for` → `form_with`.
+- STI transactions keep their `/credit/:id`, `/debit/:id` and `/transfer/:id` links through `polymorphic_path`, which herb accepts. `transaction_path` would have changed those URLs.
+- New tests guard each rewrite: transaction links by kind, search results by type, account aliases, the users index, the budget percentage label, and what each of the six record forms submits. The form tests pass on both the `form_for` and the `form_with` views.
