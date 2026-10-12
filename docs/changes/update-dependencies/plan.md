@@ -133,3 +133,13 @@ Domain skills applied: dependencies. Named for the implementer: using-sqlite-wor
 - Bundler does not switch versions inside the image: it runs the image's default 4.0.20 against `BUNDLED WITH 4.0.22`. Install and boot still work. Pinning 4.0.22 in the image needs a Dockerfile change beyond `RUBY_VERSION` (rule 13), so it is left as is.
 - `bin/rails test:system` is left to CI, by Etienne's choice (2026-10-11).
 - `bin/rails test:system` errors on the untouched branch too: ChromeDriver wants Chrome 155, the cached Chrome for Testing is 150. This is a toolchain issue, not fixed here.
+
+## Amendment (2026-10-11)
+
+Status: accepted.
+
+1. Bundler in the image. In the Dockerfile build stage, after `COPY Gemfile Gemfile.lock .ruby-version ./` and before `bundle lock`, add `RUN gem install bundler --no-document -v "$(awk '/BUNDLED WITH/ { getline; print $1 }' Gemfile.lock)"`. The version comes from the lockfile, so a later Bundler bump needs no Dockerfile edit. The official image sets `GEM_HOME=/usr/local/bundle`, the same as `BUNDLE_PATH`, so the existing `COPY --from=build "${BUNDLE_PATH}"` carries the gem into the final stage. Verify the `GEM_HOME` value in the image before relying on it. Commit: `build(docker): install the Bundler the lockfile names`.
+2. herb framework. Add `framework: actionview` to `.herb.yml`, below `version:`. Run `npx @herb-tools/linter app/views/`. Fix each new offense in the view, then run `bin/rails test`. Commit: `style(views): lint templates as Action View`.
+3. Verify: `docker build --platform linux/amd64`, then `docker run --rm --entrypoint sh <image> -c 'bundle -v; bundle exec ruby -e "puts Bundler::VERSION"; SECRET_KEY_BASE_DUMMY=1 bin/rails runner "puts Rails.version"'`. Both Bundler lines print 4.0.22 and Rails boots. Remove the image. Prune only the build cache if space runs out. Push with the worktree `bin/` and Ruby 4.0.7 first on `PATH`.
+
+Proof: the `docker run` output above; herb's summary with no failing offense and no framework notice; `bin/rails test` green. No new unit test: neither change alters app behaviour, and the image check exercises the Dockerfile directly.
