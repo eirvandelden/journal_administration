@@ -2,7 +2,7 @@
 <header>
   <h1><%= @account.name %></h1>
   <nav>
-    <%= link_to t('common.show'), @account %>
+    <%= link_to t('common.show'), account_path(@account) %>
   </nav>
 </header>
 <article>

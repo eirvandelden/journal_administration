@@ -26,6 +26,13 @@ class TransactionsIndexTest < ActionDispatch::IntegrationTest
     assert_select "tr.unconsolidated", text: /Bakery purchase/, count: 0
   end
 
+  test "index links each transaction to the page for its kind" do
+    get transactions_path
+
+    assert_select "a[href='#{credit_path(transactions(:credit_salary))}']"
+    assert_select "a[href='#{debit_path(transactions(:debit_bakery))}']"
+  end
+
   test "GET /transactions returns 200" do
     get transactions_path
 
