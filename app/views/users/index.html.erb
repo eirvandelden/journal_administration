@@ -7,5 +7,5 @@
 </header>
 
 <article>
-  <%= render @users %>
+  <%= render partial: "users/user", collection: @users, as: :user %>
 </article>

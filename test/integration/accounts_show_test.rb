@@ -27,6 +27,12 @@ class AccountsShowTest < ActionDispatch::IntegrationTest
     assert_select "h2", text: I18n.t("accounts.show.aliases")
   end
 
+  test "show lists each recognition pattern of an external account" do
+    get account_path(accounts(:albert_heijn))
+
+    assert_select "li", text: /#{account_aliases(:albert_heijn_ah_to_go).pattern}/
+  end
+
   test "show renders a transaction where account is debitor" do
     get account_path(accounts(:checking))
 
