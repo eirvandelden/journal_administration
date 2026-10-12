@@ -32,6 +32,8 @@ RUN apt-get update -qq && \
 
 # Install application gems
 COPY Gemfile Gemfile.lock .ruby-version ./
+# Run the Bundler the lockfile names, not the image's default
+RUN gem install bundler --no-document -v "$(awk '/BUNDLED WITH/ { getline; print $1 }' Gemfile.lock)"
 # Ensure linux/amd64 gems are in the lock and installed
 RUN bundle lock --add-platform x86_64-linux \
  && bundle config set deployment true \
