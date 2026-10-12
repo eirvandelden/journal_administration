@@ -26,3 +26,31 @@ Compliance (acceptance criteria → proof):
 - No new deprecation warnings → the test output contains none.
 - `/mcp` still lists transactions → `test/integration/assistant_test.rb:318` "the assistant finds the transactions that still need a category".
 - Every test named in `## Proof` exists. No existing test was weakened, skipped or deleted.
+
+## Round 2 — 2026-10-12T15:23:43Z — de2e72d
+
+Scope: `git diff fab7ab4..HEAD`.
+
+- [ ] Nit: The search results `case` has no `else` branch. The old loop rendered `searches/_result_<type>` for any key, so a new key in `Search#compute_results` without a partial raised a missing-template error. Now a new key renders its `<h3>` heading with no items and no error. The `case` also repeats the five keys that `Search#compute_results` defines, so the two lists can drift apart. All five current keys have a `when` branch, so the page renders the same today. — `app/views/searches/index.html.erb:8` →
+- [ ] Nit: The test names in `record_forms_test.rb` claim more than the tests prove. "the new account form creates an account" and the others only check the form's `action`, `method`, `_method`, `enctype` and the field name prefix. No test submits a form. The checks are the right guard for the `form_with` rewrite. Only the names overstate it, for example "the new account form posts account fields to the accounts path" would match. — `test/integration/record_forms_test.rb:8` →
+- [ ] Nit: No test guards the "show" link on the transaction edit page. `transactions_index_test.rb` proves that `_table` keeps the `/credit/:id` and `/debit/:id` links. If someone changes `polymorphic_path(@transaction)` on the edit page to `transaction_path`, the link changes to `/transactions/:id` and the suite stays green. — `app/views/transactions/edit.html.erb:5` →
+
+Checked and clean:
+
+- Dockerfile: `awk '/BUNDLED WITH/ { getline; print $1 }'` reads `4.0.22` from the indented line below `BUNDLED WITH`. The install runs after the lockfile `COPY` and before `bundle lock`, so the whole `bundle` step uses 4.0.22. The gem goes into `GEM_HOME=/usr/local/bundle`, which is `BUNDLE_PATH`, so the final stage's `COPY --from=build "${BUNDLE_PATH}"` carries it. The `rm -rf "${BUNDLE_PATH}"/ruby/*/cache` step does not delete `/usr/local/bundle/cache/bundler-4.0.22.gem`, which is a few hundred KB. I did not rebuild the image. The amd64 `bundle -v` evidence is the implementer's record in the plan's amendment notes.
+- `.herb.yml` `framework: actionview`: herb checks 90 files, finds 0 offenses and prints no framework notice. 9400978 changes only `.herb.yml`. The 40 offenses were info and hint level, so every commit kept the linter green.
+- Qualified partial paths: every new path names a partial in the same controller's view folder, for example `admin/users/_form` and `products/_price_chart`. The lookup result does not change, and every local is passed as before.
+- Route helpers: `Account`, `Category`, `Chattel` and `Appropriation` have no STI subclasses, so `account_path(account)` and similar helpers give the same URL as `link_to record`. Transactions keep `polymorphic_path`, and `routes.rb:35-37` maps it to `/credit`, `/debit` and `/transfer`. The new `transactions_index_test.rb` test fails if `_table` switches to `transaction_path`.
+- Explicit collection partials: `users/_user`, `account_aliases/_account_alias` and the five `searches/_result_*` partials declare one strict local each. The `as:` names match those locals. An empty collection renders nothing in both forms. The new accounts, users and searches tests fail if a partial stops rendering or gets the wrong local. Search now has a test for each of its five result types.
+- `label` → `pct_label`: only a rename, and the HTML stays the same. The new test pins `60%` inside the status span.
+- `form_for` → `form_with model:`: `load_defaults 8.0` makes `form_with` generate field ids and no `data-remote`, so labels and field ids stay the same. The param key comes from `model_name.param_key`, which keeps `credit[...]` for an STI credit. The URL comes from `polymorphic_path`, and a persisted record gets `_method=patch`. `form_with` still sets `multipart` when the builder sees a `file_field`, and the chattel and credit tests prove that. One change in the HTML: the `<form>` element loses `form_for`'s `id`/`class` (`new_account`, `edit_chattel_1`). No CSS, JS, Turbo Stream, controller or system test refers to those ids or classes.
+- Scope: each commit changes only the views of the rule it names, plus that rule's tests. There are no stray config, whitespace or `.github/` changes.
+- Under Ruby 4.0.7: `bin/rails test` gives 908 runs, 0 failures, 0 errors, 0 skips, and prints no warnings. rubocop, herb, Brakeman, bundler-audit and `i18n-tasks normalize` pass, and `git status` stays clean. The system tests are left to CI, as Etienne chose.
+- The round 1 findings are addressed in the branch: the decision is recorded in the implementation notes, a7c9ec4 adds the frame test, and the notes explain the bumps and the patchlevel. Their `→` slots are still empty.
+
+Compliance (amendment acceptance criteria → proof):
+
+- In the built `linux/amd64` image, `bundle -v` prints 4.0.22 → the `docker run` output recorded in plan.md "Amendment notes". I did not run it again.
+- herb lint passes with `framework: actionview` and prints no framework notice → I ran `npx @herb-tools/linter app/views/`: 0 offenses, no notice.
+- The amendment's `## Proof` names no new unit test. The tests the amendment notes list all exist: transaction links by kind (`transactions_index_test.rb`), search results by type (`searches_test.rb`), account aliases (`accounts_show_test.rb`), the users index (`users_index_test.rb`), the budget percentage label (`balance_partial_test.rb`) and the six record forms (`record_forms_test.rb`).
+- No existing test was weakened, skipped or deleted.
