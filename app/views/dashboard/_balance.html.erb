@@ -56,9 +56,9 @@
               <% if debit_cat && debit_budgeted %>
                 <% debit_actual = dashboard.budget_actuals[debit_cat].to_f %>
                 <% status = budget_status(category: debit_cat, actual: debit_actual, budgeted: debit_budgeted) %>
-                <% label = budget_pct_label(actual: debit_actual, budgeted: debit_budgeted) %>
+                <% pct_label = budget_pct_label(actual: debit_actual, budgeted: debit_budgeted) %>
                 <% css_class = "budget-status budget-status--#{status}" %>
-                <span class="<%= css_class %>"><%= label %></span>
+                <span class="<%= css_class %>"><%= pct_label %></span>
               <% end %>
             </td>
           <% end %>
@@ -71,9 +71,9 @@
               <% if credit_cat && credit_budgeted %>
                 <% credit_actual = -dashboard.budget_actuals[credit_cat].to_f %>
                 <% status = budget_status(category: credit_cat, actual: credit_actual, budgeted: credit_budgeted) %>
-                <% label = budget_pct_label(actual: credit_actual, budgeted: credit_budgeted) %>
+                <% pct_label = budget_pct_label(actual: credit_actual, budgeted: credit_budgeted) %>
                 <% css_class = "budget-status budget-status--#{status}" %>
-                <span class="<%= css_class %>"><%= label %></span>
+                <span class="<%= css_class %>"><%= pct_label %></span>
               <% end %>
             </td>
           <% end %>
