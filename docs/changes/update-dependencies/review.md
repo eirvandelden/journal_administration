@@ -54,3 +54,21 @@ Compliance (amendment acceptance criteria → proof):
 - herb lint passes with `framework: actionview` and prints no framework notice → I ran `npx @herb-tools/linter app/views/`: 0 offenses, no notice.
 - The amendment's `## Proof` names no new unit test. The tests the amendment notes list all exist: transaction links by kind (`transactions_index_test.rb`), search results by type (`searches_test.rb`), account aliases (`accounts_show_test.rb`), the users index (`users_index_test.rb`), the budget percentage label (`balance_partial_test.rb`) and the six record forms (`record_forms_test.rb`).
 - No existing test was weakened, skipped or deleted.
+
+## Round 3 — 2026-10-13T12:43:54Z — 5e177f2
+
+Scope: `git diff eb0c0af..HEAD` (one commit, 5e177f2, tests only). No uncommitted changes.
+
+- [ ] Nit: The new test "the edit page of a credit links back to the credit's own page" checks a navigation link, not a form, but it sits in `record_forms_test.rb`. The file's other tests all check what a form submits. `transactions_show_test.rb` and `transactions_index_test.rb` already hold the transaction page and link checks, so a reader looks there first. — `test/integration/record_forms_test.rb:65` →
+
+Checked and clean:
+
+- The seven renamed tests now say what they assert: the form's action, method and field prefix, plus the file field where one exists. The assertions did not change. This closes round 2's naming nit.
+- The new link test discriminates. On the credit edit page, the only link to `/credit/:id` is the "show" link in the header `<nav>`. `_form`, `_whole_payment_charge`, `transaction_splits/_frame` and the `transaction_links` partials link only to nested paths. If `polymorphic_path(@transaction)` becomes `transaction_path`, the link changes to `/transactions/:id` and the test fails. This closes round 2's edit-link nit.
+- Round 2's search `case` nit (`app/views/searches/index.html.erb:8`, no `else` branch) has no change on the branch. Its `→` slot is still empty.
+- Under Ruby 4.0.7: `bin/rails test` gives 909 runs, 0 failures, 0 errors, 0 skips. rubocop, herb, Brakeman, bundler-audit and `i18n-tasks normalize` pass, and `git status` stays clean.
+
+Compliance:
+
+- The commit adds one test and renames seven. No existing test was weakened, skipped or deleted.
+- The intent and plan acceptance criteria are unchanged since round 2, and their proofs still pass.
