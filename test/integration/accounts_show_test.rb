@@ -114,4 +114,24 @@ class AccountsShowTest < ActionDispatch::IntegrationTest
     assert_redirected_to account_path(accounts(:checking))
     assert_predicate flash[:alert], :present?
   end
+
+  test "show offers to mark an external account as a shared provider" do
+    get account_path(accounts(:adyen))
+
+    assert_select "form[action=?]", account_payment_provider_path(accounts(:adyen)) do
+      assert_select "button", text: I18n.t("accounts.show.mark_payment_provider")
+    end
+    assert_select "form[action=?]", account_merchant_reassignment_path(accounts(:adyen)), count: 0
+  end
+
+  test "show offers the move only for a provider" do
+    accounts(:adyen).update!(payment_provider: true)
+
+    get account_path(accounts(:adyen))
+
+    assert_select "form[action=?]", account_merchant_reassignment_path(accounts(:adyen)) do
+      assert_select "button", text: I18n.t("accounts.show.move_to_merchants")
+    end
+    assert_select "button", text: I18n.t("accounts.show.unmark_payment_provider")
+  end
 end

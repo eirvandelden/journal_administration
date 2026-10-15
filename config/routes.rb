@@ -39,6 +39,8 @@ Rails.application.routes.draw do
     scope module: "accounts" do
       resource :transactions_bulk, only: [ :update ]
       resource :transaction_absorption, only: [ :create ]
+      resource :payment_provider, only: %i[create destroy]
+      resource :merchant_reassignment, only: [ :create ]
       resources :account_aliases, only: %i[create destroy]
     end
   end

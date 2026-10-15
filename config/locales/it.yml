@@ -34,10 +34,16 @@ it:
       account_number: 'Numero conto:'
       aliases: Modelli di riconoscimento
       category: 'Categoria:'
+      confirm_move_to_merchants: Spostare ogni transazione di questo conto sul negozio indicato? Una transazione con la categoria predefinita di questo conto riceve quella del negozio, o nessuna.
       edit: Modifica
       id: 'Id:'
+      mark_payment_provider: Segna come fornitore di pagamenti condiviso
+      move_to_merchants: Sposta le transazioni sui loro negozi
       name: 'Nome:'
       owner: 'Proprietario:'
+      payment_provider_off: Questo conto non è un fornitore di pagamenti condiviso.
+      payment_provider_on: 'Questo conto è un fornitore di pagamenti condiviso: il negozio indicato in ogni transazione decide la controparte.'
+      unmark_payment_provider: Rimuovi il segno di fornitore di pagamenti condiviso
       update_transactions: Aggiorna transazioni
     transactions_bulk:
       update:
@@ -51,6 +57,7 @@ it:
         iban: IBAN
         name: Nome
         number: Numero
+        payment_provider: Fornitore di pagamenti
       appropriation:
         amount: Importo stanziato
         budget_year: Anno di bilancio
@@ -106,6 +113,8 @@ it:
           attributes:
             base:
               has_transactions: non può essere eliminato perché ha transazioni associate
+            payment_provider:
+              must_be_external: deve essere un conto esterno
         account_alias:
           attributes:
             account:
@@ -560,6 +569,12 @@ it:
     todo_consolidatable_accounts: Conti da consolidare
     todo_consolidatable_transactions: Transazioni da consolidare
     todo_upload: Carica nuove transazioni
+  merchant_reassignments:
+    create:
+      failure: 'Spostamento delle transazioni non riuscito: %{message}'
+      success:
+        one: "%{count} transazione spostata sul suo negozio."
+        other: "%{count} transazioni spostate sui loro negozi."
   number:
     currency:
       format:
@@ -617,6 +632,11 @@ it:
   pagination:
     next: Successivo
     previous: Precedente
+  payment_providers:
+    create:
+      success: Segnato come fornitore di pagamenti condiviso.
+    destroy:
+      success: Non più un fornitore di pagamenti condiviso.
   product_types:
     create:
       success: Tipo di prodotto aggiunto.

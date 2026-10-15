@@ -34,10 +34,16 @@ nl:
       account_number: 'Rekeningnummer:'
       aliases: Herkenningspatronen
       category: 'Categorie:'
+      confirm_move_to_merchants: Elke transactie op deze rekening verplaatsen naar de winkel die erin staat? Een transactie met de standaardcategorie van deze rekening krijgt de standaardcategorie van de winkel, of geen.
       edit: Bewerken
       id: 'Id:'
+      mark_payment_provider: Markeer als gedeelde betaaldienstverlener
+      move_to_merchants: Transacties naar hun winkels verplaatsen
       name: 'Naam:'
       owner: 'Eigenaar:'
+      payment_provider_off: Deze rekening is geen gedeelde betaaldienstverlener.
+      payment_provider_on: 'Deze rekening is een gedeelde betaaldienstverlener: de winkel in elke transactie bepaalt de tegenpartij.'
+      unmark_payment_provider: Markering als gedeelde betaaldienstverlener opheffen
       update_transactions: Transacties bijwerken
     transactions_bulk:
       update:
@@ -51,6 +57,7 @@ nl:
         iban: IBAN
         name: Naam
         number: Nummer
+        payment_provider: Betaaldienstverlener
       appropriation:
         amount: Begroot bedrag
         budget_year: Begrotingsjaar
@@ -106,6 +113,8 @@ nl:
           attributes:
             base:
               has_transactions: kan niet worden verwijderd omdat er transacties aan gekoppeld zijn
+            payment_provider:
+              must_be_external: moet een externe rekening zijn
         account_alias:
           attributes:
             account:
@@ -560,6 +569,12 @@ nl:
     todo_consolidatable_accounts: Te consolideren rekeningen
     todo_consolidatable_transactions: Te consolideren transacties
     todo_upload: Nieuwe transacties uploaden
+  merchant_reassignments:
+    create:
+      failure: 'Verplaatsen van transacties mislukt: %{message}'
+      success:
+        one: "%{count} transactie verplaatst naar de winkel."
+        other: "%{count} transacties verplaatst naar hun winkels."
   number:
     currency:
       format:
@@ -617,6 +632,11 @@ nl:
   pagination:
     next: Volgende
     previous: Vorige
+  payment_providers:
+    create:
+      success: Gemarkeerd als gedeelde betaaldienstverlener.
+    destroy:
+      success: Geen gedeelde betaaldienstverlener meer.
   product_types:
     create:
       success: Productsoort toegevoegd.

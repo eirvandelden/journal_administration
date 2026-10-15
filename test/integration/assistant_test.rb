@@ -498,6 +498,83 @@ class AssistantTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "the assistant marks a shared provider and moves its transactions to their merchants" do
+    marked = ask_assistant("set_payment_provider", account_id: accounts(:adyen).id, shared: true)
+
+    assert_predicate accounts(:adyen).reload, :payment_provider?
+    assert_includes marked, "Adyen is now a shared payment provider"
+    assert_equal accounts(:adyen), transactions(:kruidvat_through_adyen).reload.debitor
+
+    moved = ask_assistant("move_transactions_to_merchants", account_id: accounts(:adyen).id)
+
+    assert_includes moved, "3 transactions"
+    assert_equal accounts(:kruidvat), transactions(:kruidvat_through_adyen).reload.debitor
+    assert_equal accounts(:adyen), transactions(:adyen_itself).reload.debitor
+  end
+
+  test "the assistant unmarks a provider" do
+    accounts(:adyen).update!(payment_provider: true)
+
+    answer = ask_assistant("set_payment_provider", account_id: accounts(:adyen).id, shared: false)
+
+    assert_not accounts(:adyen).reload.payment_provider?
+    assert_includes answer, "Adyen is no longer a shared payment provider"
+  end
+
+  test "the assistant is told when an account does not exist" do
+    assert refused?("set_payment_provider", account_id: 0, shared: true)
+    assert refused?("move_transactions_to_merchants", account_id: 0)
+  end
+
+  test "the assistant is refused when marking a family account" do
+    assert refused?("set_payment_provider", account_id: accounts(:checking).id, shared: true)
+    assert_not accounts(:checking).reload.payment_provider?
+  end
+
+  test "the assistant is told when the account is no provider" do
+    assert refused?("move_transactions_to_merchants", account_id: accounts(:adyen).id)
+    assert_equal accounts(:adyen), transactions(:kruidvat_through_adyen).reload.debitor
+  end
+
+  test "the assistant is told when a move fails" do
+    accounts(:adyen).update!(payment_provider: true)
+    failing = transactions(:kruidvat_through_adyen)
+    failing.transaction_splits.create!(amount: 10, category: categories(:bakery))
+    failing.update_column(:amount, 5)
+
+    assert refused?("move_transactions_to_merchants", account_id: accounts(:adyen).id)
+    assert_match(/##{failing.id}\b/, JSON.parse(response.body).dig("result", "content", 0, "text"))
+    assert_equal accounts(:adyen), failing.reload.debitor
+  end
+
+  test "the move tool warns that a default category follows the merchant" do
+    post_to_assistant
+    tools = JSON.parse(response.body).dig("result", "tools").index_by { |tool| tool["name"] }
+
+    assert_match(/default category/, tools.fetch("move_transactions_to_merchants")["description"])
+  end
+
+  test "the assistant hears about a single moved transaction in the singular" do
+    accounts(:adyen).update!(payment_provider: true)
+    Transaction.by_account(accounts(:adyen).id).where.not(id: transactions(:kruidvat_through_adyen).id)
+      .update_all(original_note: "Naam: Adyen")
+
+    post_to_assistant(method: "tools/call",
+      params: { name: "move_transactions_to_merchants", arguments: { account_id: accounts(:adyen).id } })
+
+    assert_equal "Moved 1 transaction from Adyen to its merchant.",
+      JSON.parse(response.body).dig("result", "content", 0, "text")
+  end
+
+  test "both new tools say they change things" do
+    post_to_assistant
+    tools = JSON.parse(response.body).dig("result", "tools").index_by { |tool| tool["name"] }
+
+    %w[set_payment_provider move_transactions_to_merchants].each do |name|
+      assert tools.fetch(name).dig("annotations", "destructiveHint"), "#{name} should say it changes things"
+    end
+  end
+
   private
 
   def only_on_home_network

@@ -40,4 +40,16 @@ class ResolvableTest < ActiveSupport::TestCase
 
     assert_equal accounts(:albert_heijn), account
   end
+
+  test "resolve_for_import books a provider payment on its merchant" do
+    accounts(:adyen).update!(payment_provider: true)
+
+    account = Account.resolve_for_import(
+      account_number: accounts(:adyen).account_number,
+      description: "Naam: Kruidvat Omschrijving: Payment IBAN: #{accounts(:adyen).account_number}",
+      name: "Kruidvat"
+    )
+
+    assert_equal accounts(:kruidvat), account
+  end
 end

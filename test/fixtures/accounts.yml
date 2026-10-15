@@ -34,3 +34,12 @@ unknown:
 
 albert_heijn_duplicate:
   name: "AH "
+
+adyen:
+  account_number: NL04ADYB2017400157
+  name: Adyen
+  category: gifts
+
+aon:
+  account_number: NL69ABNA0244748942
+  name: AON CCSI
