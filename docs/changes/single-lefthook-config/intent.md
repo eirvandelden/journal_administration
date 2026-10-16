@@ -24,15 +24,20 @@ A pull that changes `db/schema.rb` runs the migrations, for a merge pull and a r
 
 ## Constraints
 
-- Permissions: none needed. No gems, system tools, destructive migrations or deploy files are touched.
+- Permissions: approved by Etienne on 2026-10-16: five devDependencies in `package.json`, installed with yarn: `stylelint` 17.16, `stylelint-config-standard` 40.0, `eslint` 10.13, `@eslint/js` 10.0, `globals` 17.13. They exist because the dotfiles `stylelint` and `eslint` checks run `yarn stylelint` and `yarn eslint`, which `package.json` lacks. No other gems, system tools, destructive migrations or deploy files.
 - The single file must not break teammates who lack the dotfiles.
 - The dotfiles defaults must not run the same check twice next to a repository check (for example rubocop).
+- Decided on 2026-10-16: dotfiles `parallel: true` is accepted for the repository pre-push checks; dotfiles `erb_lint` stays on; dotfiles `yamllint` excludes `config/locales/**`, because `i18n-tasks normalize` output must pass `i18n-normalized`.
+- Dotfiles `stylelint` and `eslint` stay on and must pass, so the repository gets working configs for them.
 - Repository checks keep their current behaviour: the union of both files, deduplicated. Where both run herb, the `.lefthook.yml` yarn version wins.
 
 ## In scope
 
 - Merge `lefthook.yml` and `.lefthook.yml` into one file that builds on the dotfiles defaults.
 - Delete `lefthook-local.yml`.
+- Add the five approved devDependencies, a stylelint config and an eslint config, and fix what they flag in the existing CSS and JS so both checks pass.
+- Exclude `config/locales/**` from `yamllint`.
+- Fix the `erb_lint` offences in `app/views/layouts/application.html.erb`, so the kept check passes.
 - Verify the migrations step fires after a pull that changes `db/schema.rb`.
 
 ## Out of scope
@@ -49,6 +54,9 @@ A pull that changes `db/schema.rb` runs the migrations, for a merge pull and a r
 - Pulling with a rebase runs the migrations step too.
 - Pulling a commit that leaves `db/schema.rb` alone does not run the migrations.
 - Every check from the old files still runs on commit or push, and none runs twice.
+- `yarn stylelint` and `yarn eslint` run in the repository and pass on the existing CSS and JS.
+- Committing a locale file normalized by `i18n-tasks normalize` passes both `yamllint` and `i18n-normalized`.
+- Committing `app/views/layouts/application.html.erb` passes `erb_lint`.
 
 ## Open questions
 
