@@ -64,7 +64,7 @@ class BulkUpdatableTest < ActiveSupport::TestCase
 
     uncategorized_transaction = Transaction.create!(
       type: "Debit",
-      amount: 8.00,
+      amount: 800,
       booked_at: Time.current,
       interest_at: Time.current,
       debitor: accounts(:checking),
@@ -73,7 +73,7 @@ class BulkUpdatableTest < ActiveSupport::TestCase
 
     default_transaction = Transaction.create!(
       type: "Debit",
-      amount: 10.00,
+      amount: 1000,
       booked_at: Time.current,
       interest_at: Time.current,
       debitor: accounts(:checking),
@@ -83,7 +83,7 @@ class BulkUpdatableTest < ActiveSupport::TestCase
 
     manually_categorized_transaction = Transaction.create!(
       type: "Debit",
-      amount: 12.00,
+      amount: 1200,
       booked_at: Time.current,
       interest_at: Time.current,
       debitor: accounts(:checking),

@@ -28,9 +28,9 @@ class ProductTest < ActiveSupport::TestCase
   end
 
   test "a product knows every time we bought it, newest first" do
-    older = Receipt.create!(shop: accounts(:albert_heijn), issued_on: 2.months.ago.to_date, total_amount: 5.00)
-    older.lines.create!(product: products(:lays_ribbelchips), quantity: 1, full_amount: 2.29,
-                        discount_amount: 0, paid_amount: 2.29)
+    older = Receipt.create!(shop: accounts(:albert_heijn), issued_on: 2.months.ago.to_date, total_amount: 500)
+    older.lines.create!(product: products(:lays_ribbelchips), quantity: 1, full_amount: 229,
+                        discount_amount: 0, paid_amount: 229)
 
     purchases = products(:lays_ribbelchips).purchases
 

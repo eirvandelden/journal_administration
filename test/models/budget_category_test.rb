@@ -9,7 +9,7 @@ class BudgetCategoryTest < ActiveSupport::TestCase
     end
 
     test "is valid with valid attributes" do
-      bc = BudgetCategory.new(budget: @budget, category: categories(:groceries), amount: 100.00)
+      bc = BudgetCategory.new(budget: @budget, category: categories(:groceries), amount: 10000)
 
       assert_predicate bc, :valid?
     end
@@ -29,35 +29,35 @@ class BudgetCategoryTest < ActiveSupport::TestCase
     end
 
     test "is invalid with negative amount" do
-      bc = BudgetCategory.new(budget: @budget, category: categories(:groceries), amount: -10)
+      bc = BudgetCategory.new(budget: @budget, category: categories(:groceries), amount: -1000)
 
       assert_predicate bc, :invalid?
       assert_predicate bc.errors[:amount], :any?
     end
 
     test "is invalid when category is a child category" do
-      bc = BudgetCategory.new(budget: @budget, category: categories(:supermarket), amount: 100)
+      bc = BudgetCategory.new(budget: @budget, category: categories(:supermarket), amount: 10000)
 
       assert_predicate bc, :invalid?
       assert_predicate bc.errors[:category], :any?
     end
 
     test "is invalid when category is the transfer category" do
-      bc = BudgetCategory.new(budget: @budget, category: categories(:transfer), amount: 100)
+      bc = BudgetCategory.new(budget: @budget, category: categories(:transfer), amount: 10000)
 
       assert_predicate bc, :invalid?
       assert_predicate bc.errors[:category], :any?
     end
 
     test "is valid when category is a parent category" do
-      bc = BudgetCategory.new(budget: @budget, category: categories(:groceries), amount: 100)
+      bc = BudgetCategory.new(budget: @budget, category: categories(:groceries), amount: 10000)
 
       assert_predicate bc, :valid?
     end
 
     test "is invalid when budget_id and category_id pair is not unique" do
-      BudgetCategory.create!(budget: @budget, category: categories(:groceries), amount: 100)
-      bc = BudgetCategory.new(budget: @budget, category: categories(:groceries), amount: 200)
+      BudgetCategory.create!(budget: @budget, category: categories(:groceries), amount: 10000)
+      bc = BudgetCategory.new(budget: @budget, category: categories(:groceries), amount: 20000)
 
       assert_predicate bc, :invalid?
       assert_predicate bc.errors[:budget_id], :any?

@@ -29,7 +29,7 @@ class PersonTest < ActiveSupport::TestCase
   test "refuses to make an outside person a household owner when transactions depend on it" do
     account = Account.create!(name: "Grandma's account", owner: nil, person: people(:grandma))
     Debit.create!(
-      amount: 25, booked_at: Time.current, interest_at: Time.current,
+      amount: 2500, booked_at: Time.current, interest_at: Time.current,
       debitor: accounts(:savings), creditor: account, category: categories(:gifts)
     )
 
