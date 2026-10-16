@@ -14,7 +14,7 @@ class Importing::AlbertHeijn::ImportJobTest < ActiveJob::TestCase
 
     assert_equal accounts(:albert_heijn), receipt.shop
     assert_equal Date.new(2026, 8, 28), receipt.issued_on
-    assert_equal BigDecimal("119.93"), receipt.total_amount
+    assert_equal 11993, receipt.total_amount
     assert_equal 37, receipt.lines.count
   end
 
@@ -23,9 +23,9 @@ class Importing::AlbertHeijn::ImportJobTest < ActiveJob::TestCase
 
     line = ReceiptLine.joins(:product).find_by(products: { name: "Vivera Plantaardige kipstukjes" })
 
-    assert_equal BigDecimal("13.96"), line.full_amount
-    assert_equal BigDecimal("6.98"), line.discount_amount
-    assert_equal BigDecimal("6.98"), line.paid_amount
+    assert_equal 1396, line.full_amount
+    assert_equal 698, line.discount_amount
+    assert_equal 698, line.paid_amount
   end
 
   test "a product we have never bought before is created for classifying" do
@@ -70,13 +70,13 @@ class Importing::AlbertHeijn::ImportJobTest < ActiveJob::TestCase
     receipt.update!(payment: big_enough_payment(receipt))
     receipt.rewrite_payment_splits
 
-    assert_equal BigDecimal("1.49"), receipt.payment.explicit_transaction_splits.sum(:amount)
+    assert_equal 149, receipt.payment.explicit_transaction_splits.sum(:amount)
 
     dearer = @slip.sub(" AH Broccoliroosjes \n\n 1 \n\n 1.49 \n\n 1.49 ",
                        " AH Broccoliroosjes \n\n 1 \n\n 2.49 \n\n 2.49 ")
     Importing::AlbertHeijn::ImportJob.perform_now(dearer)
 
-    assert_equal BigDecimal("2.49"), receipt.payment.reload.explicit_transaction_splits.sum(:amount)
+    assert_equal 249, receipt.payment.reload.explicit_transaction_splits.sum(:amount)
   end
 
   test "re-importing a charged payment's packing slip keeps its splits and charges" do
@@ -93,7 +93,7 @@ class Importing::AlbertHeijn::ImportJobTest < ActiveJob::TestCase
     Importing::AlbertHeijn::ImportJob.perform_now(dearer)
 
     assert_equal [ part ], receipt.payment.reload.explicit_transaction_splits.to_a
-    assert_equal BigDecimal("1.49"), part.reload.amount
+    assert_equal 149, part.reload.amount
     assert_equal appropriations(:birthday_etienne), part.appropriation
   end
 
@@ -102,7 +102,7 @@ class Importing::AlbertHeijn::ImportJobTest < ActiveJob::TestCase
   def big_enough_payment(receipt)
     Transaction.create!(
       type: "Debit", debitor: accounts(:checking), creditor: accounts(:albert_heijn),
-      amount: 200, booked_at: receipt.issued_on, interest_at: receipt.issued_on
+      amount: 20_000, booked_at: receipt.issued_on, interest_at: receipt.issued_on
     )
   end
 end

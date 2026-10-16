@@ -23,13 +23,20 @@ module Importing
           their_account_number: csv_row[3],
           code: csv_row[4],
           direction: csv_row[5],
-          amount: csv_row[6].delete(".").tr(",", ".").to_d,
+          amount: parse_amount(csv_row[6]),
           mutation_kind: csv_row[7],
           description: csv_row[8],
           original_balance: csv_row[9],
           original_tag: csv_row[10]
         )
       end
+
+      # @return [Integer] cents
+      # @raise [ArgumentError] when the text is not an amount
+      def self.parse_amount(text)
+        Cents.parse(text) || raise(ArgumentError, "not an amount: #{text.inspect}")
+      end
+      private_class_method :parse_amount
 
       def initialize(date:, initiator_name:, our_account_number:, their_account_number:,
                      code:, direction:, amount:, mutation_kind:, description:,
