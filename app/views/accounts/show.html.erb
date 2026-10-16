@@ -12,8 +12,8 @@
   <%= @account.id %>
 </p>
 <p>
-  <b><%= t('.account_number') %></b>
-  <%= @account.account_number %>
+  <b><%= t('.account_numbers') %></b>
+  <%= safe_join(@account.numbers, tag.br) %>
 </p>
 <p>
   <b><%= t('.name') %></b>

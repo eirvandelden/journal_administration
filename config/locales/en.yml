@@ -13,8 +13,12 @@ en:
       success: "✅ Account was successfully created."
     destroy:
       success: "✅ Account was successfully destroyed."
-    index:
+    form:
       account_number: Account number
+      account_numbers: Account numbers
+      remove_number: Remove
+    index:
+      account_numbers: Account numbers
       category: Category
       confirm_destroy: This will permanently delete the account. This cannot be undone.
       destroy: Destroy
@@ -31,7 +35,7 @@ en:
       title: "➕ New account"
     show:
       absorb_transactions: Absorb transactions from duplicates
-      account_number: 'Account number:'
+      account_numbers: 'Account numbers:'
       aliases: Recognition patterns
       category: 'Category:'
       confirm_move_to_merchants: Move every transaction on this account to the merchant named in it? A transaction still on this account's default category gets the merchant's default category, or none.
@@ -58,6 +62,8 @@ en:
         name: Name
         number: Number
         payment_provider: Payment provider
+      account/account_numbers:
+        number: Account number
       account_number:
         number: Account number
       appropriation:
@@ -119,16 +125,16 @@ en:
               has_transactions: cannot be deleted because it has associated transactions
             payment_provider:
               must_be_external: must be an external account
-        account_number:
-          attributes:
-            number:
-              taken_by: already belongs to %{account}
         account_alias:
           attributes:
             account:
               must_be_external: must belong to an external account
             pattern:
               invalid_like_characters: must not contain %% or _ characters
+        account_number:
+          attributes:
+            number:
+              taken_by: already belongs to %{account}
         appropriation:
           attributes:
             base:

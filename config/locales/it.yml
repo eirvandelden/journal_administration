@@ -13,8 +13,12 @@ it:
       success: "✅ Conto creato con successo."
     destroy:
       success: "✅ Conto eliminato con successo."
-    index:
+    form:
       account_number: Numero conto
+      account_numbers: Numeri conto
+      remove_number: Rimuovi
+    index:
+      account_numbers: Numeri conto
       category: Categoria
       confirm_destroy: Questo eliminerà il conto in modo permanente. Questa azione non può essere annullata.
       destroy: Elimina
@@ -31,7 +35,7 @@ it:
       title: "➕ Nuovo conto"
     show:
       absorb_transactions: Assorbi transazioni dai duplicati
-      account_number: 'Numero conto:'
+      account_numbers: 'Numeri conto:'
       aliases: Modelli di riconoscimento
       category: 'Categoria:'
       confirm_move_to_merchants: Spostare ogni transazione di questo conto sul negozio indicato? Una transazione con la categoria predefinita di questo conto riceve quella del negozio, o nessuna.
@@ -58,6 +62,8 @@ it:
         name: Nome
         number: Numero
         payment_provider: Fornitore di pagamenti
+      account/account_numbers:
+        number: Numero conto
       account_number:
         number: Numero conto
       appropriation:
@@ -119,16 +125,16 @@ it:
               has_transactions: non può essere eliminato perché ha transazioni associate
             payment_provider:
               must_be_external: deve essere un conto esterno
-        account_number:
-          attributes:
-            number:
-              taken_by: appartiene già a %{account}
         account_alias:
           attributes:
             account:
               must_be_external: deve appartenere a un conto esterno
             pattern:
               invalid_like_characters: non deve contenere i caratteri %% o _
+        account_number:
+          attributes:
+            number:
+              taken_by: appartiene già a %{account}
         appropriation:
           attributes:
             base:

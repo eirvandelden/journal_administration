@@ -17,7 +17,7 @@
       <tr>
         <th></th>
         <th><%= t('.id') %></th>
-        <th><%= t('.account_number') %></th>
+        <th><%= t('.account_numbers') %></th>
         <th><%= t('.name') %></th>
         <th><%= t('.owner') %></th>
         <th><%= t('.category') %></th>
@@ -34,7 +34,7 @@
             <%= link_to t('.show'), account %>
           </td>
           <td><%= account.id %></td>
-          <td><%= account.account_number %></td>
+          <td><%= safe_join(account.numbers, tag.br) %></td>
           <td><%= account.name %></td>
           <td><%= account.owner %></td>
           <td><%= account.category&.name %></td>
@@ -77,7 +77,7 @@
       <tr>
         <th></th>
         <th><%= t('.id') %></th>
-        <th><%= t('.account_number') %></th>
+        <th><%= t('.account_numbers') %></th>
         <th><%= t('.name') %></th>
         <th><%= t('.category') %></th>
         <th></th>
@@ -93,7 +93,7 @@
             <%= link_to t('.show'), account %>
           </td>
           <td><%= account.id %></td>
-          <td><%= account.account_number %></td>
+          <td><%= safe_join(account.numbers, tag.br) %></td>
           <td><%= account.name %></td>
           <td><%= account.category&.name %></td>
           <td><%= link_to t('.edit'), edit_account_path(account) %></td>

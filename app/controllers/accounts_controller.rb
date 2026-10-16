@@ -6,8 +6,8 @@ class AccountsController < ApplicationController
   #
   # @return [void]
   def index
-    own_accounts = Account.own.order(:id)
-    external_accounts = Account.external.order(:id)
+    own_accounts = Account.own.includes(:account_numbers).order(:id)
+    external_accounts = Account.external.includes(:account_numbers).order(:id)
 
     if params[:filter] == "untouched"
       own_accounts = own_accounts.where("updated_at = created_at")
@@ -35,12 +35,15 @@ class AccountsController < ApplicationController
   # @return [void]
   def new
     @account = Account.new
+    @account.account_numbers.build
   end
 
   # Renders form for editing an account
   #
   # @return [void]
-  def edit; end
+  def edit
+    @account.account_numbers.build
+  end
 
   # Creates a new account
   #
@@ -53,7 +56,7 @@ class AccountsController < ApplicationController
         format.html { redirect_to @account, notice: t("accounts.create.success") }
         format.json { render :show, status: :created, location: @account }
       else
-        format.html { render :new }
+        format.html { render_with_blank_number :new }
         format.json { render json: @account.errors, status: :unprocessable_entity }
       end
     end
@@ -68,7 +71,7 @@ class AccountsController < ApplicationController
         format.html { redirect_to @account, notice: t("accounts.update.success") }
         format.json { render :show, status: :ok, location: @account }
       else
-        format.html { render :edit }
+        format.html { render_with_blank_number :edit }
         format.json { render json: @account.errors, status: :unprocessable_entity }
       end
     end
@@ -100,6 +103,12 @@ class AccountsController < ApplicationController
   end
 
   def account_params
-    params.require(:account).permit(:id, :account_number, :name, :owner, :category_id)
+    params.require(:account).permit(:id, :name, :owner, :category_id,
+      account_numbers_attributes: %i[id number _destroy])
+  end
+
+  def render_with_blank_number(template)
+    @account.account_numbers.build unless @account.account_numbers.any?(&:new_record?)
+    render template
   end
 end
