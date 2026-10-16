@@ -5,8 +5,8 @@ class ImportableTest < ActiveSupport::TestCase
     row = Importing::ING::Row.new(
       date: DateTime.new(2024, 1, 15),
       initiator_name: "Albert Heijn B.V.",
-      our_account_number: accounts(:checking).account_number,
-      their_account_number: accounts(:albert_heijn).account_number,
+      our_account_number: account_numbers(:checking).number,
+      their_account_number: account_numbers(:albert_heijn).number,
       code: "GT",
       direction: "Af",
       amount: 25.50,
@@ -32,8 +32,8 @@ class ImportableTest < ActiveSupport::TestCase
     row = Importing::ING::Row.new(
       date: DateTime.new(2024, 1, 15),
       initiator_name: "Werkgever B.V.",
-      our_account_number: accounts(:checking).account_number,
-      their_account_number: accounts(:employer).account_number,
+      our_account_number: account_numbers(:checking).number,
+      their_account_number: account_numbers(:employer).number,
       code: "OV",
       direction: "Bij",
       amount: 3000.00,

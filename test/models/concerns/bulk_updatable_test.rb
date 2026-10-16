@@ -57,7 +57,7 @@ class BulkUpdatableTest < ActiveSupport::TestCase
     default_category = categories(:supermarket)
     manual_category = categories(:rent)
     account = Account.create!(
-      account_number: "NL11TEST9999999999",
+      account_numbers: [ AccountNumber.new(number: "NL11TEST9999999999") ],
       name: "Fixture Independent External Account",
       category: default_category
     )

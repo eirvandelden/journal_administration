@@ -1,0 +1,39 @@
+checking:
+  account: checking
+  number: NL54INGB0671255150
+
+savings:
+  account: savings
+  number: NL00INGB0123456789
+
+albert_heijn:
+  account: albert_heijn
+  number: NL00ABNA9999999999
+
+albert_heijn_duplicate_first:
+  account: albert_heijn_duplicate
+  number: NL00ABNA9999999001
+
+albert_heijn_duplicate_second:
+  account: albert_heijn_duplicate
+  number: NL00ABNA9999999002
+
+employer:
+  account: employer
+  number: NL00RABO1111111111
+
+jumbo:
+  account: jumbo
+  number: NL00ABNA8888888888
+
+kruidvat:
+  account: kruidvat
+  number: NL00ABNA7777777777
+
+adyen:
+  account: adyen
+  number: NL04ADYB2017400157
+
+aon:
+  account: aon
+  number: NL69ABNA0244748942

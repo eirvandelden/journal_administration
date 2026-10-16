@@ -43,17 +43,60 @@ class AccountTest < ActiveSupport::TestCase
 
   # -- validations ------------------------------------------------------------
 
-  test "account_number must be unique" do
-    duplicate = Account.new(account_number: accounts(:checking).account_number)
+  test "refuses the same number twice in one save" do
+    account = Account.new(
+      name: "Twice",
+      account_numbers: 2.times.map { AccountNumber.new(number: "NL00TWIC0000000001") }
+    )
 
-    assert_not duplicate.valid?
-    assert_includes duplicate.errors[:account_number], "has already been taken"
+    assert_not account.valid?
+    assert_not_empty account.errors[:account_numbers]
   end
 
-  test "account_number allows blank" do
+  test "an account may have no number" do
     account = Account.new(name: "No Number")
 
     assert_predicate account, :valid?
+  end
+
+  # -- numbers ----------------------------------------------------------------
+
+  test "Account#numbers lists every number" do
+    assert_equal %w[NL00ABNA9999999001 NL00ABNA9999999002],
+      accounts(:albert_heijn_duplicate).numbers.sort
+  end
+
+  test "Account#numbers is empty without numbers" do
+    assert_empty accounts(:unknown).numbers
+  end
+
+  test "destroying an account removes its numbers" do
+    assert_difference "AccountNumber.count", -1 do
+      accounts(:jumbo).destroy
+    end
+  end
+
+  test "nested attributes add a number" do
+    account = accounts(:jumbo)
+
+    account.update!(account_numbers_attributes: [ { number: "NL00JUMB0000000002" } ])
+
+    assert_equal %w[NL00ABNA8888888888 NL00JUMB0000000002], account.reload.numbers.sort
+  end
+
+  test "nested attributes remove a number" do
+    account = accounts(:albert_heijn_duplicate)
+    removed = account_numbers(:albert_heijn_duplicate_first)
+
+    account.update!(account_numbers_attributes: [ { id: removed.id, _destroy: "1" } ])
+
+    assert_equal %w[NL00ABNA9999999002], account.reload.numbers
+  end
+
+  test "nested attributes ignore a blank new number" do
+    assert_no_difference "AccountNumber.count" do
+      accounts(:jumbo).update!(account_numbers_attributes: [ { number: "" } ])
+    end
   end
 
   # -- associations -----------------------------------------------------------
@@ -164,8 +207,8 @@ class AccountTest < ActiveSupport::TestCase
     assert_equal "Gezamenlijke Rekening", accounts(:checking).to_s
   end
 
-  test "to_s returns account_number when name is blank" do
-    account = Account.new(account_number: "NL00TEST0000000001", name: "")
+  test "to_s falls back to the first number" do
+    account = Account.new(account_numbers: [ AccountNumber.new(number: "NL00TEST0000000001") ], name: "")
 
     assert_equal "NL00TEST0000000001", account.to_s
   end
