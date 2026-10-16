@@ -20,16 +20,19 @@ module Assistant
       person = Appropriation.person_named(recipient)
       return problem("No person named #{recipient}.") unless person
 
+      cents = cents_from(amount)
+      return problem(two_decimals) if cents.nil?
+
       appropriation = Appropriation.named(purpose:, recipient: person.name, budget_year:).first ||
         Appropriation.new(purpose:, person:, budget_year:)
       saved = if appropriation.persisted?
-        appropriation.update(amount:)
+        appropriation.update(amount: cents)
       else
-        appropriation.update(amount:, recipient: person.name)
+        appropriation.update(amount: cents, recipient: person.name)
       end
       return problem(appropriation.errors.full_messages.to_sentence) unless saved
 
-      answer("#{appropriation} (##{appropriation.id}) is set at #{format("%.2f", appropriation.amount)}.")
+      answer("#{appropriation} (##{appropriation.id}) is set at #{euros(appropriation.amount)}.")
     end
   end
 end

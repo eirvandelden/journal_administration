@@ -55,7 +55,7 @@ module Assistant
     # Spending and earning are the same subtraction read from opposite sides, and an assistant
     # told that four thousand euro of salary was "spent" will pass that confusion on.
     def self.describe(category, planned, dashboard)
-      net = dashboard.budget_actuals[category].to_f
+      net = dashboard.budget_actuals[category].to_i
 
       return earning(category, planned, -net) if category.credit?
 
@@ -79,9 +79,7 @@ module Assistant
     end
     private_class_method :earning
 
-    def self.money(amount)
-      format("%.2f", amount)
-    end
+    def self.money(cents) = euros(cents)
     private_class_method :money
   end
 end

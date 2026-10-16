@@ -48,7 +48,7 @@ module Assistant
     # Lists the explicit parts, so the assistant can charge each one
     def self.name_a_part(transaction)
       parts = transaction.explicit_transaction_splits.map do |part|
-        "#{part.id}: #{format("%.2f", part.amount)} #{part.category&.name} #{part.note}".strip
+        "#{part.id}: #{euros(part.amount)} #{part.category&.name} #{part.note}".strip
       end
       "Transaction ##{transaction.id} is split, so charge its parts instead, naming one as " \
         "transaction_split_id:\n#{parts.join("\n")}"
@@ -59,7 +59,7 @@ module Assistant
     def self.charge(chargeable, appropriation)
       return problem(chargeable.errors.full_messages.to_sentence) unless chargeable.update(appropriation:)
 
-      answer("Charged #{format("%.2f", chargeable.amount)} to #{appropriation}.")
+      answer("Charged #{euros(chargeable.amount)} to #{appropriation}.")
     end
     private_class_method :charge
   end

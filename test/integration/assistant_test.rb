@@ -62,7 +62,7 @@ class AssistantTest < ActionDispatch::IntegrationTest
     answer = ask_assistant("set_budget_amount",
       budget_id: budget.id, category_id: categories(:groceries).id, amount: 250)
 
-    assert_equal 250, planned_for(budget, :groceries)
+    assert_equal 25_000, planned_for(budget, :groceries)
     assert_includes answer, "Groceries may cost 250.00 a month"
   end
 
@@ -169,7 +169,7 @@ class AssistantTest < ActionDispatch::IntegrationTest
 
     ask_assistant("set_budget_amount", budget_id: budget.id, category_id: categories(:groceries).id, amount: 120)
 
-    assert_equal 120, planned_for(budget, :groceries)
+    assert_equal 12_000, planned_for(budget, :groceries)
   end
 
   test "the assistant cannot start a second budget on a day one already starts" do
@@ -203,7 +203,7 @@ class AssistantTest < ActionDispatch::IntegrationTest
 
     ask_assistant("set_budget_amount", budget_id: budget.id, category_id: categories(:housing).id, amount: 800)
 
-    assert_equal 800, planned_for(budget, :housing)
+    assert_equal 80_000, planned_for(budget, :housing)
   end
 
   test "the assistant may not change a budget that has already finished" do
@@ -402,13 +402,13 @@ class AssistantTest < ActionDispatch::IntegrationTest
 
     ask_assistant("set_appropriation", **christmas, amount: 80)
 
-    assert_equal 80, Appropriation.find_by!(christmas).amount
+    assert_equal 8000, Appropriation.find_by!(christmas).amount
 
     assert_no_difference "Appropriation.count" do
       ask_assistant("set_appropriation", **christmas, amount: 100)
     end
 
-    assert_equal 100, Appropriation.find_by!(christmas).amount
+    assert_equal 10_000, Appropriation.find_by!(christmas).amount
   end
 
   test "the assistant charges a payment to an appropriation" do
@@ -431,7 +431,7 @@ class AssistantTest < ActionDispatch::IntegrationTest
 
   test "charging a split payment without naming a part lists its parts" do
     webshop = transactions(:webshop_sinterklaas)
-    parts = [ 60, 40 ].map { |amount| webshop.transaction_splits.create!(amount:, category: categories(:gifts)) }
+    parts = [ 6000, 4000 ].map { |amount| webshop.transaction_splits.create!(amount:, category: categories(:gifts)) }
 
     answer = ask_assistant("charge_to_appropriation",
       appropriation_id: appropriations(:sinterklaas_chiara).id, transaction_id: webshop.id)
@@ -441,7 +441,7 @@ class AssistantTest < ActionDispatch::IntegrationTest
   end
 
   test "charging a part of another payment is refused" do
-    part = transactions(:webshop_sinterklaas).transaction_splits.create!(amount: 60, category: categories(:gifts))
+    part = transactions(:webshop_sinterklaas).transaction_splits.create!(amount: 6000, category: categories(:gifts))
 
     assert refused?("charge_to_appropriation", appropriation_id: appropriations(:sinterklaas_chiara).id,
       transaction_id: transactions(:gift_payment).id, transaction_split_id: part.id)
@@ -450,7 +450,7 @@ class AssistantTest < ActionDispatch::IntegrationTest
 
   test "charging a remainder part is refused" do
     payment = transactions(:gift_payment)
-    payment.transaction_splits.create!(amount: 10, category: categories(:gifts))
+    payment.transaction_splits.create!(amount: 1000, category: categories(:gifts))
     payment.ensure_remainder_split
     remainder = payment.transaction_splits.find_by!(remainder: true)
 
@@ -562,8 +562,8 @@ class AssistantTest < ActionDispatch::IntegrationTest
   test "the assistant is told when a move fails" do
     accounts(:adyen).update!(payment_provider: true)
     failing = transactions(:kruidvat_through_adyen)
-    failing.transaction_splits.create!(amount: 10, category: categories(:bakery))
-    failing.update_column(:amount, 5)
+    failing.transaction_splits.create!(amount: 1000, category: categories(:bakery))
+    failing.update_column(:amount, 500)
 
     assert refused?("move_transactions_to_merchants", account_id: accounts(:adyen).id)
     assert_match(/##{failing.id}\b/, JSON.parse(response.body).dig("result", "content", 0, "text"))
@@ -625,7 +625,9 @@ class AssistantTest < ActionDispatch::IntegrationTest
     from = Time.current.beginning_of_month
     budget = Budget.create!(starts_at: from, ends_at: from + 29.days)
 
-    amounts.each { |category, amount| budget.budget_categories.create!(category: categories(category), amount:) }
+    amounts.each do |category, euros|
+      budget.budget_categories.create!(category: categories(category), amount: Cents.from_euros(euros))
+    end
 
     { from: from.to_date.to_s, until: budget.ends_at.to_date.to_s }
   end

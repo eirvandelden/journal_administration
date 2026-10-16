@@ -24,4 +24,10 @@ class Assistant::ListAppropriationsTest < ActiveSupport::TestCase
 
     assert_includes line, "charged 30.00, left 170.00"
   end
+
+  test "reports amounts in euros as before" do
+    response = Assistant::ListAppropriations.call(budget_year: 2026, server_context: nil)
+
+    assert_includes response.content.first[:text], "appropriated 150.00"
+  end
 end
