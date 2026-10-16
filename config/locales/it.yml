@@ -134,6 +134,11 @@ it:
             base:
               cannot_reclassify_with_transactions: non può cambiare proprietà familiare perché ha transazioni
               has_transactions: non può essere eliminato perché ha transazioni associate
+              merge_household_duplicate: un conto di famiglia non può essere unito a un altro conto
+              merge_into_household: un conto di famiglia non può assorbire duplicati
+              merge_into_itself: non può essere unito a se stesso
+              merge_nothing_picked: 'non ha nulla da unire: scegli almeno un duplicato'
+              merge_provider_into_shop: un fornitore di pagamenti condiviso non può essere unito a un conto che non lo è
               one_owner_only: deve avere al massimo un proprietario
             payment_provider:
               must_be_external: deve essere un conto esterno

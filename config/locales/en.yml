@@ -134,6 +134,11 @@ en:
             base:
               cannot_reclassify_with_transactions: cannot change its household ownership because it has transactions
               has_transactions: cannot be deleted because it has associated transactions
+              merge_household_duplicate: a family account cannot be merged into another account
+              merge_into_household: a family account cannot take over duplicates
+              merge_into_itself: cannot be merged into itself
+              merge_nothing_picked: 'has nothing to merge: pick at least one duplicate'
+              merge_provider_into_shop: a shared payment provider cannot be merged into an account that is not one
               one_owner_only: must have at most one owner
             payment_provider:
               must_be_external: must be an external account

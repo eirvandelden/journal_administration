@@ -8,6 +8,7 @@ class Account < ApplicationRecord
   include Resolvable
   include BulkUpdatable
   include Searchable
+  include Mergeable
 
   # Numbers live in account_numbers. The old column stays until a separate change drops it.
   self.ignored_columns += [ "account_number" ]

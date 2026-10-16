@@ -134,6 +134,11 @@ nl:
             base:
               cannot_reclassify_with_transactions: kan het eigenaarschap van het huishouden niet wijzigen omdat er transacties zijn
               has_transactions: kan niet worden verwijderd omdat er transacties aan gekoppeld zijn
+              merge_household_duplicate: een gezinsrekening kan niet in een andere rekening worden samengevoegd
+              merge_into_household: een gezinsrekening kan geen duplicaten overnemen
+              merge_into_itself: kan niet met zichzelf worden samengevoegd
+              merge_nothing_picked: 'heeft niets om samen te voegen: kies minstens één duplicaat'
+              merge_provider_into_shop: een gedeelde betaaldienstverlener kan niet worden samengevoegd met een rekening die dat niet is
               one_owner_only: mag maar één eigenaar hebben
             payment_provider:
               must_be_external: moet een externe rekening zijn
