@@ -9,7 +9,7 @@ class Importing::AlbertHeijn::PackingSlipTest < ActiveSupport::TestCase
   test "a packing slip says which order it belongs to and when it arrives" do
     assert_equal "100000001", @slip.order_number
     assert_equal Date.new(2026, 8, 28), @slip.delivered_on
-    assert_equal BigDecimal("119.93"), @slip.total_amount
+    assert_equal 11993, @slip.total_amount
   end
 
   test "a packing slip lists a line for every product that was packed" do
@@ -20,28 +20,28 @@ class Importing::AlbertHeijn::PackingSlipTest < ActiveSupport::TestCase
     milk = @slip.lines.find { |line| line.name == "AH Lactosevrije houdbare volle melk" }
 
     assert_equal 16, milk.quantity
-    assert_equal BigDecimal("23.84"), milk.full_amount
-    assert_equal BigDecimal("23.84"), milk.paid_amount
+    assert_equal 2384, milk.full_amount
+    assert_equal 2384, milk.paid_amount
   end
 
   test "a bonus is folded into the line of the product it discounted" do
     vivera = @slip.lines.find { |line| line.name == "Vivera Plantaardige kipstukjes" }
 
-    assert_equal BigDecimal("13.96"), vivera.full_amount
-    assert_equal BigDecimal("6.98"), vivera.discount_amount
-    assert_equal BigDecimal("6.98"), vivera.paid_amount
+    assert_equal 1396, vivera.full_amount
+    assert_equal 698, vivera.discount_amount
+    assert_equal 698, vivera.paid_amount
   end
 
   test "a product nobody discounted was paid in full" do
     broccoli = @slip.lines.find { |line| line.name == "AH Broccoliroosjes" }
 
     assert_equal 0, broccoli.discount_amount
-    assert_equal BigDecimal("1.49"), broccoli.paid_amount
+    assert_equal 149, broccoli.paid_amount
   end
 
   test "the lines add up to the shelf total and the bonus the slip states" do
-    assert_equal BigDecimal("137.39"), @slip.lines.sum(&:full_amount)
-    assert_equal BigDecimal("27.81"), @slip.lines.sum(&:discount_amount)
+    assert_equal 13739, @slip.lines.sum(&:full_amount)
+    assert_equal 2781, @slip.lines.sum(&:discount_amount)
   end
 
   test "what was added for free is not a purchase" do
@@ -59,8 +59,8 @@ class Importing::AlbertHeijn::PackingSlipTest < ActiveSupport::TestCase
     cheese = slip.lines.find { |line| line.name == "AH Goudse Extra belegen 48+ pondstuk var" }
 
     assert_equal 1, cheese.quantity
-    assert_equal BigDecimal("8.60"), cheese.full_amount
-    assert_equal BigDecimal("4.30"), cheese.discount_amount
+    assert_equal 860, cheese.full_amount
+    assert_equal 430, cheese.discount_amount
   end
 
   test "a slip of any size adds up to the totals it stated" do
@@ -69,8 +69,8 @@ class Importing::AlbertHeijn::PackingSlipTest < ActiveSupport::TestCase
     )
 
     assert_equal 44, slip.lines.size
-    assert_equal BigDecimal("170.26"), slip.lines.sum(&:full_amount)
-    assert_equal BigDecimal("43.04"), slip.lines.sum(&:discount_amount)
+    assert_equal 17026, slip.lines.sum(&:full_amount)
+    assert_equal 4304, slip.lines.sum(&:discount_amount)
   end
 
   test "a slip where nothing was on bonus records no discounts" do
@@ -78,7 +78,7 @@ class Importing::AlbertHeijn::PackingSlipTest < ActiveSupport::TestCase
 
     assert_equal 37, slip.lines.size
     assert_equal 0, slip.lines.sum(&:discount_amount)
-    assert_equal BigDecimal("137.39"), slip.lines.sum(&:full_amount)
+    assert_equal 13739, slip.lines.sum(&:full_amount)
   end
 
   test "a mail missing the parts a slip is made of is refused" do
@@ -93,7 +93,7 @@ class Importing::AlbertHeijn::PackingSlipTest < ActiveSupport::TestCase
     slip = Importing::AlbertHeijn::PackingSlip.parse(doubled)
     tuna = slip.lines.find { |line| line.name == "AH Tonijnsalade" }
 
-    assert_equal BigDecimal("1.00"), tuna.discount_amount
+    assert_equal 100, tuna.discount_amount
   end
 
   test "a slip whose product rows do not line up is refused" do
