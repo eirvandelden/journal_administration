@@ -1,11 +1,11 @@
 split_grocery_supermarket:
   transaction_id: <%= ActiveRecord::FixtureSet.identify(:debit_grocery) %>
   category: supermarket
-  amount: 30.00
+  amount: 3000
   note: Supermarket items
 
 split_grocery_bakery:
   transaction_id: <%= ActiveRecord::FixtureSet.identify(:debit_grocery) %>
   category: bakery
-  amount: 10.00
+  amount: 1000
   note: Bakery items

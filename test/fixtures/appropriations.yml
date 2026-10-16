@@ -8,7 +8,7 @@ birthday_etienne:
   recipient: Etienne
   person: etienne
   budget_year: 2026
-  amount: 150.00
+  amount: 15000
 
 christmas_etienne:
   <<: *DEFAULTS
@@ -16,7 +16,7 @@ christmas_etienne:
   recipient: Etienne
   person: etienne
   budget_year: 2026
-  amount: 100.00
+  amount: 10000
 
 sinterklaas_chiara:
   <<: *DEFAULTS
@@ -24,7 +24,7 @@ sinterklaas_chiara:
   recipient: Chiara
   person: chiara
   budget_year: 2026
-  amount: 75.00
+  amount: 7500
 
 sinterklaas_cosimo:
   <<: *DEFAULTS
@@ -32,7 +32,7 @@ sinterklaas_cosimo:
   recipient: Cosimo
   person: cosimo
   budget_year: 2026
-  amount: 75.00
+  amount: 7500
 
 christmas_serena:
   <<: *DEFAULTS
@@ -40,7 +40,7 @@ christmas_serena:
   recipient: Serena
   person: serena
   budget_year: 2026
-  amount: 50.00
+  amount: 5000
 
 birthday_chiara_next_year:
   <<: *DEFAULTS
@@ -48,7 +48,7 @@ birthday_chiara_next_year:
   recipient: Chiara
   person: chiara
   budget_year: 2027
-  amount: 60.00
+  amount: 6000
 
 birthday_etienne_next_year:
   <<: *DEFAULTS
@@ -56,4 +56,4 @@ birthday_etienne_next_year:
   recipient: Etienne
   person: etienne
   budget_year: 2027
-  amount: 150.00
+  amount: 15000

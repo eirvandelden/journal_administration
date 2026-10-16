@@ -23,7 +23,7 @@ module Splittable
 
   # Remaining amount not yet allocated to explicit splits
   #
-  # @return [BigDecimal]
+  # @return [Integer] cents
   def split_balance = amount - explicit_transaction_splits.sum(:amount)
 
   # Whether the full transaction amount is allocated to splits
@@ -33,7 +33,7 @@ module Splittable
 
   # The portion of the transaction that still has no category assigned.
   #
-  # @return [BigDecimal]
+  # @return [Integer] cents
   def uncategorized_amount
     uncategorized_splits_amount + untracked_uncategorized_amount
   end
@@ -67,7 +67,7 @@ module Splittable
   # directly through its primary category.
   #
   # @param category [Category]
-  # @return [BigDecimal]
+  # @return [Integer] cents
   def amount_for(category:) = split? ? matching_transaction_splits_for(category).sum(:amount) : amount
 
   # Returns the category label relevant to a category page.

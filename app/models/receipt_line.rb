@@ -3,13 +3,17 @@
 # The shelf price and what was paid are both kept, so a bonus is visible as the
 # difference between them.
 class ReceiptLine < ApplicationRecord
+  include Monetary
+
+  monetary :full_amount, :discount_amount, :paid_amount
+
   belongs_to :receipt
   belongs_to :product
 
   validates :quantity, presence: true
-  validates :full_amount, numericality: { greater_than_or_equal_to: 0 }
-  validates :discount_amount, numericality: { greater_than_or_equal_to: 0 }
-  validates :paid_amount, numericality: { greater_than_or_equal_to: 0 }
+  validates :full_amount, comparison: { greater_than_or_equal_to: 0 }
+  validates :discount_amount, comparison: { greater_than_or_equal_to: 0 }
+  validates :paid_amount, comparison: { greater_than_or_equal_to: 0 }
   validate :paid_amount_follows_from_the_bonus
 
   def on_bonus? = discount_amount.positive?
