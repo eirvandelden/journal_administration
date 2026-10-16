@@ -14,11 +14,14 @@ nl:
     destroy:
       success: "✅ Rekening succesvol verwijderd."
     form:
+      account_number: Rekeningnummer
+      account_numbers: Rekeningnummers
+      remove_number: Verwijderen
       external_owner: Externe rekening
       group_owner: "%{name} (groep)"
       person_owner: "%{name} (persoon)"
     index:
-      account_number: Rekeningnummer
+      account_numbers: Rekeningnummers
       category: Categorie
       confirm_destroy: Dit verwijdert de rekening permanent. Dit kan niet ongedaan worden gemaakt.
       destroy: Verwijderen
@@ -35,7 +38,7 @@ nl:
       title: "➕ Nieuwe rekening"
     show:
       absorb_transactions: Transacties overnemen van duplicaten
-      account_number: 'Rekeningnummer:'
+      account_numbers: 'Rekeningnummers:'
       aliases: Herkenningspatronen
       category: 'Categorie:'
       confirm_move_to_merchants: Elke transactie op deze rekening verplaatsen naar de winkel die erin staat? Een transactie met de standaardcategorie van deze rekening krijgt de standaardcategorie van de winkel, of geen.
@@ -63,6 +66,8 @@ nl:
         name: Naam
         number: Nummer
         payment_provider: Betaaldienstverlener
+      account/account_numbers:
+        number: Rekeningnummer
       account_number:
         number: Rekeningnummer
       appropriation:
@@ -132,16 +137,16 @@ nl:
               one_owner_only: mag maar één eigenaar hebben
             payment_provider:
               must_be_external: moet een externe rekening zijn
-        account_number:
-          attributes:
-            number:
-              taken_by: hoort al bij %{account}
         account_alias:
           attributes:
             account:
               must_be_external: moet bij een externe rekening horen
             pattern:
               invalid_like_characters: mag geen %% of _ tekens bevatten
+        account_number:
+          attributes:
+            number:
+              taken_by: hoort al bij %{account}
         appropriation:
           attributes:
             base:
