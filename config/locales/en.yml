@@ -113,6 +113,7 @@ en:
         appropriation: Appropriation
     errors:
       messages:
+        not_an_amount: is not an amount
         must_be_pdf: must be a PDF document
         record_invalid: 'Validation failed: %{errors}'
         restrict_dependent_destroy:

@@ -3,10 +3,14 @@
 # Associates a Category with a Budget and stores the planned spending amount.
 # The category must be a top-level (parent) category.
 class BudgetCategory < ApplicationRecord
+  include Monetary
+
+  monetary :amount
+
   belongs_to :budget
   belongs_to :category
 
-  validates :amount, presence: true, numericality: { greater_than: 0 }
+  validates :amount, presence: true, comparison: { greater_than: 0 }
   validates :budget_id, uniqueness: { scope: :category_id }
   validate :category_must_be_parent
   validate :category_must_not_be_transfer

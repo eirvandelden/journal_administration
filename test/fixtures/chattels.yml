@@ -7,7 +7,7 @@ one:
   purchase_transaction: debit_grocery
   purchased_at: <%= 6.months.ago.to_fs(:db) %>
   warranty_expires_at: <%= 6.months.from_now.to_fs(:db) %>
-  purchase_price: 1299.99
+  purchase_price: 129999
   notes: Work laptop
 
 two:
@@ -18,10 +18,10 @@ two:
   purchased_at: <%= 2.years.ago.to_fs(:db) %>
   warranty_expires_at: <%= 1.year.ago.to_fs(:db) %>
   left_possession_at: <%= 1.month.ago.to_fs(:db) %>
-  purchase_price: 599.00
+  purchase_price: 59900
   notes: Replaced with newer model
 
 three:
   name: Mystery Device
   kind: electronics
-  purchase_price: 49.99
+  purchase_price: 4999
