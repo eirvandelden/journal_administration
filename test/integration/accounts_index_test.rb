@@ -33,13 +33,13 @@ class AccountsIndexTest < ActionDispatch::IntegrationTest
   test "own and external pagination params are independent" do
     55.times do |index|
       Account.create!(
-        account_number: format("NLOWN%012d", index),
+        account_numbers: [ AccountNumber.new(number: format("NLOWN%012d", index)) ],
         name: "Pagy Own #{index}",
         owner: :samen
       )
 
       Account.create!(
-        account_number: format("NLEXT%012d", index),
+        account_numbers: [ AccountNumber.new(number: format("NLEXT%012d", index)) ],
         name: "Pagy External #{index}"
       )
     end
@@ -51,10 +51,10 @@ class AccountsIndexTest < ActionDispatch::IntegrationTest
     own_items_per_page = css_select("#own-accounts-table tbody tr").size
     external_items_per_page = css_select("#external-accounts-table tbody tr").size
 
-    own_page_1_number = Account.own.order(:id).limit(1).pick(:account_number)
-    own_page_2_number = Account.own.order(:id).offset(own_items_per_page).limit(1).pick(:account_number)
-    external_page_1_number = Account.external.order(:id).limit(1).pick(:account_number)
-    external_page_2_number = Account.external.order(:id).offset(external_items_per_page).limit(1).pick(:account_number)
+    own_page_1_number = number_at(Account.own, 0)
+    own_page_2_number = number_at(Account.own, own_items_per_page)
+    external_page_1_number = number_at(Account.external, 0)
+    external_page_2_number = number_at(Account.external, external_items_per_page)
 
     get accounts_path, params: { own_page: 2, external_page: 1 }
 
@@ -90,5 +90,11 @@ class AccountsIndexTest < ActionDispatch::IntegrationTest
 
     assert_select "#own-accounts-table tbody td", text: "E. van Delden"
     assert_select "#own-accounts-table tbody td", text: "Delden Household"
+  end
+
+  private
+
+  def number_at(accounts, offset)
+    accounts.order(:id).offset(offset).first&.numbers&.first
   end
 end

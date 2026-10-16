@@ -42,8 +42,8 @@ class PaymentProvidersTest < ActionDispatch::IntegrationTest
       delete account_payment_provider_path(@account)
 
       Importing::ING::ImportJob.perform_now(
-        [ "20260815", "Kruidvat", accounts(:checking).account_number, @account.account_number, "GT", "Af",
-          "10,00", "Betaalautomaat", "Naam: Kruidvat IBAN: #{@account.account_number}", "1000,00", "" ]
+        [ "20260815", "Kruidvat", account_numbers(:checking).number, account_numbers(:adyen).number, "GT", "Af",
+          "10,00", "Betaalautomaat", "Naam: Kruidvat IBAN: #{account_numbers(:adyen).number}", "1000,00", "" ]
       )
 
       assert_equal @account, Transaction.reorder(:id).last.debitor

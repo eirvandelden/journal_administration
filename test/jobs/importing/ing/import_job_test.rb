@@ -21,7 +21,7 @@ class Importing::ING::ImportJobTest < ActiveJob::TestCase
   end
 
   test "creates their_account when it does not exist" do
-    row = [ "20240115", "New Store", accounts(:checking).account_number, "NL00NEW2222222222",
+    row = [ "20240115", "New Store", account_numbers(:checking).number, "NL00NEW2222222222",
            "GT", "Af", "10,00", "Betaalautomaat", "Shopping", "1000,00", "" ]
 
     assert_difference "Account.count", 1 do
@@ -30,13 +30,35 @@ class Importing::ING::ImportJobTest < ActiveJob::TestCase
   end
 
   test "resolves existing accounts by account number" do
-    row = [ "20240115", "Some Name", accounts(:checking).account_number,
-           accounts(:albert_heijn).account_number,
+    row = [ "20240115", "Some Name", account_numbers(:checking).number,
+           account_numbers(:albert_heijn).number,
            "GT", "Af", "15,00", "Betaalautomaat", "Shopping", "1000,00", "" ]
 
     assert_no_difference "Account.count" do
       Importing::ING::ImportJob.perform_now(row)
     end
+  end
+
+  test "importing from a known second number creates no account" do
+    row = import_row(account_numbers(:albert_heijn_duplicate_second).number)
+
+    assert_no_difference "Account.count" do
+      Importing::ING::ImportJob.perform_now(row)
+    end
+  end
+
+  test "a transaction from any number of an account books on that account" do
+    account_numbers = account_numbers(:albert_heijn_duplicate_first, :albert_heijn_duplicate_second)
+
+    account_numbers.each { |number| Importing::ING::ImportJob.perform_now(import_row(number.number)) }
+
+    assert_equal [ accounts(:albert_heijn_duplicate) ] * 2, Transaction.reorder(:id).last(2).map(&:creditor)
+  end
+
+  test "a transaction from a number typed with spaces books on the owner of that number" do
+    Importing::ING::ImportJob.perform_now(import_row("nl00 abna 9999 999999"))
+
+    assert_equal accounts(:albert_heijn), last_transaction.creditor
   end
 
   test "a payment through a shared provider books on the merchant's existing account" do
@@ -58,22 +80,28 @@ class Importing::ING::ImportJobTest < ActiveJob::TestCase
   end
 
   test "a via suffix is dropped from the merchant name" do
-    mollie = Account.create!(name: "Stichting Mollie Payments", account_number: "NL00MOLL0000000001",
-      payment_provider: true)
+    mollie = Account.create!(
+      name: "Stichting Mollie Payments",
+      account_numbers: [ AccountNumber.new(number: "NL00MOLL0000000001") ],
+      payment_provider: true
+    )
 
     Importing::ING::ImportJob.perform_now(
-      provider_row("Partydeco", number: mollie.account_number, suffix: " via Stichting Mollie Payments")
+      provider_row("Partydeco", number: mollie.numbers.first, suffix: " via Stichting Mollie Payments")
     )
 
     assert_equal "Partydeco", last_transaction.debitor.name
   end
 
   test "a by suffix is dropped from the merchant name" do
-    buckaroo = Account.create!(name: "STICHTING DERDENGELDEN BUCKAROO", account_number: "NL00BUCK0000000001",
-      payment_provider: true)
+    buckaroo = Account.create!(
+      name: "STICHTING DERDENGELDEN BUCKAROO",
+      account_numbers: [ AccountNumber.new(number: "NL00BUCK0000000001") ],
+      payment_provider: true
+    )
 
     Importing::ING::ImportJob.perform_now(
-      provider_row("Topbloemen", number: buckaroo.account_number, suffix: " by Buckaroo")
+      provider_row("Topbloemen", number: buckaroo.numbers.first, suffix: " by Buckaroo")
     )
 
     assert_equal "Topbloemen", last_transaction.debitor.name
@@ -96,7 +124,7 @@ class Importing::ING::ImportJobTest < ActiveJob::TestCase
   end
 
   test "a payment to an account that is not a shared provider books on that account" do
-    Importing::ING::ImportJob.perform_now(provider_row("Kruidvat", number: accounts(:aon).account_number))
+    Importing::ING::ImportJob.perform_now(provider_row("Kruidvat", number: account_numbers(:aon).number))
 
     assert_equal accounts(:aon), last_transaction.debitor
   end
@@ -109,12 +137,17 @@ class Importing::ING::ImportJobTest < ActiveJob::TestCase
 
   private
 
+  def import_row(number)
+    [ "20240115", "Albert Heijn", account_numbers(:checking).number, number,
+      "GT", "Bij", "15,00", "Betaalautomaat", "Refund", "1000,00", "" ]
+  end
+
   def last_transaction = Transaction.reorder(:id).last
 
-  def provider_row(merchant, number: accounts(:adyen).account_number, direction: "Af", suffix: "")
+  def provider_row(merchant, number: account_numbers(:adyen).number, direction: "Af", suffix: "")
     description = "Naam: #{merchant}#{suffix} Omschrijving: Payment IBAN: #{number} Kenmerk: 99"
 
-    [ "20260815", merchant, accounts(:checking).account_number, number,
+    [ "20260815", merchant, account_numbers(:checking).number, number,
       "GT", direction, "10,00", "Betaalautomaat", description, "1000,00", "" ]
   end
 end
