@@ -19,6 +19,13 @@ class BudgetsTest < ActionDispatch::IntegrationTest
     assert_select "form"
   end
 
+  test "GET /budgets/new renders the form inside a frame that navigates the whole page" do
+    get new_budget_url
+
+    assert_response :success
+    assert_select "turbo-frame#budget_form[target=_top] form"
+  end
+
   test "GET /budgets/new does not offer the transfer category" do
     get new_budget_url
 

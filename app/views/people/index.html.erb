@@ -16,7 +16,7 @@
     <tbody>
       <% @people.each do |person| %>
         <tr>
-          <td><%= link_to person.name, person %></td>
+          <td><%= link_to person.name, person_path(person) %></td>
           <td><%= t("people.household.#{person.household?}") %></td>
           <td><%= link_to t("people.index.edit"), edit_person_path(person) %></td>
         </tr>

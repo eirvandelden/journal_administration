@@ -20,7 +20,7 @@
   <tbody>
     <% chattels.each do |chattel| %>
       <tr>
-        <td><%= link_to chattel.name, chattel %></td>
+        <td><%= link_to chattel.name, chattel_path(chattel) %></td>
         <td><%= chattel.brand %></td>
         <td><%= chattel.kind %></td>
         <td><%= chattel.model_number %></td>

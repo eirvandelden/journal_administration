@@ -1,5 +1,5 @@
 <%# locals: (account:) %>
-<%= form_for account do |f| %>
+<%= form_with model: account do |f| %>
   <% if account.errors.any? %>
     <div id="error_explanation">
       <h2><%= t('errors.template.header', count: account.errors.count, model: Account.model_name.human.downcase) %></h2>
