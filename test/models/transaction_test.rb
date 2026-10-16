@@ -13,11 +13,11 @@ class TransactionTest < ActiveSupport::TestCase
     assert_instance_of Debit, transactions(:debit_grocery).reload
     assert_instance_of Credit, transactions(:credit_salary).reload
     assert_instance_of Transfer, transactions(:transfer_savings).reload
-    assert_equal BigDecimal("50.00"), transactions(:debit_grocery).amount
+    assert_equal 5000, transactions(:debit_grocery).amount
 
-    debit = Transaction.new(debitor: first_account, creditor: accounts(:unknown), amount: 10)
-    credit = Transaction.new(debitor: accounts(:unknown), creditor: first_account, amount: 10)
-    transfer = Transaction.new(debitor: first_account, creditor: second_account, amount: 10)
+    debit = Transaction.new(debitor: first_account, creditor: accounts(:unknown), amount: 1000)
+    credit = Transaction.new(debitor: accounts(:unknown), creditor: first_account, amount: 1000)
+    transfer = Transaction.new(debitor: first_account, creditor: second_account, amount: 1000)
     [ debit, credit, transfer ].each(&:valid?)
 
     assert_equal %w[Debit Credit Transfer], [ debit.type, credit.type, transfer.type ]
@@ -33,7 +33,7 @@ class TransactionTest < ActiveSupport::TestCase
   end
 
   test "type must be present" do
-    transaction = Transaction.new(type: nil, amount: 10)
+    transaction = Transaction.new(type: nil, amount: 1000)
 
     assert_not transaction.valid?
     assert_includes transaction.errors[:type], "can't be blank"
@@ -69,7 +69,7 @@ class TransactionTest < ActiveSupport::TestCase
     transaction = Transaction.new(
       debitor: accounts(:checking),
       creditor: accounts(:savings),
-      amount: 100
+      amount: 10000
     )
     transaction.valid?
 
@@ -80,7 +80,7 @@ class TransactionTest < ActiveSupport::TestCase
     transaction = Transaction.new(
       debitor: accounts(:employer),
       creditor: accounts(:checking),
-      amount: 100
+      amount: 10000
     )
     transaction.valid?
 
@@ -91,7 +91,7 @@ class TransactionTest < ActiveSupport::TestCase
     transaction = Transaction.new(
       debitor: accounts(:checking),
       creditor: accounts(:albert_heijn),
-      amount: 100
+      amount: 10000
     )
     transaction.valid?
 
@@ -103,7 +103,7 @@ class TransactionTest < ActiveSupport::TestCase
       type: "Credit",
       debitor: accounts(:checking),
       creditor: accounts(:savings),
-      amount: 100
+      amount: 10000
     )
     transaction.valid?
 
@@ -325,9 +325,31 @@ class TransactionTest < ActiveSupport::TestCase
       assert_includes results, transactions(:transfer_savings)
     end
 
+    test "searchable transfers match an amount typed with a comma" do
+      results = @transaction.searchable_transfers(amount: "500,00")
+
+      assert_includes results, transactions(:transfer_savings)
+    end
+
+    test "searchable transfers return nothing for an unreadable amount" do
+      assert_empty @transaction.searchable_transfers(amount: "abc")
+    end
+
     test "returns empty relation when nothing matches" do
       assert_empty @transaction.searchable_transfers(query: "nonexistent")
     end
+  end
+end
+
+class TransactionSearchTest < ActiveSupport::TestCase
+  test "search finds a transaction by its amount in euros" do
+    assert_includes Transaction.search("12.50"), transactions(:debit_bakery)
+    assert_includes Transaction.search("12.5"), transactions(:debit_bakery)
+    assert_not_includes Transaction.search("12.51"), transactions(:debit_bakery)
+  end
+
+  test "search finds a whole amount with two decimals" do
+    assert_includes Transaction.search("3000.00"), transactions(:credit_salary)
   end
 end
 
@@ -368,42 +390,42 @@ class TransactionSplittableTest < ActiveSupport::TestCase
 
   test "fully_split? returns true when a remainder split covers the remaining balance" do
     transaction = transactions(:uncategorized)
-    transaction.transaction_splits.create!(amount: 10.00, category: categories(:supermarket))
+    transaction.transaction_splits.create!(amount: 1000, category: categories(:supermarket))
     transaction.ensure_remainder_split
 
     assert_predicate transaction.reload, :fully_split?
   end
 
   test "uncategorized_amount returns only the untracked uncategorized remainder" do
-    assert_equal BigDecimal("10.00"), transactions(:debit_grocery).uncategorized_amount
+    assert_equal 1000, transactions(:debit_grocery).uncategorized_amount
   end
 
   test "uncategorized_amount includes a nil-category remainder split" do
     transaction = transactions(:uncategorized)
-    transaction.transaction_splits.create!(amount: 10.00, category: categories(:supermarket))
+    transaction.transaction_splits.create!(amount: 1000, category: categories(:supermarket))
     transaction.ensure_remainder_split
 
-    assert_equal BigDecimal("15.00"), transaction.reload.uncategorized_amount
+    assert_equal 1500, transaction.reload.uncategorized_amount
   end
 
   test "amount_for uses split rows including the remainder row" do
     transaction = transactions(:debit_grocery)
     transaction.ensure_remainder_split
 
-    assert_equal BigDecimal("40.00"), transaction.amount_for(category: categories(:supermarket))
+    assert_equal 4000, transaction.amount_for(category: categories(:supermarket))
   end
 
   class RemainderSplit < ActiveSupport::TestCase
     test "ensure_remainder_split creates remainder when splits exist" do
       transaction = transactions(:uncategorized)
-      transaction.transaction_splits.create!(amount: 10.00, category: categories(:supermarket))
+      transaction.transaction_splits.create!(amount: 1000, category: categories(:supermarket))
 
       transaction.ensure_remainder_split
 
       remainder = transaction.transaction_splits.find_by(remainder: true)
 
       assert remainder
-      assert_equal BigDecimal("15.00"), remainder.amount
+      assert_equal 1500, remainder.amount
       assert_nil remainder.category
     end
 
@@ -419,21 +441,21 @@ class TransactionSplittableTest < ActiveSupport::TestCase
 
     test "ensure_remainder_split updates existing remainder amount" do
       transaction = transactions(:uncategorized)
-      transaction.transaction_splits.create!(amount: 10.00, category: categories(:supermarket))
+      transaction.transaction_splits.create!(amount: 1000, category: categories(:supermarket))
       transaction.ensure_remainder_split
 
-      transaction.transaction_splits.create!(amount: 5.00, category: categories(:bakery))
+      transaction.transaction_splits.create!(amount: 500, category: categories(:bakery))
       transaction.ensure_remainder_split
 
       remainders = transaction.transaction_splits.where(remainder: true)
 
       assert_equal 1, remainders.count
-      assert_equal BigDecimal("10.00"), remainders.first.amount
+      assert_equal 1000, remainders.first.amount
     end
 
     test "ensure_remainder_split removes remainder when fully covered by explicit splits" do
       transaction = transactions(:uncategorized)
-      transaction.transaction_splits.create!(amount: 25.00, category: categories(:supermarket))
+      transaction.transaction_splits.create!(amount: 2500, category: categories(:supermarket))
       transaction.ensure_remainder_split
 
       remainders = transaction.transaction_splits.where(remainder: true)
@@ -443,7 +465,7 @@ class TransactionSplittableTest < ActiveSupport::TestCase
 
     test "ensure_remainder_split removes remainder when no explicit splits exist" do
       transaction = transactions(:uncategorized)
-      transaction.transaction_splits.create!(amount: 10.00, category: categories(:supermarket))
+      transaction.transaction_splits.create!(amount: 1000, category: categories(:supermarket))
       transaction.ensure_remainder_split
 
       transaction.transaction_splits.where(remainder: false).destroy_all
@@ -458,9 +480,9 @@ class TransactionSplittableTest < ActiveSupport::TestCase
       transaction = transactions(:debit_grocery)
       transaction.ensure_remainder_split
 
-      transaction.update!(amount: 60.00)
+      transaction.update!(amount: 6000)
 
-      assert_equal BigDecimal("20.00"), transaction.reload.transaction_splits.find_by(remainder: true).amount
+      assert_equal 2000, transaction.reload.transaction_splits.find_by(remainder: true).amount
     end
 
     test "updating the category adjusts the remainder split category" do
@@ -475,7 +497,7 @@ class TransactionSplittableTest < ActiveSupport::TestCase
     test "amount must cover explicit split amounts" do
       transaction = transactions(:debit_grocery)
 
-      assert_not transaction.update(amount: 35.00)
+      assert_not transaction.update(amount: 3500)
       assert_includes transaction.errors[:amount],
                       I18n.t("activerecord.errors.models.transaction.attributes.amount.must_cover_splits")
     end
@@ -493,7 +515,7 @@ class TransactionChargingTest < ActiveSupport::TestCase
 
   test "a split transaction cannot be charged as a whole" do
     payment = transactions(:gift_payment)
-    payment.transaction_splits.create!(amount: 10, category: categories(:gifts))
+    payment.transaction_splits.create!(amount: 1000, category: categories(:gifts))
 
     assert_not payment.update(appropriation: @appropriation)
   end
@@ -506,14 +528,14 @@ class TransactionChargingTest < ActiveSupport::TestCase
 
   test "a transaction with charged parts cannot become a transfer" do
     payment = payment_between_our_own_accounts
-    payment.transaction_splits.create!(amount: 10, appropriation: @appropriation)
+    payment.transaction_splits.create!(amount: 1000, appropriation: @appropriation)
 
     assert_not payment.update(type: "Transfer")
   end
 
   test "#charged? when whole or any part is charged" do
     charged_part = payment_between_our_own_accounts
-    charged_part.transaction_splits.create!(amount: 10, appropriation: @appropriation)
+    charged_part.transaction_splits.create!(amount: 1000, appropriation: @appropriation)
 
     assert_not payment_between_our_own_accounts.charged?
     assert_predicate payment_between_our_own_accounts(appropriation: @appropriation), :charged?
@@ -525,7 +547,7 @@ class TransactionChargingTest < ActiveSupport::TestCase
   # Booked as a Debit although both accounts are ours, so only the charge can stop it becoming a Transfer.
   def payment_between_our_own_accounts(appropriation: nil)
     Transaction.create!(
-      type: "Debit", debitor: accounts(:checking), creditor: accounts(:savings), amount: 40,
+      type: "Debit", debitor: accounts(:checking), creditor: accounts(:savings), amount: 4000,
       booked_at: Time.current, interest_at: Time.current, appropriation:
     )
   end

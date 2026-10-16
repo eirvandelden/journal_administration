@@ -167,7 +167,7 @@ class PaymentProviderTest < ActiveSupport::TestCase
     assert_raises(PaymentProvider::MoveFailed) { @provider.move_transactions_to_merchants }
 
     assert_equal @provider, failing.reload.debitor
-    assert_equal [ [ 10, categories(:bakery) ] ],
+    assert_equal [ [ 1000, categories(:bakery) ] ],
       failing.explicit_transaction_splits.map { |split| [ split.amount, split.category ] }
   end
 
@@ -179,7 +179,7 @@ class PaymentProviderTest < ActiveSupport::TestCase
     created_first.update_columns(original_note: "Naam: Brand New Shop Omschrijving: x", booked_at: 1.day.ago)
     failing = transactions(:kruidvat_through_adyen)
     failing.update_column(:booked_at, 2.days.ago)
-    failing.transaction_splits.create!(amount: 10, category: categories(:bakery))
+    failing.transaction_splits.create!(amount: 1000, category: categories(:bakery))
     failing.update_column(:amount, 5)
     order = Transaction.by_account(@provider.id).ids
 

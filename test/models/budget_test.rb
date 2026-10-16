@@ -306,18 +306,18 @@ class BudgetTest < ActiveSupport::TestCase
     test "planning a category the budget already covers replaces the amount" do
       budget = budgets(:active_budget)
 
-      budget.plan(category: categories(:groceries), amount: 275)
+      budget.plan(category: categories(:groceries), amount: 27500)
 
-      assert_equal 275, budget.budget_categories.find_by(category: categories(:groceries)).amount
+      assert_equal 27_500, budget.budget_categories.find_by(category: categories(:groceries)).amount
       assert_equal 2, budget.budget_categories.count
     end
 
     test "planning a category the budget does not cover yet adds it" do
       budget = budgets(:active_budget)
 
-      budget.plan(category: categories(:housing), amount: 900)
+      budget.plan(category: categories(:housing), amount: 90000)
 
-      assert_equal 900, budget.budget_categories.find_by(category: categories(:housing)).amount
+      assert_equal 90_000, budget.budget_categories.find_by(category: categories(:housing)).amount
     end
 
     test "a refused plan leaves the budget itself saveable" do
