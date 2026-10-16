@@ -24,7 +24,7 @@
   <dd><%= debitor ? link_to(debitor.to_s, account_path(debitor)) : '-' %></dd>
 
   <dt><%= t('transactions.table.amount') %></dt>
-  <dd><%= number_to_currency(@transaction.amount) %></dd>
+  <dd><%= cents_to_currency(@transaction.amount) %></dd>
 
   <dt><%= t('transactions.table.category') %></dt>
   <dd><%= @transaction.category&.name || t("common.uncategorized") %></dd>
@@ -35,7 +35,7 @@
       <ul>
         <% @transaction.explicit_transaction_splits.each do |split| %>
           <li>
-            <%= split.category&.to_s %> — <%= number_to_currency(split.amount) %><%= " (#{split.note})" if split.note.present? %>
+            <%= split.category&.to_s %> — <%= cents_to_currency(split.amount) %><%= " (#{split.note})" if split.note.present? %>
             — <%= render "transactions/appropriation", chargeable: split %>
           </li>
         <% end %>

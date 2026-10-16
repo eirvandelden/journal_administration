@@ -37,7 +37,7 @@
         <% @budget.budget_categories.includes(:category).each do |bc| %>
           <tr>
             <td><%= bc.category.name %></td>
-            <td><%= number_to_currency(bc.amount) %></td>
+            <td><%= cents_to_currency(bc.amount) %></td>
           </tr>
         <% end %>
       </tbody>
