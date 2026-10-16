@@ -18,28 +18,28 @@ class Dashboard
 
   # Returns debit transactions grouped by category with totals
   #
-  # @return [Hash{Category => Float}] Categories mapped to debit amounts
+  # @return [Hash{Category => Integer}] Categories mapped to debit cents
   def debit_transactions
     @debit_transactions ||= grouped_transactions_for(Debit)
   end
 
   # Returns credit transactions grouped by category with totals
   #
-  # @return [Hash{Category => Float}] Categories mapped to credit amounts
+  # @return [Hash{Category => Integer}] Categories mapped to credit cents
   def credit_transactions
     @credit_transactions ||= grouped_transactions_for(Credit)
   end
 
   # Calculates total debit amount
   #
-  # @return [Float] Sum of all debit transactions
+  # @return [Integer] Sum of all debit transactions, in cents
   def debit_total
     debit_transactions.values.sum
   end
 
   # Calculates total credit amount (excluding transfers)
   #
-  # @return [Float] Sum of all credit transactions
+  # @return [Integer] Sum of all credit transactions, in cents
   def credit_sub_total
     credit_transactions.values.sum
   end
@@ -54,22 +54,22 @@ class Dashboard
   # Returns historical-average spending per category scaled to the selected period
   #
   # Lookback period is one year ending the day before date_range.start_date.
-  # Each average is: (sum_over_lookback / 365) × selected_days.
+  # Each average is: (sum_over_lookback / 365) × selected_days, divided exactly and
+  # rounded once to whole cents.
   #
-  # @return [Array<Float>] Scaled averages in the same order as chart_labels
+  # @return [Array<Integer>] Scaled averages in cents, in the same order as chart_labels
   def historical_averages
     lookback = lookback_date_range
     totals = grouped_transactions_for(Credit, range: lookback)
 
     credit_transactions.keys.map do |category|
-      hist_sum = totals[category] || 0.0
-      (hist_sum / 365.0 * range_days).round(2)
+      (Rational(totals[category] || 0, 365) * range_days).round
     end
   end
 
   # Calculates profit or loss (debit - credit)
   #
-  # @return [Float] Profit if positive, loss if negative
+  # @return [Integer] Profit if positive, loss if negative, in cents
   def profit_or_loss
     debit_total - credit_sub_total
   end
@@ -88,7 +88,7 @@ class Dashboard
   # Returns budget amounts per parent category keyed by Category, scaled from the
   # budget's stored monthly amount to the number of months in the selected date range.
   #
-  # @return [Hash{Category => BigDecimal}]
+  # @return [Hash{Category => Integer}] cents
   def budget_amounts
     return {} unless active_budget
 
@@ -97,13 +97,13 @@ class Dashboard
       .each_with_object({}) do |budget_category, amounts|
         next if budget_category.category.transfer?
 
-        amounts[budget_category.category] = budget_category.amount * months_in_range
+        amounts[budget_category.category] = (budget_category.amount * months_in_range).round
       end
   end
 
   # Calculates total credit including profit/loss adjustment
   #
-  # @return [Float] Credit subtotal plus profit/loss
+  # @return [Integer] Credit subtotal plus profit/loss, in cents
   def credit_total
     credit_sub_total + profit_or_loss
   end
@@ -111,10 +111,10 @@ class Dashboard
   # Returns each category's net amount for budget comparison: its debit total minus
   # its credit total, so a refund offsets the spending it was refunding.
   #
-  # @return [Hash{Category => Float}]
+  # @return [Hash{Category => Integer}] cents
   def budget_actuals
     @budget_actuals ||= (debit_transactions.keys | credit_transactions.keys).compact.index_with do |category|
-      debit_transactions[category].to_f - credit_transactions[category].to_f
+      debit_transactions[category].to_i - credit_transactions[category].to_i
     end
   end
 
@@ -185,6 +185,6 @@ class Dashboard
   end
 
   def months_in_range
-    range_days / 30.0
+    Rational(range_days, 30)
   end
 end

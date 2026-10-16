@@ -355,6 +355,13 @@ class BudgetTest < ActiveSupport::TestCase
       end
     end
 
+    test "suggested amounts are Integer cents" do
+      budget = Budget.new(starts_at: Time.current)
+
+      assert_predicate budget.suggested_amounts, :any?
+      assert(budget.suggested_amounts.values.all?(Integer))
+    end
+
     test "returns positive amounts" do
       budget = Budget.new(starts_at: Time.current)
 

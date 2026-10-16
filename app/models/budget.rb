@@ -60,17 +60,19 @@ class Budget < ApplicationRecord
   #
   # Scales to the budget's period length (defaults to 30 days for open-ended budgets).
   #
-  # @return [Hash{Category => BigDecimal}]
+  # Divides exactly and rounds once, to whole cents, at the end.
+  #
+  # @return [Hash{Category => Integer}] cents
   def suggested_amounts
     lookback = suggestion_lookback_range
     period_days = suggestion_period_days
 
-    [ Debit, Credit ].each_with_object({}) do |klass, result|
+    exact = [ Debit, Credit ].each_with_object(Hash.new(0)) do |klass, result|
       suggestion_totals_by_parent(klass, lookback).each do |parent, total|
-        daily_avg = total.to_f / suggestion_lookback_days(lookback)
-        result[parent] = ((result[parent] || 0) + daily_avg * period_days).round(2)
+        result[parent] += Rational(total * period_days, suggestion_lookback_days(lookback))
       end
     end
+    exact.transform_values(&:round)
   end
 
   # Applies suggested amounts to budget_categories in memory (does not save).
@@ -219,6 +221,6 @@ class Budget < ApplicationRecord
   end
 
   def suggestion_lookback_days(range)
-    ((range.end.to_date - range.begin.to_date).to_i + 1).to_f
+    (range.end.to_date - range.begin.to_date).to_i + 1
   end
 end
