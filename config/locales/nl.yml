@@ -63,6 +63,8 @@ nl:
         name: Naam
         number: Nummer
         payment_provider: Betaaldienstverlener
+      account_number:
+        number: Rekeningnummer
       appropriation:
         amount: Begroot bedrag
         budget_year: Begrotingsjaar
@@ -122,12 +124,18 @@ nl:
       models:
         account:
           attributes:
+            account_numbers:
+              duplicated: moeten onderling verschillen
             base:
               cannot_reclassify_with_transactions: kan het eigenaarschap van het huishouden niet wijzigen omdat er transacties zijn
               has_transactions: kan niet worden verwijderd omdat er transacties aan gekoppeld zijn
               one_owner_only: mag maar één eigenaar hebben
             payment_provider:
               must_be_external: moet een externe rekening zijn
+        account_number:
+          attributes:
+            number:
+              taken_by: hoort al bij %{account}
         account_alias:
           attributes:
             account:
