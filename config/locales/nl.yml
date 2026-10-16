@@ -31,6 +31,39 @@ nl:
       owner: Eigenaar
       show: Tonen
       update_transactions: Transacties bijwerken
+    merges:
+      create:
+        accounts:
+          one: "%{count} rekening"
+          other: "%{count} rekeningen"
+        receipts:
+          one: "%{count} kassabon"
+          other: "%{count} kassabonnen"
+        success: "✅ %{accounts} samengevoegd met deze rekening. Verplaatst: %{transactions} en %{receipts}."
+        transactions:
+          one: "%{count} transactie"
+          other: "%{count} transacties"
+      new:
+        accounts:
+          one: "%{count} rekening"
+          other: "%{count} rekeningen"
+        confirm: "%{accounts} samenvoegen met %{account}? %{transactions} en %{receipts} verplaatsen. Dit kan niet ongedaan worden gemaakt."
+        counts: "%{transactions} en %{receipts} verplaatsen"
+        intro: "%{account} blijft bestaan en houdt zijn naam. De gekozen rekeningen geven hun transacties, kassabonnen, herkenningspatronen en rekeningnummers over en worden daarna verwijderd."
+        merge: Samenvoegen
+        no_matches: Geen externe rekeningen gevonden voor "%{query}".
+        receipts:
+          one: "%{count} kassabon"
+          other: "%{count} kassabonnen"
+        review: Samenvoegen controleren
+        review_heading: Klaar om samen te voegen
+        search: Zoek duplicaten op naam of rekeningnummer
+        search_submit: Zoeken
+        title: Duplicaten samenvoegen met %{account}
+        totals: In totaal verplaatsen %{transactions} en %{receipts}.
+        transactions:
+          one: "%{count} transactie"
+          other: "%{count} transacties"
     new:
       title: "➕ Nieuwe rekening"
     show:
@@ -42,6 +75,7 @@ nl:
       edit: Bewerken
       id: 'Id:'
       mark_payment_provider: Markeer als gedeelde betaaldienstverlener
+      merge_duplicates: Duplicaten samenvoegen…
       move_to_merchants: Transacties naar hun winkels verplaatsen
       name: 'Naam:'
       owner: 'Eigenaar:'

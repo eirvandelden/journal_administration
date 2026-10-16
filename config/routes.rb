@@ -41,6 +41,7 @@ Rails.application.routes.draw do
       resource :transaction_absorption, only: [ :create ]
       resource :payment_provider, only: %i[create destroy]
       resource :merchant_reassignment, only: [ :create ]
+      resource :merge, only: %i[new create]
       resources :account_aliases, only: %i[create destroy]
     end
   end

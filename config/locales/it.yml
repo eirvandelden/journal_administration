@@ -31,6 +31,39 @@ it:
       owner: Proprietario
       show: Mostra
       update_transactions: Aggiorna transazioni
+    merges:
+      create:
+        accounts:
+          one: "%{count} conto"
+          other: "%{count} conti"
+        receipts:
+          one: "%{count} scontrino"
+          other: "%{count} scontrini"
+        success: "✅ %{accounts} uniti a questo conto. Spostati: %{transactions} e %{receipts}."
+        transactions:
+          one: "%{count} transazione"
+          other: "%{count} transazioni"
+      new:
+        accounts:
+          one: "%{count} conto"
+          other: "%{count} conti"
+        confirm: Unire %{accounts} in %{account}? Si spostano %{transactions} e %{receipts}. L'operazione non può essere annullata.
+        counts: si spostano %{transactions} e %{receipts}
+        intro: "%{account} resta e mantiene il suo nome. I conti scelti gli cedono transazioni, scontrini, schemi di riconoscimento e numeri di conto, e poi vengono rimossi."
+        merge: Unisci
+        no_matches: Nessun conto esterno corrisponde a "%{query}".
+        receipts:
+          one: "%{count} scontrino"
+          other: "%{count} scontrini"
+        review: Controlla unione
+        review_heading: Pronto per l'unione
+        search: Cerca duplicati per nome o numero di conto
+        search_submit: Cerca
+        title: Unisci duplicati in %{account}
+        totals: In totale si spostano %{transactions} e %{receipts}.
+        transactions:
+          one: "%{count} transazione"
+          other: "%{count} transazioni"
     new:
       title: "➕ Nuovo conto"
     show:
@@ -42,6 +75,7 @@ it:
       edit: Modifica
       id: 'Id:'
       mark_payment_provider: Segna come fornitore di pagamenti condiviso
+      merge_duplicates: Unisci duplicati…
       move_to_merchants: Sposta le transazioni sui loro negozi
       name: 'Nome:'
       owner: 'Proprietario:'
