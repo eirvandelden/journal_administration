@@ -29,8 +29,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_11_120000) do
     t.integer "owner"
     t.boolean "payment_provider", default: false, null: false
     t.datetime "updated_at", null: false
+    t.integer "person_id"
+    t.integer "group_id"
     t.index ["category_id"], name: "index_accounts_on_category_id"
+    t.index ["group_id"], name: "index_accounts_on_group_id"
     t.index ["id"], name: "index_accounts_on_id"
+    t.index ["person_id"], name: "index_accounts_on_person_id"
+    t.check_constraint "person_id IS NULL OR group_id IS NULL", name: "accounts_have_at_most_one_managed_owner"
   end
 
   create_table "active_storage_attachments", force: :cascade do |t|
@@ -80,7 +85,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_11_120000) do
     t.decimal "amount", precision: 10, scale: 2, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index "LOWER(purpose), LOWER(recipient), budget_year", name: "index_appropriations_on_lower_purpose_recipient_and_year", unique: true
+    t.boolean "legacy_duplicate", default: false, null: false
+    t.integer "person_id"
+    t.index "LOWER(purpose), person_id, budget_year", name: "index_appropriations_on_person_and_purpose_and_year", unique: true, where: "person_id IS NOT NULL AND legacy_duplicate = false"
+    t.index ["person_id"], name: "index_appropriations_on_person_id"
     t.check_constraint "amount > 0", name: "check_appropriation_amount_positive"
   end
 
@@ -135,6 +143,33 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_11_120000) do
   end
 
   create_table "data_migrations", primary_key: "version", id: :string, force: :cascade do |t|
+  end
+
+  create_table "group_memberships", force: :cascade do |t|
+    t.integer "group_id", null: false
+    t.integer "person_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["group_id", "person_id"], name: "index_group_memberships_on_group_id_and_person_id", unique: true
+    t.index ["group_id"], name: "index_group_memberships_on_group_id"
+    t.index ["person_id"], name: "index_group_memberships_on_person_id"
+  end
+
+  create_table "groups", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "name_key"
+    t.index ["name_key"], name: "index_groups_on_name_key", unique: true
+  end
+
+  create_table "people", force: :cascade do |t|
+    t.string "name", null: false
+    t.boolean "household", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "name_key"
+    t.index ["name_key"], name: "index_people_on_name_key", unique: true
   end
 
   create_table "product_types", force: :cascade do |t|
@@ -259,13 +294,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_11_120000) do
 
   add_foreign_key "account_aliases", "accounts"
   add_foreign_key "accounts", "categories"
+  add_foreign_key "accounts", "groups", on_delete: :restrict
+  add_foreign_key "accounts", "people", on_delete: :restrict
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "appkit_push_subscriptions", "users"
+  add_foreign_key "appropriations", "people", on_delete: :restrict
   add_foreign_key "budget_categories", "budgets"
   add_foreign_key "budget_categories", "categories"
   add_foreign_key "budgets", "budgets", column: "closed_by_budget_id", on_delete: :nullify
   add_foreign_key "chattels", "transactions", column: "purchase_transaction_id"
+  add_foreign_key "group_memberships", "groups", on_delete: :restrict
+  add_foreign_key "group_memberships", "people", on_delete: :restrict
   add_foreign_key "product_types", "categories"
   add_foreign_key "products", "product_types"
   add_foreign_key "receipt_lines", "products"

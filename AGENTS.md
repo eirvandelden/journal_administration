@@ -6,8 +6,10 @@ A family household finance app. It imports bank transactions, categorizes them, 
 
 ## Domain
 
-- **Transaction** — single-table inheritance: `Credit`, `Debit`, `Transfer`. The type follows from whether the debitor/creditor `Account` is family-owned. A transaction can be split across several `Category`s via `TransactionSplit` (split total may not exceed the transaction amount); `Transfer` transactions cannot be split or categorized directly.
-- **Account** — family-owned (`samen`, `etienne`, `michelle`, `serena`, `cosimo`, `chiara`) or external (shops, other banks). `AccountAlias` patterns match merchant names from bank imports to an external account.
+- **Transaction** — single-table inheritance: `Credit`, `Debit`, `Transfer`. The type follows from whether the debitor/creditor `Account` is household-owned. A transaction can be split across several `Category`s via `TransactionSplit` (split total may not exceed the transaction amount); `Transfer` transactions cannot be split or categorized directly.
+- **Person** — a named individual with a `household` flag; household people can own accounts, other people (e.g. a grandparent) can receive appropriations.
+- **Group** — a named set of people (e.g. `Samen`), linked through `GroupMembership`; a group is household-owned when at least one member is a household person.
+- **Account** — owned through its managed `Person` or `Group`; it is household-owned when that owner is, otherwise external (shops, other banks). The legacy `accounts.owner` and `appropriations.recipient` columns are immutable history. `AccountAlias` patterns match merchant names from bank imports to an external account.
 - **Category** — hierarchical (parent/child), each has a `direction` (`debit`/`credit`). The `Transfer` category name is reserved and excluded from budgets.
 - **Budget** — time-bounded, one active at a time: creating or updating a budget closes its predecessor automatically. Holds per-parent-category `BudgetCategory` allocations.
 - **TransactionLink** — connects a `Debit`/`Credit` to the `Transfer` that covers it (e.g. a credit card bill and the transfer that pays it).

@@ -6,8 +6,8 @@ class AccountsController < ApplicationController
   #
   # @return [void]
   def index
-    own_accounts = Account.own.order(:id)
-    external_accounts = Account.external.order(:id)
+    own_accounts = Account.own.includes(:person, group: :people).order(:id)
+    external_accounts = Account.external.includes(:person, group: :people).order(:id)
 
     if params[:filter] == "untouched"
       own_accounts = own_accounts.where("updated_at = created_at")
@@ -68,7 +68,7 @@ class AccountsController < ApplicationController
         format.html { redirect_to @account, notice: t("accounts.update.success") }
         format.json { render :show, status: :ok, location: @account }
       else
-        format.html { render :edit }
+        format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @account.errors, status: :unprocessable_entity }
       end
     end
@@ -100,6 +100,6 @@ class AccountsController < ApplicationController
   end
 
   def account_params
-    params.require(:account).permit(:id, :account_number, :name, :owner, :category_id)
+    params.require(:account).permit(:id, :account_number, :name, :managed_owner, :person_id, :group_id, :category_id)
   end
 end

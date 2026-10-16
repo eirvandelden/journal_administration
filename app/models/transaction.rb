@@ -1,7 +1,7 @@
 # Represents a financial transaction between accounts
 #
 # Transactions are single-table inheritance with three types: Credit, Debit, Transfer.
-# The type is automatically determined by which accounts are family-owned accounts.
+# The type is automatically determined by which accounts have household owners.
 class Transaction < ApplicationRecord
   include Accountable
   include Categorizable
@@ -127,14 +127,14 @@ class Transaction < ApplicationRecord
 
   # Determines transaction type based on account ownership
   #
-  # Sets the type to Transfer if both accounts are family-owned,
-  # Credit if creditor is family-owned, or Debit if debitor is family-owned.
+  # Sets the type to Transfer if both accounts have household owners,
+  # Credit if the creditor has a household owner, or Debit if the debitor does.
   #
   # @return [void]
   def determine_debit_credit_or_transfer_type
-    # is debitor_account owned by us? This is a Debit Transaction!
-    # is creditor_account owned by us? This is a Credit Transaction!
-    # are both owned by the same owner? This is a Transfer Transaction! (Or a Debit + Credit Transaction)
+    # Is the debitor account household-owned? This is a Debit Transaction.
+    # Is the creditor account household-owned? This is a Credit Transaction.
+    # Are both household-owned? This is a Transfer Transaction.
     return if type.present?
     return self.type = "Transfer" if debitor_is_us? && creditor_is_us?
     return self.type = "Credit" if creditor_is_us?
@@ -144,15 +144,15 @@ class Transaction < ApplicationRecord
   def check_transfer_type_through_account_owners
     if type == "Transfer"
       unless debitor_is_us? && creditor_is_us?
-        errors.add(:type, "must be Transfer only if both debitor and creditor are family accounts")
+        errors.add(:type, "must be Transfer only if both accounts have household owners")
       end
     elsif type == "Debit"
       unless debitor_is_us?
-        errors.add(:type, "must be Debit only if debitor is a family account")
+        errors.add(:type, "must be Debit only if debitor has a household owner")
       end
     elsif type == "Credit"
       unless creditor_is_us?
-        errors.add(:type, "must be Credit only if creditor is a family account")
+        errors.add(:type, "must be Credit only if creditor has a household owner")
       end
     end
   end

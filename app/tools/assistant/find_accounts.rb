@@ -11,7 +11,7 @@ module Assistant
     )
 
     def self.call(query:, server_context:)
-      accounts = Account.search(query)
+      accounts = Account.search(query).includes(:person, group: :people)
 
       return answer("No account matches #{query}.") if accounts.empty?
 
@@ -19,7 +19,9 @@ module Assistant
     end
 
     def self.describe(account)
-      "#{account.id}: #{account} (#{account.external? ? "a shop or other outsider" : "ours"})"
+      status = account.external? ? "a shop or other outsider" : "ours"
+      owner = "#{account.owner_name}; " if account.owner_name.present?
+      "#{account.id}: #{account} (#{owner}#{status})"
     end
     private_class_method :describe
 

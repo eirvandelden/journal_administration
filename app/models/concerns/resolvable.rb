@@ -1,7 +1,7 @@
 # Resolves counterparty accounts during CSV imports
 #
 # Implements a smart account resolution strategy: first by account number,
-# then by matching against known family accounts, finally by normalized name lookup.
+# then by matching against managed household accounts, finally by normalized name lookup.
 module Resolvable
   extend ActiveSupport::Concern
 
@@ -29,17 +29,31 @@ module Resolvable
       find_or_create_with_normalized_name(name)
     end
 
-    # Attempts to find a family account embedded in transaction description
+    # Attempts to find a managed household account embedded in the transaction description.
     #
-    # Searches the description for any family account number and returns that account.
-    # Used for detecting transfers between family accounts.
+    # Searches the description for a household-owned account number and returns that account.
+    # Household accounts may belong to managed people or groups.
     #
     # @param description [String] The transaction description
-    # @return [Account, nil] The matched family account, or nil if no match
+    # @return [Account, nil] The matched household account, or nil if no match
     def resolve_from_description(description)
-      our_accounts = where.not(owner: nil).pluck(:account_number).reject(&:blank?)
-      matched_account = our_accounts.find { |account| description.include?(account) }
-      find_by(account_number: matched_account) if matched_account.present?
+      resolve_by_account_number(description) || resolve_by_account_name(description)
+    end
+
+    # Finds a household account by its number embedded in a description.
+    # @return [Account, nil]
+    def resolve_by_account_number(description)
+      candidates = own.where.not(account_number: nil).pluck(:account_number).reject(&:blank?)
+      match = candidates.find { |number| description.include?(number) }
+      own.find_by(account_number: match) if match
+    end
+
+    # Finds a household account by its name embedded in a description.
+    # @return [Account, nil]
+    def resolve_by_account_name(description)
+      candidates = own.where.not(name: nil).pluck(:name).reject(&:blank?).sort_by { |name| -name.length }
+      match = candidates.find { |name| description.include?(name) }
+      own.find_by(name: match) if match
     end
   end
 end

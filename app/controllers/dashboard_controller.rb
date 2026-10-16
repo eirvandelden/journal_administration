@@ -1,4 +1,4 @@
-# Displays financial dashboard for all family accounts
+# Displays the household finance dashboard.
 #
 # Shows debit and credit transactions grouped by category for a date range,
 # with calculations for profit/loss over the selected period.

@@ -13,7 +13,7 @@ module Assistant
 
     # @return [MCP::Tool::Response]
     def self.call(budget_year:, server_context:)
-      appropriations = Appropriation.of_year(budget_year).order(:purpose, :recipient)
+      appropriations = Appropriation.of_year(budget_year).includes(:person).order(:purpose)
 
       return answer("No appropriation has been set for #{budget_year}.") if appropriations.empty?
 
@@ -22,7 +22,7 @@ module Assistant
 
     # One line per appropriation, amounts written as appropriated, charged and left
     def self.describe(appropriation)
-      "#{appropriation.id}: #{appropriation.purpose} for #{appropriation.recipient}, " \
+      "#{appropriation.id}: #{appropriation.purpose} for #{appropriation.recipient_name}, " \
         "appropriated #{money(appropriation.amount)}, charged #{money(appropriation.charged)}, " \
         "left #{money(appropriation.balance)}"
     end

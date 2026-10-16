@@ -134,4 +134,12 @@ class AccountsShowTest < ActionDispatch::IntegrationTest
     end
     assert_select "button", text: I18n.t("accounts.show.unmark_payment_provider")
   end
+
+  test "show displays the current managed owner name" do
+    groups(:samen).update!(name: "Delden Household")
+
+    get account_path(accounts(:checking))
+
+    assert_select "article p", text: /Delden Household/
+  end
 end

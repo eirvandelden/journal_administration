@@ -1,0 +1,35 @@
+---
+etienne:
+  name: Etienne
+  name_key: etienne
+  household: true
+
+michelle:
+  name: Michelle
+  name_key: michelle
+  household: true
+
+serena:
+  name: Serena
+  name_key: serena
+  household: true
+
+cosimo:
+  name: Cosimo
+  name_key: cosimo
+  household: true
+
+chiara:
+  name: Chiara
+  name_key: chiara
+  household: true
+
+grandma:
+  name: Grandma
+  name_key: grandma
+  household: false
+
+grandpa:
+  name: Grandpa
+  name_key: grandpa
+  household: false

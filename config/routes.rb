@@ -7,6 +7,8 @@ Rails.application.routes.draw do
   end
 
   resources :chattels
+  resources :people
+  resources :groups
   resources :product_types, except: %i[destroy]
   resources :products, only: %i[index show edit update]
   resources :receipts, only: %i[index show] do

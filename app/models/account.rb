@@ -1,8 +1,7 @@
 # Represents a bank account with transactions and categorization
 #
-# Accounts can be family-owned (samen, etienne, michelle, serena, cosimo, chiara) or external
-# (e.g., Albert Heijn, creditors, other banks). The owner enum determines whether
-# transactions are debits, credits, or transfers.
+# Accounts belong to managed people or groups, or remain external.
+# Household ownership determines whether transactions are debits, credits, or transfers.
 class Account < ApplicationRecord
   include Normalizable
   include PaymentProvider
@@ -12,20 +11,39 @@ class Account < ApplicationRecord
 
   searchable_on :name, :account_number
 
-  FAMILY_OWNERS = %w[samen etienne michelle serena cosimo chiara].freeze
+  LEGACY_OWNERS = {
+    "samen" => "Samen",
+    "etienne" => "Etienne",
+    "michelle" => "Michelle",
+    "serena" => "Serena",
+    "cosimo" => "Cosimo",
+    "chiara" => "Chiara"
+  }.freeze
 
   # @!attribute [rw] owner
-  #   @return [String] The account owner (samen, etienne, michelle, serena, cosimo, chiara)
+  #   @return [String] The immutable legacy owner value.
   enum :owner, { samen: 0, etienne: 1, michelle: 2, serena: 3, cosimo: 4, chiara: 5 }
 
-  scope :own,      -> { where.not(owner: nil) }
-  scope :external, -> { where(owner: nil) }
+  scope :own, -> {
+    where(person_id: Person.where(household: true)).or(
+      where(group_id: Group.joins(:people).where(people: { household: true }))
+    )
+  }
+  scope :external, -> { where.not(id: own.select(:id)) }
 
   has_many :account_aliases, dependent: :destroy
+
+  belongs_to :person, optional: true
+  belongs_to :group, optional: true
 
   belongs_to :category, optional: true
 
   validates :account_number, uniqueness: true, allow_blank: true
+  validate :one_managed_owner
+  validate :managed_owner_exists
+  validate :preserve_transaction_classification
+  validate :legacy_owner_is_unchanged
+  before_validation :assign_legacy_owner, on: :create
 
   before_destroy :check_no_transactions_exist
 
@@ -41,11 +59,41 @@ class Account < ApplicationRecord
       .limit(limit)
   end
 
-  # Returns true when the account is not owned by a family member
+  # Returns true when the account has no household owner.
   #
   # @return [Boolean]
   def external?
-    owner.nil?
+    !household_owned?
+  end
+
+  # Whether this account belongs to a household person or group.
+  # @return [Boolean]
+  def household_owned?
+    person&.household? || group&.household? || false
+  end
+
+  # The current managed owner's name, or nil for an external account.
+  # @return [String, nil]
+  def owner_name
+    group&.name || person&.name
+  end
+
+  # Selects exactly one managed owner from the account form.
+  # @param value [String]
+  # @return [void]
+  def managed_owner=(value)
+    kind, id = value.to_s.split("_", 2)
+    self.person_id = kind == "person" ? id : nil
+    self.group_id = kind == "group" ? id : nil
+  end
+
+  # The managed owner selection shown by the account form.
+  # @return [String]
+  def managed_owner
+    return "group_#{group_id}" if group_id.present?
+    return "person_#{person_id}" if person_id.present?
+
+    ""
   end
 
   # Returns human-readable string representation of the account
@@ -66,6 +114,67 @@ class Account < ApplicationRecord
   end
 
   private
+
+  # Prevents assigning both a person and a group to one account.
+  # @return [void]
+  def one_managed_owner
+    return unless person_id.present? && group_id.present?
+
+    errors.add(:base, :one_owner_only)
+  end
+
+  # Rejects a person or group id that points at no record.
+  # @return [void]
+  def managed_owner_exists
+    errors.add(:person, :required) if person_id.present? && !Person.exists?(person_id)
+    errors.add(:group, :required) if group_id.present? && !Group.exists?(group_id)
+  end
+
+  # Refuses ownership changes that would alter the classification of account history.
+  # @return [void]
+  def preserve_transaction_classification
+    return unless persisted? && (will_save_change_to_person_id? || will_save_change_to_group_id?)
+    return unless transactions_exist?
+
+    errors.add(:base, :cannot_reclassify_with_transactions) if previous_household_owned? != household_owned?
+  end
+
+  # Whether any transactions use this account.
+  # @return [Boolean]
+  def transactions_exist?
+    Transaction.where("debitor_account_id = :id OR creditor_account_id = :id", id:).exists?
+  end
+
+  # Whether the stored managed owner marks this account as household-owned.
+  # @return [Boolean]
+  def previous_household_owned?
+    previous = Account.find(id)
+    previous.person&.household? || previous.group&.household? || false
+  end
+
+  # Refuses edits to the preserved legacy owner field.
+  # @return [void]
+  def legacy_owner_is_unchanged
+    return unless persisted? && will_save_change_to_owner?
+
+    errors.add(:owner, :readonly)
+  end
+
+  # Maps legacy owner values to managed people or groups for existing callers.
+  # @return [void]
+  def assign_legacy_owner
+    return if person_id.present? || group_id.present? || owner.blank?
+
+    name = LEGACY_OWNERS[owner]
+    return if name.blank?
+
+    self.group = Group.find_or_create_by!(name:) if owner == "samen"
+    self.person = Person.find_or_create_by!(name:, household: true) unless owner == "samen"
+    group.group_memberships.find_or_create_by!(person: Person.find_or_create_by!(name: "Etienne", household: true)) if
+      owner == "samen"
+    group.group_memberships.find_or_create_by!(person: Person.find_or_create_by!(name: "Michelle", household: true)) if
+      owner == "samen"
+  end
 
   def check_no_transactions_exist
     return unless Transaction.where("debitor_account_id = :id OR creditor_account_id = :id", id: id).exists?

@@ -15,6 +15,13 @@ class AccountAuthorizationTest < ActionDispatch::IntegrationTest
     assert_equal "samen", Current.account.owner
   end
 
+  test "Current.account returns the Samen group account after the group is renamed" do
+    groups(:samen).update!(name: "Household")
+    Current.user = users(:member)
+
+    assert_equal accounts(:checking), Current.account
+  end
+
   test "Current.account falls back to Account.first when samen account doesn't exist" do
     assert_not_nil Current.account
   end

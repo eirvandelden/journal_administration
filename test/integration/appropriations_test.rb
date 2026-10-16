@@ -19,8 +19,9 @@ class AppropriationsTest < ActionDispatch::IntegrationTest
 
   test "a second appropriation for the same purpose, recipient and year is refused regardless of letter case" do
     assert_no_difference "Appropriation.count" do
-      post appropriations_path,
-        params: { appropriation: new_appropriation(purpose: "birthday", recipient: "etienne") }
+      post appropriations_path, params: {
+        appropriation: new_appropriation(purpose: "birthday", recipient: "etienne")
+      }
     end
 
     assert_response :unprocessable_entity
@@ -33,6 +34,45 @@ class AppropriationsTest < ActionDispatch::IntegrationTest
     get appropriations_path(year: 2026)
 
     assert_appropriation_row "Birthday", "Michelle", 150, 0, 150
+  end
+
+  test "an appropriation selects an outside person" do
+    get new_appropriation_path
+
+    assert_select "select[name='appropriation[person_id]'] option[value=?]", people(:grandma).id, text: "Grandma"
+
+    post appropriations_path, params: {
+      appropriation: { purpose: "Visit", person_id: people(:grandma).id, budget_year: 2026, amount: 40 }
+    }
+
+    appropriation = Appropriation.find_by!(purpose: "Visit")
+
+    assert_equal people(:grandma), appropriation.person
+  end
+
+  test "a new appropriation requires an existing managed person" do
+    assert_no_difference [ "Appropriation.count", "Person.count" ] do
+      post appropriations_path, params: {
+        appropriation: { purpose: "Visit", recipient: "Unmanaged stranger", budget_year: 2026, amount: 40 }
+      }
+    end
+
+    assert_response :unprocessable_entity
+  end
+
+  test "renaming a recipient updates displayed appropriations without changing charges" do
+    appropriation = appropriations(:birthday_etienne)
+    transactions(:gift_payment).update!(appropriation:)
+    amount = appropriation.amount
+    charged = appropriation.charged
+
+    people(:etienne).update!(name: "E. van Delden")
+    get appropriations_path(year: 2026)
+
+    assert_appropriation_row "Birthday", "E. van Delden", amount, charged, amount - charged
+    assert_appropriation_row "Christmas", "E. van Delden", 100, 0, 100
+    assert_equal amount, appropriation.reload.amount
+    assert_equal charged, appropriation.charged
   end
 
   test "raising an appropriation raises its balance by the same amount" do
@@ -130,18 +170,21 @@ class AppropriationsTest < ActionDispatch::IntegrationTest
     assert_select "tr", text: /-.*Birthday present/m
   end
 
-  test "the new-appropriation form suggests household members and earlier recipients" do
+  test "the new-appropriation form lists every managed person using their current name" do
+    people(:etienne).update!(name: "E. van Delden")
     get new_appropriation_path
 
-    assert_select "datalist option[value=?]", "Etienne"
-    assert_select "datalist option[value=?]", "Chiara"
-    assert_select "datalist option[value=?]", "Samen", count: 0
-    assert_select "datalist option[value=?]", "Grandma", count: 0
+    assert_select "select[name='appropriation[person_id]'] option[value=?]", people(:etienne).id, text: "E. van Delden"
+    assert_select "select[name='appropriation[person_id]'] option[value=?]", people(:chiara).id, text: "Chiara"
+    assert_select "select[name='appropriation[person_id]'] option[value=?]", people(:grandma).id, text: "Grandma"
+    assert_select "select[name='appropriation[person_id]'] option[value=?]", people(:grandpa).id, text: "Grandpa"
+    assert_select "select[name='appropriation[person_id]'] option", text: "Samen", count: 0
 
-    Appropriation.create!(purpose: "Birthday", recipient: "Grandma", budget_year: 2026, amount: 40)
+    aunt = Person.create!(name: "Aunt", household: false)
+    Appropriation.create!(purpose: "Birthday", person: aunt, budget_year: 2026, amount: 40)
     get new_appropriation_path
 
-    assert_select "datalist option[value=?]", "Grandma"
+    assert_select "select[name='appropriation[person_id]'] option[value=?]", aunt.id, text: "Aunt"
   end
 
   test "in Dutch the page is called Begrotingsposten" do
@@ -151,6 +194,24 @@ class AppropriationsTest < ActionDispatch::IntegrationTest
 
     assert_select "header nav a[href=?]", appropriations_path, text: /Begrotingsposten/
     assert_select "h1", text: /Begrotingsposten/
+  end
+
+  test "legacy_duplicate cannot be set through the form params" do
+    post appropriations_path, params: {
+      appropriation: new_appropriation(purpose: "Graduation").merge(legacy_duplicate: "1")
+    }
+
+    created = Appropriation.find_by!(purpose: "Graduation")
+
+    assert_not created.legacy_duplicate
+  end
+
+  test "legacy_duplicate cannot be changed through update params" do
+    appropriation = appropriations(:birthday_etienne)
+
+    patch appropriation_path(appropriation), params: { appropriation: { amount: 151, legacy_duplicate: "1" } }
+
+    assert_not appropriation.reload.legacy_duplicate
   end
 
   private
@@ -164,6 +225,6 @@ class AppropriationsTest < ActionDispatch::IntegrationTest
   end
 
   def new_appropriation(purpose: "Birthday", recipient: "Etienne", budget_year: 2026, amount: 150)
-    { purpose:, recipient:, budget_year:, amount: }
+    { purpose:, person_id: Person.find_by!(name_key: recipient.downcase).id, budget_year:, amount: }
   end
 end

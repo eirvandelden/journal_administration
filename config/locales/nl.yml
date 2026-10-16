@@ -13,6 +13,10 @@ nl:
       success: "✅ Rekening succesvol aangemaakt."
     destroy:
       success: "✅ Rekening succesvol verwijderd."
+    form:
+      external_owner: Externe rekening
+      group_owner: "%{name} (groep)"
+      person_owner: "%{name} (persoon)"
     index:
       account_number: Rekeningnummer
       category: Categorie
@@ -55,6 +59,7 @@ nl:
     attributes:
       account:
         iban: IBAN
+        managed_owner: Eigenaar
         name: Naam
         number: Nummer
         payment_provider: Betaaldienstverlener
@@ -85,6 +90,11 @@ nl:
         serial_number: Serienummer
         warranty_document: Garantiedocument
         warranty_expires_at: Garantie tot
+      group:
+        name: Naam
+      person:
+        household: Lid van het huishouden
+        name: Naam
       product:
         brand: Merk
         name: Naam
@@ -112,7 +122,9 @@ nl:
         account:
           attributes:
             base:
+              cannot_reclassify_with_transactions: kan het eigenaarschap van het huishouden niet wijzigen omdat er transacties zijn
               has_transactions: kan niet worden verwijderd omdat er transacties aan gekoppeld zijn
+              one_owner_only: mag maar één eigenaar hebben
             payment_provider:
               must_be_external: moet een externe rekening zijn
         account_alias:
@@ -143,6 +155,20 @@ nl:
             category:
               must_be_parent: moet een hoofdcategorie zijn
               must_not_be_transfer: mag niet de categorie Transfer zijn
+        group:
+          attributes:
+            base:
+              cannot_change_with_transactions: zou de rekeningclassificatie wijzigen ondanks bestaande transacties
+            person_ids:
+              invalid: bevat een persoon die niet meer bestaat
+        group_membership:
+          attributes:
+            base:
+              cannot_change_with_transactions: zou de rekeningclassificatie wijzigen ondanks bestaande transacties
+        person:
+          attributes:
+            household:
+              cannot_change_with_transactions: kan niet worden gewijzigd omdat rekeningclassificatie ervan afhangt
         receipt_line:
           attributes:
             paid_amount:
@@ -178,6 +204,13 @@ nl:
         other: Begrotingsposten
       category: Categorie
       chattel: Bezitting
+      group:
+        one: Groep
+        other: Groepen
+      group_membership: Groepslidmaatschap
+      person:
+        one: Persoon
+        other: Personen
       product:
         one: Product
         other: Producten
@@ -538,6 +571,28 @@ nl:
       header:
         one: "%{model} niet opgeslagen: %{count} fout gevonden"
         other: "%{model} niet opgeslagen: %{count} fouten gevonden"
+  groups:
+    create:
+      success: "✅ Groep aangemaakt."
+    destroy:
+      success: "✅ Groep verwijderd."
+    edit:
+      heading: "%{name} bewerken"
+    form:
+      members: Leden
+    index:
+      edit: Bewerken
+      heading: Groepen
+      members: Leden
+      new: "➕ Nieuwe groep"
+    new:
+      heading: Nieuwe groep
+    show:
+      destroy: "🔥 Groep verwijderen"
+      edit: "✏️ Groep bewerken"
+      members: Leden
+    update:
+      success: "✅ Groep bijgewerkt."
   helpers:
     select:
       prompt: Maak een keuze
@@ -559,6 +614,8 @@ nl:
     budgets: "💰 %{model}"
     categories: "🏷️ %{model}"
     chattels: "📦 %{model}"
+    groups: "👥 Groepen"
+    people: "👤 Personen"
     preferences: "🎨 Voorkeuren"
     product_types: "🥫 %{model}"
     products: "🛒 %{model}"
@@ -637,6 +694,27 @@ nl:
       success: Gemarkeerd als gedeelde betaaldienstverlener.
     destroy:
       success: Geen gedeelde betaaldienstverlener meer.
+  people:
+    create:
+      success: "✅ Persoon aangemaakt."
+    destroy:
+      success: "✅ Persoon verwijderd."
+    edit:
+      heading: "%{name} bewerken"
+    household:
+      'false': Buiten het huishouden
+      'true': Lid van het huishouden
+    index:
+      edit: Bewerken
+      heading: Personen
+      new: "➕ Nieuwe persoon"
+    new:
+      heading: Nieuwe persoon
+    show:
+      destroy: "🔥 Persoon verwijderen"
+      edit: "✏️ Persoon bewerken"
+    update:
+      success: "✅ Persoon bijgewerkt."
   product_types:
     create:
       success: Productsoort toegevoegd.

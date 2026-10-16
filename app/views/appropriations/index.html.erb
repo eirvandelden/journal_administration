@@ -27,7 +27,7 @@
         <% @appropriations.each do |appropriation| %>
           <tr>
             <td><%= link_to appropriation.purpose, appropriation %></td>
-            <td><%= appropriation.recipient %></td>
+            <td><%= appropriation.recipient_name %></td>
             <td><%= number_to_currency(appropriation.amount) %></td>
             <td><%= number_to_currency(appropriation.charged) %></td>
             <td><%= render "appropriations/balance", appropriation: appropriation %></td>

@@ -13,7 +13,7 @@ module Importable
     # Also updates the counterparty account name if not already set.
     #
     # @param row [Object] CSV row object with date, amount, description, note, etc.
-    # @param our_account [Account] The family account involved in the transaction
+    # @param our_account [Account] The household account involved in the transaction
     # @param their_account [Account] The external account or counterparty
     # @return [Transaction] A new (unsaved) transaction instance
     def build_from_import(row, our_account:, their_account:)

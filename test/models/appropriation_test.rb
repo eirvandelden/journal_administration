@@ -2,6 +2,12 @@ require "test_helper"
 
 class AppropriationTest < ActiveSupport::TestCase
   class Validations < ActiveSupport::TestCase
+    test "refuses duplicate purpose person and year" do
+      duplicate = Appropriation.new(purpose: "birthday", person: people(:etienne), budget_year: 2026, amount: 10)
+
+      assert_not duplicate.valid?
+    end
+
     test "requires purpose, recipient, budget year and a positive amount" do
       appropriation = Appropriation.new(amount: 0)
 
@@ -10,13 +16,13 @@ class AppropriationTest < ActiveSupport::TestCase
     end
 
     test "refuses a duplicate regardless of letter case" do
-      duplicate = Appropriation.new(purpose: "birthday", recipient: "ETIENNE", budget_year: 2026, amount: 10)
+      duplicate = Appropriation.new(purpose: "birthday", person: people(:etienne), budget_year: 2026, amount: 10)
 
       assert_not duplicate.valid?
     end
 
     test "allows the same purpose and recipient in another year" do
-      later = Appropriation.new(purpose: "Birthday", recipient: "Etienne", budget_year: 2028, amount: 10)
+      later = Appropriation.new(purpose: "Birthday", person: people(:etienne), budget_year: 2028, amount: 10)
 
       assert_predicate later, :valid?
     end
@@ -24,6 +30,29 @@ class AppropriationTest < ActiveSupport::TestCase
     test "refuses changing the year onto an existing purpose and recipient" do
       assert_not appropriations(:birthday_etienne).update(budget_year: 2027)
     end
+  end
+
+  test "sets the legacy recipient on create only" do
+    appropriation = Appropriation.create!(
+      purpose: "Graduation", person: people(:grandma), budget_year: 2026, amount: 25
+    )
+
+    assert_equal "Grandma", appropriation.recipient
+
+    appropriation.update!(person: people(:grandpa))
+
+    assert_equal "Grandma", appropriation.reload.recipient
+  end
+
+  test "renaming a person preserves appropriation amount and charges" do
+    appropriation = appropriations(:birthday_etienne)
+    transactions(:gift_payment).update!(appropriation:)
+    charged = appropriation.charged
+
+    people(:etienne).update!(name: "E. van Delden")
+
+    assert_equal BigDecimal("150.00"), appropriation.reload.amount
+    assert_equal charged, appropriation.charged
   end
 
   class RecipientSuggestions < ActiveSupport::TestCase
@@ -35,17 +64,18 @@ class AppropriationTest < ActiveSupport::TestCase
     end
 
     test ".recipient_suggestions adds earlier recipients once regardless of letter case" do
-      Appropriation.create!(purpose: "Birthday", recipient: "Grandma", budget_year: 2026, amount: 40)
-      Appropriation.create!(purpose: "Christmas", recipient: "grandma", budget_year: 2026, amount: 30)
+      Appropriation.create!(purpose: "Birthday", person: people(:grandma), budget_year: 2026, amount: 40)
+      Appropriation.create!(purpose: "Christmas", person: people(:grandma), budget_year: 2026, amount: 30)
 
       assert_equal 1, Appropriation.recipient_suggestions.count { |name| name.casecmp?("grandma") }
       assert_equal 1, Appropriation.recipient_suggestions.count { |name| name.casecmp?("etienne") }
     end
 
-    test ".recipient_suggestions sorts ignoring letter case and keeps the latest spelling" do
-      Appropriation.create!(purpose: "Birthday", recipient: "grandma", budget_year: 2026, amount: 40)
-      Appropriation.create!(purpose: "Christmas", recipient: "Grandma", budget_year: 2026, amount: 30)
-      Appropriation.create!(purpose: "Birthday", recipient: "bob", budget_year: 2026, amount: 20)
+    test ".recipient_suggestions sorts managed names ignoring letter case" do
+      Appropriation.create!(purpose: "Birthday", person: people(:grandma), budget_year: 2026, amount: 40)
+      Appropriation.create!(purpose: "Christmas", person: people(:grandma), budget_year: 2026, amount: 30)
+      bob = Person.create!(name: "bob", household: false)
+      Appropriation.create!(purpose: "Birthday", person: bob, budget_year: 2026, amount: 20)
 
       suggestions = Appropriation.recipient_suggestions
 
@@ -116,5 +146,60 @@ class AppropriationTest < ActiveSupport::TestCase
 
     assert_not appropriation.destroy
     assert Appropriation.exists?(appropriation.id)
+  end
+
+  class LegacyDuplicates < ActiveSupport::TestCase
+    test "refuses a new appropriation that matches only a legacy duplicate row" do
+      original = appropriations(:birthday_etienne)
+      original.update_columns(legacy_duplicate: true)
+      Appropriation.where.not(id: original.id).where(purpose: "Birthday", person_id: original.person_id,
+        budget_year: 2026).delete_all
+      duplicate = Appropriation.new(purpose: "Birthday", person: original.person, budget_year: 2026, amount: 10)
+
+      assert_not duplicate.valid?
+      assert_includes duplicate.errors.attribute_names, :purpose
+    end
+
+    test "keeps an existing legacy pair updatable" do
+      first, second = legacy_pair
+
+      assert first.update(amount: 11)
+      assert second.update(amount: 12)
+    end
+
+    test "refuses moving a legacy row onto another existing key" do
+      first, second = legacy_pair
+      Appropriation.where(id: first.id).update_all(legacy_duplicate: true)
+      clash = Appropriation.create!(purpose: "Other", person: second.person, budget_year: 2026, amount: 5)
+
+      assert_not clash.update(purpose: "Birthday")
+      assert_includes clash.errors.attribute_names, :purpose
+    end
+
+    test "the database refuses two unflagged rows with the same key when validation is bypassed" do
+      original = appropriations(:birthday_etienne)
+      twin = Appropriation.new(purpose: "BIRTHDAY", recipient: "Etienne", person: original.person,
+        budget_year: 2026, amount: 10)
+
+      assert_raises(ActiveRecord::RecordNotUnique) { twin.save!(validate: false) }
+    end
+
+    test "the database allows a flagged row beside an unflagged one" do
+      original = appropriations(:birthday_etienne)
+      twin = Appropriation.new(purpose: "BIRTHDAY", recipient: "Etienne", person: original.person,
+        budget_year: 2026, amount: 10, legacy_duplicate: true)
+
+      assert_nothing_raised { twin.save!(validate: false) }
+    end
+
+    private
+
+    def legacy_pair
+      first = appropriations(:birthday_etienne)
+      second = Appropriation.new(purpose: "BIRTHDAY", recipient: "Etienne", person: first.person,
+        budget_year: 2026, amount: 20, legacy_duplicate: true)
+      second.save!(validate: false)
+      [ first, second ]
+    end
   end
 end

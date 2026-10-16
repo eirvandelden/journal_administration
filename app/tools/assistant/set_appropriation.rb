@@ -17,10 +17,17 @@ module Assistant
 
     # @return [MCP::Tool::Response]
     def self.call(purpose:, recipient:, budget_year:, amount:, server_context:)
-      appropriation = Appropriation.named(purpose:, recipient:, budget_year:).first ||
-        Appropriation.new(purpose:, recipient:, budget_year:)
+      person = Appropriation.person_named(recipient)
+      return problem("No person named #{recipient}.") unless person
 
-      return problem(appropriation.errors.full_messages.to_sentence) unless appropriation.update(amount:)
+      appropriation = Appropriation.named(purpose:, recipient: person.name, budget_year:).first ||
+        Appropriation.new(purpose:, person:, budget_year:)
+      saved = if appropriation.persisted?
+        appropriation.update(amount:)
+      else
+        appropriation.update(amount:, recipient: person.name)
+      end
+      return problem(appropriation.errors.full_messages.to_sentence) unless saved
 
       answer("#{appropriation} (##{appropriation.id}) is set at #{format("%.2f", appropriation.amount)}.")
     end

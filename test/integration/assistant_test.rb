@@ -42,6 +42,17 @@ class AssistantTest < ActionDispatch::IntegrationTest
       "finished, nothing planned"
   end
 
+  test "the assistant reports a renamed appropriation recipient" do
+    people(:etienne).update!(name: "E. van Delden")
+
+    answer = ask_assistant("list_appropriations", budget_year: 2026)
+
+    assert_includes answer, "Birthday for E. van Delden"
+    assert_includes answer, "Christmas for E. van Delden"
+    assert_not_includes answer, "Birthday for Etienne"
+    assert_not_includes answer, "Christmas for Etienne"
+  end
+
   test "the assistant changes what a category may cost" do
     budget = budgets(:active_budget)
 
