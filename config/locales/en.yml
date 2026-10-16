@@ -58,6 +58,8 @@ en:
         name: Name
         number: Number
         payment_provider: Payment provider
+      account_number:
+        number: Account number
       appropriation:
         amount: Amount appropriated
         budget_year: Budget year
@@ -111,10 +113,16 @@ en:
       models:
         account:
           attributes:
+            account_numbers:
+              duplicated: must be different from the other numbers
             base:
               has_transactions: cannot be deleted because it has associated transactions
             payment_provider:
               must_be_external: must be an external account
+        account_number:
+          attributes:
+            number:
+              taken_by: already belongs to %{account}
         account_alias:
           attributes:
             account:

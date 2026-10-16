@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_11_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_16_090000) do
   create_table "account_aliases", force: :cascade do |t|
     t.integer "account_id", null: false
     t.datetime "created_at", null: false
@@ -19,6 +19,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_11_120000) do
     t.index "LOWER(pattern)", name: "index_account_aliases_on_lower_pattern", unique: true
     t.index ["account_id", "pattern"], name: "index_account_aliases_on_account_id_and_pattern", unique: true
     t.index ["account_id"], name: "index_account_aliases_on_account_id"
+  end
+
+  create_table "account_numbers", force: :cascade do |t|
+    t.integer "account_id", null: false
+    t.datetime "created_at", null: false
+    t.string "number", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_account_numbers_on_account_id"
+    t.index ["number"], name: "index_account_numbers_on_number", unique: true
   end
 
   create_table "accounts", force: :cascade do |t|
@@ -258,6 +267,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_11_120000) do
   end
 
   add_foreign_key "account_aliases", "accounts"
+  add_foreign_key "account_numbers", "accounts"
   add_foreign_key "accounts", "categories"
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"

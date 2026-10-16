@@ -58,6 +58,8 @@ it:
         name: Nome
         number: Numero
         payment_provider: Fornitore di pagamenti
+      account_number:
+        number: Numero conto
       appropriation:
         amount: Importo stanziato
         budget_year: Anno di bilancio
@@ -111,10 +113,16 @@ it:
       models:
         account:
           attributes:
+            account_numbers:
+              duplicated: devono essere diversi tra loro
             base:
               has_transactions: non può essere eliminato perché ha transazioni associate
             payment_provider:
               must_be_external: deve essere un conto esterno
+        account_number:
+          attributes:
+            number:
+              taken_by: appartiene già a %{account}
         account_alias:
           attributes:
             account:
