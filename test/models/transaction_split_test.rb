@@ -9,6 +9,15 @@ class TransactionSplitTest < ActiveSupport::TestCase
       assert_includes split.errors[:amount], "can't be blank"
     end
 
+    test "accepts an amount typed with a comma" do
+      split = TransactionSplit.new(
+        financial_transaction: transactions(:uncategorized), category: categories(:supermarket), amount: "12,34"
+      )
+
+      assert_predicate split, :valid?
+      assert_equal 1234, split.amount
+    end
+
     test "amount must be greater than zero" do
       split = TransactionSplit.new(financial_transaction: transactions(:debit_grocery), amount: 0)
 
@@ -16,7 +25,7 @@ class TransactionSplitTest < ActiveSupport::TestCase
       assert_includes split.errors[:amount], "must be greater than 0"
     end
 
-    test "amount must not exceed transaction split_balance on create" do
+    test "refuses more than the balance in cents" do
       split = TransactionSplit.new(financial_transaction: transactions(:debit_grocery), amount: 99999)
 
       assert_not split.valid?

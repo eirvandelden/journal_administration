@@ -273,7 +273,7 @@ class DashboardTest < ActiveSupport::TestCase
   end
 
   class BudgetActuals < ActiveSupport::TestCase
-    test "nets a category's credits against its debits" do
+    test "budget actuals are Integer cents" do
       booked_at = 10.days.from_now
       Debit.create!(
         amount: 8000, booked_at:, interest_at: booked_at,

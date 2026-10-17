@@ -12,6 +12,11 @@ class Importing::AlbertHeijn::PackingSlipTest < ActiveSupport::TestCase
     assert_equal 11993, @slip.total_amount
   end
 
+  test "reads lines and total as cents" do
+    assert_instance_of Integer, @slip.total_amount
+    assert(@slip.lines.all? { |line| line.full_amount.is_a?(Integer) && line.paid_amount.is_a?(Integer) })
+  end
+
   test "a packing slip lists a line for every product that was packed" do
     assert_equal 37, @slip.lines.size
   end
