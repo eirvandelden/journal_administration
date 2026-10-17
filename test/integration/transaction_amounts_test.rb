@@ -43,4 +43,20 @@ class TransactionAmountsTest < ActionDispatch::IntegrationTest
     assert_equal 1250, @transaction.reload.amount
     assert_select "input[name$='[amount]'][value='abc']"
   end
+
+  test "a numeric JSON amount in euros stores cents" do
+    patch transaction_url(@transaction), params: { transaction: { amount: 12.5 } },
+      as: :json, headers: { "Accept" => "text/html" }
+
+    assert_response :redirect
+    assert_equal 1250, @transaction.reload.amount
+  end
+
+  test "a JSON amount with a fraction of a cent answers 422" do
+    patch transaction_url(@transaction, format: :json),
+      params: { transaction: { amount: 12.345 } }, as: :json
+
+    assert_response :unprocessable_entity
+    assert_predicate response.parsed_body["amount"], :present?
+  end
 end

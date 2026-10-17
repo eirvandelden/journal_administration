@@ -1,5 +1,7 @@
 # Manages household chattels (valuable items with warranties and insurance)
 class ChattelsController < ApplicationController
+  include MoneyParams
+
   before_action :set_chattel, only: %i[show edit update destroy]
   before_action :set_brands_in_use, only: %i[show new create edit update]
 
@@ -92,9 +94,10 @@ class ChattelsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def chattel_params
-      params.require(:chattel).permit(:name, :brand, :kind, :model_number, :serial_number,
+      permitted = params.require(:chattel).permit(:name, :brand, :kind, :model_number, :serial_number,
                                       :purchase_transaction_id, :purchased_at,
                                       :warranty_expires_at, :left_possession_at,
                                       :purchase_price, :notes, :warranty_document)
+      euros_to_cents(permitted, :purchase_price)
     end
 end
