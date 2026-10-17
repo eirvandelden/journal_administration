@@ -111,6 +111,7 @@ Each step ends with the narrowest test run green, then the step's test files. Co
 12. Sweep: `grep -rn "number_to_currency" app` must show only `MoneyHelper`; `grep -rnE "to_d\b|BigDecimal|\.round\(2\)" app` must show only intended uses. Full suite `bin/rails test` and `bin/rails test:system`, then `bundle exec rubocop`, `npx @herb-tools/linter app/views/`, `bundle exec brakeman --no-pager -q`, `bundle exec bundler-audit check`, `bundle exec i18n-tasks normalize` (no diff).
 13. Real-data check (criteria 6 and 8), below in Proof. Record the result in the pull request description.
 14. Manual check in the browser on the worktree app (port 3001, copied database): type `1,50` in a transaction, a split, an appropriation and a budget amount; see `1,50` again.
+15. JSON input (added after the implement report, coordinator decision): `TransactionsController` and `ChattelsController` convert a numeric JSON amount (`{"transaction":{"amount":12.5}}`) with `Cents.from_euros`, so it stores 1250. A sub-cent value answers 422 with an error message, never 500. Failing integration test first.
 
 ## Risks
 
