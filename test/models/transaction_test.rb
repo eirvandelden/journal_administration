@@ -351,6 +351,14 @@ class TransactionSearchTest < ActiveSupport::TestCase
   test "search finds a whole amount with two decimals" do
     assert_includes Transaction.search("3000.00"), transactions(:credit_salary)
   end
+
+  test "search does not match a transaction without an amount" do
+    transaction = transactions(:uncategorized)
+    transaction.update_columns(amount: nil, note: "Without amount")
+
+    assert_not_includes Transaction.search("0"), transaction
+    assert_not_includes Transaction.search(".00"), transaction
+  end
 end
 
 class TransactionSplittableTest < ActiveSupport::TestCase
