@@ -28,7 +28,7 @@ class Transaction < ApplicationRecord
     t = arel_table
     text_conditions = searchable_columns.map { |col| t[col].matches(sanitized) }
     where(text_conditions.reduce(:or)).or(
-      where("printf('%.2f', amount / 100.0) LIKE ?", sanitized)
+      where("amount IS NOT NULL AND printf('%.2f', amount / 100.0) LIKE ?", sanitized)
     ).limit(10)
   }
 
