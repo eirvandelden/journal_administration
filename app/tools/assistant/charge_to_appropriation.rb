@@ -3,7 +3,8 @@ module Assistant
   class ChargeToAppropriation < Tool
     description "Charge a payment to an appropriation, moving any earlier charge. A split payment is charged " \
       "per part: name the part with transaction_split_id. Transfers cannot be charged. Charging does not " \
-      "change the payment's category."
+      "change the payment's category. A charged credit lowers the balance and a charged debit, such as a " \
+      "returned item, raises it."
     annotations idempotent_hint: true
     input_schema(
       properties: {
