@@ -2,7 +2,8 @@
 module Assistant
   class ListAppropriations < Tool
     description "List the appropriations of one budget year: for each, its number, purpose, recipient, " \
-      "the amount appropriated, the amount charged to it and the balance left. A negative balance is overspent."
+      "the amount appropriated, the amount charged to it and the balance left. Charged counts credits minus " \
+      "debits, so a credit lowers the balance and a debit raises it. A negative balance is overspent."
     annotations read_only_hint: true
     input_schema(
       properties: {

@@ -1,8 +1,10 @@
 require "test_helper"
 require_relative "../test_helpers/appropriation_assertions"
+require_relative "../test_helpers/appropriation_payments"
 
 class AppropriationChargesTest < ActionDispatch::IntegrationTest
   include AppropriationAssertions
+  include AppropriationPayments
 
   setup do
     sign_in_as(users(:member))
@@ -40,16 +42,54 @@ class AppropriationChargesTest < ActionDispatch::IntegrationTest
     assert_select "form[action=?]", transaction_appropriation_charge_path(transfer), count: 0
   end
 
-  test "charging a payment lowers the appropriation's balance by its amount" do
-    charge transactions(:gift_payment), to: appropriations(:birthday_etienne)
+  test "a charged credit lowers the balance by its amount" do
+    appropriation = appropriations(:birthday_etienne)
+    appropriation.update!(amount: 200)
+
+    charge credit(50, note: "Birthday present"), to: appropriation
+
+    assert_figures_on_both_pages appropriation, charged: 50, balance: 150
+  end
+
+  test "a charged debit raises the balance by its amount" do
+    appropriation = appropriations(:birthday_etienne)
+    appropriation.update!(amount: 200)
+
+    charge credit(50, note: "Birthday present"), to: appropriation
+    charge debit(20, note: "Returned present"), to: appropriation
+
+    assert_figures_on_both_pages appropriation, charged: 30, balance: 170
+  end
+
+  test "a charged debit alone shows a negative amount charged" do
+    appropriation = appropriations(:birthday_etienne)
+    appropriation.update!(amount: 200)
+
+    charge debit(20, note: "Returned present"), to: appropriation
+
+    assert_figures_on_both_pages appropriation, charged: -20, balance: 220
+  end
+
+  test "a charged part of a credit counts like a whole credit" do
+    appropriation = appropriations(:birthday_etienne)
+    appropriation.update!(amount: 200)
+    part, = split_payment(credit(100, note: "Shared presents"), 50, 50)
+
+    charge_part part, to: appropriation
+
+    assert_figures_on_both_pages appropriation, charged: 50, balance: 150
+  end
+
+  test "charging a credit lowers the appropriation's balance by its amount" do
+    charge credit(40, note: "Birthday present"), to: appropriations(:birthday_etienne)
 
     get appropriations_path(year: 2026)
 
     assert_appropriation_row "Birthday", "Etienne", 150, 40, 110
   end
 
-  test "the parts of one split payment can be charged to different appropriations" do
-    chiara_part, cosimo_part = split_webshop_payment
+  test "the parts of one split credit can be charged to different appropriations" do
+    chiara_part, cosimo_part = split_credit
 
     charge_part chiara_part, to: appropriations(:sinterklaas_chiara)
     charge_part cosimo_part, to: appropriations(:sinterklaas_cosimo)
@@ -60,8 +100,8 @@ class AppropriationChargesTest < ActionDispatch::IntegrationTest
     assert_appropriation_row "Sinterklaas", "Cosimo", 75, 40, 35
   end
 
-  test "a payment counts in the budget year of its appropriation, not the year it was paid" do
-    charge transactions(:gift_payment), to: appropriations(:birthday_chiara_next_year)
+  test "a credit counts in the budget year of its appropriation, not the year it was paid" do
+    charge credit(40, note: "Birthday present"), to: appropriations(:birthday_chiara_next_year)
 
     get appropriations_path(year: 2027)
 
@@ -72,8 +112,8 @@ class AppropriationChargesTest < ActionDispatch::IntegrationTest
     assert_select "tfoot", text: /#{Regexp.escape(currency(450))}.*#{Regexp.escape(currency(0))}/m
   end
 
-  test "charging a payment to another appropriation moves its amount there" do
-    payment = transactions(:gift_payment)
+  test "charging a credit to another appropriation moves its amount there" do
+    payment = credit(40, note: "Birthday present")
     payment.update!(appropriation: appropriations(:birthday_etienne))
 
     charge payment, to: appropriations(:christmas_etienne)
@@ -97,9 +137,9 @@ class AppropriationChargesTest < ActionDispatch::IntegrationTest
     assert_appropriation_row "Birthday", "Etienne", 150, 0, 150
   end
 
-  test "a charged refund lowers the amount charged" do
-    charge transactions(:large_gift_payment), to: appropriations(:birthday_etienne)
-    charge transactions(:gift_refund), to: appropriations(:birthday_etienne)
+  test "a charged debit lowers the amount charged" do
+    charge credit(90, note: "Birthday present"), to: appropriations(:birthday_etienne)
+    charge debit(20, note: "Returned present"), to: appropriations(:birthday_etienne)
 
     get appropriations_path(year: 2026)
 
@@ -107,7 +147,7 @@ class AppropriationChargesTest < ActionDispatch::IntegrationTest
   end
 
   test "spending more than appropriated shows a negative balance marked as overspent" do
-    charge bicycle_for_etienne, to: appropriations(:birthday_etienne)
+    charge credit(180, note: "Birthday bicycle with a basket"), to: appropriations(:birthday_etienne)
 
     get appropriations_path(year: 2026)
 
@@ -133,8 +173,8 @@ class AppropriationChargesTest < ActionDispatch::IntegrationTest
       transaction_transaction_split_appropriation_charge_path(chiara_part.financial_transaction, chiara_part), count: 0
   end
 
-  test "charging an unsplit payment on its edit page makes it count there" do
-    payment = transactions(:gift_payment)
+  test "charging an unsplit credit on its edit page makes it count there" do
+    payment = credit(40, note: "Birthday present")
 
     get edit_transaction_path(payment)
 
@@ -146,8 +186,8 @@ class AppropriationChargesTest < ActionDispatch::IntegrationTest
     assert_equal 40, appropriations(:birthday_etienne).charged
   end
 
-  test "charging one part on a split payment's edit page counts only that part" do
-    chiara_part, = split_webshop_payment
+  test "charging one part on a split credit's edit page counts only that part" do
+    chiara_part, = split_credit
     webshop = chiara_part.financial_transaction
 
     get edit_transaction_path(webshop)
@@ -232,18 +272,28 @@ class AppropriationChargesTest < ActionDispatch::IntegrationTest
   end
 
   def split_webshop_payment
-    webshop = transactions(:webshop_sinterklaas)
+    split_payment(transactions(:webshop_sinterklaas), 60, 40)
+  end
 
-    { "Chiara" => 60, "Cosimo" => 40 }.map do |name, amount|
-      webshop.transaction_splits.create!(amount:, category: categories(:gifts), note: "Sinterklaas present for #{name}")
+  def split_credit
+    split_payment(credit(100, note: "Sinterklaas presents"), 60, 40)
+  end
+
+  def split_payment(payment, *amounts)
+    names = %w[Chiara Cosimo]
+
+    amounts.zip(names).map do |amount, name|
+      payment.transaction_splits.create!(amount:, category: categories(:gifts), note: "Sinterklaas present for #{name}")
     end
   end
 
-  def bicycle_for_etienne
-    Transaction.create!(
-      type: "Debit", debitor: accounts(:savings), creditor: accounts(:unknown), category: categories(:gifts),
-      amount: 180, booked_at: Time.zone.local(2026, 10, 20, 12), interest_at: Time.zone.local(2026, 10, 20, 12),
-      note: "Birthday bicycle with a basket"
-    )
+  def assert_figures_on_both_pages(appropriation, charged:, balance:)
+    get appropriations_path(year: appropriation.budget_year)
+
+    assert_appropriation_row appropriation.purpose, appropriation.recipient_name, appropriation.amount, charged, balance
+
+    get appropriation_path(appropriation)
+
+    assert_appropriation_figures charged, balance
   end
 end

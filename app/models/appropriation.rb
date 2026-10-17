@@ -1,6 +1,7 @@
 # A sum the household sets aside for one purpose and recipient in one budget year
 #
-# Payments and split parts are charged to it; what is left never carries over to another year.
+# Credits and split parts of credits are charged to it, and debits are refunded to it, until the books
+# use double-entry bookkeeping; what is left never carries over to another year.
 class Appropriation < ApplicationRecord
   belongs_to :person, optional: true
 
@@ -64,10 +65,10 @@ class Appropriation < ApplicationRecord
     person&.name || recipient
   end
 
-  # Charged payments and split parts, minus charged refunds
+  # Charged credits and credit parts, minus charged debits
   #
   # @return [BigDecimal]
-  def charged = @charged ||= charged_on("Debit") - charged_on("Credit")
+  def charged = @charged ||= charged_on("Credit") - charged_on("Debit")
 
   # What is left of the amount appropriated; negative when overspent
   #
