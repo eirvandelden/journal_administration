@@ -18,6 +18,15 @@ locale: :en)
     assert_includes line.errors[:paid_amount], expected
   end
 
+  test "paid amount follows from the bonus in cents" do
+    line = ReceiptLine.new(
+      receipt: receipts(:albert_heijn_friday), product: products(:lays_ribbelchips),
+      quantity: 1, full_amount: 219, discount_amount: 70, paid_amount: 149
+    )
+
+    assert_predicate line, :valid?
+  end
+
   test "a line bought on bonus knows it was" do
     assert_predicate receipt_lines(:lays_chips_on_bonus), :on_bonus?
     assert_not receipt_lines(:ah_chips).on_bonus?
