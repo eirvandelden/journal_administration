@@ -19,7 +19,7 @@ class TransactionSplitsTest < ActionDispatch::IntegrationTest
       remainder = @debit.transaction_splits.find_by(remainder: true)
 
       assert remainder
-      assert_equal BigDecimal("15.00"), remainder.amount
+      assert_equal 1500, remainder.amount
     end
 
     test "via turbo stream re-renders splits frame" do
@@ -78,7 +78,7 @@ I18n.t("activerecord.errors.models.transaction_split.attributes.financial_transa
 
       assert_response :redirect
       assert_redirected_to edit_transaction_url(@transaction)
-      assert_equal BigDecimal("20.00"), @split.reload.amount
+      assert_equal 2000, @split.reload.amount
     end
 
     test "via turbo stream re-renders splits frame" do
@@ -127,7 +127,7 @@ I18n.t("activerecord.errors.models.transaction_split.attributes.amount.exceeds_t
       remainder = @transaction.transaction_splits.find_by(remainder: true)
 
       assert remainder
-      assert_equal BigDecimal("40.00"), remainder.amount
+      assert_equal 4000, remainder.amount
     end
 
     test "via turbo stream re-renders splits frame" do
@@ -152,7 +152,7 @@ I18n.t("activerecord.errors.models.transaction_split.attributes.amount.exceeds_t
       remainder = @debit.transaction_splits.find_by(remainder: true)
 
       assert remainder
-      assert_equal BigDecimal("15.00"), remainder.amount
+      assert_equal 1500, remainder.amount
     end
 
     test "updating a split adjusts the remainder" do
@@ -166,7 +166,7 @@ I18n.t("activerecord.errors.models.transaction_split.attributes.amount.exceeds_t
       remainder = @debit.transaction_splits.reload.find_by(remainder: true)
 
       assert remainder
-      assert_equal BigDecimal("5.00"), remainder.amount
+      assert_equal 500, remainder.amount
     end
 
     test "deleting last explicit split removes remainder too" do
@@ -222,6 +222,25 @@ I18n.t("activerecord.errors.models.transaction_split.attributes.amount.exceeds_t
       assert_select "h2", text: I18n.t("transactions.edit.edit_heading")
       assert_select "h2", text: I18n.t("transactions.edit.split_heading")
       assert_select "h2", text: I18n.t("transactions.edit.link_heading")
+    end
+  end
+
+  class SplitInEuros < ActionDispatch::IntegrationTest
+    setup { sign_in_as(users(:admin)) }
+
+    test "splitting 12,34 into 10,00 and 2,34 leaves nothing unsplit" do
+      debit = transactions(:uncategorized)
+      debit.update_columns(amount: 1234)
+
+      post transaction_transaction_splits_url(debit),
+        params: { transaction_split: { category_id: categories(:supermarket).id, amount: "10,00" } }
+      post transaction_transaction_splits_url(debit),
+        params: { transaction_split: { category_id: categories(:bakery).id, amount: "2,34" } }
+
+      assert_equal [ 1000, 234 ], debit.explicit_transaction_splits.order(:id).pluck(:amount)
+      assert_equal 0, debit.reload.split_balance
+      assert_predicate debit, :fully_split?
+      assert_not debit.transaction_splits.exists?(remainder: true)
     end
   end
 end

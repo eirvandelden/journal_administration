@@ -71,7 +71,7 @@ module Linkable
   #
   # @return [Integer] cents, 0 when fully covered, positive when underpull
   def link_balance
-    amount - covered_amount
+    amount.to_i - covered_amount
   end
 
   # Whether linked transfers fully cover this transaction's amount
