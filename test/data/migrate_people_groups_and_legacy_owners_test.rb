@@ -140,7 +140,7 @@ class MigratePeopleGroupsAndLegacyOwnersTest < ActiveSupport::TestCase
     )
     split_payment.ensure_remainder_split
 
-    assert_equal BigDecimal("100"), appropriations(:birthday_etienne).charged
+    assert_equal BigDecimal("-100"), appropriations(:birthday_etienne).charged
 
     clear_managed_links
 

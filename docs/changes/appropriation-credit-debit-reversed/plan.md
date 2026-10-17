@@ -87,3 +87,5 @@ Domain skills applied: rails-architecture, rails-testing, ruby-style.
   - Codex proposed dropping the precondition; keeping it with the new sign still proves both links count before the migration runs.
 - The shared payment helper is not wired in: `test_helper.rb` does not load test helper modules, and the nested `Totals` class does not inherit includes. → fixed (each consumer requires and includes `AppropriationPayments`; `Totals` includes it itself)
 - The automated Proof covers only the index page, while the intent names the show page too. → fixed (added `assert_appropriation_figures` for the show page; each page criterion asserts both pages)
+
+Reproduction: committed
