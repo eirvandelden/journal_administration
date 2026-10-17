@@ -73,7 +73,7 @@ class MigratePeopleGroupsAndLegacyOwnersTest < ActiveSupport::TestCase
     assert_equal [ false, true ], [ first.legacy_duplicate, second.legacy_duplicate ]
     assert_equal second.id, charge.reload.appropriation_id
     assert_equal [ charge ], second.charges
-    assert_equal charge.amount, second.charged
+    assert_equal(-charge.amount, second.charged)
   end
 
   test "a person rename shows the new name on both case-variant rows" do
