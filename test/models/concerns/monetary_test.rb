@@ -26,4 +26,12 @@ class MonetaryTest < ActiveSupport::TestCase
 
     assert_not_includes appropriation.errors.details[:amount], { error: :not_an_amount }
   end
+
+  test "an unreadable amount shows only the not an amount message" do
+    split = TransactionSplit.new(amount: "abc", financial_transaction: transactions(:debit_bakery))
+
+    split.valid?
+
+    assert_equal [ "is not an amount" ], split.errors[:amount]
+  end
 end

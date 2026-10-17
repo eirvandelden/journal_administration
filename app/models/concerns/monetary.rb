@@ -14,11 +14,18 @@ module Monetary
       names.each do |name|
         attribute name, Cents::Type.new
         validate { errors.add(name, :not_an_amount) if unreadable_amount?(name) }
+        after_validation { keep_only_not_an_amount(name) if unreadable_amount?(name) }
       end
     end
   end
 
   private
+
+  # An unreadable amount is also blank, so other validators add messages that only repeat the problem
+  def keep_only_not_an_amount(name)
+    errors.delete(name)
+    errors.add(name, :not_an_amount)
+  end
 
   def unreadable_amount?(name)
     typed = public_send(:"#{name}_before_type_cast")
