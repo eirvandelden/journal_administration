@@ -17,5 +17,5 @@ module AppropriationAssertions
       end
   end
 
-  def currency(amount) = ApplicationController.helpers.number_to_currency(amount)
+  def currency(amount) = ApplicationController.helpers.cents_to_currency(amount)
 end

@@ -24,12 +24,12 @@ module Splittable
   # Remaining amount not yet allocated to explicit splits
   #
   # @return [Integer] cents
-  def split_balance = amount - explicit_transaction_splits.sum(:amount)
+  def split_balance = amount.to_i - explicit_transaction_splits.sum(:amount)
 
   # Whether the full transaction amount is allocated to splits
   #
   # @return [Boolean]
-  def fully_split? = split? && (amount - transaction_splits.sum(:amount)).zero?
+  def fully_split? = split? && (amount.to_i - transaction_splits.sum(:amount)).zero?
 
   # The portion of the transaction that still has no category assigned.
   #
@@ -97,7 +97,7 @@ module Splittable
   def untracked_uncategorized_amount
     return 0 unless category.blank? || split?
 
-    remaining = amount - transaction_splits.sum(:amount)
+    remaining = amount.to_i - transaction_splits.sum(:amount)
     remaining.positive? ? remaining : 0
   end
 

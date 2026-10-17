@@ -107,7 +107,7 @@ class TransactionsShowTest < ActionDispatch::IntegrationTest
   end
 
   test "show counts and renders only explicit splits" do
-    @uncategorized.transaction_splits.create!(category: categories(:supermarket), amount: 10.00, note: "Food")
+    @uncategorized.transaction_splits.create!(category: categories(:supermarket), amount: 1000, note: "Food")
     @uncategorized.ensure_remainder_split
 
     sign_in_as(@member)

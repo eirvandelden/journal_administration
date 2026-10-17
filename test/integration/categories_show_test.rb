@@ -32,7 +32,7 @@ class CategoriesShowTest < ActionDispatch::IntegrationTest
     get category_path(categories(:bakery))
 
     assert_response :success
-    assert_match split_row_pattern_for(amount: 10, category: categories(:bakery),
+    assert_match split_row_pattern_for(amount: 1000, category: categories(:bakery),
                                        note: transactions(:debit_grocery).note),
                  response.body
   end
@@ -43,7 +43,7 @@ class CategoriesShowTest < ActionDispatch::IntegrationTest
     get category_path(categories(:supermarket))
 
     assert_response :success
-    assert_match split_row_pattern_for(amount: 40, category: categories(:supermarket),
+    assert_match split_row_pattern_for(amount: 4000, category: categories(:supermarket),
                                        note: transactions(:debit_grocery).note),
                  response.body
   end
@@ -101,7 +101,7 @@ class CategoriesShowTest < ActionDispatch::IntegrationTest
   private
 
   def split_row_pattern_for(amount:, category:, note:)
-    formatted_amount = Regexp.escape(ApplicationController.helpers.number_to_currency(amount))
+    formatted_amount = Regexp.escape(ApplicationController.helpers.cents_to_currency(amount))
     formatted_category = Regexp.escape(category.name)
     formatted_note = Regexp.escape(note)
 

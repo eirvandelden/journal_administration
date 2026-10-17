@@ -11,7 +11,7 @@ class ReceiptsTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select "tbody td", text: accounts(:albert_heijn).name
-    assert_select "tbody td", text: ApplicationController.helpers.number_to_currency(@receipt.total_amount)
+    assert_select "tbody td", text: ApplicationController.helpers.cents_to_currency(@receipt.total_amount)
   end
 
   test "the receipts page links each invoice to its own page" do
@@ -50,8 +50,8 @@ class ReceiptsTest < ActionDispatch::IntegrationTest
     get receipt_path(@receipt)
 
     assert_response :success
-    assert_select "dd", text: ApplicationController.helpers.number_to_currency(@receipt.total_amount)
-    assert_select "dd", text: ApplicationController.helpers.number_to_currency(@receipt.basket_total)
+    assert_select "dd", text: ApplicationController.helpers.cents_to_currency(@receipt.total_amount)
+    assert_select "dd", text: ApplicationController.helpers.cents_to_currency(@receipt.basket_total)
   end
 
   test "an unsettled receipt offers the payments that could have settled it" do
@@ -68,7 +68,7 @@ class ReceiptsTest < ActionDispatch::IntegrationTest
     assert_redirected_to receipt_path(@receipt)
     assert_equal transactions(:debit_grocery), @receipt.reload.payment
     assert_equal(
-      { categories(:groceries) => BigDecimal("2.98"), categories(:household) => BigDecimal("3.49") },
+      { categories(:groceries) => 298, categories(:household) => 349 },
       @receipt.payment.explicit_transaction_splits.to_h { |split| [ split.category, split.amount ] }
     )
   end
@@ -93,7 +93,7 @@ class ReceiptsTest < ActionDispatch::IntegrationTest
   end
 
   test "a basket costing more than the payment leaves the payment's splits alone" do
-    @receipt.lines.first.update!(full_amount: BigDecimal("60.00"), discount_amount: 0, paid_amount: BigDecimal("60.00"))
+    @receipt.lines.first.update!(full_amount: 6000, discount_amount: 0, paid_amount: 6000)
     splits_before = transactions(:debit_grocery).transaction_splits.map(&:attributes)
 
     post receipt_payment_link_path(@receipt), params: { receipt: { payment_id: transactions(:debit_grocery).id } }
@@ -103,7 +103,7 @@ class ReceiptsTest < ActionDispatch::IntegrationTest
   end
 
   test "a basket costing more than the payment does not settle the receipt either" do
-    @receipt.lines.first.update!(full_amount: BigDecimal("60.00"), discount_amount: 0, paid_amount: BigDecimal("60.00"))
+    @receipt.lines.first.update!(full_amount: 6000, discount_amount: 0, paid_amount: 6000)
 
     post receipt_payment_link_path(@receipt), params: { receipt: { payment_id: transactions(:debit_grocery).id } }
 
@@ -112,7 +112,7 @@ class ReceiptsTest < ActionDispatch::IntegrationTest
 
   test "a receipt cannot be settled against a charged payment" do
     payment = Transaction.create!(
-      type: "Debit", debitor: accounts(:checking), creditor: accounts(:albert_heijn), amount: 50,
+      type: "Debit", debitor: accounts(:checking), creditor: accounts(:albert_heijn), amount: 5000,
       booked_at: @receipt.issued_on, interest_at: @receipt.issued_on, appropriation: appropriations(:birthday_etienne)
     )
 
