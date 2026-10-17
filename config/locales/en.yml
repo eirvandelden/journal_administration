@@ -114,6 +114,7 @@ en:
     errors:
       messages:
         must_be_pdf: must be a PDF document
+        not_an_amount: is not an amount
         record_invalid: 'Validation failed: %{errors}'
         restrict_dependent_destroy:
           has_many: Cannot delete record because dependent %{record} exist

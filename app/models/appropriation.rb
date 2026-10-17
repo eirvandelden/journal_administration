@@ -2,6 +2,10 @@
 #
 # Payments and split parts are charged to it; what is left never carries over to another year.
 class Appropriation < ApplicationRecord
+  include Monetary
+
+  monetary :amount
+
   belongs_to :person, optional: true
 
   has_many :transactions, dependent: :restrict_with_error
@@ -10,7 +14,7 @@ class Appropriation < ApplicationRecord
   validates :purpose, presence: true
   validates :recipient, presence: true
   validates :budget_year, presence: true, numericality: { only_integer: true }
-  validates :amount, presence: true, numericality: { greater_than: 0 }
+  validates :amount, presence: true, comparison: { greater_than: 0 }
   validate :managed_person_required
   validate :one_per_purpose_person_and_year
   validate :legacy_recipient_is_unchanged
@@ -66,12 +70,12 @@ class Appropriation < ApplicationRecord
 
   # Charged payments and split parts, minus charged refunds
   #
-  # @return [BigDecimal]
+  # @return [Integer] cents
   def charged = @charged ||= charged_on("Debit") - charged_on("Credit")
 
   # What is left of the amount appropriated; negative when overspent
   #
-  # @return [BigDecimal]
+  # @return [Integer] cents
   def balance = amount - charged
 
   # Whether more was charged than appropriated

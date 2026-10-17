@@ -90,13 +90,13 @@ class AccountableTest < ActiveSupport::TestCase
   test "move_counterparty keeps a split transaction's category and splits" do
     accounts(:kruidvat).update!(category: categories(:household))
     payment = transactions(:kruidvat_through_adyen)
-    payment.transaction_splits.create!(amount: 4, category: categories(:bakery))
+    payment.transaction_splits.create!(amount: 400, category: categories(:bakery))
     payment.ensure_remainder_split
 
     payment.move_counterparty(from: accounts(:adyen), to: accounts(:kruidvat))
 
     assert_equal categories(:gifts), payment.reload.category
-    assert_equal [ [ 4, categories(:bakery) ] ],
+    assert_equal [ [ 400, categories(:bakery) ] ],
       payment.explicit_transaction_splits.map { |split| [ split.amount, split.category ] }
     assert_equal categories(:gifts), payment.transaction_splits.find_by!(remainder: true).category
   end

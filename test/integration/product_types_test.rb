@@ -53,9 +53,9 @@ class ProductTypesTest < ActionDispatch::IntegrationTest
     get product_type_path(product_types(:naturel_chips))
 
     assert_response :success
-    currency = ApplicationController.helpers.method(:number_to_currency)
+    currency = ApplicationController.helpers.method(:cents_to_currency)
 
-    assert_select "#monthly-totals-table tbody td", text: currency.call(BigDecimal("2.98"))
+    assert_select "#monthly-totals-table tbody td", text: currency.call(298)
     assert_select "#monthly-totals-table tbody td", text: "1"
   end
 

@@ -70,7 +70,7 @@ class DashboardTest < ActiveSupport::TestCase
   test "debit_transactions aggregates multiple child category amounts into parent" do
     dashboard = Dashboard.new(filter: "year_to_date")
 
-    expected_total = 52.50
+    expected_total = 5250
 
     assert_equal expected_total, dashboard.debit_transactions[categories(:groceries)]
   end
@@ -100,13 +100,13 @@ class DashboardTest < ActiveSupport::TestCase
   test "debit_transactions use split amounts for split transactions" do
     dashboard = Dashboard.new(filter: "year_to_date")
 
-    assert_equal BigDecimal("52.50"), dashboard.debit_transactions[categories(:groceries)]
+    assert_equal 5250, dashboard.debit_transactions[categories(:groceries)]
   end
 
   test "debit_transactions keep remaining split balance uncategorized" do
     dashboard = Dashboard.new(filter: "year_to_date")
 
-    assert_equal BigDecimal("35.00"), dashboard.debit_transactions[nil]
+    assert_equal 3500, dashboard.debit_transactions[nil]
   end
 
   test "month_to_date filter uses beginning of month to now" do
@@ -155,11 +155,26 @@ class DashboardTest < ActiveSupport::TestCase
       assert_equal dashboard.chart_labels.size, dashboard.historical_averages.size
     end
 
+    test "historical averages are Integer cents" do
+      booked_at = Time.zone.parse("2025-06-15 12:00")
+      in_range = Time.zone.parse("2026-01-10 12:00")
+      [ booked_at, in_range ].each do |time|
+        Credit.create!(amount: 10_001, booked_at: time, interest_at: time,
+                       debitor: accounts(:employer), creditor: accounts(:checking), category: categories(:income))
+      end
+
+      dashboard = Dashboard.new(start_date: "2026-01-01", end_date: "2026-01-31")
+      average = dashboard.historical_averages[dashboard.credit_transactions.keys.index(categories(:income))]
+
+      assert_instance_of Integer, average
+      assert_equal (Rational(10_001, 365) * 31).round, average
+    end
+
     test "returns zeros when no prior-year data exists" do
       # Fixtures are booked in current month; year_to_date lookback covers the previous year
       dashboard = Dashboard.new(filter: "year_to_date")
 
-      assert dashboard.historical_averages.all? { |v| v == 0.0 },
+      assert dashboard.historical_averages.all? { |v| v.zero? },
              "Expected all historical averages to be zero when no prior-year transactions exist"
     end
   end
@@ -239,29 +254,40 @@ class DashboardTest < ActiveSupport::TestCase
 
     test "scales the monthly budget to the number of months in the selected range" do
       budget = Budget.create!(starts_at: Time.zone.parse("2026-01-01"))
-      BudgetCategory.create!(budget:, category: categories(:groceries), amount: 100)
+      BudgetCategory.create!(budget:, category: categories(:groceries), amount: 10_000)
 
       dashboard = Dashboard.new(start_date: "2026-01-01", end_date: "2026-03-31")
 
-      assert_equal 300, dashboard.budget_amounts[categories(:groceries)]
+      assert_equal 30_000, dashboard.budget_amounts[categories(:groceries)]
+    end
+
+    test "budget amounts are Integer cents scaled to the period" do
+      budget = Budget.create!(starts_at: Time.zone.parse("2026-01-01"))
+      BudgetCategory.create!(budget:, category: categories(:groceries), amount: 1_001)
+
+      dashboard = Dashboard.new(start_date: "2026-01-01", end_date: "2026-01-10")
+
+      assert_equal 334, dashboard.budget_amounts[categories(:groceries)]
+      assert_instance_of Integer, dashboard.budget_amounts[categories(:groceries)]
     end
   end
 
   class BudgetActuals < ActiveSupport::TestCase
-    test "nets a category's credits against its debits" do
+    test "budget actuals are Integer cents" do
       booked_at = 10.days.from_now
       Debit.create!(
-        amount: 80, booked_at:, interest_at: booked_at,
+        amount: 8000, booked_at:, interest_at: booked_at,
         debitor: accounts(:checking), creditor: accounts(:albert_heijn), category: categories(:groceries)
       )
       Credit.create!(
-        amount: 20, booked_at:, interest_at: booked_at,
+        amount: 2000, booked_at:, interest_at: booked_at,
         debitor: accounts(:albert_heijn), creditor: accounts(:checking), category: categories(:groceries)
       )
 
       dashboard = Dashboard.new(start_date: 9.days.from_now.to_date.to_s, end_date: 11.days.from_now.to_date.to_s)
 
-      assert_equal 60, dashboard.budget_actuals[categories(:groceries)]
+      assert_equal 6000, dashboard.budget_actuals[categories(:groceries)]
+      assert_instance_of Integer, dashboard.budget_actuals[categories(:groceries)]
     end
 
     test "charging a payment leaves its category and what it counts in the monthly budget unchanged" do
@@ -272,7 +298,7 @@ class DashboardTest < ActiveSupport::TestCase
       dashboard = Dashboard.new(start_date: "2026-11-20", end_date: "2026-11-20")
 
       assert_equal categories(:gifts), payment.reload.category
-      assert_equal 40, dashboard.budget_actuals[categories(:gifts)]
+      assert_equal 4000, dashboard.budget_actuals[categories(:gifts)]
     end
   end
 end

@@ -19,7 +19,8 @@
     <%= f.number_field :budget_year, step: 1, required: true %>
 
     <%= f.label :amount %>
-    <%= f.number_field :amount, step: "0.01", min: "0.01", required: true %>
+    <%= f.number_field :amount, step: "0.01", min: "0.01", required: true,
+          value: cents_field_value(appropriation, :amount, separator: ".") %>
   </fieldset>
 
   <%= f.submit %>

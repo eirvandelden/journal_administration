@@ -45,7 +45,7 @@ class AppropriationChargesTest < ActionDispatch::IntegrationTest
 
     get appropriations_path(year: 2026)
 
-    assert_appropriation_row "Birthday", "Etienne", 150, 40, 110
+    assert_appropriation_row "Birthday", "Etienne", 15000, 4000, 11000
   end
 
   test "the parts of one split payment can be charged to different appropriations" do
@@ -56,8 +56,8 @@ class AppropriationChargesTest < ActionDispatch::IntegrationTest
 
     get appropriations_path(year: 2026)
 
-    assert_appropriation_row "Sinterklaas", "Chiara", 75, 60, 15
-    assert_appropriation_row "Sinterklaas", "Cosimo", 75, 40, 35
+    assert_appropriation_row "Sinterklaas", "Chiara", 7500, 6000, 1500
+    assert_appropriation_row "Sinterklaas", "Cosimo", 7500, 4000, 3500
   end
 
   test "a payment counts in the budget year of its appropriation, not the year it was paid" do
@@ -65,11 +65,11 @@ class AppropriationChargesTest < ActionDispatch::IntegrationTest
 
     get appropriations_path(year: 2027)
 
-    assert_appropriation_row "Birthday", "Chiara", 60, 40, 20
+    assert_appropriation_row "Birthday", "Chiara", 6000, 4000, 2000
 
     get appropriations_path(year: 2026)
 
-    assert_select "tfoot", text: /#{Regexp.escape(currency(450))}.*#{Regexp.escape(currency(0))}/m
+    assert_select "tfoot", text: /#{Regexp.escape(currency(45000))}.*#{Regexp.escape(currency(0))}/m
   end
 
   test "charging a payment to another appropriation moves its amount there" do
@@ -80,8 +80,8 @@ class AppropriationChargesTest < ActionDispatch::IntegrationTest
 
     get appropriations_path(year: 2026)
 
-    assert_appropriation_row "Birthday", "Etienne", 150, 0, 150
-    assert_appropriation_row "Christmas", "Etienne", 100, 40, 60
+    assert_appropriation_row "Birthday", "Etienne", 15000, 0, 15000
+    assert_appropriation_row "Christmas", "Etienne", 10000, 4000, 6000
   end
 
   test "removing a charge lowers the amount charged and keeps the payment" do
@@ -94,7 +94,7 @@ class AppropriationChargesTest < ActionDispatch::IntegrationTest
 
     get appropriations_path(year: 2026)
 
-    assert_appropriation_row "Birthday", "Etienne", 150, 0, 150
+    assert_appropriation_row "Birthday", "Etienne", 15000, 0, 15000
   end
 
   test "a charged refund lowers the amount charged" do
@@ -103,7 +103,7 @@ class AppropriationChargesTest < ActionDispatch::IntegrationTest
 
     get appropriations_path(year: 2026)
 
-    assert_appropriation_row "Birthday", "Etienne", 150, 70, 80
+    assert_appropriation_row "Birthday", "Etienne", 15000, 7000, 8000
   end
 
   test "spending more than appropriated shows a negative balance marked as overspent" do
@@ -111,8 +111,8 @@ class AppropriationChargesTest < ActionDispatch::IntegrationTest
 
     get appropriations_path(year: 2026)
 
-    assert_appropriation_row "Birthday", "Etienne", 150, 180, -30
-    assert_select "tbody tr mark", text: currency(-30)
+    assert_appropriation_row "Birthday", "Etienne", 15000, 18000, -3000
+    assert_select "tbody tr mark", text: currency(-3000)
   end
 
   test "a payment's page shows its appropriation, per part when split, without a way to change it" do
@@ -143,7 +143,7 @@ class AppropriationChargesTest < ActionDispatch::IntegrationTest
     charge payment, to: appropriations(:birthday_etienne)
 
     assert_redirected_to edit_transaction_path(payment)
-    assert_equal 40, appropriations(:birthday_etienne).charged
+    assert_equal 4000, appropriations(:birthday_etienne).charged
   end
 
   test "charging one part on a split payment's edit page counts only that part" do
@@ -161,12 +161,13 @@ class AppropriationChargesTest < ActionDispatch::IntegrationTest
     charge_part chiara_part, to: appropriations(:sinterklaas_chiara)
 
     assert_redirected_to edit_transaction_path(webshop)
-    assert_equal 60, appropriations(:sinterklaas_chiara).charged
+    assert_equal 6000, appropriations(:sinterklaas_chiara).charged
   end
 
   test "a split payment's edit page offers no charge for the whole payment or its remainder" do
     webshop = transactions(:webshop_sinterklaas)
-    webshop.transaction_splits.create!(amount: 60, category: categories(:gifts), note: "Sinterklaas present for Chiara")
+    webshop.transaction_splits.create!(amount: 6000, category: categories(:gifts),
+note: "Sinterklaas present for Chiara")
     webshop.ensure_remainder_split
 
     get edit_transaction_path(webshop)
@@ -204,7 +205,7 @@ class AppropriationChargesTest < ActionDispatch::IntegrationTest
   end
 
   test "removing the last part on the edit page offers to charge the whole payment again" do
-    part = transactions(:gift_payment).transaction_splits.create!(amount: 10, category: categories(:gifts))
+    part = transactions(:gift_payment).transaction_splits.create!(amount: 1000, category: categories(:gifts))
 
     delete transaction_transaction_split_url(part.financial_transaction, part),
       headers: { "Accept" => "text/vnd.turbo-stream.html" }
@@ -234,7 +235,7 @@ class AppropriationChargesTest < ActionDispatch::IntegrationTest
   def split_webshop_payment
     webshop = transactions(:webshop_sinterklaas)
 
-    { "Chiara" => 60, "Cosimo" => 40 }.map do |name, amount|
+    { "Chiara" => 6000, "Cosimo" => 4000 }.map do |name, amount|
       webshop.transaction_splits.create!(amount:, category: categories(:gifts), note: "Sinterklaas present for #{name}")
     end
   end
@@ -242,7 +243,7 @@ class AppropriationChargesTest < ActionDispatch::IntegrationTest
   def bicycle_for_etienne
     Transaction.create!(
       type: "Debit", debitor: accounts(:savings), creditor: accounts(:unknown), category: categories(:gifts),
-      amount: 180, booked_at: Time.zone.local(2026, 10, 20, 12), interest_at: Time.zone.local(2026, 10, 20, 12),
+      amount: 18_000, booked_at: Time.zone.local(2026, 10, 20, 12), interest_at: Time.zone.local(2026, 10, 20, 12),
       note: "Birthday bicycle with a basket"
     )
   end

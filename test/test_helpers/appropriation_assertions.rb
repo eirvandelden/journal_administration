@@ -7,5 +7,5 @@ module AppropriationAssertions
     assert_select "tbody tr", text: /#{cells.map { |cell| Regexp.escape(cell) }.join(".*")}/m
   end
 
-  def currency(amount) = ApplicationController.helpers.number_to_currency(amount)
+  def currency(amount) = ApplicationController.helpers.cents_to_currency(amount)
 end

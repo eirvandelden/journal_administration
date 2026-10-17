@@ -1,6 +1,9 @@
 class Chattel < ApplicationRecord
   include Searchable
   include PdfAttachmentValidatable
+  include Monetary
+
+  monetary :purchase_price
 
   searchable_on :name, :brand, :kind, :model_number, :serial_number, :notes
 
@@ -9,7 +12,7 @@ class Chattel < ApplicationRecord
   has_one_attached :warranty_document
 
   validates :name, presence: true
-  validates :purchase_price, numericality: { greater_than: 0 }, allow_nil: true
+  validates :purchase_price, comparison: { greater_than: 0 }, allow_nil: true
   validates_pdf_attachment_of :warranty_document
 
   scope :active, -> { where(left_possession_at: nil) }

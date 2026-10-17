@@ -55,7 +55,8 @@
     </div>
     <div class="field">
       <%= f.label :purchase_price %>
-      <%= f.text_field :purchase_price, disabled: disabled %>
+      <%= f.text_field :purchase_price, disabled: disabled,
+        value: cents_field_value(f.object, :purchase_price, separator: I18n.t("number.format.separator")) %>
     </div>
     <div class="field">
       <%= f.label :notes %>

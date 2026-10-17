@@ -29,7 +29,7 @@
         <td><%= creditor ? link_to(creditor.name || creditor.account_number, account_path(creditor)) : "" %></td>
         <% debitor = transaction.debitor %>
         <td><%= debitor ? link_to(debitor.name || debitor.account_number, account_path(debitor)) : "" %></td>
-        <td><%= number_to_currency display_amount %></td>
+        <td><%= cents_to_currency display_amount %></td>
         <td><%= transaction.booked_at ? l(transaction.booked_at.to_date) : '' %></td>
         <td><%= transaction.interest_at ? l(transaction.interest_at.to_date) : '' %></td>
         <td><%= transaction.category&.to_s %></td>
@@ -42,7 +42,7 @@
             <td></td>
             <td></td>
             <td></td>
-            <td><%= number_to_currency split.amount %></td>
+            <td><%= cents_to_currency split.amount %></td>
             <td></td>
             <td></td>
             <td><%= split.category&.to_s %></td>

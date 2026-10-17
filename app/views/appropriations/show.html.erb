@@ -10,10 +10,10 @@
 <article>
   <dl>
     <dt><%= Appropriation.human_attribute_name(:amount) %></dt>
-    <dd><%= number_to_currency(@appropriation.amount) %></dd>
+    <dd><%= cents_to_currency(@appropriation.amount) %></dd>
 
     <dt><%= t(".charged") %></dt>
-    <dd><%= number_to_currency(@appropriation.charged) %></dd>
+    <dd><%= cents_to_currency(@appropriation.charged) %></dd>
 
     <dt><%= t(".balance") %></dt>
     <dd><%= render "appropriations/balance", appropriation: @appropriation %></dd>
@@ -36,7 +36,7 @@
           <tr>
             <td><%= charge.booked_at ? l(charge.booked_at.to_date) : "-" %></td>
             <td><%= charge.note %></td>
-            <td><%= number_to_currency(charge.amount) %></td>
+            <td><%= cents_to_currency(charge.amount) %></td>
           </tr>
         <% end %>
       </tbody>

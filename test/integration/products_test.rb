@@ -53,11 +53,11 @@ class ProductsTest < ActionDispatch::IntegrationTest
     get product_path(products(:lays_ribbelchips))
 
     assert_response :success
-    currency = ApplicationController.helpers.method(:number_to_currency)
+    currency = ApplicationController.helpers.method(:cents_to_currency)
 
-    assert_select "tbody td", text: currency.call(BigDecimal("2.19"))
-    assert_select "tbody td", text: currency.call(BigDecimal("0.70"))
-    assert_select "tbody td", text: currency.call(BigDecimal("1.49"))
+    assert_select "tbody td", text: currency.call(219)
+    assert_select "tbody td", text: currency.call(70)
+    assert_select "tbody td", text: currency.call(149)
   end
 
   test "a product page says when we never bought it" do
@@ -108,6 +108,8 @@ class ProductsTest < ActionDispatch::IntegrationTest
   private
 
   def buy_again(product, shelf:, paid:)
+    shelf = Cents.from_euros(shelf)
+    paid = Cents.from_euros(paid)
     receipt = Receipt.create!(shop: accounts(:albert_heijn), issued_on: 2.months.ago.to_date, total_amount: shelf)
     receipt.lines.create!(product: product, quantity: 1, full_amount: shelf,
                           discount_amount: shelf - paid, paid_amount: paid)

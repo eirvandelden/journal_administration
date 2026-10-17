@@ -121,7 +121,7 @@ class AccountTest < ActiveSupport::TestCase
   test "recent_transactions defaults to a limit of ten" do
     11.times do |index|
       Transaction.create!(
-        amount: 10 + index,
+        amount: 1000 + index,
         booked_at: 20.days.from_now + index.minutes,
         interest_at: 20.days.from_now + index.minutes,
         debitor: accounts(:checking),
@@ -135,7 +135,7 @@ class AccountTest < ActiveSupport::TestCase
 
   test "recent_transactions are ordered by booked_at descending" do
     older = Transaction.create!(
-      amount: 20,
+      amount: 2000,
       booked_at: 30.days.from_now,
       interest_at: 30.days.from_now,
       debitor: accounts(:checking),
@@ -143,7 +143,7 @@ class AccountTest < ActiveSupport::TestCase
       category: categories(:supermarket)
     )
     newer = Transaction.create!(
-      amount: 30,
+      amount: 3000,
       booked_at: 31.days.from_now,
       interest_at: 31.days.from_now,
       debitor: accounts(:checking),
@@ -160,7 +160,7 @@ class AccountTest < ActiveSupport::TestCase
     timestamp = 60.days.from_now
 
     first = Transaction.create!(
-      amount: 60,
+      amount: 6000,
       booked_at: timestamp,
       interest_at: timestamp,
       debitor: accounts(:checking),
@@ -168,7 +168,7 @@ class AccountTest < ActiveSupport::TestCase
       category: categories(:supermarket)
     )
     second = Transaction.create!(
-      amount: 70,
+      amount: 7000,
       booked_at: timestamp,
       interest_at: timestamp,
       debitor: accounts(:checking),
@@ -217,7 +217,7 @@ class AccountTest < ActiveSupport::TestCase
     test "cannot be destroyed when it has debitor transactions" do
       account = Account.create!(name: "Debitor Account", owner: :samen)
       Transaction.create!(
-        amount: 10,
+        amount: 1000,
         booked_at: Time.current,
         interest_at: Time.current,
         debitor: account,
@@ -233,7 +233,7 @@ class AccountTest < ActiveSupport::TestCase
     test "cannot be destroyed when it has creditor transactions" do
       account = Account.create!(name: "Creditor Account", owner: :samen)
       Transaction.create!(
-        amount: 10,
+        amount: 1000,
         booked_at: Time.current,
         interest_at: Time.current,
         debitor: accounts(:albert_heijn),

@@ -11,6 +11,9 @@ class Transaction < ApplicationRecord
   include Searchable
   include PdfAttachmentValidatable
   include Splittable
+  include Monetary
+
+  monetary :amount, :original_balance_after_mutation
 
   searchable_on :note, :original_note
 
@@ -25,7 +28,7 @@ class Transaction < ApplicationRecord
     t = arel_table
     text_conditions = searchable_columns.map { |col| t[col].matches(sanitized) }
     where(text_conditions.reduce(:or)).or(
-      where("CAST(amount AS TEXT) LIKE ?", sanitized)
+      where("amount IS NOT NULL AND printf('%.2f', amount / 100.0) LIKE ?", sanitized)
     ).limit(10)
   }
 

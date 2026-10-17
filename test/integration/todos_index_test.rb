@@ -10,7 +10,7 @@ class TodosIndexTest < ActionDispatch::IntegrationTest
 
     assert_response :success
 
-    formatted_amount = Regexp.escape(ApplicationController.helpers.number_to_currency(10))
+    formatted_amount = Regexp.escape(ApplicationController.helpers.cents_to_currency(1000))
     formatted_note = Regexp.escape(transactions(:debit_grocery).note)
 
     assert_match %r{#{formatted_note}.*?#{formatted_amount}}m, response.body
@@ -18,14 +18,14 @@ class TodosIndexTest < ActionDispatch::IntegrationTest
 
   test "todo keeps showing a nil-category remainder split as uncategorized" do
     transaction = transactions(:uncategorized)
-    transaction.transaction_splits.create!(amount: 10.00, category: categories(:supermarket))
+    transaction.transaction_splits.create!(amount: 1000, category: categories(:supermarket))
     transaction.ensure_remainder_split
 
     get todo_path
 
     assert_response :success
 
-    formatted_amount = Regexp.escape(ApplicationController.helpers.number_to_currency(15))
+    formatted_amount = Regexp.escape(ApplicationController.helpers.cents_to_currency(1500))
     formatted_note = Regexp.escape(transaction.note)
 
     assert_match %r{#{formatted_note}.*?#{formatted_amount}}m, response.body

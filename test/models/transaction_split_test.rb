@@ -9,6 +9,15 @@ class TransactionSplitTest < ActiveSupport::TestCase
       assert_includes split.errors[:amount], "can't be blank"
     end
 
+    test "accepts an amount typed with a comma" do
+      split = TransactionSplit.new(
+        financial_transaction: transactions(:uncategorized), category: categories(:supermarket), amount: "12,34"
+      )
+
+      assert_predicate split, :valid?
+      assert_equal 1234, split.amount
+    end
+
     test "amount must be greater than zero" do
       split = TransactionSplit.new(financial_transaction: transactions(:debit_grocery), amount: 0)
 
@@ -16,8 +25,8 @@ class TransactionSplitTest < ActiveSupport::TestCase
       assert_includes split.errors[:amount], "must be greater than 0"
     end
 
-    test "amount must not exceed transaction split_balance on create" do
-      split = TransactionSplit.new(financial_transaction: transactions(:debit_grocery), amount: 999.99)
+    test "refuses more than the balance in cents" do
+      split = TransactionSplit.new(financial_transaction: transactions(:debit_grocery), amount: 99999)
 
       assert_not split.valid?
       assert_includes split.errors[:amount],
@@ -28,7 +37,7 @@ I18n.t("activerecord.errors.models.transaction_split.attributes.amount.exceeds_t
       split = TransactionSplit.new(
         financial_transaction: transactions(:uncategorized),
         category: categories(:supermarket),
-        amount: 10.00
+        amount: 1000
       )
 
       assert_predicate split, :valid?
@@ -56,7 +65,7 @@ I18n.t("activerecord.errors.models.transaction_split.attributes.amount.exceeds_t
     test "transfer transactions cannot be split" do
       split = TransactionSplit.new(
         financial_transaction: transactions(:transfer_savings),
-        amount: 10.00
+        amount: 1000
       )
 
       assert_not split.valid?
@@ -67,7 +76,7 @@ I18n.t("activerecord.errors.models.transaction_split.attributes.financial_transa
     test "category is optional" do
       split = TransactionSplit.new(
         financial_transaction: transactions(:uncategorized),
-        amount: 10.00,
+        amount: 1000,
         category: nil
       )
 
@@ -82,14 +91,14 @@ I18n.t("activerecord.errors.models.transaction_split.attributes.financial_transa
   class AmountOnUpdate < ActiveSupport::TestCase
     test "amount can be updated within remaining balance" do
       split = transaction_splits(:split_grocery_supermarket)
-      split.amount = 20.00
+      split.amount = 2000
 
       assert_predicate split, :valid?
     end
 
     test "amount cannot be updated to exceed transaction amount" do
       split = transaction_splits(:split_grocery_supermarket)
-      split.amount = 999.99
+      split.amount = 99_999
 
       assert_not split.valid?
       assert_includes split.errors[:amount],
@@ -104,7 +113,7 @@ I18n.t("activerecord.errors.models.transaction_split.attributes.amount.exceeds_t
     end
 
     test "a remainder split cannot be charged" do
-      @payment.transaction_splits.create!(amount: 10, category: categories(:gifts))
+      @payment.transaction_splits.create!(amount: 1000, category: categories(:gifts))
       @payment.ensure_remainder_split
       remainder = @payment.transaction_splits.find_by!(remainder: true)
 
@@ -114,7 +123,7 @@ I18n.t("activerecord.errors.models.transaction_split.attributes.amount.exceeds_t
     test "a split cannot be added to a transaction charged as a whole" do
       @payment.update!(appropriation: @appropriation)
 
-      split = @payment.transaction_splits.build(amount: 10, category: categories(:gifts))
+      split = @payment.transaction_splits.build(amount: 1000, category: categories(:gifts))
 
       assert_not split.valid?
       assert_includes split.errors.attribute_names, :financial_transaction

@@ -26,7 +26,7 @@ class ChattelTest < ActiveSupport::TestCase
   end
 
   test "purchase_price accepts positive values" do
-    chattel = Chattel.new(name: "Test", purchase_price: 99.99)
+    chattel = Chattel.new(name: "Test", purchase_price: 9999)
 
     assert_predicate chattel, :valid?
   end

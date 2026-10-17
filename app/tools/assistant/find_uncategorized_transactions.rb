@@ -27,7 +27,7 @@ module Assistant
     end
 
     def self.describe(transaction)
-      "#{transaction.id}: #{transaction.booked_at.to_date} #{transaction.amount} " \
+      "#{transaction.id}: #{transaction.booked_at.to_date} #{Cents.to_euros(transaction.amount)} " \
         "from #{transaction.debitor&.name} to #{transaction.creditor&.name} - #{transaction.note}"
     end
     private_class_method :describe

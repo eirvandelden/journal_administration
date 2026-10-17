@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_11_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_16_120000) do
   create_table "account_aliases", force: :cascade do |t|
     t.integer "account_id", null: false
     t.datetime "created_at", null: false
@@ -82,7 +82,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_11_120000) do
     t.string "purpose", null: false
     t.string "recipient", null: false
     t.integer "budget_year", null: false
-    t.decimal "amount", precision: 10, scale: 2, null: false
+    t.integer "amount", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "legacy_duplicate", default: false, null: false
@@ -93,7 +93,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_11_120000) do
   end
 
   create_table "budget_categories", force: :cascade do |t|
-    t.decimal "amount", precision: 10, scale: 2, null: false
+    t.integer "amount", null: false
     t.integer "budget_id", null: false
     t.integer "category_id", null: false
     t.datetime "created_at", null: false
@@ -133,7 +133,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_11_120000) do
     t.string "model_number"
     t.string "name", null: false
     t.text "notes"
-    t.decimal "purchase_price", precision: 10, scale: 2
+    t.integer "purchase_price"
     t.integer "purchase_transaction_id"
     t.datetime "purchased_at"
     t.string "serial_number"
@@ -194,9 +194,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_11_120000) do
 
   create_table "receipt_lines", force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.decimal "discount_amount", precision: 10, scale: 2, default: "0.0", null: false
-    t.decimal "full_amount", precision: 10, scale: 2, null: false
-    t.decimal "paid_amount", precision: 10, scale: 2, null: false
+    t.integer "discount_amount", default: 0, null: false
+    t.integer "full_amount", null: false
+    t.integer "paid_amount", null: false
     t.integer "product_id", null: false
     t.decimal "quantity", precision: 10, scale: 3, null: false
     t.integer "receipt_id", null: false
@@ -211,7 +211,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_11_120000) do
     t.string "order_number"
     t.integer "payment_id"
     t.integer "shop_id", null: false
-    t.decimal "total_amount", precision: 10, scale: 2, null: false
+    t.integer "total_amount", null: false
     t.datetime "updated_at", null: false
     t.index ["order_number"], name: "index_receipts_on_order_number", unique: true
     t.index ["payment_id"], name: "index_receipts_on_payment_id"
@@ -240,7 +240,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_11_120000) do
   end
 
   create_table "transaction_splits", force: :cascade do |t|
-    t.decimal "amount", precision: 10, scale: 2, null: false
+    t.integer "amount", null: false
     t.integer "category_id"
     t.datetime "created_at", null: false
     t.text "note"
@@ -255,7 +255,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_11_120000) do
   end
 
   create_table "transactions", force: :cascade do |t|
-    t.decimal "amount", precision: 10, scale: 2
+    t.integer "amount"
     t.datetime "booked_at", precision: nil
     t.integer "category_id"
     t.datetime "created_at", null: false
@@ -263,7 +263,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_11_120000) do
     t.bigint "debitor_account_id"
     t.datetime "interest_at", precision: nil
     t.text "note"
-    t.decimal "original_balance_after_mutation"
+    t.integer "original_balance_after_mutation"
     t.text "original_note"
     t.string "original_tag"
     t.string "type"

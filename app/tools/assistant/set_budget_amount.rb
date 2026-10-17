@@ -27,15 +27,18 @@ module Assistant
       category = Category.find_by(id: category_id)
       return problem("No category ##{category_id} exists.") if category.nil?
 
-      plan(budget, category, amount)
+      cents = cents_from(amount)
+      return problem(two_decimals) if cents.nil?
+
+      plan(budget, category, cents)
     end
 
-    def self.plan(budget, category, amount)
-      planned = budget.plan(category: category, amount: amount)
+    def self.plan(budget, category, cents)
+      planned = budget.plan(category: category, amount: cents)
 
       return problem(planned.errors.full_messages.to_sentence) if planned.errors.any?
 
-      answer("#{category.name} may cost #{format("%.2f", planned.amount)} a month in the budget " \
+      answer("#{category.name} may cost #{euros(planned.amount)} a month in the budget " \
         "starting #{budget.starts_at.to_date}.")
     end
     private_class_method :plan

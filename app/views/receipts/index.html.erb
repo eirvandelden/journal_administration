@@ -21,7 +21,7 @@
         <tr>
           <td><%= link_to l(receipt.issued_on, format: :short), receipt_path(receipt) %></td>
           <td><%= receipt.shop.name %></td>
-          <td><%= number_to_currency(receipt.total_amount) %></td>
+          <td><%= cents_to_currency(receipt.total_amount) %></td>
           <td><%= receipt.payment ? t(".settled") : t(".not_settled") %></td>
         </tr>
       <% end %>
