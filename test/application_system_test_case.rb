@@ -1,47 +1,26 @@
 require "test_helper"
 
 class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
-  # Selenium Manager itself honors SE_CACHE_PATH for where it caches downloaded browsers;
-  # follow the same override so this doesn't silently miss a non-default cache location.
-  CHROME_CACHE_ROOT = File.join(ENV["SE_CACHE_PATH"].presence || File.expand_path("~/.cache/selenium"), "chrome")
+  SCREEN_SIZE = [ 1400, 1400 ].freeze
 
-  # Selenium Manager caches each Chrome for Testing build under <platform>/<version>/;
-  # the binary's own path below that differs per platform.
-  CHROME_LEAF_PATHS = [
-    "Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing", # macOS
-    "chrome-linux64/chrome",                                                  # Linux
-    "chrome-win64/chrome.exe"                                                 # Windows
-  ].freeze
-
-  # Deliberately prefers the newest Chrome for Testing build already cached locally over
-  # whatever Selenium Manager would otherwise resolve, so tests run without network access.
-  driven_by :selenium, using: :headless_chrome, screen_size: [ 1400, 1400 ] do |options|
-    binary = ENV["CHROME_BIN"].presence || chrome_binary
-    options.binary = binary if binary
-  end
-
-  def self.chrome_binary(cache_root: CHROME_CACHE_ROOT)
-    version_dirs_newest_first(cache_root).each do |dir|
-      binary = chrome_leaf_in(dir)
-      return binary if binary
+  # Rails' system testing only knows Chrome and Firefox, so Edge needs its own Capybara driver.
+  # Selenium Manager resolves the msedgedriver that matches the installed Edge.
+  def self.edge_options(binary: ENV["EDGE_BIN"].presence)
+    Selenium::WebDriver::Edge::Options.new.tap do |options|
+      options.add_argument("--headless")
+      options.binary = binary if binary
     end
-
-    nil
   end
 
-  def self.version_dirs_newest_first(cache_root)
-    Dir.glob("#{cache_root}/*/*")
-      .select { |dir| File.directory?(dir) && Gem::Version.correct?(File.basename(dir)) }
-      .sort_by { |dir| Gem::Version.new(File.basename(dir)) }
-      .reverse
+  def self.edge_driver(app, driver_class: Capybara::Selenium::Driver, options: edge_options)
+    driver_class.new(app, browser: :edge, options: options).tap do |driver|
+      driver.browser.manage.window.size = Selenium::WebDriver::Dimension.new(*SCREEN_SIZE)
+    end
   end
-  private_class_method :version_dirs_newest_first
 
-  def self.chrome_leaf_in(version_dir)
-    CHROME_LEAF_PATHS.map { |leaf_path| File.join(version_dir, leaf_path) }
-      .find { |binary| File.executable?(binary) }
-  end
-  private_class_method :chrome_leaf_in
+  Capybara.register_driver(:headless_edge) { |app| edge_driver(app) }
+
+  driven_by :headless_edge
 
   private
     def locale
