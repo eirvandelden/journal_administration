@@ -24,7 +24,6 @@ ignorePaths:
   - db/migrate/**
   - db/data/**
   - db/db.sql
-  - yarn-error.log
   - Gemfile
   - Dockerfile
   - "*.min.*"
