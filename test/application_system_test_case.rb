@@ -2,12 +2,15 @@ require "test_helper"
 
 class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   SCREEN_SIZE = [ 1400, 1400 ].freeze
+  CI_ARGUMENTS = %w[ --no-sandbox --disable-dev-shm-usage ].freeze
 
   # Rails' system testing only knows Chrome and Firefox, so Edge needs its own Capybara driver.
   # Selenium Manager resolves the msedgedriver that matches the installed Edge.
-  def self.edge_options(binary: ENV["EDGE_BIN"].presence)
+  # On CI the Ubuntu runner blocks the Chromium sandbox and has a small /dev/shm, so Edge exits at start.
+  def self.edge_options(binary: ENV["EDGE_BIN"].presence, ci: ENV["CI"].present?)
     Selenium::WebDriver::Edge::Options.new.tap do |options|
       options.add_argument("--headless")
+      CI_ARGUMENTS.each { |argument| options.add_argument(argument) } if ci
       options.binary = binary if binary
     end
   end

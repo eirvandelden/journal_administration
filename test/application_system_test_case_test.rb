@@ -56,6 +56,20 @@ class ApplicationSystemTestCaseTest < ActiveSupport::TestCase
     assert_includes ApplicationSystemTestCase.edge_options(binary: nil).args, "--headless"
   end
 
+  test "Edge options disable the sandbox on CI" do
+    args = ApplicationSystemTestCase.edge_options(binary: nil, ci: true).args
+
+    assert_includes args, "--no-sandbox"
+    assert_includes args, "--disable-dev-shm-usage"
+  end
+
+  test "Edge options keep the sandbox off CI" do
+    args = ApplicationSystemTestCase.edge_options(binary: nil, ci: false).args
+
+    assert_not_includes args, "--no-sandbox"
+    assert_not_includes args, "--disable-dev-shm-usage"
+  end
+
   test "an explicit binary is used" do
     assert_equal "/opt/edge", ApplicationSystemTestCase.edge_options(binary: "/opt/edge").binary
   end
