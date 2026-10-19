@@ -25,7 +25,7 @@ UI-review slices 3 (page anatomy), 4 (index pages) and 5 (show and edit pages) s
 
 - The interaction-design reference on dotfiles main is binding: action rows, edit pages, confirmation dialogs (native confirm through `data-turbo-confirm`), where Delete lives, default button, table width, responsive tables, screen readers.
 - Follow the `### Upgrading` steps of the mvpa.css CHANGELOG entry of 2026-10-13 (#41).
-- Upstream first: the mvpa.css pull request (menu and responsive tables, with an `### Upgrading` entry in its dated CHANGELOG section) merges before the app uses those parts. Only the menu and the table CSS go upstream now; the sheet, segmented control and badges stay in slice 2.
+- Upstream first: the mvpa.css pull request (menu and responsive tables, with an `### Upgrading` entry in its dated CHANGELOG section) merges before the app uses those parts. Only the menu, the table CSS and the title-bar row layout (`main > header nav` as a wrapping row, added by Etienne on 2026-10-19) go upstream now; the sheet, segmented control and badges stay in slice 2.
 - Ordering against PR #348 (cents-instead-of-decimals): the plan and the upstream mvpa.css work may start now. The app view changes branch from main only after #348 merges; rebase onto it before touching app views.
 - Approved permissions: `bundle update mvpa-css`; a branch, push and draft pull request in eirvandelden/mvpa.css. Anything else (another gem or package, a migration, deploy or CI files) is a stop-and-ask.
 - Every label is translated in `en`, `nl` and `it`. `Verwijderen…` keeps its ellipsis in every language.

@@ -143,6 +143,8 @@ The work runs in two phases with a gate between them.
 - Account name: no model change. Prove the error alert with a duplicate account number. The intent criterion now says so.
 - Upstream workflow: the mvpa.css pull request runs on Phase 1 of this plan, with its own review and draft pull request, and no separate intent or plan in that repository.
 - Annuleren: a link, `<a role="button" class="button-secondary">`, as the reference requires. The intent criterion now says so.
+- Title bar row: `main > header nav` is a column in mvpa.css. Phase 1 adds a wrapping row layout for it (`flex-direction: row; flex-wrap: wrap`), tested, shown in `demo.html`, with an `### Upgrading` step. On a phone the controls wrap instead of running off the edge.
+- Actions menu items that send a DELETE (an unlink) stay plain; the menu never holds `Delete…`, as the reference requires.
 
 ## Out of scope
 
