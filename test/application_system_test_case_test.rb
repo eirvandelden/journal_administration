@@ -63,11 +63,20 @@ class ApplicationSystemTestCaseTest < ActiveSupport::TestCase
     assert_includes args, "--disable-dev-shm-usage"
   end
 
+  test "Edge options skip first-run setup and the GPU on CI" do
+    args = ApplicationSystemTestCase.edge_options(binary: nil, ci: true).args
+
+    assert_includes args, "--no-first-run"
+    assert_includes args, "--disable-gpu"
+  end
+
   test "Edge options keep the sandbox off CI" do
     args = ApplicationSystemTestCase.edge_options(binary: nil, ci: false).args
 
     assert_not_includes args, "--no-sandbox"
     assert_not_includes args, "--disable-dev-shm-usage"
+    assert_not_includes args, "--no-first-run"
+    assert_not_includes args, "--disable-gpu"
   end
 
   test "an explicit binary is used" do
