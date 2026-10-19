@@ -28,7 +28,7 @@ A family household finance app. It imports bank transactions, categorizes them, 
 ## Gotchas
 
 - Rails binstubs resolve `APP_ROOT` to the main checkout, not the current worktree — when pushing from a `.worktrees/*` checkout, put that worktree's `bin/` first on `PATH` or pre-push hooks boot the wrong app.
-- A worktree has no `node_modules` until `yarn install` runs there — without it the `herb-lint` pre-push hook fails with a misleading `.herb.yml` config error.
+- A worktree has no `node_modules` until `npm install` runs there — without it the `herb-lint` pre-push hook fails with a misleading `.herb.yml` config error.
 - `bundle install` prints "Fetching" lines from the `useragent` GitHub gem to stdout; don't pipe bundler output into a file you expect to be clean.
 - Clear `tmp/cache/bootsnap` if code changes don't seem to take effect.
 - Every user has an `assistant_token` for MCP access; regenerate it via `regenerate_assistant_token`, read it with `bin/kamal console`. The MCP endpoint only answers on the host named by `ASSISTANT_HOST`.
