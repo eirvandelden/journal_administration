@@ -47,6 +47,7 @@ Facts checked while planning (2026-10-19):
 6. Add the `AGENTS.md` line.
 7. Run `bin/rails test`, `bundle exec rubocop`, `bundle exec brakeman --no-pager -q` and `bundle exec bundler-audit check`. All green.
 8. Push and confirm the CI `system-test` job passes on Edge. Its log must show the run, and no step may be skipped.
+9. CI fix after delivery (change request, coordinator): the CI `system-test` job on PR #350 failed in every system test with `SessionNotCreatedError: session not created: Chrome instance exited` at `edge_driver`. Failed run: https://github.com/eirvandelden/journal_administration/actions/runs/39271281652 (job 118123921619). Find the cause from the job log and the runner image, not by guessing; the likely candidate is the Chromium sandbox on the Linux runner, fixed with Edge options such as `--no-sandbox` and `--disable-dev-shm-usage` set only when `ENV["CI"]` is present, so the local run stays unchanged. Write a failing unit test for the options first. No `.github/workflows` edit unless the log proves it is required (approved only then, see intent). After three failed CI attempts at this problem, stop and report.
 
 ## Risks
 
