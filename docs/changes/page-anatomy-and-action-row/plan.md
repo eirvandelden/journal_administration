@@ -138,10 +138,11 @@ The work runs in two phases with a gate between them.
 - #348 rewrites money formatting in the same views. Any amount markup in this plan (`<data value>`) follows whatever helper #348 introduces.
 - The phone action row stacks `Opslaan` on top while focus order stays `Verwijderen…`, `Annuleren`, `Opslaan` (accepted in the intent).
 
-## Open decisions
+## Decisions settled by Etienne (2026-10-19)
 
-- Account name: the criterion "saving an account with an empty name shows the error" needs a name validation that `Account` lacks, and the bank import creates accounts without a name (`Account.find_or_create_by(account_number:)` in `app/jobs/importing/ing/import_job.rb` and `Resolvable`). Default path, used unless Etienne decides otherwise: no model change; prove the alert with a duplicate account number. Alternative: require a name only when saving through the account form (a validation context passed by `AccountsController#create` and `#update`), with its own model test.
-- Upstream workflow: whether the mvpa.css pull request needs its own `docs/changes/<slug>/` intent and plan in that repository, or runs on Phase 1 of this plan.
+- Account name: no model change. Prove the error alert with a duplicate account number. The intent criterion now says so.
+- Upstream workflow: the mvpa.css pull request runs on Phase 1 of this plan, with its own review and draft pull request, and no separate intent or plan in that repository.
+- Annuleren: a link, `<a role="button" class="button-secondary">`, as the reference requires. The intent criterion now says so.
 
 ## Out of scope
 
@@ -162,14 +163,14 @@ The work runs in two phases with a gate between them.
 - Each index page has `+ Nieuw` in its title bar and shows no database IDs → `test/integration/index_pages_test.rb` `every index with a new route has + Nieuw in its title bar` and `no index shows a database ID column`
 - Every page has exactly one `h1` → `test/integration/page_headings_test.rb` `every page has exactly one h1 in its title bar`
 - On a transaction's show page `Nieuw bezit` sits in the "Acties" menu next to `Bewerken` → `test/integration/transactions_show_test.rb` `Nieuw bezit sits in the Acties menu beside Bewerken`
-- Saving an account with an empty name shows the error in an alert above the form, announced by a screen reader → `test/integration/accounts_edit_test.rb` `a rejected save shows the errors in an alert above the fields` (default path: a duplicate account number, see Open decisions), `test/integration/people_test.rb` `saving a person without a name shows the error in an alert`, plus one manual VoiceOver or accessibility-tree check after a rejected save, recorded in the pull request
+- Saving an account with a number another account already has shows the error in an alert above the form, announced by a screen reader → `test/integration/accounts_edit_test.rb` `a rejected save shows the errors in an alert above the fields`, `test/integration/people_test.rb` `saving a person without a name shows the error in an alert`, plus one manual VoiceOver or accessibility-tree check after a rejected save, recorded in the pull request
 - A chattel's show page lists its fields as a description list → `test/integration/chattels_show_test.rb` `show page lists the fields as a description list`
 - A refused delete returns to the edit page → `test/integration/people_test.rb` `a refused delete returns to the edit page with the reason`, and the same test in `accounts_edit_test.rb`, `groups_test.rb`, `appropriations_test.rb`
 - On the Gebruikers list no row has a remove button; an administrator removes a user from the admin edit page after the native confirm → `test/integration/users_index_test.rb` `rows carry no remove button` and `test/system/admin_users_test.rb` `an administrator deletes a user from the edit page after the confirm`
 - With the sidebar open on a laptop the transactions table never scrolls the page sideways; a long description wraps; amounts and dates stay on one line → `test/system/responsive_tables_test.rb` `transactions table fits beside the sidebar at laptop width`
 - On a phone each transaction stacks, each value labelled with its translated column name, still a table with column headers to a screen reader → `test/system/responsive_tables_test.rb` `transactions table stacks into labelled rows at phone width` (computed `display`, `::before` content, header clipped not `display: none`, roles), plus one manual VoiceOver or accessibility-tree check recorded in the pull request
 - The same width and stacking hold for every index table → `test/integration/index_pages_test.rb` `every index table stacks with a data-label on every cell` and `test/system/responsive_tables_test.rb` `no index page, show page or the dashboard scrolls sideways at phone width`
-- A plain `Annuleren` looks like a bordered button beside a filled `Opslaan` → `test/system/action_row_test.rb` `Annuleren has a border and a different background from Opslaan`. The criterion says `type="button"`; the reference requires a navigating Cancel to be an `<a>`, so the test asserts `<a role="button" class="button-secondary">` with the plain-button look of a `type="button"`
+- A plain `Annuleren` looks like a bordered button beside a filled `Opslaan` → `test/system/action_row_test.rb` `Annuleren has a border and a different background from Opslaan`. The test asserts `<a role="button" class="button-secondary">` with the plain-button look of a `type="button"`
 - Unlinking a receipt payment, removing an appropriation charge, deleting a split, a link or an alias still work from the same place → existing `test/integration/receipts_test.rb`, `appropriation_charges_test.rb`, `transaction_splits_test.rb`, `transaction_links_test.rb`, `account_aliases_test.rb`, unchanged and green
 
 Per changed file, the unit tests expected:

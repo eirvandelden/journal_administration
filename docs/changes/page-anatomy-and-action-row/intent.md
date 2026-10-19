@@ -64,13 +64,13 @@ UI-review slices 3 (page anatomy), 4 (index pages) and 5 (show and edit pages) s
 - Each index page has "+ Nieuw" in its title bar and shows no database IDs.
 - Every page, including the dashboard, transactions, accounts and todos, has exactly one `h1`.
 - On a transaction's show page, "Nieuw bezit" sits in the "Acties ▾" menu, next to `Bewerken`.
-- Saving an account with an empty name shows the error in an alert above the form, and a screen reader announces it.
+- Saving an account with a number another account already has shows the error in an alert above the form, and a screen reader announces it.
 - A chattel's show page lists its fields as a description list.
 - On the Gebruikers list, no row has a remove button; an administrator removes a user from that user's admin edit page, after the native confirm.
 - With the sidebar open on a laptop, the transactions table never makes the page scroll sideways; a long description wraps, and amounts and dates stay on one line.
 - On a phone, each transaction in the table shows as a stacked block, each value preceded by its translated column name; a screen reader still announces it as a table with column headers.
 - The same width and stacking hold for every index table.
-- A `type="button"` Annuleren looks like a plain bordered button beside a filled `Opslaan`.
+- `Annuleren` is a link that looks like a plain bordered button beside a filled `Opslaan`.
 - Unlinking a receipt's payment, removing an appropriation charge, deleting a transaction split, a transaction link or an account alias still work from the same place as today.
 
 ## Flagged concerns
