@@ -16,6 +16,8 @@
           <%= render partial: "searches/result_chattel", collection: items, as: :chattel %>
         <% when :categories %>
           <%= render partial: "searches/result_category", collection: items, as: :category %>
+        <% else %>
+          <%= raise ArgumentError, "No search result partial for #{type}" %>
         <% end %>
       </section>
     <% end %>
