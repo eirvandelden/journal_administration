@@ -15,12 +15,16 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     end
   end
 
+  # One log file per process, so parallel workers do not overwrite each other.
+  def self.log_path(name, pid: Process.pid)
+    Rails.root.join("tmp/screenshots/#{name}-#{pid}.log").to_s
+  end
+
   # CI evidence for intermittent hangs: msedgedriver's verbose log lands in tmp/screenshots, which CI uploads.
   def self.edge_service(ci: ENV["CI"].present?)
     return unless ci
 
-    log = Rails.root.join("tmp/screenshots/msedgedriver.log").to_s
-    Selenium::WebDriver::Edge::Service.new(log: log, args: %w[ --verbose ])
+    Selenium::WebDriver::Edge::Service.new(log: log_path("msedgedriver"), args: %w[ --verbose ])
   end
 
   def self.edge_driver(app, driver_class: Capybara::Selenium::Driver, options: edge_options, service: edge_service)
@@ -30,13 +34,14 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     end
   end
 
-  if ENV["CI"].present?
-    FileUtils.mkdir_p(Rails.root.join("tmp/screenshots"))
-    Selenium::WebDriver.logger.level = :debug
-    Selenium::WebDriver.logger.output = Rails.root.join("tmp/screenshots/selenium.log").to_s
+  Capybara.register_driver(:headless_edge) do |app|
+    if ENV["CI"].present?
+      FileUtils.mkdir_p(Rails.root.join("tmp/screenshots"))
+      Selenium::WebDriver.logger.level = :debug
+      Selenium::WebDriver.logger.output = log_path("selenium")
+    end
+    edge_driver(app)
   end
-
-  Capybara.register_driver(:headless_edge) { |app| edge_driver(app) }
 
   driven_by :headless_edge
 

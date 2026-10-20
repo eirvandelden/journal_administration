@@ -79,12 +79,20 @@ class ApplicationSystemTestCaseTest < ActiveSupport::TestCase
     assert_not_includes args, "--disable-gpu"
   end
 
+  test "log files are per process so parallel workers do not overwrite each other" do
+    assert_equal Rails.root.join("tmp/screenshots/msedgedriver-42.log").to_s,
+      ApplicationSystemTestCase.log_path("msedgedriver", pid: 42)
+    first = ApplicationSystemTestCase.log_path("selenium", pid: 1)
+
+    assert_not_equal first, ApplicationSystemTestCase.log_path("selenium", pid: 2)
+  end
+
   test "the Edge service writes a verbose driver log into tmp/screenshots on CI" do
     service = ApplicationSystemTestCase.edge_service(ci: true)
 
     service.log # Selenium turns a String log path into a --log-path argument on first read.
 
-    assert_includes service.args, "--log-path=#{Rails.root.join("tmp/screenshots/msedgedriver.log")}"
+    assert_includes service.args, "--log-path=#{ApplicationSystemTestCase.log_path("msedgedriver")}"
     assert_includes service.args, "--verbose"
   end
 
