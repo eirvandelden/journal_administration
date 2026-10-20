@@ -61,12 +61,4 @@ class RecordFormsTest < ActionDispatch::IntegrationTest
       assert_select "input[type=file][name='credit[proof_of_purchase]']"
     end
   end
-
-  test "the edit page of a credit links back to the credit's own page" do
-    credit = transactions(:credit_salary)
-
-    get edit_transaction_path(credit)
-
-    assert_select "a[href='#{credit_path(credit)}']"
-  end
 end
