@@ -40,7 +40,7 @@ class ApplicationSystemTestCaseTest < ActiveSupport::TestCase
   test "the Edge driver drives Edge with the Edge options" do
     options = ApplicationSystemTestCase.edge_options(binary: nil)
 
-    ApplicationSystemTestCase.edge_driver(:app, driver_class: FakeDriver, options: options)
+    ApplicationSystemTestCase.edge_driver(:app, driver_class: FakeDriver, options: options, service: nil)
 
     assert_equal({ browser: :edge, options: options }, FakeDriver.last.arguments)
     assert_equal :app, FakeDriver.last.app
@@ -77,6 +77,33 @@ class ApplicationSystemTestCaseTest < ActiveSupport::TestCase
     assert_not_includes args, "--disable-dev-shm-usage"
     assert_not_includes args, "--no-first-run"
     assert_not_includes args, "--disable-gpu"
+  end
+
+  test "the Edge service writes a verbose driver log into tmp/screenshots on CI" do
+    service = ApplicationSystemTestCase.edge_service(ci: true)
+
+    service.log # Selenium turns a String log path into a --log-path argument on first read.
+
+    assert_includes service.args, "--log-path=#{Rails.root.join("tmp/screenshots/msedgedriver.log")}"
+    assert_includes service.args, "--verbose"
+  end
+
+  test "there is no Edge service off CI" do
+    assert_nil ApplicationSystemTestCase.edge_service(ci: false)
+  end
+
+  test "the Edge driver passes the Edge service to the driver" do
+    service = Object.new
+
+    ApplicationSystemTestCase.edge_driver(:app, driver_class: FakeDriver, service: service)
+
+    assert_same service, FakeDriver.last.arguments[:service]
+  end
+
+  test "the Edge driver passes no service key without one" do
+    ApplicationSystemTestCase.edge_driver(:app, driver_class: FakeDriver, service: nil)
+
+    assert_not FakeDriver.last.arguments.key?(:service)
   end
 
   test "an explicit binary is used" do

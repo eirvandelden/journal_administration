@@ -15,10 +15,25 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     end
   end
 
-  def self.edge_driver(app, driver_class: Capybara::Selenium::Driver, options: edge_options)
-    driver_class.new(app, browser: :edge, options: options).tap do |driver|
+  # CI evidence for intermittent hangs: msedgedriver's verbose log lands in tmp/screenshots, which CI uploads.
+  def self.edge_service(ci: ENV["CI"].present?)
+    return unless ci
+
+    log = Rails.root.join("tmp/screenshots/msedgedriver.log").to_s
+    Selenium::WebDriver::Edge::Service.new(log: log, args: %w[ --verbose ])
+  end
+
+  def self.edge_driver(app, driver_class: Capybara::Selenium::Driver, options: edge_options, service: edge_service)
+    arguments = { browser: :edge, options: options, service: service }.compact
+    driver_class.new(app, **arguments).tap do |driver|
       driver.browser.manage.window.size = Selenium::WebDriver::Dimension.new(*SCREEN_SIZE)
     end
+  end
+
+  if ENV["CI"].present?
+    FileUtils.mkdir_p(Rails.root.join("tmp/screenshots"))
+    Selenium::WebDriver.logger.level = :debug
+    Selenium::WebDriver.logger.output = Rails.root.join("tmp/screenshots/selenium.log").to_s
   end
 
   Capybara.register_driver(:headless_edge) { |app| edge_driver(app) }
