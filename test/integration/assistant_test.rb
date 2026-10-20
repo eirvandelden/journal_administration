@@ -1,6 +1,9 @@
 require "test_helper"
+require_relative "../test_helpers/appropriation_payments"
 
 class AssistantTest < ActionDispatch::IntegrationTest
+  include AppropriationPayments
+
   KEEP_ME_POSTED = "subscriptions/listen"
   METHOD_NOT_FOUND = -32601
 
@@ -376,13 +379,22 @@ class AssistantTest < ActionDispatch::IntegrationTest
 
   test "the assistant lists a year's appropriations with what is left of each" do
     birthday = appropriations(:birthday_etienne)
-    transactions(:gift_payment).update!(appropriation: birthday)
+    credit(40, note: "Birthday present").update!(appropriation: birthday)
 
     answer = ask_assistant("list_appropriations", budget_year: 2026)
     line = answer.lines.find { |candidate| candidate.start_with?("#{birthday.id}:") }
 
     assert_match(/Birthday.*Etienne.*150\.00.*40\.00.*110\.00/, line)
     assert_not_includes answer, "#{appropriations(:birthday_chiara_next_year).id}:"
+  end
+
+  test "the appropriation tools describe credits as charges and debits as refunds" do
+    post_to_assistant(method: "tools/list")
+
+    tools = JSON.parse(response.body).dig("result", "tools").index_by { |tool| tool["name"] }
+
+    assert_match(/credits minus debits/i, tools.dig("list_appropriations", "description"))
+    assert_match(/credit.*lowers.*debit.*raises/im, tools.dig("charge_to_appropriation", "description"))
   end
 
   test "the assistant sets an appropriation and changes its amount when set again" do

@@ -1,4 +1,5 @@
 require "test_helper"
+require_relative "../test_helpers/appropriation_payments"
 
 class AppropriationTest < ActiveSupport::TestCase
   class Validations < ActiveSupport::TestCase
@@ -86,27 +87,29 @@ class AppropriationTest < ActiveSupport::TestCase
   end
 
   class Totals < ActiveSupport::TestCase
+    include AppropriationPayments
+
     setup do
       @appropriation = appropriations(:birthday_etienne)
     end
 
-    test "#charged adds charged payments and split parts and subtracts refunds" do
-      transactions(:large_gift_payment).update!(appropriation: @appropriation)
-      transactions(:gift_refund).update!(appropriation: @appropriation)
-      webshop_part(amount: 60).update!(appropriation: @appropriation)
+    test "#charged adds charged credits and credit parts and subtracts debits" do
+      credit(90, note: "Birthday present").update!(appropriation: @appropriation)
+      debit(20, note: "Returned present").update!(appropriation: @appropriation)
+      credit_part(amount: 60).update!(appropriation: @appropriation)
 
       assert_equal BigDecimal("130"), @appropriation.charged
     end
 
     test "#balance is appropriated minus charged" do
-      transactions(:gift_payment).update!(appropriation: @appropriation)
+      credit(40, note: "Birthday present").update!(appropriation: @appropriation)
 
       assert_equal BigDecimal("110"), @appropriation.balance
     end
 
     test "#overspent? when balance is negative" do
-      transactions(:large_gift_payment).update!(appropriation: @appropriation)
-      webshop_part(amount: 100).update!(appropriation: @appropriation)
+      credit(90, note: "Birthday present").update!(appropriation: @appropriation)
+      credit_part(amount: 100).update!(appropriation: @appropriation)
 
       assert_predicate @appropriation, :overspent?
       assert_not appropriations(:christmas_etienne).overspent?
@@ -129,6 +132,10 @@ class AppropriationTest < ActiveSupport::TestCase
     end
 
     private
+
+    def credit_part(amount:)
+      credit(100, note: "Shared presents").transaction_splits.create!(amount:, category: categories(:gifts))
+    end
 
     def webshop_part(amount:)
       transactions(:webshop_sinterklaas).transaction_splits.create!(amount:, category: categories(:gifts))
