@@ -5,11 +5,16 @@ This document describes how the household runs its money. It holds the method on
 ```mermaid
 flowchart LR
   Salary["Salary (each earner)"] --> Samen["Samen Betaalrekening"]
-  Samen -->|fill each potje| Potjes["Samen potjes (Oranje Spaarrekening)"]
-  Samen -->|leftover| Buffer["Buffer potje"]
+  subgraph Potjes["Samen potjes (Oranje Spaarrekening)"]
+    Others["Nine other potjes"]
+    Buffer["Buffer"]
+  end
+  Samen -->|fill each potje| Others
+  Samen -->|leftover| Buffer
   Samen -->|equal agreed amount| Personal["Personal Betaalrekening (each partner)"]
   Samen -->|direct debit| Fixed["Vaste lasten, Verzekeringen, Abonnementen, Heffingen"]
-  Potjes -->|pulled before or after a purchase| Samen
+  Others -->|pulled before or after a purchase| Samen
+  Buffer -->|pulled when no potje fits| Samen
 ```
 
 ## Words we use
