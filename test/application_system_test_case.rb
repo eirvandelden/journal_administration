@@ -2,7 +2,11 @@ require "test_helper"
 
 class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   SCREEN_SIZE = [ 1400, 1400 ].freeze
-  CI_ARGUMENTS = %w[ --no-sandbox --disable-dev-shm-usage --no-first-run --disable-gpu ].freeze
+  CI_ARGUMENTS = %w[
+    --no-sandbox --disable-dev-shm-usage --no-first-run
+    --disable-renderer-backgrounding --disable-backgrounding-occluded-windows
+    --disable-features=CalculateNativeWinOcclusion
+  ].freeze
 
   # Rails' system testing only knows Chrome and Firefox, so Edge needs its own Capybara driver.
   # Selenium Manager resolves the msedgedriver that matches the installed Edge.

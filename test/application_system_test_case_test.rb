@@ -63,11 +63,14 @@ class ApplicationSystemTestCaseTest < ActiveSupport::TestCase
     assert_includes args, "--disable-dev-shm-usage"
   end
 
-  test "Edge options skip first-run setup and the GPU on CI" do
+  test "Edge options skip first-run setup and keep the renderer awake on CI" do
     args = ApplicationSystemTestCase.edge_options(binary: nil, ci: true).args
 
     assert_includes args, "--no-first-run"
-    assert_includes args, "--disable-gpu"
+    assert_includes args, "--disable-renderer-backgrounding"
+    assert_includes args, "--disable-backgrounding-occluded-windows"
+    assert_includes args, "--disable-features=CalculateNativeWinOcclusion"
+    assert_not_includes args, "--disable-gpu"
   end
 
   test "Edge options keep the sandbox off CI" do
@@ -77,6 +80,7 @@ class ApplicationSystemTestCaseTest < ActiveSupport::TestCase
     assert_not_includes args, "--disable-dev-shm-usage"
     assert_not_includes args, "--no-first-run"
     assert_not_includes args, "--disable-gpu"
+    assert_not_includes args, "--disable-renderer-backgrounding"
   end
 
   test "log files are per process so parallel workers do not overwrite each other" do
