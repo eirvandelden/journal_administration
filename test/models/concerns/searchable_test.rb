@@ -37,6 +37,12 @@ class SearchableTest < ActiveSupport::TestCase
     assert_not_includes results, accounts(:albert_heijn)
   end
 
+  test "search matches a number typed with spaces and lowercase" do
+    results = Account.search("nl00 abna 9999 9990 02")
+
+    assert_includes results, accounts(:albert_heijn_duplicate)
+  end
+
   test "search counts each record once when several numbers match" do
     results = Account.search("NL00ABNA99999990")
 

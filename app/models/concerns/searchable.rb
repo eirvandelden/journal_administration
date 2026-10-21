@@ -20,10 +20,8 @@ module Searchable
       scope :search, ->(query) {
         return none if query.blank?
 
-        sanitized = "%#{sanitize_sql_like(query.to_s.strip)}%"
-        conditions = columns.map { |col|
- "#{table_name}.#{col} LIKE ?" } + searchable_association_conditions(associations)
-        where(conditions.join(" OR "), *conditions.map { sanitized }).limit(10)
+        terms = searchable_terms(query.to_s.strip, columns, associations)
+        where(terms.map(&:first).join(" OR "), *terms.map(&:last)).limit(10)
       }
     end
 
@@ -34,16 +32,30 @@ module Searchable
       @searchable_columns || []
     end
 
-    # SQL fragments, one per association column, each with one LIKE placeholder
+    # Pairs of a SQL fragment with one LIKE placeholder and its pattern, one per searched column
     #
+    # The query is normalized the way the association's model normalizes the column.
+    #
+    # @param query [String]
+    # @param columns [Array<Symbol>]
     # @param associations [Hash{Symbol => Symbol}]
-    # @return [Array<String>]
-    def searchable_association_conditions(associations)
-      associations.map do |name, column|
-        reflection = reflect_on_association(name)
-        "#{table_name}.#{primary_key} IN " \
-          "(SELECT #{reflection.foreign_key} FROM #{reflection.table_name} WHERE #{column} LIKE ?)"
-      end
+    # @return [Array<Array(String, String)>]
+    def searchable_terms(query, columns, associations)
+      own = columns.map { |column| [ "#{table_name}.#{column} LIKE ?", like_pattern(query) ] }
+      own + associations.map { |name, column| searchable_association_term(query, name, column) }
+    end
+
+    # @return [Array(String, String)]
+    def searchable_association_term(query, name, column)
+      reflection = reflect_on_association(name)
+      sql = "#{table_name}.#{primary_key} IN " \
+        "(SELECT #{reflection.foreign_key} FROM #{reflection.table_name} WHERE #{column} LIKE ?)"
+      [ sql, like_pattern(reflection.klass.normalize_value_for(column, query)) ]
+    end
+
+    # @return [String]
+    def like_pattern(text)
+      "%#{sanitize_sql_like(text)}%"
     end
   end
 end
