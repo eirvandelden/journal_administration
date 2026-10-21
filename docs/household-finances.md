@@ -19,20 +19,20 @@ The household uses Dutch terms. The standard financial term stands next to each 
 | Dutch term | Standard term (agent-supplied) | Source |
 | --- | --- | --- |
 | Betaalrekening | current account | <https://www.ing.nl/particulier/betalen/bankrekeningen> |
-| En/of Betaalrekening | joint current account | <https://www.ing.nl/particulier/betalen/bankrekeningen/gezamenlijke-rekening> |
+| En/of Betaalrekening (not confirmed for this household) | joint current account | <https://www.ing.nl/particulier/betalen/bankrekeningen/gezamenlijke-rekening> |
 | Oranje Spaarrekening | savings account | <https://www.ing.nl/particulier/sparen/oranje-spaarrekening> |
 | Potje (ING: Spaarpotje) | savings sub-account, used as a budget category; the method is envelope budgeting | <https://www.ing.nl/particulier/sparen/oranje-spaarrekening> |
 | Spaardoelen | savings goals, ING's other name for the sub-accounts | <https://www.ing.nl/particulier/sparen/spaardoelen> |
-| Creditcard | credit card | <https://www.ing.nl/particulier/betalen/creditcards/afschrijfdatum-creditcard> |
+| Creditcard (not confirmed as an ING card) | credit card | <https://www.ing.nl/particulier/betalen/creditcards/afschrijfdatum-creditcard> |
 | Samen | joint household account | household name |
 | Buffer | emergency fund and surplus | `GLOSSARY.md` |
 | Reserveringen | sinking fund | `GLOSSARY.md` |
 | Vaste lasten (Vaste Lasten) | fixed expenses | `GLOSSARY.md` |
-| Verzekeringen | insurance premiums | household name |
-| Abonnementen | subscriptions | household name |
-| Heffingen | levies, meaning local taxes and charges | household name |
+| Verzekeringen | insurance premiums | Dutch word |
+| Abonnementen | subscriptions | Dutch word |
+| Heffingen | levies, meaning local taxes and charges | Dutch word |
+| Trimsalon | pet grooming salon | Dutch word |
 | Appropriation | earmarked funds | `GLOSSARY.md` |
-| Monthly personal transfer | personal allowance | household name |
 
 ## Bank accounts and potjes
 
@@ -61,7 +61,7 @@ Each salary arrives in the Samen Betaalrekening. Then each Samen potje is filled
 
 ## Personal accounts
 
-Each month an equal, agreed amount moves from Samen to each personal Betaalrekening. The standard term is personal allowance. Etienne's active potjes are "Etienne's verzorging", "Steam Deck" and "Etienne's Buffer". His wife's potjes are not recorded here.
+Each month an equal, agreed amount moves from Samen to each personal Betaalrekening. The standard term is personal allowance. Etienne's active potjes are "Etienne's verzorging" (personal care budget), "Steam Deck" (savings goal) and "Etienne's Buffer" (emergency fund and surplus). His wife's potjes are not recorded here.
 
 ## Fixed costs
 
@@ -73,7 +73,7 @@ A purchase is pulled from its potje shortly before or after it is paid. This kee
 
 ## Buffer and Reserveringen
 
-Reserveringen holds money saved ahead for recurring costs. Examples are the animal insurance, the trimsalon and the dentist. Buffer holds the salary leftover and anything that no potje can pay. Buffer serves as both surplus and emergency fund. No target size is recorded.
+Reserveringen holds money saved ahead for recurring costs. Examples are the animal insurance, the trimsalon (pet grooming salon) and the dentist. Buffer holds the salary leftover and anything that no potje can pay. Buffer serves as both surplus and emergency fund. No target size is recorded.
 
 ## Appropriations
 
