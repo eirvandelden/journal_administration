@@ -108,11 +108,11 @@ class Account < ApplicationRecord
 
   # Returns human-readable string representation of the account
   #
-  # @return [String] Account name if present, otherwise the first account number
+  # @return [String] Account name if present, otherwise the lowest account number
   def to_s
     return name unless name.blank?
 
-    numbers.first.to_s
+    numbers.min.to_s
   end
 
   # Returns the account numbers as strings

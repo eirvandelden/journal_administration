@@ -246,6 +246,13 @@ class AccountTest < ActiveSupport::TestCase
     assert_equal "NL00TEST0000000001", account.to_s
   end
 
+  test "to_s falls back to the lowest number however the numbers were added" do
+    account = Account.create!(name: "", account_numbers: [ AccountNumber.new(number: "NL00ZZZZ0000000002"),
+                                                           AccountNumber.new(number: "NL00AAAA0000000001") ])
+
+    assert_equal "NL00AAAA0000000001", account.reload.to_s
+  end
+
   # -- absorb_transactions_from_aliases ----------------------------------------
 
   test "absorb_transactions_from_aliases returns the number of transactions reassigned" do
