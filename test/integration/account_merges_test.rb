@@ -112,6 +112,10 @@ class AccountMergesTest < ActionDispatch::IntegrationTest
       end
     end
 
+    test "without picks the page counts no transactions" do
+      assert_empty queries_matching(/COUNT.*FROM "transactions"/) { get new_account_merge_path(@target) }
+    end
+
     test "the review step changes nothing" do
       assert_no_difference [ "Account.count", "AccountNumber.count" ] do
         get new_account_merge_path(@target), params: { duplicate_ids: [ @duplicate.id ] }
@@ -148,5 +152,15 @@ class AccountMergesTest < ActionDispatch::IntegrationTest
       assert_redirected_to new_session_path
       assert Account.exists?(@duplicate.id)
     end
+  end
+
+  private
+
+  # SQL statements that match the pattern while the block runs
+  def queries_matching(pattern, &)
+    statements = []
+    counter = ->(*, payload) { statements << payload[:sql] if payload[:sql].match?(pattern) }
+    ActiveSupport::Notifications.subscribed(counter, "sql.active_record", &)
+    statements
   end
 end
