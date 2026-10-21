@@ -177,3 +177,22 @@ Domain skills applied: glossary, diagrams, software-design (design gate only; no
 - The no-amount and no-code checks are too weak for formats such as "100 euro" or other code shapes → fixed (wider regexes for euro words, decimals, IBANs and long digit runs, plus a manual review checklist for every number and identifier)
 - Potje labels such as "Cadeautjes en speelgoed" get no standard term → fixed (the Samen potjes table gains a standard-term column, and the outline says potje names are labels kept in that table)
 
+
+## Addendum: the ten Samen potjes
+
+Supplied by the coordinator from Etienne's chat message, which listed all ten. This closes "Decision needed before implementation". Step 2 of Order of work may start.
+
+Names are as Etienne wrote them, with one spelling fix: "persoonlije zorg" becomes "persoonlijke zorg". The purpose column marks what Etienne said and what the agent derived from the name.
+
+- Boodschappen, huishoudelijk en persoonlijke zorg — groceries, household and personal care; purpose derived from the name.
+- Vrije tijd en hobby — leisure and hobbies; purpose derived from the name.
+- Auto en vervoer — car and transport; purpose derived from the name.
+- Kinderen kleding — children's clothing; also pays Christmas and Sinterklaas, because the gift potjes are underfunded (Etienne).
+- Cadeautjes en speelgoed — gifts and toys; most appropriations are saved for here or in Reserveringen (Etienne).
+- Projecten — saving for projects; purpose derived from the name, since Etienne said most potjes are named after a category or a saving goal.
+- Reserveringen — saving ahead for recurring costs such as the animal insurance, the trimsalon and the dentist (Etienne).
+- Vakantie — saving for holidays; purpose derived from the name.
+- Cosimo — currently unused (Etienne).
+- Buffer — the salary leftover and anything no potje can pay; surplus and emergency fund (Etienne).
+
+The document marks each derived purpose with "purpose taken from the potje's name", so Etienne can confirm or correct it in review.
