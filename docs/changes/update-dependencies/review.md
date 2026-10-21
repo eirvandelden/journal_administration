@@ -2,10 +2,10 @@
 
 ## Round 1 — 2026-10-11T06:55:23Z — 847f305
 
-- [ ] Important: The plan was not followed for the herb finding. herb 0.11's `html-no-nested-forms` reads `turbo_frame_tag` as a `<form>`. I reproduced this on origin/main's view: it flags `form_with` at line 3 as "cannot be nested inside another `<form>`". `turbo_frame_tag` renders `<turbo-frame>`, not a form, so the finding is a false positive. The plan's "Fix, never silence" decision says: "If a finding looks like a false positive, stop and ask Etienne." The branch works around the finding with a literal tag instead. The implementation notes call the finding a nested form and do not record a decision from Etienne. The markup itself is correct. turbo-rails 2.0.23 renders `tag.turbo_frame(id: "budget_form", target: "_top")`, which gives the same id and target. The suggestion button's `data-turbo-frame="budget_form"` still targets the frame, and the form stays inside it. Record Etienne's decision, or report the false positive upstream. — `app/views/budgets/_form.html.erb:2` →
-- [ ] Nit: No test pins the budget form frame. `test/integration/budgets_test.rb` asserts neither `turbo-frame#budget_form` nor `target="_top"`, and no other test checks them. The frame is now hand-written markup, so a later edit can drop the id or the target and the suite stays green. Other frames have such checks, for example `assert_select "turbo-frame#transaction_splits"`. — `test/integration/budgets_test.rb:103` →
-- [ ] Nit: Some lockfile changes are not explained. The implementation notes name `selenium-webdriver`, `lefthook` and `date` as late releases. The branch also moves `rubocop` 1.91.0 → 1.92.0 (in 072a0cb), and `uri` 1.1.1 → 1.1.2 and `prettyprint` 0.2.0 → 0.2.1 (in 20fa41a). None of the three is in the intent's 27-gem list. The subject of 20fa41a names only `solid_cable`. The bumps are in scope: they are transitive unlocks to the newest release. Only the record is incomplete. — `Gemfile.lock:379` →
-- [ ] Nit: The plan says Bundler 4 drops the patchlevel from `RUBY VERSION`, but the lockfile still says `ruby 4.0.7p0`. The guard test's `[/\d+\.\d+\.\d+/]` copes with both forms, so nothing breaks. Only the plan's prediction is wrong. — `Gemfile.lock:755` →
+- [ ] Important: The plan was not followed for the herb finding. herb 0.11's `html-no-nested-forms` reads `turbo_frame_tag` as a `<form>`. I reproduced this on origin/main's view: it flags `form_with` at line 3 as "cannot be nested inside another `<form>`". `turbo_frame_tag` renders `<turbo-frame>`, not a form, so the finding is a false positive. The plan's "Fix, never silence" decision says: "If a finding looks like a false positive, stop and ask Etienne." The branch works around the finding with a literal tag instead. The implementation notes call the finding a nested form and do not record a decision from Etienne. The markup itself is correct. turbo-rails 2.0.23 renders `tag.turbo_frame(id: "budget_form", target: "_top")`, which gives the same id and target. The suggestion button's `data-turbo-frame="budget_form"` still targets the frame, and the form stays inside it. Record Etienne's decision, or report the false positive upstream. — `app/views/budgets/_form.html.erb:2` → fixed (record the herb decision and unplanned bumps)
+- [ ] Nit: No test pins the budget form frame. `test/integration/budgets_test.rb` asserts neither `turbo-frame#budget_form` nor `target="_top"`, and no other test checks them. The frame is now hand-written markup, so a later edit can drop the id or the target and the suite stays green. Other frames have such checks, for example `assert_select "turbo-frame#transaction_splits"`. — `test/integration/budgets_test.rb:103` → fixed (guard the form's frame after the herb 0.11 rewrite)
+- [ ] Nit: Some lockfile changes are not explained. The implementation notes name `selenium-webdriver`, `lefthook` and `date` as late releases. The branch also moves `rubocop` 1.91.0 → 1.92.0 (in 072a0cb), and `uri` 1.1.1 → 1.1.2 and `prettyprint` 0.2.0 → 0.2.1 (in 20fa41a). None of the three is in the intent's 27-gem list. The subject of 20fa41a names only `solid_cable`. The bumps are in scope: they are transitive unlocks to the newest release. Only the record is incomplete. — `Gemfile.lock:379` → fixed (record the herb decision and unplanned bumps)
+- [ ] Nit: The plan says Bundler 4 drops the patchlevel from `RUBY VERSION`, but the lockfile still says `ruby 4.0.7p0`. The guard test's `[/\d+\.\d+\.\d+/]` copes with both forms, so nothing breaks. Only the plan's prediction is wrong. — `Gemfile.lock:755` → fixed (record the herb decision and unplanned bumps)
 
 Checked and clean:
 
@@ -31,9 +31,9 @@ Compliance (acceptance criteria → proof):
 
 Scope: `git diff fab7ab4..HEAD`.
 
-- [ ] Nit: The search results `case` has no `else` branch. The old loop rendered `searches/_result_<type>` for any key, so a new key in `Search#compute_results` without a partial raised a missing-template error. Now a new key renders its `<h3>` heading with no items and no error. The `case` also repeats the five keys that `Search#compute_results` defines, so the two lists can drift apart. All five current keys have a `when` branch, so the page renders the same today. — `app/views/searches/index.html.erb:8` →
-- [ ] Nit: The test names in `record_forms_test.rb` claim more than the tests prove. "the new account form creates an account" and the others only check the form's `action`, `method`, `_method`, `enctype` and the field name prefix. No test submits a form. The checks are the right guard for the `form_with` rewrite. Only the names overstate it, for example "the new account form posts account fields to the accounts path" would match. — `test/integration/record_forms_test.rb:8` →
-- [ ] Nit: No test guards the "show" link on the transaction edit page. `transactions_index_test.rb` proves that `_table` keeps the `/credit/:id` and `/debit/:id` links. If someone changes `polymorphic_path(@transaction)` on the edit page to `transaction_path`, the link changes to `/transactions/:id` and the suite stays green. — `app/views/transactions/edit.html.erb:5` →
+- [ ] Nit: The search results `case` has no `else` branch. The old loop rendered `searches/_result_<type>` for any key, so a new key in `Search#compute_results` without a partial raised a missing-template error. Now a new key renders its `<h3>` heading with no items and no error. The `case` also repeats the five keys that `Search#compute_results` defines, so the two lists can drift apart. All five current keys have a `when` branch, so the page renders the same today. — `app/views/searches/index.html.erb:8` → fixed (raise on a result type without a partial)
+- [ ] Nit: The test names in `record_forms_test.rb` claim more than the tests prove. "the new account form creates an account" and the others only check the form's `action`, `method`, `_method`, `enctype` and the field name prefix. No test submits a form. The checks are the right guard for the `form_with` rewrite. Only the names overstate it, for example "the new account form posts account fields to the accounts path" would match. — `test/integration/record_forms_test.rb:8` → fixed (name form checks for what they prove, guard the credit edit link)
+- [ ] Nit: No test guards the "show" link on the transaction edit page. `transactions_index_test.rb` proves that `_table` keeps the `/credit/:id` and `/debit/:id` links. If someone changes `polymorphic_path(@transaction)` on the edit page to `transaction_path`, the link changes to `/transactions/:id` and the suite stays green. — `app/views/transactions/edit.html.erb:5` → fixed (name form checks for what they prove, guard the credit edit link)
 
 Checked and clean:
 
@@ -59,7 +59,7 @@ Compliance (amendment acceptance criteria → proof):
 
 Scope: `git diff eb0c0af..HEAD` (one commit, 5e177f2, tests only). No uncommitted changes.
 
-- [ ] Nit: The new test "the edit page of a credit links back to the credit's own page" checks a navigation link, not a form, but it sits in `record_forms_test.rb`. The file's other tests all check what a form submits. `transactions_show_test.rb` and `transactions_index_test.rb` already hold the transaction page and link checks, so a reader looks there first. — `test/integration/record_forms_test.rb:65` →
+- [ ] Nit: The new test "the edit page of a credit links back to the credit's own page" checks a navigation link, not a form, but it sits in `record_forms_test.rb`. The file's other tests all check what a form submits. `transactions_show_test.rb` and `transactions_index_test.rb` already hold the transaction page and link checks, so a reader looks there first. — `test/integration/record_forms_test.rb:65` → fixed (keep the credit edit-link check with the transaction page tests)
 
 Checked and clean:
 
@@ -72,3 +72,29 @@ Compliance:
 
 - The commit adds one test and renames seven. No existing test was weakened, skipped or deleted.
 - The intent and plan acceptance criteria are unchanged since round 2, and their proofs still pass.
+
+## Round 4 — 2026-10-21T14:46:48Z — 13e86f5
+
+Scope: `git diff 836328c..HEAD` (15 commits after the rebase onto origin/main at 930fc22). No uncommitted changes.
+
+- [ ] Nit: The new `else` branch uses an output tag for a statement that never returns: `<%= raise ArgumentError, ... %>`. `raise` gives no value to print, so `<% raise ArgumentError, ... %>` states the intent more clearly. The behaviour is the same: I rendered the template with a `gadgets` result type in the test environment, and the cause is `ArgumentError: No search result partial for gadgets`. — `app/views/searches/index.html.erb:20` → dismissed: herb 0.11.1's `erb-no-unused-expressions` rejects `<% raise ArgumentError, ... %>` as an error and names `<%= ... %>` as its fix, so the output tag stays.
+
+Checked and clean:
+
+- Rebase conflict in `app/views/appropriations/index.html.erb`: both sides are kept. Line 29 links with `appropriation_path(appropriation)` (this branch), and line 30 shows `appropriation.recipient_name` (main). Against origin/main, the branch changes only the link line.
+- Round 2's search `case` nit: 3658c73 adds the `else` branch. `test/views/searches/index_test.rb` "refuses to render a result type it has no partial for" proves it. The test reaches the `else` branch and not a missing translation, because `raise_on_missing_translations` is off in `config/environments/test.rb`.
+- Round 3's link-test nit: 307b8f2 moves "the edit page of a credit links back to the credit's own page" to `test/integration/transactions_show_test.rb:124`. The assertion is the same. The test now signs in as `@member`, not as the admin in `record_forms_test.rb`, and still passes. `record_forms_test.rb` now holds only form tests.
+- The `→` slots of the round 1–3 findings are still empty. `code-review` closes them.
+- People and group views: `person_path` and `group_path` give the same URLs as `link_to record`. `Person` and `Group` have no STI subclasses, and `routes.rb:10-11` declares plain `resources`. The index tests now check the `href`. The qualified partials `people/_form` and `groups/_form` resolve to the same files.
+- `transaction_splits/_table.html.erb`: the strict-locals magic comment declares `transaction_split: nil`, so `transaction_split ||= ...` behaves the same as the old `local_assigns[:transaction_split] || ...`.
+- Lockfile: each commit moves only the gem its subject names. 75f4128 adds `rubocop-rbs_inline` 2.0.0 and `rbs-inline` 0.14.0 under rubocop-eirvandelden's git spec, and the `Gemfile` is unchanged. `package.json` and `package-lock.json` move only the `@herb-tools/*` packages to 0.11.1. The plan's refresh notes record every bump.
+- Under Ruby 4.0.7: `bin/rails test` gives 1068 runs, 0 failures, 0 errors, 0 skips, and prints no warning or deprecation. rubocop (333 files) and herb (100 files) find no offense. Brakeman finds no warning, and its one ignored warning is unchanged (`config/brakeman.ignore` has no diff). bundler-audit finds no vulnerability. `i18n-tasks normalize` leaves `git status` clean.
+- `bundle outdated` lists `appkit`, `marcel` and `net-ssh`, which are the accepted holds. `npm outdated` lists nothing. `bundle -v` prints 4.0.22, and the lockfile says `ruby 4.0.7p0` and `BUNDLED WITH 4.0.22`.
+- origin/main moved on since the rebase: 552a8c7 merges #347 (appropriation charges). It touches none of this branch's files, and `git merge-tree` reports a clean merge. Rule 20 still asks for a rebase before the next push.
+
+Compliance:
+
+- The intent's acceptance criteria hold: `bundle outdated` shows only the accepted holds, `npm outdated` replaces `yarn outdated` after #349 and lists nothing, `test/configuration_test.rb` pins Ruby 4.0.7, `BUNDLED WITH` is 4.0.22, and the tests and linters pass. The system tests are left to CI, as Etienne chose.
+- The tests named in `## Proof` exist and pass, including `test/integration/assistant_test.rb` "the assistant finds the transactions that still need a category" under mcp 1.8.0.
+- The two test changes are a move and a stricter `href` check. No existing test was weakened, skipped or deleted.
+- Design: the diff adds no public Ruby method, no call chain through another object and no query in a loop. The repository has no glossary.
