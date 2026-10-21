@@ -2,7 +2,7 @@
 - **Betaalrekening** — the ING current account where salary arrives and most fixed costs leave. Avoid: main account.
 - **Buffer** — the potje that holds the salary leftover and serves as the emergency fund.
 - **Oranje Spaarrekening** — the ING savings account that holds the potjes.
-- **Potje** — a virtual account inside a Spaarrekening with its own account number; it works as a budget envelope. Avoid: pot, jar, envelope.
+- **Potje** — a virtual account inside a Spaarrekening with its own account number; it holds the money budgeted for one purpose. Avoid: pot, jar, envelope.
 - **Reserveringen** — the potje for saving ahead for recurring costs, such as insurance, the trimsalon and the dentist; the standard term is sinking fund.
 - **Samen** — the shared household: Etienne and his wife, with their joint Betaalrekening and potjes.
 - **Vaste lasten** — fixed monthly costs, mostly paid straight from the Betaalrekening.
