@@ -8,7 +8,7 @@ class Accounts::MergesController < ApplicationController
   # @route /accounts/:account_id/merge/new
   def new
     @query = merge_params[:query].to_s.strip
-    @matches = candidates.search(@query)
+    @matches = candidates.includes(:account_numbers).search(@query)
     @duplicates = candidates.where(id: duplicate_ids).order(:id).includes(:account_numbers)
     @transactions_count = duplicate_ids.any? ? Transaction.by_account(@duplicates.ids).count : 0
     @receipts_count = Receipt.where(shop_id: @duplicates.ids).count

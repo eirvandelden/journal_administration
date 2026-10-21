@@ -116,6 +116,18 @@ class AccountMergesTest < ActionDispatch::IntegrationTest
       assert_empty queries_matching(/COUNT.*FROM "transactions"/) { get new_account_merge_path(@target) }
     end
 
+    test "the match list reads account numbers once however many accounts match" do
+      3.times do |i|
+        Account.create!(name: "AH Extra #{i}", account_numbers: [ AccountNumber.new(number: "NL00EXTRA#{i}") ])
+      end
+
+      reads = queries_matching(/^SELECT "account_numbers"\.\*/) do
+        get new_account_merge_path(@target), params: { query: "AH" }
+      end
+
+      assert_equal 1, reads.size
+    end
+
     test "the review step changes nothing" do
       assert_no_difference [ "Account.count", "AccountNumber.count" ] do
         get new_account_merge_path(@target), params: { duplicate_ids: [ @duplicate.id ] }
