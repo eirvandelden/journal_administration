@@ -101,3 +101,5 @@ Domain skills applied: rails-testing, ruby-style, dependencies (no new gem; Sele
 
 - The single-file and `EDGE_BIN` checks used `test/system/login_theme_test.rb`, which inherits `ActionDispatch::IntegrationTest` and starts no browser, so an invalid `EDGE_BIN` could pass unnoticed → fixed (checks now use `test/system/search_dialog_test.rb`; a note under Proof records why)
 - The unit tests checked the driver name and isolated options but not that the registered factory builds a `Capybara::Selenium::Driver` for `:edge` with those options and a 1400 by 1400 window → fixed (added `edge_driver` with an injected `driver_class`, and two fake-driver unit tests for the browser, options and window size)
+
+14. Result of step 13 (implement stage): commit 48c8a05 replaced `--disable-gpu` with the three renderer flags in `CI_ARGUMENTS`. CI run 39662774190, `system-test` job: the first run and four reruns passed, so five distinct jobs in a row (119439839353, 119440703089, 119441627442, 119442648597, 119443725998). Five passes are evidence, not proof. No failure, so no new logs.
