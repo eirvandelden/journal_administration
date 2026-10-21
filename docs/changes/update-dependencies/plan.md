@@ -150,3 +150,14 @@ Proof: the `docker run` output above; herb's summary with no failing offense and
 - `framework: actionview` enabled 40 info and hint offenses, none failing. Etienne chose to fix all 40 here (2026-10-12), one commit per rule: qualified partial paths, explicit route helpers, explicit partials, the `label` local that shadowed the helper, and `form_for` → `form_with`.
 - STI transactions keep their `/credit/:id`, `/debit/:id` and `/transfer/:id` links through `polymorphic_path`, which herb accepts. `transaction_path` would have changed those URLs.
 - New tests guard each rewrite: transaction links by kind, search results by type, account aliases, the users index, the budget percentage label, and what each of the six record forms submits. The form tests pass on both the `form_for` and the `form_with` views.
+
+### Refresh notes (2026-10-21)
+
+- The branch is rebased onto `main` after #343, #345 and #349. #349 replaced yarn with npm, so the herb linter bump now lives in `package-lock.json`, and `npm outdated` replaces `yarn outdated` as the check.
+- The people and group views from #345 had 6 Action View offenses. They now use `person_path`, `group_path` and qualified form partials, and their index tests check the link targets.
+- Review round 2 and 3 nits are closed: the search `case` raises on a result type without a partial, and the credit edit-link test moved to `transactions_show_test.rb`.
+- Newer releases since 2026-10-11: `lefthook` 2.2.2, `herb` and `@herb-tools/linter` 0.11.1, `sqlite3` 2.10.1, `json` 3.1.0, `net-imap` 0.6.8, `mcp` 1.8.0, `mvpa-css` 2be440b, `rubocop-capybara` 3.1.0 and `rubocop-eirvandelden` 6d41c35. The last brings `rubocop-rbs_inline` 2.0.0 and `rbs-inline` 0.14.0 as its own dependencies; the Gemfile does not change.
+- `.herb.yml` moves to 0.11.1, which turns on `actionview-no-local-assigns` and `erb-require-template-format`. One offense, in `transaction_splits/_table.html.erb`, is fixed.
+- `net-ssh` 8.0.0 stays out: kamal 2.12.0 requires `net-ssh ~> 7.3`. `marcel` stays on 1.x for Active Storage, and `appkit` is updated separately.
+- The rubocop pre-commit job in the repo's `lefthook.yml` fails inside `git commit` in a worktree: git exports `GIT_DIR`, and Bundler then cannot load the git-sourced gems. Two test commits went in with `--no-verify` by Etienne's choice (2026-10-20), after rubocop passed on the staged files by hand.
+- The budget suggestion system test fails on days a suggested amount ends in 0 (`0.7` against `"0.70"`). Etienne chose to leave it until money moves to cents (2026-10-16).
