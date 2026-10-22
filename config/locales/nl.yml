@@ -846,17 +846,13 @@ nl:
   todos:
     index:
       account: Rekening
-      actions: Acties
-      classify: Indelen
       date: Datum
       description: Omschrijving
-      edit: Bewerken
       empty: "🎉 Niets te doen. Alle transacties zijn gecategoriseerd en alle rekeningen zijn bijgewerkt."
       kind: Soort
       product: Product
       title: Te doen
       transaction: Transactie
-      update_transactions: Transacties bijwerken
   transaction_absorptions:
     create:
       success: "%{count} transacties overgenomen van dubbele rekeningen."
