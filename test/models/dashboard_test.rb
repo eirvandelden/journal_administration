@@ -270,6 +270,110 @@ class DashboardTest < ActiveSupport::TestCase
       assert_equal 334, dashboard.budget_amounts[categories(:groceries)]
       assert_instance_of Integer, dashboard.budget_amounts[categories(:groceries)]
     end
+
+    test "multiplies by the month count" do
+      budget = Budget.create!(starts_at: Time.zone.parse("2025-01-01"))
+      BudgetCategory.create!(budget:, category: categories(:groceries), amount: 1480)
+
+      { %w[2026-10-01 2026-10-31] => 1, %w[2026-02-01 2026-02-28] => 1, %w[2026-01-01 2026-03-31] => 3 }
+        .each do |(start_date, end_date), months|
+          dashboard = Dashboard.new(start_date:, end_date:)
+
+          assert_equal 1480 * months, dashboard.budget_amounts[categories(:groceries)]
+        end
+    end
+
+    test "exact days that are not whole months keep the budget goal at days over thirty" do
+      budget = Budget.create!(starts_at: Time.zone.parse("2025-01-01"))
+      BudgetCategory.create!(budget:, category: categories(:groceries), amount: 300)
+
+      dashboard = Dashboard.new(start_date: "2026-10-01", end_date: "2026-10-20")
+
+      assert_in_delta 200, dashboard.budget_amounts[categories(:groceries)]
+    end
+  end
+
+  class SelectableMonths < ActiveSupport::TestCase
+    setup do
+      Chattel.update_all(purchase_transaction_id: nil)
+      Transaction.destroy_all
+    end
+
+    test "uses a given date_range" do
+      range = MonthRange.from_selection(filter: nil, from_month: "2026-02", to_month: "2026-03")
+
+      assert_same range, Dashboard.new(date_range: range).date_range
+    end
+
+    test "runs newest first from the first booked month through the current month" do
+      travel_to Time.zone.local(2026, 10, 22) do
+        book_debit_on Time.zone.local(2026, 8, 15)
+
+        months = Dashboard.new(filter: "current_month").selectable_months
+
+        assert_equal [ "2026-10", "2026-09", "2026-08" ], months.map { |month| month.strftime("%Y-%m") }
+        assert(months.all? { |month| month.day == 1 })
+      end
+    end
+
+    test "includes a future booked month" do
+      travel_to Time.zone.local(2026, 10, 22) do
+        book_debit_on Time.zone.local(2026, 12, 3)
+
+        months = Dashboard.new(filter: "current_month").selectable_months
+
+        assert_equal Date.new(2026, 12, 1), months.first
+      end
+    end
+
+    test "includes a period before the first booking" do
+      travel_to Time.zone.local(2026, 10, 22) do
+        book_debit_on Time.zone.local(2026, 8, 15)
+        range = MonthRange.from_selection(filter: nil, from_month: "2026-05", to_month: "2026-06")
+
+        months = Dashboard.new(date_range: range).selectable_months
+
+        assert_equal Date.new(2026, 5, 1), months.last
+      end
+    end
+
+    test "is the period and the current month when nothing is booked" do
+      travel_to Time.zone.local(2026, 10, 22) do
+        range = MonthRange.from_selection(filter: nil, from_month: "2026-08", to_month: "2026-09")
+
+        months = Dashboard.new(date_range: range).selectable_months
+
+        assert_equal [ "2026-10", "2026-09", "2026-08" ], months.map { |month| month.strftime("%Y-%m") }
+      end
+    end
+
+    test "runs two queries, however often it is called" do
+      dashboard = Dashboard.new(filter: "current_month")
+
+      assert_queries_count(2) do
+        dashboard.selectable_months
+        dashboard.selectable_months
+      end
+    end
+
+    test "current_year in October counts a January debit and not a November one" do
+      travel_to Time.zone.local(2026, 10, 22) do
+        book_debit_on Time.zone.local(2026, 1, 15), amount: 10
+        book_debit_on Time.zone.local(2026, 11, 15), amount: 99
+        range = MonthRange.from_selection(filter: "current_year", from_month: nil, to_month: nil)
+
+        assert_equal 10, Dashboard.new(date_range: range).debit_total
+      end
+    end
+
+    private
+
+    def book_debit_on(booked_at, amount: 10)
+      Debit.create!(
+        amount:, booked_at:, interest_at: booked_at, category: categories(:household),
+        debitor: accounts(:checking), creditor: accounts(:albert_heijn)
+      )
+    end
   end
 
   class BudgetActuals < ActiveSupport::TestCase

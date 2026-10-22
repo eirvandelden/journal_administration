@@ -81,9 +81,9 @@ class DateRange
 
   # How many months a monthly budget counts for over this span: days / 30
   #
-  # @return [Float]
+  # @return [Rational]
   def month_count
-    days / 30.0
+    Rational(days, 30)
   end
 
   # Returns the range as a Ruby Range object suitable for database queries

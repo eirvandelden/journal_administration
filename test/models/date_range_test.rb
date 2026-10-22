@@ -85,7 +85,7 @@ class DateRangeTest < ActiveSupport::TestCase
   test "month_count is days over thirty" do
     range = DateRange.from_dates("2026-10-11", "2026-10-20")
 
-    assert_in_delta 10 / 30.0, range.month_count
+    assert_equal Rational(1, 3), range.month_count
   end
 
   test "from_dates returns a MonthRange for 1 to 31 October" do

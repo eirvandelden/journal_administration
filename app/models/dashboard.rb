@@ -9,11 +9,12 @@ class Dashboard
 
   # Initializes a new dashboard
   #
+  # @param date_range [DateRange, nil] A ready-made span (overrides everything else)
   # @param filter [String, nil] Date range filter (e.g., "last_month", "year_to_date")
   # @param start_date [String, Date, nil] Custom start date (overrides filter)
   # @param end_date [String, Date, nil] Custom end date (overrides filter)
-  def initialize(filter: nil, start_date: nil, end_date: nil)
-    @date_range = custom_date_range(start_date, end_date) || DateRange.from_filter(filter)
+  def initialize(date_range: nil, filter: nil, start_date: nil, end_date: nil)
+    @date_range = date_range || custom_date_range(start_date, end_date) || DateRange.from_filter(filter)
   end
 
   # Returns debit transactions grouped by category with totals
@@ -63,7 +64,7 @@ class Dashboard
     totals = grouped_transactions_for(Credit, range: lookback)
 
     credit_transactions.keys.map do |category|
-      (Rational(totals[category] || 0, 365) * range_days).round
+      (Rational(totals[category] || 0, 365) * date_range.days).round
     end
   end
 
@@ -97,8 +98,23 @@ class Dashboard
       .each_with_object({}) do |budget_category, amounts|
         next if budget_category.category.transfer?
 
-        amounts[budget_category.category] = (budget_category.amount * months_in_range).round
+        amounts[budget_category.category] = (budget_category.amount * date_range.month_count).round
       end
+  end
+
+  # Returns the months the pickers offer, newest first
+  #
+  # Runs from the first booked month (or the span's first month) through the last booked month,
+  # the current month or the span's last month, whichever is latest.
+  #
+  # @return [Array<Date>] First days of months
+  def selectable_months
+    @selectable_months ||= begin
+      first_month = [ first_booked_on, date_range.start_date.to_date ].compact.min.beginning_of_month
+      last_month = [ last_booked_on, Date.current, date_range.end_date.to_date ].compact.max.beginning_of_month
+
+      (0..months_between(first_month, last_month)).map { |offset| (first_month >> offset) }.reverse
+    end
   end
 
   # Calculates total credit including profit/loss adjustment
@@ -180,11 +196,15 @@ class Dashboard
     DateRange.new(lookback_start.beginning_of_day, lookback_end.end_of_day)
   end
 
-  def range_days
-    (date_range.end_date.to_date - date_range.start_date.to_date).to_i + 1
+  def first_booked_on
+    Transaction.unscoped.minimum(:booked_at)&.to_date
   end
 
-  def months_in_range
-    Rational(range_days, 30)
+  def last_booked_on
+    Transaction.unscoped.maximum(:booked_at)&.to_date
+  end
+
+  def months_between(first_month, last_month)
+    (last_month.year * 12 + last_month.month) - (first_month.year * 12 + first_month.month)
   end
 end
