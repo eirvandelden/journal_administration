@@ -176,3 +176,15 @@ credit_grocery:
   creditor: checking
   category: supermarket
   note: Groceries paid at AH
+
+# An incasso payment as the bank books it: the note names the order number twice
+ordered_grocery:
+  type: Credit
+  amount: 13166
+  booked_at: 2026-08-28 09:00:00
+  interest_at: 2026-08-28 09:00:00
+  debitor: albert_heijn
+  creditor: checking
+  category: supermarket
+  note: "Naam: Albert Heijn B.V. Omschrijving: AE74532780 IBAN: NL00TEST0000000000 Machtiging ID: ALBERT.HEIJN.AE74532780.000000001"
+  original_note: "Naam: Albert Heijn B.V. Omschrijving: AE74532780 IBAN: NL00TEST0000000000 Machtiging ID: ALBERT.HEIJN.AE74532780.000000001"
