@@ -22,6 +22,7 @@ class PageHeadingsTest < ActionDispatch::IntegrationTest
       dashboard_index_path, transactions_path, new_transaction_path, transaction_path(transactions(:debit_grocery)),
       edit_transaction_path(transactions(:debit_grocery)), new_transactions_import_path, accounts_path,
       account_path(accounts(:checking)), new_account_path, edit_account_path(accounts(:checking)),
+      new_account_merge_path(accounts(:albert_heijn)),
       people_path, new_person_path, person_path(people(:etienne)), edit_person_path(people(:etienne)),
       groups_path, new_group_path, group_path(groups(:samen)), edit_group_path(groups(:samen)),
       categories_path, new_category_path, category_path(categories(:supermarket)),

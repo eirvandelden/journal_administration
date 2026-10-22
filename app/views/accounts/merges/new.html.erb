@@ -1,10 +1,7 @@
 <% content_for(:title) { t('.title', account: @account) } %>
-<header>
-  <h1><%= t('.title', account: @account) %></h1>
-  <nav>
-    <%= link_to t('common.cancel'), account_path(@account) %>
-  </nav>
-</header>
+<%= render layout: "shared/title_bar", locals: { title: t('.title', account: @account) } do %>
+  <%= link_to t('common.cancel'), account_path(@account) %>
+<% end %>
 
 <article>
   <p><%= t('.intro', account: @account) %></p>
