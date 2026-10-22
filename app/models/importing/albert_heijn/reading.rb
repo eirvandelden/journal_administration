@@ -12,6 +12,7 @@ module Importing
       DELIVERY_DATE = /(\d{1,2})\s+(\p{L}+)\s+(\d{4})/
       AMOUNT = /\A\d+\.\d{2}\z/
       PRICE_EACH = /\A(\d+\.\d{2}|gew\.)\z/
+      DEPOSIT_ROW = /\A\+ Statiegeld/
 
       # @param mail [String] the mail as text
       # @return [Array<String>] every line of the mail with something on it, without its padding
@@ -26,7 +27,7 @@ module Importing
       #
       #: () -> bool
       def reconciles?
-        lines.sum(&:full_amount) == shelf_amount && shelf_amount - bonus_amount == settled_amount
+        lines.sum(&:full_amount) + deposit_amount == shelf_amount && shelf_amount - bonus_amount == settled_amount
       end
 
       private
@@ -37,6 +38,11 @@ module Importing
       end
 
       def bonus_amount = stated("Totaal voordeel")&.abs || 0
+
+      # A deposit row sits among the products of an older confirmation, but is no product
+      def deposit_amount = product_rows(products).select { |row| deposit_row?(row) }.sum { |row| cents(row.last) }
+
+      def deposit_row?(row) = row.first.match?(DEPOSIT_ROW)
 
       def date_in(text)
         day, month, year = text.match(DELIVERY_DATE).captures
@@ -59,7 +65,8 @@ module Importing
       end
 
       def lines_from(section, discounts)
-        product_rows(section).map do |name, quantity, _price_each, total|
+        rows = product_rows(section).reject { |row| deposit_row?(row) }
+        rows.map do |name, quantity, _price_each, total|
           PackingSlip::Line.new(name, quantity.to_i, cents(total), discounts.fetch(name, 0))
         end
       end
@@ -77,12 +84,20 @@ module Importing
       # A product can be discounted more than once in one mail, so the bonuses on a name are added
       # up. A discount is recorded as the size of what came off, whichever sign the mail used.
       def discounts_in(tokens)
-        first = tokens.rindex("Bonusvoordeel")
         last = tokens.index("Totaal voordeel")
-        return {} if first.nil? || last.nil? || last < first
+        first = last && tokens[0...last].rindex("Bonusvoordeel")
+        return {} if first.nil?
 
-        bonuses = tokens[(first + 1)...last].each_slice(FIELDS_PER_BONUS)
-        bonuses.each_with_object(Hash.new(0)) { |(name, _promotion, amount), all| all[name] += cents(amount).abs }
+        tokens[(first + 1)...last].each_slice(FIELDS_PER_BONUS).each_with_object(Hash.new(0)) do |bonus, all|
+          name, amount = name_and_amount(bonus)
+          all[name] += cents(amount).abs
+        end
+      end
+
+      # A bonus is a name, a promotion and an amount; older confirmations put the amount second
+      def name_and_amount(bonus)
+        name, second, third = bonus
+        [ name, second.match?(/\A-?\d+\.\d{2}\z/) ? second : third ]
       end
 
       # The tokens from the product table's first row up to the first of these ends, or the rest
