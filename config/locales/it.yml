@@ -16,10 +16,10 @@ it:
     form:
       account_number: Numero conto
       account_numbers: Numeri conto
-      remove_number: Rimuovi
       external_owner: Conto esterno
       group_owner: "%{name} (gruppo)"
       person_owner: "%{name} (persona)"
+      remove_number: Rimuovi
     index:
       account_numbers: Numeri conto
       category: Categoria

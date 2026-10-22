@@ -16,10 +16,10 @@ en:
     form:
       account_number: Account number
       account_numbers: Account numbers
-      remove_number: Remove
       external_owner: External account
       group_owner: "%{name} (group)"
       person_owner: "%{name} (person)"
+      remove_number: Remove
     index:
       account_numbers: Account numbers
       category: Category

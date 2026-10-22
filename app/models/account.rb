@@ -132,6 +132,12 @@ class Account < ApplicationRecord
 
   private
 
+  def numbers_are_distinct
+    return if numbers.uniq.size == numbers.size
+
+    errors.add(:account_numbers, :duplicated)
+  end
+
   # Prevents assigning both a person and a group to one account.
   # @return [void]
   def one_managed_owner
@@ -191,12 +197,6 @@ class Account < ApplicationRecord
       owner == "samen"
     group.group_memberships.find_or_create_by!(person: Person.find_or_create_by!(name: "Michelle", household: true)) if
       owner == "samen"
-  end
-
-  def numbers_are_distinct
-    return if numbers.uniq.size == numbers.size
-
-    errors.add(:account_numbers, :duplicated)
   end
 
   def check_no_transactions_exist

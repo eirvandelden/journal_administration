@@ -16,10 +16,10 @@ nl:
     form:
       account_number: Rekeningnummer
       account_numbers: Rekeningnummers
-      remove_number: Verwijderen
       external_owner: Externe rekening
       group_owner: "%{name} (groep)"
       person_owner: "%{name} (persoon)"
+      remove_number: Verwijderen
     index:
       account_numbers: Rekeningnummers
       category: Categorie

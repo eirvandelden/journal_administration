@@ -40,11 +40,9 @@ module Resolvable
     def find_or_create_by_number(number)
       number = AccountNumber.normalize_value_for(:number, number)
 
-      owner_of(number) || create!(account_numbers: [ AccountNumber.new(number:) ])
-    rescue ActiveRecord::RecordNotUnique
-      owner_of(number)
-    rescue ActiveRecord::RecordInvalid => error
-      owner_of(number) || raise(error)
+      AccountNumber.owner_of(number) || create!(account_numbers: [ AccountNumber.new(number:) ])
+    rescue ActiveRecord::RecordNotUnique, ActiveRecord::RecordInvalid => error
+      AccountNumber.owner_of(number) || raise(error)
     end
 
     # Attempts to find a managed household account embedded in the transaction description.
@@ -61,9 +59,7 @@ module Resolvable
     # Finds a household account by any of its numbers embedded in a description.
     # @return [Account, nil]
     def resolve_by_account_number(description)
-      numbers = AccountNumber.where(account: own).pluck(:number)
-      matched = numbers.find { |number| description.include?(number) }
-      owner_of(matched) if matched.present?
+      AccountNumber.household_owner_in(description)
     end
 
     # Finds a household account by its name embedded in a description.
@@ -72,12 +68,6 @@ module Resolvable
       candidates = own.where.not(name: nil).pluck(:name).reject(&:blank?).sort_by { |name| -name.length }
       match = candidates.find { |name| description.include?(name) }
       own.find_by(name: match) if match
-    end
-
-    private
-
-    def owner_of(number)
-      AccountNumber.find_by(number:)&.account
     end
   end
 end
