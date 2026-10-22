@@ -131,7 +131,7 @@ attr_reader :lines #: Array[PackingSlip::Line]
 def packed?               # OlderPackingSlip true, OrderConfirmation false
 ```
 
-Bonuses fold into their lines in every reader, as `PackingSlip` does today. Where the readers share parsing (Dutch month names, amounts), move the shared method to a small module `Importing::AlbertHeijn::Reading`, included by all three. No base class.
+Bonuses fold into their lines in every reader, as `PackingSlip` does today. Where the readers share parsing (Dutch month names, amounts), move the shared method to a small module `Importing::AlbertHeijn::Reading`, included by all three. No base class. The two new readers read the mail as a list of lines and step over table headings; `PackingSlip` also refuses a mail that says "Bedankt voor je bestelling", so a confirmation never reads as a packing slip.
 
 `Receipt::Recordable` (new concern on `Receipt`): keeps one delivery per order number, with the best basket known.
 
@@ -147,7 +147,7 @@ SHOP_NAME = "Albert Heijn B.V."
 def self.record_basket(basket)
 ```
 
-Private: `keeps_packed_basket?(basket)`, `same_basket?(basket)` (compares issued_on, total, packed and each line's name, quantity and amounts in memory), `replace_basket(basket)`, `shop`. The body moves here from `ImportJob#record`. `shop` resolves `Account.resolve_for_import(account_number: nil, description: "", name: SHOP_NAME)`.
+`record_basket` finds or builds the receipt and calls its public `record(basket)`, so the private helpers stay private without `send`. Private: `keeps_packed_basket?(basket)`, `same_basket?(basket)` (compares issued_on, total, packed and each line's name, quantity and amounts in memory), `replace_basket(basket)`, `albert_heijn` (not `shop`, which would hide the association). The body moves here from `ImportJob#record`. `albert_heijn` resolves `Account.resolve_for_import(account_number: nil, description: "", name: SHOP_NAME)`.
 
 `Receipt::PaymentMatching` (new concern on `Receipt`; not `Linkable`, which names a Transaction concern already): links deliveries to the payments that confidently paid them.
 
@@ -241,7 +241,7 @@ Not checked: journal_administration has no Steep or rbs_rails setup.
 N = lines in a basket, D = unlinked deliveries, C = categories in a basket.
 
 - `BasketMail.parse`: no queries, O(mail length), at most three readers.
-- `ImportAlbertHeijnMail`, same basket again: 4 queries (shop, receipt, its lines with products), no writes.
+- `ImportAlbertHeijnMail`, same basket again: at most 4 queries (the receipt, its lines, their products; the shop is only resolved when something is written), no writes.
 - `ImportAlbertHeijnMail`, new or changed basket: about 3N + 8, the same as today's `ImportJob` (per line: one or two to resolve the product, one insert). A linked delivery adds `rewrite_payment_splits` (about 4 + C).
 - `LinkDeliveriesToPayments`: 1 query for the unlinked deliveries, then 2 per delivery (ordered and door-card candidates), then about 6 + C per link. The AE lookup is a `LIKE '%AE<n>%'` scan of the notes, with no index; about 20 000 transactions make that cheap in SQLite. About 175 deliveries on the first run cost a few thousand queries in one call; each link has its own transaction.
 - `ListUnclassifiedProducts`: 2 queries, whatever the number of products.
@@ -383,7 +383,7 @@ Out of scope, as `intent.md` lists: contacting Albert Heijn, reading mail inside
 - An unreadable mail is skipped and reported, nothing saved → `test/integration/albert_heijn_deliveries_test.rb` `test "a mail nobody can read is refused and saves nothing"`
 - The import run on a copy of the dev database → check: step 16, evidence recorded in the change folder.
 - Query count: `list_unclassified_products` answers in two queries whatever the number of products → `test/tools/assistant/list_unclassified_products_test.rb` `test "lists the products in two queries however many there are"`
-- Query count: importing the same basket again reads four queries and writes nothing → `test/models/receipt/recordable_test.rb` `test "an unchanged basket is read in four queries and writes nothing"`
+- Query count: importing the same basket again reads four queries and writes nothing → `test/models/receipt/recordable_test.rb` `test "an unchanged basket is read in four queries and writes nothing"` (asserts at most four)
 - Invariant: a confirmation never replaces a packed basket, enforced by `Receipt.record_basket` → `test/models/receipt/recordable_test.rb` `test "a confirmation after a packing slip keeps the packed lines"`
 - Invariant: an assistant never changes a brand or type already present, enforced by `Product#fill_in` → `test/models/product_test.rb` `test "fill_in keeps a brand and type already present"`
 - Invariant: an assistant's category is a child of Huishoudelijke uitgaven, enforced by `Category.add_household_expense` → `test/models/category_test.rb` `test "add_household_expense places the category under Huishoudelijke uitgaven"`
