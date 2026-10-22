@@ -977,6 +977,7 @@ it:
         submit: Carica
     index:
       new_transaction: "➕ Nuova transazione"
+      title: Transazioni
     new:
       title: "➕ Nuova transazione"
     recent:

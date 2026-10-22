@@ -22,4 +22,11 @@ class TransactionsImportsTest < ActionDispatch::IntegrationTest
 
     assert_select "form[action='#{transactions_imports_path}'][method='post']"
   end
+
+  test "new has a title bar h1 and an action row with Annuleren" do
+    get new_transactions_import_path
+
+    assert_select "main > header > h1", count: 1
+    assert_select "form > footer a[role=button][href=?]", transactions_path
+  end
 end

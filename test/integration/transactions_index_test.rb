@@ -105,8 +105,7 @@ class TransactionsIndexTest < ActionDispatch::IntegrationTest
     formatted_amount = Regexp.escape(ApplicationController.helpers.cents_to_currency(1000))
     formatted_note = Regexp.escape(transactions(:debit_grocery).note)
 
-    assert_match %r{<td>#{formatted_amount}</td>\s*<td>.*?</td>\s*<td>.*?</td>\s*<td>#{formatted_note}</td>}m,
-response.body
+    assert_match %r{>#{formatted_amount}</data>.*?<td[^>]*>#{formatted_note}</td>}m, response.body
   end
 
   test "no_category filter keeps showing a nil-category remainder split as uncategorized" do
@@ -119,10 +118,9 @@ response.body
     assert_response :success
 
     formatted_amount = Regexp.escape(ApplicationController.helpers.cents_to_currency(1500))
-    formatted_note = Regexp.escape(transaction.note.truncate(20))
+    formatted_note = Regexp.escape(transaction.note)
 
-    assert_match %r{<td>#{formatted_amount}</td>\s*<td>.*?</td>\s*<td>.*?</td>\s*<td>#{formatted_note}</td>}m,
-response.body
+    assert_match %r{>#{formatted_amount}</data>.*?<td[^>]*>#{formatted_note}</td>}m, response.body
   end
 
   class SplitSubRows < ActionDispatch::IntegrationTest
@@ -158,5 +156,28 @@ response.body
       assert_response :success
       assert_select "tr.split-row", count: 3
     end
+  end
+
+  test "index has a title bar with + Nieuw and rows that open the transaction through the amount" do
+    get transactions_path
+
+    assert_select "main > header > h1", count: 1
+    assert_select "main > header nav a[href=?]", new_transaction_path, text: I18n.t("common.new")
+    assert_select "tbody td a[href=?]", debit_path(transactions(:debit_bakery))
+    assert_select "tbody td:first-child a", count: 0, text: I18n.t("transactions.table.show")
+  end
+
+  test "index does not cut a long note short" do
+    transactions(:debit_bakery).update!(note: "x" * 60)
+
+    get transactions_path
+
+    assert_select "td", text: "x" * 60
+  end
+
+  test "every index table stacks with a data-label on every cell" do
+    get transactions_path
+
+    assert_select "table[data-stack] tbody td:not([data-label])", count: 0
   end
 end

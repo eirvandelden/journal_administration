@@ -977,6 +977,7 @@ nl:
         submit: Uploaden
     index:
       new_transaction: "➕ Nieuwe transactie"
+      title: Transacties
     new:
       title: "➕ Nieuwe transactie"
     recent:

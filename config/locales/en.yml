@@ -977,6 +977,7 @@ en:
         submit: Upload
     index:
       new_transaction: "➕ New Transaction"
+      title: Transactions
     new:
       title: "➕ New transaction"
     recent:
