@@ -47,6 +47,16 @@ class ResponsiveTablesTest < ApplicationSystemTestCase
     end
   end
 
+  test "a long single-word title wraps instead of scrolling sideways at phone width" do
+    current_window.resize_to(*PHONE)
+    visit receipts_url
+
+    long_word = "Boodschappenfacturenoverzichtsbeheerdersvergadering"
+    page.execute_script("document.querySelector('main > header h1').textContent = #{long_word.to_json}")
+
+    assert_no_sideways_scroll "long title"
+  end
+
   private
 
   def pages

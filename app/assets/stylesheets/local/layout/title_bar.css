@@ -1,0 +1,5 @@
+/* A long single-word heading wraps instead of widening the page. <html> has no lang, so no hyphens. */
+main > header h1 {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
