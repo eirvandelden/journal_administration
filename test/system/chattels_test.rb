@@ -10,12 +10,12 @@ class ChattelsTest < ApplicationSystemTestCase
   test "visiting the index" do
     visit chattels_url
 
-    assert_link I18n.t("chattels.index.new_chattel", locale: locale)
+    assert_link I18n.t("common.new", locale: locale)
   end
 
   test "should create chattel" do
     visit chattels_url
-    click_on I18n.t("chattels.index.new_chattel", locale: locale)
+    click_on I18n.t("common.new", locale: locale)
 
     fill_in "chattel_name", with: "System Test Chattel"
     click_on I18n.t("common.save", locale: locale)

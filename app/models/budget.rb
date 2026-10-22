@@ -31,6 +31,11 @@ class Budget < ApplicationRecord
   scope :chronological, -> { order(starts_at: :asc) }
   scope :starting_after, ->(day) { where("starts_at > ?", day.in_time_zone.end_of_day).chronological }
 
+  # @return [String] The period the budget covers, for example "1 January 2026 – 31 December 2026"
+  def to_s
+    [ starts_at, ends_at ].compact.map { |moment| I18n.l(moment.to_date, format: :long) }.join(" – ")
+  end
+
   # @return [Boolean]
   def active? = starts_at <= Time.current && (ends_at.nil? || ends_at > Time.current)
 
