@@ -38,9 +38,10 @@ class AccountsEditTest < ActionDispatch::IntegrationTest
   end
 
   test "a rejected save shows the errors in an alert above the fields" do
-    taken = accounts(:checking).account_number
+    other_number = accounts(:checking).numbers.first
 
-    patch account_path(@account), params: { account: { account_number: taken } }
+    patch account_path(@account),
+      params: { account: { account_numbers_attributes: { "0" => { number: other_number } } } }
 
     assert_response :unprocessable_entity
     assert_select "form > aside[role=alert] li"

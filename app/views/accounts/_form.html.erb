@@ -34,7 +34,7 @@
   <%= render "shared/action_row", form: f,
       cancel_path: account.persisted? ? account_path(account) : accounts_path,
       delete_form_id: (dom_id(account, :delete) if account.persisted?),
-      confirm: t("common.confirm_delete_named", name: account.name_in_database.presence || account.account_number_in_database) %>
+      confirm: t("common.confirm_delete_named", name: account.stored_label) %>
 <% end %>
 <% if account.persisted? %>
   <%= render "shared/delete_form", record: account, url: account_path(account) %>

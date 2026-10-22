@@ -110,9 +110,15 @@ class Account < ApplicationRecord
   #
   # @return [String] Account name if present, otherwise the lowest account number
   def to_s
-    return name unless name.blank?
+    label_from(name, numbers.compact.min)
+  end
 
-    numbers.min.to_s
+  # The account's label as last saved, ignoring unsaved changes.
+  #
+  # @return [String] Stored name if present, otherwise the lowest stored account number
+  def stored_label
+    stored_numbers = account_numbers.select(&:persisted?).filter_map(&:number_in_database)
+    label_from(name_in_database, stored_numbers.min)
   end
 
   # Returns the account numbers as strings
@@ -204,6 +210,13 @@ class Account < ApplicationRecord
 
     errors.add(:base, :has_transactions)
     throw :abort
+  end
+
+  # @param name [String, nil]
+  # @param number [String, nil]
+  # @return [String] the name when present, otherwise the number
+  def label_from(name, number)
+    name.presence || number.to_s
   end
 
   # @param pattern [String]
