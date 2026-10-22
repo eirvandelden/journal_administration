@@ -32,7 +32,8 @@ module Resolvable
     # Finds the account that owns a number, or creates an account holding it
     #
     # Spaces and case in the number do not matter. When a parallel import creates the same
-    # number first, the unique index raises and this returns the account that won.
+    # number first, the unique index or the taken-number validation raises and this returns the
+    # account that won. Any other validation failure still raises.
     #
     # @param number [String] An account number
     # @return [Account]
@@ -42,6 +43,8 @@ module Resolvable
       owner_of(number) || create!(account_numbers: [ AccountNumber.new(number:) ])
     rescue ActiveRecord::RecordNotUnique
       owner_of(number)
+    rescue ActiveRecord::RecordInvalid => error
+      owner_of(number) || raise(error)
     end
 
     # Attempts to find a managed household account embedded in the transaction description.

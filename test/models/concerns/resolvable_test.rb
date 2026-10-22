@@ -150,8 +150,24 @@ class ResolvableTest < ActiveSupport::TestCase
       assert_equal [ "NL00NEW0000000002" ], account.numbers
     end
 
-    test "falls back to the existing account when a parallel import won" do
+    test "falls back to the account that won when the loser looked up before the winner committed" do
       number = "NL00RACE0000000001"
+      winner = Account.create!(name: "Parallel winner", account_numbers: [ AccountNumber.new(number:) ])
+      lookups = 0
+      original = AccountNumber.method(:find_by)
+      AccountNumber.define_singleton_method(:find_by) do |*args, **options|
+        (lookups += 1) == 1 ? nil : original.call(*args, **options)
+      end
+
+      assert_no_difference "Account.count" do
+        assert_equal winner, Account.find_or_create_by_number(number)
+      end
+    ensure
+      AccountNumber.singleton_class.remove_method(:find_by)
+    end
+
+    test "falls back to the existing account when the unique index rejects a parallel import" do
+      number = "NL00RACE0000000002"
       winner = Account.new(name: "Parallel winner", account_numbers: [ AccountNumber.new(number:) ])
       Account.define_singleton_method(:create!) do |*|
         winner.save!
