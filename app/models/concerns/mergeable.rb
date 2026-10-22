@@ -22,14 +22,26 @@ module Mergeable
     true
   end
 
-  # @return [Integer] Transactions that have this account on either side
-  def transactions_count
-    Transaction.by_account(id).count
-  end
+  class_methods do
+    # Counts transactions per account, one grouped query per side
+    #
+    # A transaction between two of the accounts counts once for each of them.
+    #
+    # @param ids [Array<Integer>] Account ids
+    # @return [Hash{Integer => Integer}] Transactions on either side, by account id
+    def transactions_count_by_account(ids)
+      return {} if ids.empty?
 
-  # @return [Integer] Receipts bought at this account
-  def receipts_count
-    receipts.count
+      debits = Transaction.where(debitor_account_id: ids).group(:debitor_account_id).count
+      credits = Transaction.where(creditor_account_id: ids).group(:creditor_account_id).count
+      debits.merge(credits) { |_id, debit, credit| debit + credit }
+    end
+
+    # @param ids [Array<Integer>] Account ids
+    # @return [Hash{Integer => Integer}] Receipts bought at each account, by account id
+    def receipts_count_by_account(ids)
+      Receipt.where(shop_id: ids).group(:shop_id).count
+    end
   end
 
   private

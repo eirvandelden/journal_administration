@@ -11,9 +11,9 @@ class Accounts::MergesController < ApplicationController
     @matches = candidates.includes(:account_numbers).search(@query)
     @duplicates = candidates.where(id: duplicate_ids).order(:id).includes(:account_numbers).load
     @transactions_count = transactions_in(@duplicates.ids)
-    @receipts_count = Receipt.where(shop_id: @duplicates.ids).count
-    @transactions_by_account = transactions_by_account(@duplicates.ids)
-    @receipts_by_account = Receipt.where(shop_id: @duplicates.ids).group(:shop_id).count
+    @transactions_by_account = Account.transactions_count_by_account(@duplicates.ids)
+    @receipts_by_account = Account.receipts_count_by_account(@duplicates.ids)
+    @receipts_count = @receipts_by_account.values.sum
   end
 
   # Merges the picked duplicates into the account.
@@ -54,14 +54,5 @@ class Accounts::MergesController < ApplicationController
   # Transactions on either side of the accounts; none for no accounts, as `by_account` would match all
   def transactions_in(ids)
     ids.any? ? Transaction.by_account(ids).count : 0
-  end
-
-  # One grouped count per side, so the review list runs no query per duplicate
-  def transactions_by_account(ids)
-    return {} if ids.empty?
-
-    debits = Transaction.where(debitor_account_id: ids).group(:debitor_account_id).count
-    credits = Transaction.where(creditor_account_id: ids).group(:creditor_account_id).count
-    debits.merge(credits) { |_id, debit, credit| debit + credit }
   end
 end

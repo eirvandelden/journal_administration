@@ -137,6 +137,15 @@ class AccountMergesTest < ActionDispatch::IntegrationTest
       assert_select "li", text: /2 transactions/
     end
 
+    test "the review step counts receipts in one query" do
+      reads = queries_matching(/COUNT.*FROM "receipts"/) do
+        get new_account_merge_path(@target), params: { duplicate_ids: [ @duplicate.id ] }
+      end
+
+      assert_equal 1, reads.size
+      assert_select "[data-turbo-confirm*='1 receipt']"
+    end
+
     test "the match list reads account numbers once however many accounts match" do
       3.times do |i|
         Account.create!(name: "AH Extra #{i}", account_numbers: [ AccountNumber.new(number: "NL00EXTRA#{i}") ])

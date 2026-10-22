@@ -150,11 +150,28 @@ class MergeableTest < ActiveSupport::TestCase
   end
 
   class Counting < MergeableTest
-    test "transactions_count and receipts_count count this account's records" do
-      assert_equal 2, @duplicate.transactions_count
-      assert_equal 1, @duplicate.receipts_count
-      assert_equal 0, accounts(:jumbo).receipts_count
-      assert_equal 0, accounts(:jumbo).transactions_count
+    test "transactions_count_by_account counts the transactions on either side per account" do
+      assert_equal({ @duplicate.id => 2 }, Account.transactions_count_by_account([ @duplicate.id ]))
+    end
+
+    test "transactions_count_by_account counts a transaction between two accounts once for each" do
+      other = Account.create!(name: "AH Other")
+      Debit.create!(
+        amount: 100, booked_at: Time.current, interest_at: Time.current,
+        debitor: accounts(:checking), creditor: @duplicate, category: categories(:gifts)
+      ).update_columns(debitor_account_id: other.id)
+
+      counts = Account.transactions_count_by_account([ @duplicate.id, other.id ])
+
+      assert_equal [ 3, 1 ], counts.values_at(@duplicate.id, other.id)
+    end
+
+    test "transactions_count_by_account is empty for no accounts" do
+      assert_empty Account.transactions_count_by_account([])
+    end
+
+    test "receipts_count_by_account counts the receipts bought at each account" do
+      assert_equal({ @duplicate.id => 1 }, Account.receipts_count_by_account([ @duplicate.id, accounts(:jumbo).id ]))
     end
   end
 end
