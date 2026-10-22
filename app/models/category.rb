@@ -7,6 +7,7 @@ class Category < ApplicationRecord
   include Searchable
 
   TRANSFER_NAME = "Transfer".freeze
+  HOUSEHOLD_EXPENSES = "Huishoudelijke uitgaven".freeze
 
   searchable_on :name
 
@@ -26,6 +27,19 @@ class Category < ApplicationRecord
   scope :budgetable_groups, -> { groups.where.not(name: TRANSFER_NAME) }
 
   validates :direction, presence: true
+
+  # The child of Huishoudelijke uitgaven with this name, created with the group's direction when missing
+  #
+  # Names are matched whatever their case. Raises ActiveRecord::RecordNotFound when the group is missing.
+  #
+  #: (String name) -> Category
+  def self.add_household_expense(name)
+    group = groups.find_by!(name: HOUSEHOLD_EXPENSES)
+    wanted = name.strip
+
+    group.secondaries.find { |child| child.name.casecmp?(wanted) } ||
+      group.secondaries.create!(name: wanted, direction: group.direction)
+  end
 
   # Returns the most recent transactions for this category and its children
   #
