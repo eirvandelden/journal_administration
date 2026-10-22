@@ -366,3 +366,10 @@ Etienne decided after the plan stage that the MCP `budget_status` tool also coun
 - The MCP compatibility proof is weak, because the existing assistant test uses exactly 30 days, where both rules agree; add an assistant test for 1 to 31 October expecting 1529.33 → dismissed: the model test "exact days keep the budget goal at days over thirty" makes the same `Dashboard.new(start_date:, end_date:)` call as the tool, over 1 to 31 October, and pinning the miscount in the assistant suite would make the open MCP decision harder to reverse
 - The form proof would pass with a leftover "Start date" label → fixed (the integration test asserts the new from and to labels exist and the start and end date labels do not)
 - The query-count test does not prove memoization, because one call costs two queries anyway → fixed (the test calls `selectable_months` twice inside one two-query assertion)
+
+## Implementation notes (implement stage, 2026-10-22)
+
+- `MonthRange.spanning` is public, so `DateRange.from_dates` can build a `MonthRange`; `new`, `from_dates` and `from_filter` stay private.
+- The `#:` RBS comments are left out: this repository's rubocop rejects them (`Layout/LeadingCommentSpace`) and adds no linter disables. The types live in the YARD `@return` tags.
+- `selectable_months` reads `Transaction.unscoped` so the default `booked_at` ordering does not enter the two aggregate queries.
+- `test/system/dashboard_filters_test.rb` is rewritten but could not run here: ChromeDriver wants Chrome 156, the machine has 150.
