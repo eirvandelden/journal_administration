@@ -64,6 +64,10 @@ class AccountMergesTest < ActionDispatch::IntegrationTest
 
       assert_predicate flash[:alert], :present?
     end
+
+    test "merging without picking duplicates counts no transactions" do
+      assert_empty queries_matching(/SELECT COUNT\(\*\) FROM "transactions"/) { post account_merge_path(@target) }
+    end
   end
 
   class New < AccountMergesTest

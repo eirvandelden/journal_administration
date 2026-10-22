@@ -10,7 +10,7 @@ class Accounts::MergesController < ApplicationController
     @query = merge_params[:query].to_s.strip
     @matches = candidates.includes(:account_numbers).search(@query)
     @duplicates = candidates.where(id: duplicate_ids).order(:id).includes(:account_numbers).load
-    @transactions_count = duplicate_ids.any? ? Transaction.by_account(@duplicates.ids).count : 0
+    @transactions_count = transactions_in(@duplicates.ids)
     @receipts_count = Receipt.where(shop_id: @duplicates.ids).count
   end
 
@@ -20,7 +20,7 @@ class Accounts::MergesController < ApplicationController
   # @route /accounts/:account_id/merge
   def create
     duplicates = Account.where(id: duplicate_ids).to_a
-    transactions = Transaction.by_account(duplicates.map(&:id)).count
+    transactions = transactions_in(duplicates.map(&:id))
     receipts = Receipt.where(shop_id: duplicates.map(&:id)).count
 
     if @account.merge(duplicates)
@@ -47,5 +47,10 @@ class Accounts::MergesController < ApplicationController
 
   def duplicate_ids
     Array(merge_params[:duplicate_ids]).compact_blank.map(&:to_i)
+  end
+
+  # Transactions on either side of the accounts; none for no accounts, as `by_account` would match all
+  def transactions_in(ids)
+    ids.any? ? Transaction.by_account(ids).count : 0
   end
 end
