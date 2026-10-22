@@ -94,22 +94,22 @@ class AppropriationTest < ActiveSupport::TestCase
     end
 
     test "#charged adds charged credits and credit parts and subtracts debits" do
-      credit(90, note: "Birthday present").update!(appropriation: @appropriation)
-      debit(20, note: "Returned present").update!(appropriation: @appropriation)
-      credit_part(amount: 60).update!(appropriation: @appropriation)
+      credit(9_000, note: "Birthday present").update!(appropriation: @appropriation)
+      debit(2_000, note: "Returned present").update!(appropriation: @appropriation)
+      credit_part(amount: 6_000).update!(appropriation: @appropriation)
 
       assert_equal 13000, @appropriation.charged
     end
 
     test "#balance is appropriated minus charged" do
-      credit(40, note: "Birthday present").update!(appropriation: @appropriation)
+      credit(4_000, note: "Birthday present").update!(appropriation: @appropriation)
 
       assert_equal 11000, @appropriation.balance
     end
 
     test "#overspent? when balance is negative" do
-      credit(90, note: "Birthday present").update!(appropriation: @appropriation)
-      credit_part(amount: 100).update!(appropriation: @appropriation)
+      credit(9_000, note: "Birthday present").update!(appropriation: @appropriation)
+      credit_part(amount: 10_000).update!(appropriation: @appropriation)
 
       assert_predicate @appropriation, :overspent?
       assert_not appropriations(:christmas_etienne).overspent?
@@ -134,7 +134,7 @@ class AppropriationTest < ActiveSupport::TestCase
     private
 
     def credit_part(amount:)
-      credit(100, note: "Shared presents").transaction_splits.create!(amount:, category: categories(:gifts))
+      credit(10_000, note: "Shared presents").transaction_splits.create!(amount:, category: categories(:gifts))
     end
 
     def webshop_part(amount:)

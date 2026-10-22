@@ -379,7 +379,7 @@ class AssistantTest < ActionDispatch::IntegrationTest
 
   test "the assistant lists a year's appropriations with what is left of each" do
     birthday = appropriations(:birthday_etienne)
-    credit(40, note: "Birthday present").update!(appropriation: birthday)
+    credit(4_000, note: "Birthday present").update!(appropriation: birthday)
 
     answer = ask_assistant("list_appropriations", budget_year: 2026)
     line = answer.lines.find { |candidate| candidate.start_with?("#{birthday.id}:") }

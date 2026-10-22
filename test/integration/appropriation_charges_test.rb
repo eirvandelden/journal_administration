@@ -44,44 +44,44 @@ class AppropriationChargesTest < ActionDispatch::IntegrationTest
 
   test "a charged credit lowers the balance by its amount" do
     appropriation = appropriations(:birthday_etienne)
-    appropriation.update!(amount: 200)
+    appropriation.update!(amount: 20_000)
 
-    charge credit(50, note: "Birthday present"), to: appropriation
+    charge credit(5_000, note: "Birthday present"), to: appropriation
 
-    assert_figures_on_both_pages appropriation, charged: 50, balance: 150
+    assert_figures_on_both_pages appropriation, charged: 5_000, balance: 15_000
   end
 
   test "a charged debit raises the balance by its amount" do
     appropriation = appropriations(:birthday_etienne)
-    appropriation.update!(amount: 200)
+    appropriation.update!(amount: 20_000)
 
-    charge credit(50, note: "Birthday present"), to: appropriation
-    charge debit(20, note: "Returned present"), to: appropriation
+    charge credit(5_000, note: "Birthday present"), to: appropriation
+    charge debit(2_000, note: "Returned present"), to: appropriation
 
-    assert_figures_on_both_pages appropriation, charged: 30, balance: 170
+    assert_figures_on_both_pages appropriation, charged: 3_000, balance: 17_000
   end
 
   test "a charged debit alone shows a negative amount charged" do
     appropriation = appropriations(:birthday_etienne)
-    appropriation.update!(amount: 200)
+    appropriation.update!(amount: 20_000)
 
-    charge debit(20, note: "Returned present"), to: appropriation
+    charge debit(2_000, note: "Returned present"), to: appropriation
 
-    assert_figures_on_both_pages appropriation, charged: -20, balance: 220
+    assert_figures_on_both_pages appropriation, charged: -2_000, balance: 22_000
   end
 
   test "a charged part of a credit counts like a whole credit" do
     appropriation = appropriations(:birthday_etienne)
-    appropriation.update!(amount: 200)
-    part, = split_payment(credit(100, note: "Shared presents"), 50, 50)
+    appropriation.update!(amount: 20_000)
+    part, = split_payment(credit(10_000, note: "Shared presents"), 5_000, 5_000)
 
     charge_part part, to: appropriation
 
-    assert_figures_on_both_pages appropriation, charged: 50, balance: 150
+    assert_figures_on_both_pages appropriation, charged: 5_000, balance: 15_000
   end
 
   test "charging a credit lowers the appropriation's balance by its amount" do
-    charge credit(40, note: "Birthday present"), to: appropriations(:birthday_etienne)
+    charge credit(4_000, note: "Birthday present"), to: appropriations(:birthday_etienne)
 
     get appropriations_path(year: 2026)
 
@@ -101,7 +101,7 @@ class AppropriationChargesTest < ActionDispatch::IntegrationTest
   end
 
   test "a credit counts in the budget year of its appropriation, not the year it was paid" do
-    charge credit(40, note: "Birthday present"), to: appropriations(:birthday_chiara_next_year)
+    charge credit(4_000, note: "Birthday present"), to: appropriations(:birthday_chiara_next_year)
 
     get appropriations_path(year: 2027)
 
@@ -113,7 +113,7 @@ class AppropriationChargesTest < ActionDispatch::IntegrationTest
   end
 
   test "charging a credit to another appropriation moves its amount there" do
-    payment = credit(40, note: "Birthday present")
+    payment = credit(4_000, note: "Birthday present")
     payment.update!(appropriation: appropriations(:birthday_etienne))
 
     charge payment, to: appropriations(:christmas_etienne)
@@ -138,8 +138,8 @@ class AppropriationChargesTest < ActionDispatch::IntegrationTest
   end
 
   test "a charged debit lowers the amount charged" do
-    charge credit(90, note: "Birthday present"), to: appropriations(:birthday_etienne)
-    charge debit(20, note: "Returned present"), to: appropriations(:birthday_etienne)
+    charge credit(9_000, note: "Birthday present"), to: appropriations(:birthday_etienne)
+    charge debit(2_000, note: "Returned present"), to: appropriations(:birthday_etienne)
 
     get appropriations_path(year: 2026)
 
@@ -147,7 +147,7 @@ class AppropriationChargesTest < ActionDispatch::IntegrationTest
   end
 
   test "spending more than appropriated shows a negative balance marked as overspent" do
-    charge credit(180, note: "Birthday bicycle with a basket"), to: appropriations(:birthday_etienne)
+    charge credit(18_000, note: "Birthday bicycle with a basket"), to: appropriations(:birthday_etienne)
 
     get appropriations_path(year: 2026)
 
@@ -174,7 +174,7 @@ class AppropriationChargesTest < ActionDispatch::IntegrationTest
   end
 
   test "charging an unsplit credit on its edit page makes it count there" do
-    payment = credit(40, note: "Birthday present")
+    payment = credit(4_000, note: "Birthday present")
 
     get edit_transaction_path(payment)
 
@@ -273,11 +273,11 @@ note: "Sinterklaas present for Chiara")
   end
 
   def split_webshop_payment
-    split_payment(transactions(:webshop_sinterklaas), 60, 40)
+    split_payment(transactions(:webshop_sinterklaas), 6_000, 4_000)
   end
 
   def split_credit
-    split_payment(credit(100, note: "Sinterklaas presents"), 60, 40)
+    split_payment(credit(10_000, note: "Sinterklaas presents"), 6_000, 4_000)
   end
 
   def split_payment(payment, *amounts)
