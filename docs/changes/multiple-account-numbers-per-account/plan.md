@@ -79,7 +79,7 @@ Albert Heijn pays and is paid through three account numbers, but `accounts.accou
 - **The ignored column goes stale.** Nothing reads or writes it after this change. Dropping it needs explicit approval and is a separate change.
 - **`update_all` skips callbacks and `updated_at`** on moved transactions, receipts, aliases and numbers. This matches `absorb_transactions_for` today. Transaction types stay correct because only external accounts merge.
 - **Merge is final.** Undo is out of scope; the confirm states the counts.
-- **A parallel import race** on a new number now raises `RecordNotUnique` from the index instead of silently creating two accounts; `find_or_create_by_number` falls back to the existing account.
+- **A parallel import race** on a new number now fails on the taken-number validation (`RecordInvalid`, since SQLite takes the write lock first) or the unique index (`RecordNotUnique`) instead of silently creating two accounts; `find_or_create_by_number` rescues both and falls back to the existing account.
 - **Rejected**: a Stimulus controller that rewrites the confirm text as boxes are ticked (adds JavaScript for one sentence; the GET preview does it on the server); a search-and-add widget for numbers on the show page (Etienne prefers the edit page).
 
 ## Out of scope
