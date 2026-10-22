@@ -75,6 +75,7 @@ module Importing
       def settled_amount = total_amount - (stated("Overig totaal") || 0)
 
       def read_lines
+        discounts = discounts_in(@tokens)
         products.each_slice(FIELDS_PER_PRODUCT).map do |name, quantity, _shelf_price, total|
           Line.new(name, quantity.to_i, Cents.from_euros(BigDecimal(total)), discounts.fetch(name, 0))
         end
@@ -83,26 +84,6 @@ module Importing
       # The products packed, without the free extras Albert Heijn throws in
       def products
         self.class.product_section(@tokens)
-      end
-
-      # A product can be discounted more than once on one slip — two promotions on
-      # the same thing — so the bonuses on a name are added up, not overwritten.
-      # The slip writes a bonus as a negative amount; a discount is recorded as
-      # the size of what came off, whichever sign the slip used.
-      def discounts
-        @discounts ||= bonuses.each_slice(3).each_with_object(Hash.new(0)) do |(name, _promotion, amount), all|
-          all[name] += Cents.from_euros(BigDecimal(amount).abs)
-        end
-      end
-
-      # Empty on a delivery where nothing was on bonus: the summary still names
-      # the bonus row, but no detail section follows it.
-      def bonuses
-        first = @tokens.rindex("Bonusvoordeel")
-        last = @tokens.index("Totaal voordeel")
-        return [] if first.nil? || last.nil? || last < first
-
-        @tokens[(first + 1)...last]
       end
     end
   end

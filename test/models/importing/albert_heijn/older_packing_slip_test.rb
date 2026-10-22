@@ -30,6 +30,21 @@ class Importing::AlbertHeijn::OlderPackingSlipTest < ActiveSupport::TestCase
     assert_not(@slip.lines.any? { |line| line.name.include?("Allerhande") })
   end
 
+  test "a bonus listed twice under one product is added up, and an empty bonus is ignored" do
+    slip = Importing::AlbertHeijn::OlderPackingSlip.parse(
+      file_fixture("albert_heijn_older_packing_slip_with_repeated_bonus.txt").read
+    )
+    lines = slip.lines.index_by(&:name)
+
+    assert_equal 60, slip.lines.size
+    assert_equal 14_517, slip.total_amount
+    assert_equal 14_113, slip.lines.sum(&:full_amount)
+    assert_equal 681, slip.lines.sum(&:discount_amount)
+    assert_equal 32, lines["AH Snoepgroente komkommer"].discount_amount
+    assert_equal 32, lines["AH Snoepgroente tomaat"].discount_amount
+    assert_equal 33, lines["AH Snoepgroente paprikamix"].discount_amount
+  end
+
   test "returns nothing for a current packing slip" do
     assert_nil Importing::AlbertHeijn::OlderPackingSlip.parse(file_fixture("albert_heijn_packing_slip.txt").read)
   end

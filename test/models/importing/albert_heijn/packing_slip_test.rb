@@ -101,6 +101,23 @@ class Importing::AlbertHeijn::PackingSlipTest < ActiveSupport::TestCase
     assert_equal 100, tuna.discount_amount
   end
 
+  test "a second bonus under no product name belongs to the product above it" do
+    tuna_bonus = " AH Tonijnsalade \n\nBonus\n\n -0.75 \n\n"
+    continued = @slip_text.sub(tuna_bonus, "#{tuna_bonus} 2 VOOR 3.50 \n\n -0.25 \n\n")
+    slip = Importing::AlbertHeijn::PackingSlip.parse(continued)
+
+    assert_equal 100, slip.lines.find { |line| line.name == "AH Tonijnsalade" }.discount_amount
+    assert_equal 2781 + 25, slip.lines.sum(&:discount_amount)
+  end
+
+  test "an empty bonus is ignored" do
+    tuna_bonus = " AH Tonijnsalade \n\nBonus\n\n -0.75 \n\n"
+    empty = "#{tuna_bonus} 2 VOOR 3.50 \n\n -0.00 \n\n"
+    slip = Importing::AlbertHeijn::PackingSlip.parse(@slip_text.sub(tuna_bonus, empty))
+
+    assert_equal 75, slip.lines.find { |line| line.name == "AH Tonijnsalade" }.discount_amount
+  end
+
   test "a slip whose product rows do not line up is refused" do
     mangled = @slip_text.sub(" AH Broccoliroosjes \n\n 1 \n\n 1.49 \n\n 1.49 \n\n",
 " AH Broccoliroosjes \n\n 1 \n\n 1.49 \n\n")
