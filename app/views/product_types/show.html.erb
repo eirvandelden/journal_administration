@@ -1,9 +1,7 @@
-<header>
-  <h1><%= @product_type.name %></h1>
-  <nav>
-    <%= link_to t("common.edit"), edit_product_type_path(@product_type) %>
-  </nav>
-</header>
+<% content_for(:title) { @product_type.name } %>
+<%= render layout: "shared/title_bar", locals: { title: @product_type.name } do %>
+  <%= link_to t("common.edit"), edit_product_type_path(@product_type) %>
+<% end %>
 
 <article>
   <dl>

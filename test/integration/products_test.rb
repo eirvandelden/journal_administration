@@ -45,7 +45,7 @@ class ProductsTest < ActionDispatch::IntegrationTest
     patch product_path(product), params: { product: { name: "" } }
 
     assert_response :unprocessable_entity
-    assert_select "#error_explanation li"
+    assert_select "aside[role=alert] li"
     assert_equal "AH Naturel Ribbelchips", product.reload.name
   end
 
@@ -103,6 +103,23 @@ class ProductsTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select "#products-table tbody tr", count: 20
+  end
+
+  test "the edit page has an action row of Annuleren and Opslaan without Verwijderen…" do
+    product = products(:andrelon_shampoo)
+
+    get edit_product_path(product)
+
+    assert_select "main > header > h1", count: 1
+    assert_select "form > footer a[role=button][href=?]", product_path(product)
+    assert_select "form > footer button", count: 0
+  end
+
+  test "the index has a title bar and every cell a data-label" do
+    get products_path
+
+    assert_select "main > header > h1", count: 1
+    assert_select "table[data-stack] tbody td:not([data-label])", count: 0
   end
 
   private

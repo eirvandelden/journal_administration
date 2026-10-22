@@ -12,9 +12,7 @@ class SharedTitleBarPartialTest < ActionView::TestCase
   end
 
   test "leaves the nav out without a block" do
-    render layout: "shared/title_bar", locals: { title: "Rekeningen" } do
-      ""
-    end
+    render partial: "shared/title_bar", locals: { title: "Rekeningen" }
 
     assert_nil Nokogiri::HTML5.fragment(rendered).at_css("nav")
   end
