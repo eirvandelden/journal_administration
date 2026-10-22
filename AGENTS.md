@@ -4,6 +4,8 @@
 
 A family household finance app. It imports bank transactions, categorizes them, tracks budgets, keeps grocery receipts and product prices, and records durable possessions (chattels) and their warranties. It also answers Model Context Protocol requests at `/mcp`, so an AI assistant can read the books and file transactions on behalf of a user.
 
+How the household runs its money, and the method to check transactions and budgets against: [docs/household-finances.md](docs/household-finances.md).
+
 ## Domain
 
 - **Transaction** — single-table inheritance: `Credit`, `Debit`, `Transfer`. The type follows from whether the debitor/creditor `Account` is household-owned. A transaction can be split across several `Category`s via `TransactionSplit` (split total may not exceed the transaction amount); `Transfer` transactions cannot be split or categorized directly.
