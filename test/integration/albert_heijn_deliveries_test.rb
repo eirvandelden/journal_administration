@@ -75,7 +75,77 @@ class AlbertHeijnDeliveriesTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "the assistant classifies a cucumber as groceries" do
+    cucumber = Product.resolve_by_name("AH Komkommer")
+
+    classify(cucumber, brand: "AH", type: "Komkommer", category: categories(:household_groceries))
+
+    assert_equal "AH", cucumber.reload.brand
+    assert_equal "Komkommer", cucumber.product_type.name
+    assert_equal "Huishoudelijke uitgaven - Boodschappen", cucumber.product_type.category.full_name
+  end
+
+  test "the assistant books a cleaner to Huishoudelijk, not to Boodschappen" do
+    cleaner = Product.resolve_by_name("AH Allesreiniger oceaan")
+
+    classify(cleaner, brand: "AH", type: "Allesreiniger", category: categories(:household_cleaning))
+
+    assert_equal "Huishoudelijke uitgaven - Huishoudelijk", cleaner.reload.product_type.category.full_name
+  end
+
+  test "naturel chips of two brands share one product type" do
+    ours = Product.resolve_by_name("AH Naturel chips")
+    theirs = Product.resolve_by_name("Lay's Naturel chips")
+
+    classify(ours, brand: "AH", type: "Naturel chips", category: categories(:groceries))
+    classify(theirs, brand: "Lay's", type: "naturel chips", category: categories(:groceries))
+
+    assert_equal ours.reload.product_type, theirs.reload.product_type
+    assert_equal 1, ProductType.where("LOWER(name) = ?", "naturel chips").count
+  end
+
+  test "a product the assistant leaves alone stays on the unclassified list" do
+    unsure = Product.resolve_by_name("Mysterieuze doos 7")
+
+    answer = ask_assistant("list_unclassified_products")
+
+    assert_predicate unsure.reload, :unclassified?
+    assert_includes answer, "#{unsure.id}: Mysterieuze doos 7 (no brand, no type)"
+  end
+
+  test "a brand and type set by hand survive the assistant" do
+    by_hand = products(:ah_ribbelchips)
+    other_type = ask_assistant("create_product_type", name: "Kaaschips", category_id: categories(:groceries).id)
+
+    answer = ask_assistant("classify_product", product_id: by_hand.id, brand: "Albert Heijn",
+      product_type_id: ProductType.find_by!(name: "Kaaschips").id)
+
+    assert_includes other_type, "Kaaschips"
+    assert_equal "AH", by_hand.reload.brand
+    assert_equal product_types(:naturel_chips), by_hand.product_type
+    assert_includes answer, "Kept the brand AH and the type Naturel chips"
+  end
+
+  test "a new category lands under Huishoudelijke uitgaven and its type books to it" do
+    answer = ask_assistant("create_household_category", name: "Huisdieren")
+    pets = Category.find_by!(name: "Huisdieren")
+    dog_food = Product.resolve_by_name("Bonzo Purina Bonzo Adult")
+
+    classify(dog_food, brand: "Purina", type: "Hondenvoer", category: pets)
+
+    assert_includes answer, "Huishoudelijke uitgaven - Huisdieren"
+    assert_equal categories(:household_expenses), pets.parent_category
+    assert_equal "debit", pets.direction
+    assert_equal pets, dog_food.reload.product_type.category
+  end
+
   private
+
+  def classify(product, brand:, type:, category:)
+    ask_assistant("create_product_type", name: type, category_id: category.id)
+    ask_assistant("classify_product", product_id: product.id, brand: brand,
+      product_type_id: ProductType.where("LOWER(name) = ?", type.downcase).first.id)
+  end
 
   def packing_slip_for(order_number)
     @packing_slip.sub("100000001", order_number)
