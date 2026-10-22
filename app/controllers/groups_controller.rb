@@ -60,7 +60,7 @@ class GroupsController < ApplicationController
   def destroy
     return redirect_to groups_path, notice: t("groups.destroy.success") if @group.destroy
 
-    redirect_to @group, alert: @group.errors.full_messages.to_sentence
+    redirect_to edit_group_path(@group), alert: @group.errors.full_messages.to_sentence
   end
 
   private

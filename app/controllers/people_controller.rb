@@ -60,7 +60,7 @@ class PeopleController < ApplicationController
   def destroy
     return redirect_to people_path, notice: t("people.destroy.success") if @person.destroy
 
-    redirect_to @person, alert: @person.errors.full_messages.to_sentence
+    redirect_to edit_person_path(@person), alert: @person.errors.full_messages.to_sentence
   end
 
   private
