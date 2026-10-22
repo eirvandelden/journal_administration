@@ -31,10 +31,19 @@ class TodosIndexTest < ActionDispatch::IntegrationTest
     assert_match %r{#{formatted_note}.*?#{formatted_amount}}m, response.body
   end
 
-  test "the todo page links a product still needing a type to its form" do
+  test "the todo page links a product still needing a type to its page" do
     get todo_path
 
     assert_response :success
-    assert_select "a[href=?]", edit_product_path(products(:andrelon_shampoo))
+    assert_select "a[href=?]", product_path(products(:andrelon_shampoo))
+  end
+
+  test "rows open the record's show page and carry no action column" do
+    get todo_path
+
+    assert_select "main > header > h1", count: 1
+    assert_select "tbody td a[href=?]", product_path(products(:andrelon_shampoo))
+    assert_select "tbody button", count: 0
+    assert_select "table[data-stack] tbody td:not([data-label])", count: 0
   end
 end

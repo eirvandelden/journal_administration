@@ -894,6 +894,7 @@ en:
       empty: "🎉 Nothing to do. All transactions are categorized and all accounts are up to date."
       kind: Kind
       product: Product
+      title: To do
       transaction: Transaction
       update_transactions: Update Transactions
   transaction_absorptions:

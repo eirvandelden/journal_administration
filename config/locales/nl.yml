@@ -894,6 +894,7 @@ nl:
       empty: "🎉 Niets te doen. Alle transacties zijn gecategoriseerd en alle rekeningen zijn bijgewerkt."
       kind: Soort
       product: Product
+      title: Te doen
       transaction: Transactie
       update_transactions: Transacties bijwerken
   transaction_absorptions:

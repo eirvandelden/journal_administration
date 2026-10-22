@@ -894,6 +894,7 @@ it:
       empty: "🎉 Nulla da fare. Tutte le transazioni sono categorizzate e tutti i conti sono aggiornati."
       kind: Tipo
       product: Prodotto
+      title: Da fare
       transaction: Transazione
       update_transactions: Aggiorna transazioni
   transaction_absorptions:

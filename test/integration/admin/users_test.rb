@@ -145,4 +145,32 @@ params: { user: { name: "Updated Member", password: "", password_confirmation: "
 
     assert_redirected_to root_path
   end
+
+  test "index rows carry no buttons and the name links to the user" do
+    sign_in_as(@admin)
+
+    get admin_users_path
+
+    assert_select "tbody button", count: 0
+    assert_select "tbody td a[href=?]", admin_user_path(@member)
+    assert_select "main > header nav a[href=?]", new_admin_user_path, text: I18n.t("common.new", locale: @admin.locale)
+  end
+
+  test "the edit page ends in an action row with Verwijderen… for another user" do
+    sign_in_as(@admin)
+
+    get edit_admin_user_path(@member)
+
+    assert_select "form > footer button.button-danger[form=?]", dom_id(@member, :delete)
+    assert_select "form##{dom_id(@member, :delete)}[action=?]", admin_user_path(@member)
+  end
+
+  test "the edit page leaves Verwijderen… out for the signed-in administrator" do
+    sign_in_as(@admin)
+
+    get edit_admin_user_path(@admin)
+
+    assert_select "form > footer button.button-danger", count: 0
+    assert_select "form > footer a[role=button]"
+  end
 end
