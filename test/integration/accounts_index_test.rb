@@ -107,7 +107,7 @@ class AccountsIndexTest < ActionDispatch::IntegrationTest
 
     assert_select "main > header > h1", count: 1
     assert_select "main > header nav a[href='#{new_account_path}']", text: I18n.t("common.new")
-    assert_select "th", text: I18n.t("accounts.index.id"), count: 0
+    assert_select "th", text: /\A\s*(Id|ID)\s*\z/, count: 0
   end
 
   test "every table cell carries a data-label" do
