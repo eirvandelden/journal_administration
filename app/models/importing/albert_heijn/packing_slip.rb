@@ -6,18 +6,21 @@ module Importing
     # record of a delivery. Its bonuses are listed apart from the products, each
     # naming the product it came off, and are folded back in here.
     class PackingSlip
+      include Reading
+
       # One product on the slip, and the bonus taken off it
       Line = Struct.new(:name, :quantity, :full_amount, :discount_amount) do
         def paid_amount = full_amount - discount_amount
       end
 
-      DELIVERY_DATE = /(\d{1,2})\s+(\p{L}+)\s+(\d{4})/
       ORDER_NUMBER = /Bestelnummer:\s*(\d+)/
       # Every heading this reader steers by; without one of them it is not a slip
       HEADINGS = [ "Aantal", "Boodschappen totaal", "Totaal" ].freeze
-      FIELDS_PER_PRODUCT = 4
 
       attr_reader :order_number, :delivered_on, :total_amount, :lines
+
+      #: () -> bool
+      def packed? = true
 
       # Reads a packing slip mail, or nothing when the mail is not one
       #
@@ -32,6 +35,7 @@ module Importing
 
       def self.readable?(blocks)
         blocks.grep(ORDER_NUMBER).any? &&
+          blocks.grep(/Bedankt voor je bestelling/).none? &&
           blocks.grep(/Bezorging op/).any? &&
           HEADINGS.all? { |heading| blocks.include?(heading) } &&
           products_line_up?(blocks)
@@ -58,26 +62,12 @@ module Importing
       def initialize(blocks)
         @blocks = blocks
         @order_number = blocks.grep(ORDER_NUMBER).first[ORDER_NUMBER, 1]
-        @delivered_on = read_delivery_date
-        @total_amount = amount_after(blocks.rindex("Totaal"))
+        @delivered_on = date_in(blocks.grep(/Bezorging op/).first)
+        @total_amount = amount_after(blocks, blocks.rindex("Totaal"))
         @lines = read_lines
       end
 
       private
-
-      def read_delivery_date
-        day, month, year = @blocks.grep(/Bezorging op/).first.match(DELIVERY_DATE).captures
-
-        Date.new(year.to_i, dutch_months.index(month.downcase) + 1, day.to_i)
-      end
-
-      def dutch_months
-        I18n.t("date.month_names", locale: :nl).compact.map(&:downcase)
-      end
-
-      def amount_after(index)
-        Cents.from_euros(BigDecimal(@blocks[index + 1]))
-      end
 
       def read_lines
         products.each_slice(FIELDS_PER_PRODUCT).map do |name, quantity, _shelf_price, total|
