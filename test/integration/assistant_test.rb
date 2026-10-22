@@ -249,7 +249,7 @@ class AssistantTest < ActionDispatch::IntegrationTest
 
   test "budget_status reports one month of budget for a whole October" do
     budget = Budget.create!(starts_at: Time.zone.local(2026, 10, 1), ends_at: Time.zone.local(2026, 10, 31).end_of_day)
-    budget.budget_categories.create!(category: categories(:groceries), amount: 1480)
+    budget.budget_categories.create!(category: categories(:groceries), amount: 148_000)
 
     answer = ask_assistant("budget_status", start_date: "2026-10-01", end_date: "2026-10-31")
 

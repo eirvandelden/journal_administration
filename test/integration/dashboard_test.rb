@@ -119,7 +119,7 @@ class MainDashboardTest < ActionDispatch::IntegrationTest
       BudgetCategory.delete_all
       Budget.delete_all
       budget = Budget.create!(starts_at: Time.zone.local(2024, 1, 1))
-      BudgetCategory.create!(budget:, category: categories(:housing), amount: 1480)
+      BudgetCategory.create!(budget:, category: categories(:housing), amount: 148_000)
     end
 
     test "October 2026 shows the stored monthly amount as the budget goal" do
