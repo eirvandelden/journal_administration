@@ -32,15 +32,19 @@ class ApplicationSystemTestCaseTest < ActiveSupport::TestCase
     end
   end
 
-  test "system tests are driven by headless Edge" do
-    assert_equal :headless_edge, ApplicationSystemTestCase.driver.name
+  test "system tests are driven by headless Edge locally" do
+    assert_equal :headless_edge, ApplicationSystemTestCase.driver_name(ci: false)
     assert Capybara.drivers[:headless_edge]
+  end
+
+  test "system tests are driven by the stock Selenium Chrome driver on CI" do
+    assert_equal :selenium, ApplicationSystemTestCase.driver_name(ci: true)
   end
 
   test "the Edge driver drives Edge with the Edge options" do
     options = ApplicationSystemTestCase.edge_options(binary: nil)
 
-    ApplicationSystemTestCase.edge_driver(:app, driver_class: FakeDriver, options: options, service: nil)
+    ApplicationSystemTestCase.edge_driver(:app, driver_class: FakeDriver, options: options)
 
     assert_equal({ browser: :edge, options: options }, FakeDriver.last.arguments)
     assert_equal :app, FakeDriver.last.app
@@ -54,68 +58,6 @@ class ApplicationSystemTestCaseTest < ActiveSupport::TestCase
 
   test "Edge options run headless" do
     assert_includes ApplicationSystemTestCase.edge_options(binary: nil).args, "--headless"
-  end
-
-  test "Edge options disable the sandbox on CI" do
-    args = ApplicationSystemTestCase.edge_options(binary: nil, ci: true).args
-
-    assert_includes args, "--no-sandbox"
-    assert_includes args, "--disable-dev-shm-usage"
-  end
-
-  test "Edge options skip first-run setup and keep the renderer awake on CI" do
-    args = ApplicationSystemTestCase.edge_options(binary: nil, ci: true).args
-
-    assert_includes args, "--no-first-run"
-    assert_includes args, "--disable-renderer-backgrounding"
-    assert_includes args, "--disable-backgrounding-occluded-windows"
-    assert_includes args, "--disable-features=CalculateNativeWinOcclusion"
-    assert_not_includes args, "--disable-gpu"
-  end
-
-  test "Edge options keep the sandbox off CI" do
-    args = ApplicationSystemTestCase.edge_options(binary: nil, ci: false).args
-
-    assert_not_includes args, "--no-sandbox"
-    assert_not_includes args, "--disable-dev-shm-usage"
-    assert_not_includes args, "--no-first-run"
-    assert_not_includes args, "--disable-gpu"
-    assert_not_includes args, "--disable-renderer-backgrounding"
-  end
-
-  test "log files are per process so parallel workers do not overwrite each other" do
-    assert_equal Rails.root.join("tmp/screenshots/msedgedriver-42.log").to_s,
-      ApplicationSystemTestCase.log_path("msedgedriver", pid: 42)
-    first = ApplicationSystemTestCase.log_path("selenium", pid: 1)
-
-    assert_not_equal first, ApplicationSystemTestCase.log_path("selenium", pid: 2)
-  end
-
-  test "the Edge service writes a verbose driver log into tmp/screenshots on CI" do
-    service = ApplicationSystemTestCase.edge_service(ci: true)
-
-    service.log # Selenium turns a String log path into a --log-path argument on first read.
-
-    assert_includes service.args, "--log-path=#{ApplicationSystemTestCase.log_path("msedgedriver")}"
-    assert_includes service.args, "--verbose"
-  end
-
-  test "there is no Edge service off CI" do
-    assert_nil ApplicationSystemTestCase.edge_service(ci: false)
-  end
-
-  test "the Edge driver passes the Edge service to the driver" do
-    service = Object.new
-
-    ApplicationSystemTestCase.edge_driver(:app, driver_class: FakeDriver, service: service)
-
-    assert_same service, FakeDriver.last.arguments[:service]
-  end
-
-  test "the Edge driver passes no service key without one" do
-    ApplicationSystemTestCase.edge_driver(:app, driver_class: FakeDriver, service: nil)
-
-    assert_not FakeDriver.last.arguments.key?(:service)
   end
 
   test "an explicit binary is used" do

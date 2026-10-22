@@ -2,52 +2,34 @@ require "test_helper"
 
 class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   SCREEN_SIZE = [ 1400, 1400 ].freeze
-  CI_ARGUMENTS = %w[
-    --no-sandbox --disable-dev-shm-usage --no-first-run
-    --disable-renderer-backgrounding --disable-backgrounding-occluded-windows
-    --disable-features=CalculateNativeWinOcclusion
-  ].freeze
 
   # Rails' system testing only knows Chrome and Firefox, so Edge needs its own Capybara driver.
   # Selenium Manager resolves the msedgedriver that matches the installed Edge.
-  # On CI the Ubuntu runner blocks the Chromium sandbox and has a small /dev/shm, so Edge exits or hangs at start.
-  def self.edge_options(binary: ENV["EDGE_BIN"].presence, ci: ENV["CI"].present?)
+  def self.edge_options(binary: ENV["EDGE_BIN"].presence)
     Selenium::WebDriver::Edge::Options.new.tap do |options|
       options.add_argument("--headless")
-      CI_ARGUMENTS.each { |argument| options.add_argument(argument) } if ci
       options.binary = binary if binary
     end
   end
 
-  # One log file per process, so parallel workers do not overwrite each other.
-  def self.log_path(name, pid: Process.pid)
-    Rails.root.join("tmp/screenshots/#{name}-#{pid}.log").to_s
-  end
-
-  # CI evidence for intermittent hangs: msedgedriver's verbose log lands in tmp/screenshots, which CI uploads.
-  def self.edge_service(ci: ENV["CI"].present?)
-    return unless ci
-
-    Selenium::WebDriver::Edge::Service.new(log: log_path("msedgedriver"), args: %w[ --verbose ])
-  end
-
-  def self.edge_driver(app, driver_class: Capybara::Selenium::Driver, options: edge_options, service: edge_service)
-    arguments = { browser: :edge, options: options, service: service }.compact
-    driver_class.new(app, **arguments).tap do |driver|
+  def self.edge_driver(app, driver_class: Capybara::Selenium::Driver, options: edge_options)
+    driver_class.new(app, browser: :edge, options: options).tap do |driver|
       driver.browser.manage.window.size = Selenium::WebDriver::Dimension.new(*SCREEN_SIZE)
     end
   end
 
-  Capybara.register_driver(:headless_edge) do |app|
-    if ENV["CI"].present?
-      FileUtils.mkdir_p(Rails.root.join("tmp/screenshots"))
-      Selenium::WebDriver.logger.level = :debug
-      Selenium::WebDriver.logger.output = log_path("selenium")
-    end
-    edge_driver(app)
+  # Headless Edge hangs or dies in about a quarter of CI runs, so CI keeps the stock headless Chrome driver.
+  def self.driver_name(ci: ENV["CI"].present?)
+    ci ? :selenium : :headless_edge
   end
 
-  driven_by :headless_edge
+  Capybara.register_driver(:headless_edge) { |app| edge_driver(app) }
+
+  if driver_name == :selenium
+    driven_by :selenium, using: :headless_chrome, screen_size: SCREEN_SIZE
+  else
+    driven_by :headless_edge
+  end
 
   private
     def locale
