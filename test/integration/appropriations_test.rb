@@ -33,7 +33,7 @@ class AppropriationsTest < ActionDispatch::IntegrationTest
 
     get appropriations_path(year: 2026)
 
-    assert_appropriation_row "Birthday", "Michelle", 150, 0, 150
+    assert_appropriation_row "Birthday", "Michelle", 15000, 0, 15000
   end
 
   test "an appropriation selects an outside person" do
@@ -70,7 +70,7 @@ class AppropriationsTest < ActionDispatch::IntegrationTest
     get appropriations_path(year: 2026)
 
     assert_appropriation_row "Birthday", "E. van Delden", amount, charged, amount - charged
-    assert_appropriation_row "Christmas", "E. van Delden", 100, 0, 100
+    assert_appropriation_row "Christmas", "E. van Delden", 10000, 0, 10000
     assert_equal amount, appropriation.reload.amount
     assert_equal charged, appropriation.charged
   end
@@ -80,7 +80,7 @@ class AppropriationsTest < ActionDispatch::IntegrationTest
 
     get appropriations_path(year: 2026)
 
-    assert_appropriation_row "Birthday", "Etienne", 200, 0, 200
+    assert_appropriation_row "Birthday", "Etienne", 20000, 0, 20000
   end
 
   test "an appropriation with charges cannot be removed" do
@@ -107,19 +107,19 @@ class AppropriationsTest < ActionDispatch::IntegrationTest
 
     get appropriations_path(year: 2027)
 
-    assert_appropriation_row "Birthday", "Etienne", 150, 0, 150
+    assert_appropriation_row "Birthday", "Etienne", 15000, 0, 15000
   end
 
   test "the page shows this year's appropriations and totals unless another year is chosen" do
     travel_to Date.new(2026, 6, 15) do
       get appropriations_path
 
-      assert_appropriation_row "Christmas", "Serena", 50, 0, 50
-      assert_select "tfoot", text: /#{Regexp.escape(currency(450))}/
+      assert_appropriation_row "Christmas", "Serena", 5000, 0, 5000
+      assert_select "tfoot", text: /#{Regexp.escape(currency(45000))}/
 
       get appropriations_path(year: 2027)
 
-      assert_appropriation_row "Birthday", "Chiara", 60, 0, 60
+      assert_appropriation_row "Birthday", "Chiara", 6000, 0, 6000
       assert_select "tbody tr", text: /Serena/, count: 0
     end
   end
@@ -129,7 +129,7 @@ class AppropriationsTest < ActionDispatch::IntegrationTest
       [ "", "next" ].each do |year|
         get appropriations_path(year:)
 
-        assert_appropriation_row "Christmas", "Serena", 50, 0, 50
+        assert_appropriation_row "Christmas", "Serena", 5000, 0, 5000
       end
     end
   end
@@ -143,21 +143,21 @@ class AppropriationsTest < ActionDispatch::IntegrationTest
   test "a year written with a leading zero is read as that year" do
     get appropriations_path(year: "02027")
 
-    assert_appropriation_row "Birthday", "Chiara", 60, 0, 60
+    assert_appropriation_row "Birthday", "Chiara", 6000, 0, 6000
   end
 
   test "an appropriation lists the payments and split parts charged to it" do
     appropriation = appropriations(:sinterklaas_chiara)
     part = transactions(:webshop_sinterklaas).transaction_splits.create!(
-      amount: 60, category: categories(:gifts), note: "Sinterklaas present for Chiara"
+      amount: 6000, category: categories(:gifts), note: "Sinterklaas present for Chiara"
     )
     part.update!(appropriation:)
     transactions(:gift_payment).update!(appropriation:)
 
     get appropriation_path(appropriation)
 
-    assert_select "tr", text: /2026-11-28.*Sinterklaas present for Chiara.*#{Regexp.escape(currency(60))}/m
-    assert_select "tr", text: /2026-11-20.*Birthday present.*#{Regexp.escape(currency(40))}/m
+    assert_select "tr", text: /2026-11-28.*Sinterklaas present for Chiara.*#{Regexp.escape(currency(6000))}/m
+    assert_select "tr", text: /2026-11-20.*Birthday present.*#{Regexp.escape(currency(4000))}/m
   end
 
   test "an appropriation lists a charged payment that has no booking date" do
@@ -181,7 +181,7 @@ class AppropriationsTest < ActionDispatch::IntegrationTest
     assert_select "select[name='appropriation[person_id]'] option", text: "Samen", count: 0
 
     aunt = Person.create!(name: "Aunt", household: false)
-    Appropriation.create!(purpose: "Birthday", person: aunt, budget_year: 2026, amount: 40)
+    Appropriation.create!(purpose: "Birthday", person: aunt, budget_year: 2026, amount: 4000)
     get new_appropriation_path
 
     assert_select "select[name='appropriation[person_id]'] option[value=?]", aunt.id, text: "Aunt"

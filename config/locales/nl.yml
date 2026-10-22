@@ -114,6 +114,7 @@ nl:
     errors:
       messages:
         must_be_pdf: moet een PDF-document zijn
+        not_an_amount: is geen bedrag
         record_invalid: 'Validatie mislukt: %{errors}'
         restrict_dependent_destroy:
           has_many: Kan item niet verwijderen omdat afhankelijke %{record} bestaan

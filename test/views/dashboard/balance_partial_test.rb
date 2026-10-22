@@ -4,13 +4,13 @@ require "ostruct"
 class Dashboard::BalancePartialTest < ActiveSupport::TestCase
   test "renders table rows without nested cells" do
     dashboard = OpenStruct.new(
-      debit_transactions: { categories(:groceries) => 62.5 },
-      credit_transactions: { categories(:income) => 3000 },
+      debit_transactions: { categories(:groceries) => 6250 },
+      credit_transactions: { categories(:income) => 300000 },
       active_budget: nil,
       budget_amounts: {},
-      debit_total: 62.5,
-      credit_total: 3000,
-      profit_or_loss: -2937.5
+      debit_total: 6250,
+      credit_total: 300000,
+      profit_or_loss: -293750
     )
 
     html = ApplicationController.render(
@@ -26,7 +26,7 @@ class Dashboard::BalancePartialTest < ActiveSupport::TestCase
       debit_transactions: {},
       credit_transactions: {},
       active_budget: OpenStruct.new,
-      budget_amounts: { categories(:groceries) => 500 },
+      budget_amounts: { categories(:groceries) => 50000 },
       budget_actuals: {},
       debit_total: 0,
       credit_total: 0,
@@ -47,7 +47,7 @@ class Dashboard::BalancePartialTest < ActiveSupport::TestCase
       debit_transactions: {},
       credit_transactions: {},
       active_budget: OpenStruct.new,
-      budget_amounts: { categories(:income) => 3000 },
+      budget_amounts: { categories(:income) => 300000 },
       budget_actuals: {},
       debit_total: 0,
       credit_total: 0,
@@ -65,14 +65,14 @@ class Dashboard::BalancePartialTest < ActiveSupport::TestCase
 
   test "budget status reflects the net of debits and credits in the same category" do
     dashboard = OpenStruct.new(
-      debit_transactions: { categories(:groceries) => 80 },
+      debit_transactions: { categories(:groceries) => 8000 },
       credit_transactions: {},
       active_budget: OpenStruct.new,
-      budget_amounts: { categories(:groceries) => 100 },
-      budget_actuals: { categories(:groceries) => 60 },
-      debit_total: 80,
+      budget_amounts: { categories(:groceries) => 10000 },
+      budget_actuals: { categories(:groceries) => 6000 },
+      debit_total: 8000,
       credit_total: 0,
-      profit_or_loss: 80
+      profit_or_loss: 8000
     )
 
     html = ApplicationController.render(

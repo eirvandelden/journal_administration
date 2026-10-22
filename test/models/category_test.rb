@@ -89,14 +89,14 @@ class CategoryTest < ActiveSupport::TestCase
 
   test "recent_transactions ignore the parent category once a transaction is split" do
     transaction = Transaction.create!(
-      amount: 50,
+      amount: 5000,
       booked_at: Time.current,
       interest_at: Time.current,
       debitor: accounts(:checking),
       creditor: accounts(:albert_heijn),
       category: categories(:supermarket)
     )
-    transaction.transaction_splits.create!(amount: 50, category: categories(:bakery))
+    transaction.transaction_splits.create!(amount: 5000, category: categories(:bakery))
 
     assert_not_includes categories(:supermarket).recent_transactions.ids, transaction.id
     assert_includes categories(:bakery).recent_transactions.ids, transaction.id
@@ -111,7 +111,7 @@ class CategoryTest < ActiveSupport::TestCase
   test "recent_transactions defaults to a limit of ten" do
     11.times do |index|
       Transaction.create!(
-        amount: 10 + index,
+        amount: 1000 + index,
         booked_at: 40.days.from_now + index.minutes,
         interest_at: 40.days.from_now + index.minutes,
         debitor: accounts(:checking),
@@ -125,7 +125,7 @@ class CategoryTest < ActiveSupport::TestCase
 
   test "recent_transactions are ordered by booked_at descending" do
     older = Transaction.create!(
-      amount: 40,
+      amount: 4000,
       booked_at: 50.days.from_now,
       interest_at: 50.days.from_now,
       debitor: accounts(:checking),
@@ -133,7 +133,7 @@ class CategoryTest < ActiveSupport::TestCase
       category: categories(:supermarket)
     )
     newer = Transaction.create!(
-      amount: 50,
+      amount: 5000,
       booked_at: 51.days.from_now,
       interest_at: 51.days.from_now,
       debitor: accounts(:checking),
@@ -150,7 +150,7 @@ class CategoryTest < ActiveSupport::TestCase
     timestamp = 70.days.from_now
 
     first = Transaction.create!(
-      amount: 60,
+      amount: 6000,
       booked_at: timestamp,
       interest_at: timestamp,
       debitor: accounts(:checking),
@@ -158,7 +158,7 @@ class CategoryTest < ActiveSupport::TestCase
       category: categories(:supermarket)
     )
     second = Transaction.create!(
-      amount: 70,
+      amount: 7000,
       booked_at: timestamp,
       interest_at: timestamp,
       debitor: accounts(:checking),

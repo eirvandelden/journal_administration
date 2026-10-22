@@ -4,6 +4,9 @@
 # basket adds up to: a bag fee or a deposit is charged without being a product.
 class Receipt < ApplicationRecord
   include PdfAttachmentValidatable
+  include Monetary
+
+  monetary :total_amount
 
   # How far the bank booking may sit from the invoice date and still be the same delivery
   BOOKING_WINDOW = 7.days

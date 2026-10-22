@@ -8,6 +8,6 @@ module TodosHelper
   def todo_description(item)
     return item.record.to_s unless item.kind == :transaction
 
-    safe_join([ item.record.note&.truncate(40), number_to_currency(item.record.uncategorized_amount) ].compact, " ")
+    safe_join([ item.record.note&.truncate(40), cents_to_currency(item.record.uncategorized_amount) ].compact, " ")
   end
 end

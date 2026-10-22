@@ -1,5 +1,7 @@
 # Manages transaction resources
 class TransactionsController < ApplicationController
+  include MoneyParams
+
   before_action :set_transaction, only: %i[show edit update destroy]
 
   # Lists all transactions with optional type, category, account, and date range filtering
@@ -87,7 +89,8 @@ class TransactionsController < ApplicationController
 
   def transaction_params
     key = (params.keys & %w[debit credit transfer transaction])[0]
-    params.require(key).permit(:id, :debit_account_id, :credit_account_id, :amount, :booked_at, :interest_at,
-  :category_id, :note, :type, :proof_of_purchase)
+    permitted = params.require(key).permit(:id, :debit_account_id, :credit_account_id, :amount, :booked_at,
+  :interest_at, :category_id, :note, :type, :proof_of_purchase)
+    euros_to_cents(permitted, :amount)
   end
 end

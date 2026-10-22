@@ -27,7 +27,7 @@
         <td><%= l(chattel.purchased_at.to_date) if chattel.purchased_at.present? %></td>
         <td><%= l(chattel.warranty_expires_at.to_date) if chattel.warranty_expires_at.present? %></td>
         <td><%= l(chattel.left_possession_at.to_date) if chattel.left_possession_at.present? %></td>
-        <td><%= number_to_currency(chattel.purchase_price) %></td>
+        <td><%= cents_to_currency(chattel.purchase_price) %></td>
         <td><%= chattel.proof_of_purchase? ? t('chattels.index.has_proof') : t('chattels.index.no_proof') %></td>
         <td><%= link_to t('common.edit'), edit_chattel_path(chattel) %></td>
       </tr>

@@ -60,7 +60,7 @@ class BudgetsTest < ApplicationSystemTestCase
   test "removing a category row leaves it out when the budget is saved" do
     starts_at = budgets(:future_budget).starts_at.to_date + 1.day
     budget = Budget.create!(starts_at: starts_at, ends_at: starts_at + 6.days)
-    BudgetCategory.create!(budget: budget, category: categories(:groceries), amount: 100)
+    BudgetCategory.create!(budget: budget, category: categories(:groceries), amount: 10_000)
 
     visit edit_budget_url(budget)
 
@@ -90,7 +90,7 @@ class BudgetsTest < ApplicationSystemTestCase
 
     assert_selector "button", text: I18n.t("budgets.form.remove", locale: locale), count: expected_amounts.size
     expected_amounts.each_value do |amount|
-      assert_field I18n.t("budgets.form.amount", locale: locale), with: format("%.2f", amount)
+      assert_field I18n.t("budgets.form.amount", locale: locale), with: format("%.2f", Cents.to_euros(amount))
     end
   end
 end

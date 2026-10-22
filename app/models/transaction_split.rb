@@ -5,13 +5,16 @@
 # splits for a transaction must not exceed the transaction's amount.
 class TransactionSplit < ApplicationRecord
   include Chargeable
+  include Monetary
+
+  monetary :amount
 
   belongs_to :financial_transaction, class_name: "Transaction", foreign_key: :transaction_id
   belongs_to :category, optional: true
 
   delegate :booked_at, to: :financial_transaction
 
-  validates :amount, presence: true, numericality: { greater_than: 0 }
+  validates :amount, presence: true, comparison: { greater_than: 0 }
   validate :amount_does_not_exceed_balance
   validate :financial_transaction_must_not_be_transfer
   validate :financial_transaction_must_not_be_charged_as_a_whole
@@ -24,7 +27,7 @@ class TransactionSplit < ApplicationRecord
     return if remainder?
 
     available = financial_transaction.split_balance
-    available += amount_was.to_d if persisted?
+    available += amount_was.to_i if persisted?
 
     return if amount <= available
 

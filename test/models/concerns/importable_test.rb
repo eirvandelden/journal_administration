@@ -9,7 +9,7 @@ class ImportableTest < ActiveSupport::TestCase
       their_account_number: accounts(:albert_heijn).account_number,
       code: "GT",
       direction: "Af",
-      amount: 25.50,
+      amount: 2550,
       mutation_kind: "Betaalautomaat",
       description: "Groceries",
       original_balance: "1000.00",
@@ -24,7 +24,7 @@ class ImportableTest < ActiveSupport::TestCase
 
     assert_equal accounts(:checking), transaction.creditor
     assert_equal accounts(:albert_heijn), transaction.debitor
-    assert_equal BigDecimal("25.50"), transaction.amount
+    assert_equal 2550, transaction.amount
     assert_equal "Credit", transaction.type
   end
 
@@ -36,7 +36,7 @@ class ImportableTest < ActiveSupport::TestCase
       their_account_number: accounts(:employer).account_number,
       code: "OV",
       direction: "Bij",
-      amount: 3000.00,
+      amount: 300000,
       mutation_kind: "Overschrijving",
       description: "Salary",
       original_balance: "5000.00",
@@ -51,7 +51,7 @@ class ImportableTest < ActiveSupport::TestCase
 
     assert_equal accounts(:checking), transaction.debitor
     assert_equal accounts(:employer), transaction.creditor
-    assert_equal BigDecimal("3000.00"), transaction.amount
+    assert_equal 300000, transaction.amount
     assert_equal "Debit", transaction.type
   end
 
@@ -63,7 +63,7 @@ class ImportableTest < ActiveSupport::TestCase
       their_account_number: "",
       code: "GT",
       direction: "Af",
-      amount: 10.00,
+      amount: 1000,
       mutation_kind: "Betaalautomaat",
       description: "Some description",
       original_balance: "100.00",

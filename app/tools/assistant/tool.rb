@@ -11,6 +11,23 @@ module Assistant
     end
     private_class_method :problem
 
+    # Cents as euros with two decimals, the way assistants have always been told amounts
+    def self.euros(cents) = format("%.2f", Cents.to_euros(cents))
+    private_class_method :euros
+
+    # The cents in an amount the assistant sent in euros, or nil when it has a fraction of a cent
+    def self.cents_from(amount)
+      Cents.from_euros(amount)
+    rescue ArgumentError
+      nil
+    end
+    private_class_method :cents_from
+
+    def self.two_decimals
+      "An amount has at most two decimals, for example 12.50."
+    end
+    private_class_method :two_decimals
+
     def self.backwards(first_day, last_day)
       "A period cannot end before it starts, and #{last_day} comes before #{first_day}."
     end

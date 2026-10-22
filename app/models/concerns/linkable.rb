@@ -37,10 +37,13 @@ module Linkable
   # Both params are optional and combined with AND when both present.
   #
   # @param query [String, nil] Matches note, creditor name, or debitor name
-  # @param amount [String, nil] Exact amount match
+  # @param amount [String, nil] Exact amount match, in euros as typed ("12,50")
   # @return [ActiveRecord::Relation<Transaction>]
   def searchable_transfers(query: nil, amount: nil)
     return Transaction.none if query.blank? && amount.blank?
+
+    cents = Cents.parse(amount)
+    return Transaction.none if amount.present? && cents.nil?
 
     scope = Transaction.unscoped
       .where(type: "Transfer")
@@ -60,15 +63,15 @@ module Linkable
       )
     end
 
-    scope = scope.where(amount: amount.to_d) if amount.present?
+    scope = scope.where(amount: cents) if cents
     scope
   end
 
   # Remaining amount not yet covered by linked transfers
   #
-  # @return [BigDecimal] 0 when fully covered, positive when underpull
+  # @return [Integer] cents, 0 when fully covered, positive when underpull
   def link_balance
-    amount - covered_amount
+    amount.to_i - covered_amount
   end
 
   # Whether linked transfers fully cover this transaction's amount

@@ -2,7 +2,7 @@ require "test_helper"
 
 class ReceiptTest < ActiveSupport::TestCase
   test "a receipt adds up what the basket cost" do
-    assert_equal BigDecimal("6.47"), receipts(:albert_heijn_friday).basket_total
+    assert_equal 647, receipts(:albert_heijn_friday).basket_total
   end
 
   test "the payment is split the way the basket divides over the categories" do
@@ -12,7 +12,7 @@ class ReceiptTest < ActiveSupport::TestCase
     receipt.rewrite_payment_splits
 
     assert_equal(
-      { categories(:groceries) => BigDecimal("2.98"), categories(:household) => BigDecimal("3.49") },
+      { categories(:groceries) => 298, categories(:household) => 349 },
       receipt.payment.explicit_transaction_splits.to_h { |split| [ split.category, split.amount ] }
     )
   end
@@ -25,7 +25,7 @@ class ReceiptTest < ActiveSupport::TestCase
 
     remainder = receipt.payment.transaction_splits.find_by(remainder: true)
 
-    assert_equal BigDecimal("43.53"), remainder.amount
+    assert_equal 4353, remainder.amount
     assert_equal categories(:supermarket), remainder.category
   end
 
@@ -41,8 +41,8 @@ class ReceiptTest < ActiveSupport::TestCase
 
   test "a basket bigger than the payment is not split at all" do
     receipt = receipts(:albert_heijn_friday)
-    receipt.update!(payment: transactions(:debit_grocery), total_amount: BigDecimal("50.00"))
-    receipt.lines.first.update!(full_amount: BigDecimal("60.00"), discount_amount: 0, paid_amount: BigDecimal("60.00"))
+    receipt.update!(payment: transactions(:debit_grocery), total_amount: 5000)
+    receipt.lines.first.update!(full_amount: 6000, discount_amount: 0, paid_amount: 6000)
 
     splits_before = receipt.payment.transaction_splits.map(&:attributes)
 
@@ -84,7 +84,7 @@ class ReceiptTest < ActiveSupport::TestCase
 
   test "a receipt offers a payment even when the amount differs, since empties are settled at the door" do
     receipt = receipts(:albert_heijn_friday)
-    receipt.update!(total_amount: BigDecimal("119.93"))
+    receipt.update!(total_amount: 11_993)
 
     assert_includes receipt.fitting_payments, transactions(:debit_grocery)
   end
@@ -121,7 +121,7 @@ class ReceiptTest < ActiveSupport::TestCase
     free_type = ProductType.create!(name: "Free samples", category: categories(:housing))
     sample = Product.create!(name: "AH Sample", brand: "AH", product_type: free_type)
     @receipt = receipts(:albert_heijn_friday)
-    @receipt.lines.create!(product: sample, quantity: 1, full_amount: 1, discount_amount: 1, paid_amount: 0)
+    @receipt.lines.create!(product: sample, quantity: 1, full_amount: 100, discount_amount: 100, paid_amount: 0)
     @receipt.update!(payment: transactions(:debit_grocery))
 
     assert @receipt.rewrite_payment_splits
@@ -131,7 +131,7 @@ class ReceiptTest < ActiveSupport::TestCase
   test "a payment booked late on the last day of the window is still offered" do
     receipt = receipts(:albert_heijn_friday)
     late = Transaction.create!(
-      type: "Debit", debitor: accounts(:checking), creditor: accounts(:albert_heijn), amount: 12,
+      type: "Debit", debitor: accounts(:checking), creditor: accounts(:albert_heijn), amount: 1200,
       booked_at: receipt.issued_on + 7.days + 18.hours, interest_at: receipt.issued_on + 7.days
     )
 
@@ -148,7 +148,7 @@ class ReceiptTest < ActiveSupport::TestCase
   end
 
   test "a delivery with an empty basket is not split at all" do
-    receipt = Receipt.create!(shop: accounts(:albert_heijn), issued_on: Date.current, total_amount: 10,
+    receipt = Receipt.create!(shop: accounts(:albert_heijn), issued_on: Date.current, total_amount: 1000,
                               payment: transactions(:debit_grocery))
     splits_before = transactions(:debit_grocery).transaction_splits.map(&:attributes)
 
@@ -173,7 +173,7 @@ class ReceiptTest < ActiveSupport::TestCase
     test "refuses a payment with a charged part" do
       payment = grocery_payment
       part = payment.transaction_splits.create!(
-        amount: 10, category: categories(:supermarket), appropriation: @appropriation
+        amount: 1000, category: categories(:supermarket), appropriation: @appropriation
       )
       @receipt.update!(payment:)
 
@@ -186,7 +186,7 @@ class ReceiptTest < ActiveSupport::TestCase
 
     def grocery_payment(appropriation: nil)
       Transaction.create!(
-        type: "Debit", debitor: accounts(:checking), creditor: accounts(:albert_heijn), amount: 50,
+        type: "Debit", debitor: accounts(:checking), creditor: accounts(:albert_heijn), amount: 5000,
         booked_at: @receipt.issued_on, interest_at: @receipt.issued_on, appropriation:
       )
     end

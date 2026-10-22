@@ -114,6 +114,7 @@ it:
     errors:
       messages:
         must_be_pdf: deve essere un documento PDF
+        not_an_amount: non è un importo
         record_invalid: 'Validazione fallita: %{errors}'
         restrict_dependent_destroy:
           has_many: Il record non può essere cancellato perchè esistono %{record} dipendenti

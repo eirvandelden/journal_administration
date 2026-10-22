@@ -15,13 +15,19 @@ class Assistant::ListAppropriationsTest < ActiveSupport::TestCase
 
   test "call reports charged as credits minus debits" do
     appropriation = appropriations(:birthday_etienne)
-    appropriation.update!(amount: 200)
-    credit(50, note: "Birthday present").update!(appropriation:)
-    debit(20, note: "Returned present").update!(appropriation:)
+    appropriation.update!(amount: 20_000)
+    credit(5_000, note: "Birthday present").update!(appropriation:)
+    debit(2_000, note: "Returned present").update!(appropriation:)
 
     response = Assistant::ListAppropriations.call(budget_year: 2026, server_context: nil)
     line = response.content.first[:text].lines.find { |candidate| candidate.start_with?("#{appropriation.id}:") }
 
     assert_includes line, "charged 30.00, left 170.00"
+  end
+
+  test "reports amounts in euros as before" do
+    response = Assistant::ListAppropriations.call(budget_year: 2026, server_context: nil)
+
+    assert_includes response.content.first[:text], "appropriated 150.00"
   end
 end

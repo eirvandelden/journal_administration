@@ -14,6 +14,6 @@ module ProductsHelper
   private
 
   def chart_y(price, highest)
-    (CHART_HEIGHT - (price / highest * CHART_HEIGHT)).round(1)
+    (CHART_HEIGHT - (price.to_d / highest * CHART_HEIGHT)).round(1)
   end
 end

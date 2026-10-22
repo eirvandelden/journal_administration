@@ -28,8 +28,8 @@
           <tr>
             <td><%= link_to appropriation.purpose, appropriation_path(appropriation) %></td>
             <td><%= appropriation.recipient_name %></td>
-            <td><%= number_to_currency(appropriation.amount) %></td>
-            <td><%= number_to_currency(appropriation.charged) %></td>
+            <td><%= cents_to_currency(appropriation.amount) %></td>
+            <td><%= cents_to_currency(appropriation.charged) %></td>
             <td><%= render "appropriations/balance", appropriation: appropriation %></td>
             <td>
               <%= link_to t(".edit"), edit_appropriation_path(appropriation) %>
@@ -43,9 +43,9 @@
         <tr>
           <th><%= t(".total") %></th>
           <td></td>
-          <td><%= number_to_currency(@appropriations.sum(&:amount)) %></td>
-          <td><%= number_to_currency(@appropriations.sum(&:charged)) %></td>
-          <td><%= number_to_currency(@appropriations.sum(&:balance)) %></td>
+          <td><%= cents_to_currency(@appropriations.sum(&:amount)) %></td>
+          <td><%= cents_to_currency(@appropriations.sum(&:charged)) %></td>
+          <td><%= cents_to_currency(@appropriations.sum(&:balance)) %></td>
           <td></td>
         </tr>
       </tfoot>

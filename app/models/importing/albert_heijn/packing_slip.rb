@@ -76,12 +76,12 @@ module Importing
       end
 
       def amount_after(index)
-        BigDecimal(@blocks[index + 1])
+        Cents.from_euros(BigDecimal(@blocks[index + 1]))
       end
 
       def read_lines
         products.each_slice(FIELDS_PER_PRODUCT).map do |name, quantity, _shelf_price, total|
-          Line.new(name, quantity.to_i, BigDecimal(total), discounts.fetch(name, 0))
+          Line.new(name, quantity.to_i, Cents.from_euros(BigDecimal(total)), discounts.fetch(name, 0))
         end
       end
 
@@ -96,7 +96,7 @@ module Importing
       # the size of what came off, whichever sign the slip used.
       def discounts
         @discounts ||= bonuses.each_slice(3).each_with_object(Hash.new(0)) do |(name, _promotion, amount), all|
-          all[name] += BigDecimal(amount).abs
+          all[name] += Cents.from_euros(BigDecimal(amount).abs)
         end
       end
 

@@ -18,12 +18,29 @@ class Importing::ING::RowTest < ActiveSupport::TestCase
     assert_equal "NL00ABNA9999999999", row.their_account_number
   end
 
+  test "reads the amount as cents" do
+    assert_equal 2550, Importing::ING::Row.parse(valid_csv_row).amount
+  end
+
+  test "reads the balance as cents" do
+    csv_row = valid_csv_row.dup.tap { |cells| cells[9] = "158,24" }
+
+    assert_equal 15_824, Transaction.new(amount: 1, original_balance_after_mutation: Importing::ING::Row.parse(csv_row).original_balance)
+      .original_balance_after_mutation
+  end
+
+  test "refuses an amount that is not an amount" do
+    csv_row = valid_csv_row.dup.tap { |cells| cells[6] = "abc" }
+
+    assert_raises(ArgumentError) { Importing::ING::Row.parse(csv_row) }
+  end
+
   test "parse reads the amount and how it was paid" do
     row = Importing::ING::Row.parse(valid_csv_row)
 
     assert_equal "GT", row.code
     assert_equal "Af", row.direction
-    assert_equal BigDecimal("25.50"), row.amount
+    assert_equal 2550, row.amount
     assert_equal "Betaalautomaat", row.mutation_kind
     assert_equal "Groceries", row.description
   end
@@ -54,7 +71,7 @@ class Importing::ING::RowTest < ActiveSupport::TestCase
 
     row = Importing::ING::Row.parse(csv_row)
 
-    assert_equal BigDecimal("1250.75"), row.amount
+    assert_equal 125_075, row.amount
   end
 
   test "initiator_name is normalized" do
@@ -81,7 +98,7 @@ class Importing::ING::RowTest < ActiveSupport::TestCase
       their_account_number: "NL00OTHER",
       code: "GT",
       direction: "Af",
-      amount: 10.00,
+      amount: 1000,
       mutation_kind: "Betaalautomaat",
       description: "Test",
       original_balance: "1000.00",

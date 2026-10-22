@@ -30,7 +30,7 @@ module Assistant
     private_class_method :describe
 
     # An amount with two decimals
-    def self.money(amount) = format("%.2f", amount)
+    def self.money(cents) = euros(cents)
     private_class_method :money
   end
 end

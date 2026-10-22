@@ -136,11 +136,11 @@ class MigratePeopleGroupsAndLegacyOwnersTest < ActiveSupport::TestCase
     whole_payment.update!(appropriation: appropriations(:birthday_etienne))
     split_payment = transactions(:webshop_sinterklaas)
     split_part = split_payment.transaction_splits.create!(
-      amount: 60, category: categories(:gifts), appropriation: appropriations(:birthday_etienne), remainder: false
+      amount: 6000, category: categories(:gifts), appropriation: appropriations(:birthday_etienne), remainder: false
     )
     split_payment.ensure_remainder_split
 
-    assert_equal BigDecimal("-100"), appropriations(:birthday_etienne).charged
+    assert_equal -10_000, appropriations(:birthday_etienne).charged
 
     clear_managed_links
 
@@ -162,7 +162,7 @@ class MigratePeopleGroupsAndLegacyOwnersTest < ActiveSupport::TestCase
       transactions(:credit_salary).reload.class,
       transactions(:transfer_savings).reload.class
     ]
-    assert_equal BigDecimal("50.00"), transactions(:debit_grocery).amount
+    assert_equal 5000, transactions(:debit_grocery).amount
     assert_equal legacy_history, legacy_history_snapshot
     assert_equal [ appropriations(:birthday_etienne), appropriations(:birthday_etienne), "Etienne" ], [
       whole_payment.reload.appropriation,

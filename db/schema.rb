@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_11_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_16_120000) do
   create_table "account_aliases", force: :cascade do |t|
     t.integer "account_id", null: false
     t.string "pattern", null: false
@@ -82,7 +82,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_11_120000) do
     t.string "purpose", null: false
     t.string "recipient", null: false
     t.integer "budget_year", null: false
-    t.decimal "amount", precision: 10, scale: 2, null: false
+    t.integer "amount", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "person_id"
@@ -95,7 +95,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_11_120000) do
   create_table "budget_categories", force: :cascade do |t|
     t.integer "budget_id", null: false
     t.integer "category_id", null: false
-    t.decimal "amount", precision: 10, scale: 2, null: false
+    t.integer "amount", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["budget_id", "category_id"], name: "index_budget_categories_on_budget_id_and_category_id", unique: true
@@ -134,7 +134,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_11_120000) do
     t.datetime "purchased_at"
     t.datetime "warranty_expires_at"
     t.datetime "left_possession_at"
-    t.decimal "purchase_price", precision: 10, scale: 2
+    t.integer "purchase_price"
     t.text "notes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -196,9 +196,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_11_120000) do
     t.integer "receipt_id", null: false
     t.integer "product_id", null: false
     t.decimal "quantity", precision: 10, scale: 3, null: false
-    t.decimal "full_amount", precision: 10, scale: 2, null: false
-    t.decimal "discount_amount", precision: 10, scale: 2, default: "0.0", null: false
-    t.decimal "paid_amount", precision: 10, scale: 2, null: false
+    t.integer "full_amount", null: false
+    t.integer "discount_amount", default: 0, null: false
+    t.integer "paid_amount", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["product_id"], name: "index_receipt_lines_on_product_id"
@@ -208,7 +208,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_11_120000) do
   create_table "receipts", force: :cascade do |t|
     t.integer "shop_id", null: false
     t.date "issued_on", null: false
-    t.decimal "total_amount", precision: 10, scale: 2, null: false
+    t.integer "total_amount", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "payment_id"
@@ -242,7 +242,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_11_120000) do
   create_table "transaction_splits", force: :cascade do |t|
     t.integer "transaction_id", null: false
     t.integer "category_id"
-    t.decimal "amount", precision: 10, scale: 2, null: false
+    t.integer "amount", null: false
     t.text "note"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -257,7 +257,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_11_120000) do
   create_table "transactions", force: :cascade do |t|
     t.bigint "debitor_account_id"
     t.bigint "creditor_account_id"
-    t.decimal "amount", precision: 10, scale: 2
+    t.integer "amount"
     t.datetime "booked_at", precision: nil
     t.datetime "interest_at", precision: nil
     t.integer "category_id"
@@ -266,7 +266,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_11_120000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "original_note"
-    t.decimal "original_balance_after_mutation"
+    t.integer "original_balance_after_mutation"
     t.string "original_tag"
     t.integer "appropriation_id"
     t.index ["appropriation_id"], name: "index_transactions_on_appropriation_id"
