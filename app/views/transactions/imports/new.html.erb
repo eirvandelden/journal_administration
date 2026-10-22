@@ -1,5 +1,6 @@
 <% content_for(:title) { t('.heading') } %>
 <%= render layout: "shared/title_bar", locals: { title: t('.heading') } do %>
+  <%= link_to t('common.back'), transactions_path %>
 <% end %>
 <article class="upload">
   <%= form_with local: true, url: transactions_imports_path, multipart: true do |form| %>
