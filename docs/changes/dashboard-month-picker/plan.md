@@ -11,7 +11,7 @@ No `GLOSSARY.md` exists yet. These terms are proposals; none uses an avoided wor
 - **Period** — the span the dashboard reports on: from 00:00 on the first day of its from month to the end of the last day of its to month. Held in a `MonthRange`.
 - **From month / to month** — the first and last calendar month of a period, written `YYYY-MM` in the request (`from_month`, `to_month`).
 - **Quick filter** — a named period relative to today: `current_month`, `last_month`, `three_months`, `current_year`, `last_year`.
-- **Month count** — the number of months a span stands for when a monthly budget is scaled to it: whole calendar months for a period, days / 30 for any other span.
+- **Month count** — the number of months a span stands for when a monthly budget is scaled to it: whole calendar months for a period or any span of whole calendar months, days / 30 for any other span.
 - **Budget goal** — the stored monthly `BudgetCategory#amount` times the month count (the dashboard's budget and target columns).
 
 ### Diagrams
@@ -181,7 +181,7 @@ Not checked: journal_administration has no Steep or rbs_rails. The `#:` comments
 1. A period from `MonthRange.from_selection` starts at 00:00 on the first day of a month and ends at the end of the last day of a month. The private `MonthRange.spanning` enforces it: it is the only builder, because `new`, `from_dates` and `from_filter` are private on `MonthRange`.
 2. A missing, unreadable, day-carrying or reversed month selection gives the current month. `MonthRange.month`, the reversed guard in `picked` and the fallback in `from_selection` enforce it.
 3. A period's budget goal is the stored monthly amount times its integer month count. `MonthRange#month_count` and `Dashboard#budget_amounts` enforce it.
-4. Any other span keeps the days / 30 budget goal, so the MCP tool behaves as before. `DateRange#month_count` enforces it; `from_dates` and `from_filter` build a plain `DateRange`.
+4. A span that is whole calendar months, from any caller (the MCP tool included), is a `MonthRange` and counts whole months. Any other span keeps the days / 30 budget goal. `DateRange.from_dates` returns a `MonthRange` when it starts on the first day of a month and ends on the last day of a month, and a plain `DateRange` otherwise. `Dashboard#initialize` builds its span through `DateRange.from_dates`, so the MCP tool needs no code change. (Amended after Etienne's decision: MCP counts whole months.)
 5. The dashboard form has no field, option value or label with a day of the month. The view (selects only, no date field) and `month_options` enforce it.
 6. The selected from month and to month are always among the options. `selectable_months` enforces it, because it widens its span to the period.
 
@@ -197,13 +197,13 @@ Not checked: journal_administration has no Steep or rbs_rails. The `#:` comments
   - It shrinks the shared `date_filter_controller.js` to a submit action, which breaks the transactions page.
   - It removes the `start_date` and `end_date` locale keys that the transactions page still uses.
 - **C: robust UI.** Month selects with a server-resolved quick filter. Chosen, with three changes:
-  - From B, the whole-month rule lives in its own class, `MonthRange`. Only the dashboard request builds one, so the MCP tool keeps days / 30.
+  - From B, the whole-month rule lives in its own class, `MonthRange`. The dashboard request builds one, and so does `DateRange.from_dates` for a whole-month span, so the MCP tool counts months too.
   - From A, `DateRange` and `Dashboard` keep their entry points, so the MCP tool and the existing model tests stay as they are.
   - appkit's `auto-submit` controller submits on connect, not on change. A new `submit-on-change` controller handles the quick filter instead.
 
 ## Design decisions
 
-- **The MCP tool keeps its budget scaling.** Intent says that the MCP endpoint does not use the dashboard dates and stays untouched. It does use them: `Assistant::BudgetStatus` calls `Dashboard.new` and `Dashboard#budget_amounts`. The plan keeps both its code and its behaviour. Only a `MonthRange` counts whole months, and only the dashboard request builds one. The MCP tool keeps days / 30, so a whole October asked through MCP still reports 1.529,33. Whether MCP should also count whole months goes in the stage report as a decision for Etienne.
+- **The MCP tool counts whole months too.** `Assistant::BudgetStatus` calls `Dashboard.new` with exact days. Etienne decided that a span of whole calendar months scales by months there as well, so a whole October reports 1.480,00 through MCP and the dashboard alike. `DateRange.from_dates` returns a `MonthRange` for such a span and a plain `DateRange` for any other. `Assistant::BudgetStatus` keeps its code. Spans that are not whole months (for example 15 to 20 October) keep days / 30.
 - **Month selects, not `<input type="month">`.** Desktop Firefox and Safari do not support the month input. The selects label months in the app locale through the existing `date.formats.month_and_year` (`"%B %Y"` in en, nl and it).
 - **The quick filter resolves on the server.** The select gets `name="filter"` and submits on change. It renders blank after every request. A later Apply with changed months therefore sends `filter=""`, and the months win. The browser clock no longer decides month edges.
 - **The month selects submit only through the Apply button.** Choosing a range needs two changes. A submit on the first change would show a period nobody chose.
@@ -215,13 +215,15 @@ Not checked: journal_administration has no Steep or rbs_rails. The `#:` comments
 
 ## Integration points
 
-- `Assistant::BudgetStatus` (the MCP `budget_status` tool) reads `Dashboard#budget_amounts`, `#active_budget`, `#budget_actuals` and `#date_range`. Its code and behaviour stay unchanged.
+- `Assistant::BudgetStatus` (the MCP `budget_status` tool) reads `Dashboard#budget_amounts`, `#active_budget`, `#budget_actuals` and `#date_range`. Its code stays unchanged. Its goal for a whole-month span now counts months.
 - `app/views/transactions/_filters.html.erb` and `app/javascript/controllers/date_filter_controller.js` stay untouched and keep their day fields.
 - `Budget` and `BudgetCategory` are read only.
 
 ## Files that change
 
-- `app/models/date_range.rb` — public `days` and `month_count` (days / 30.0).
+- `app/models/date_range.rb` — public `days` and `month_count` (days / 30.0); `from_dates` returns a `MonthRange` for a whole-month span.
+- `test/integration/assistant_test.rb` — an MCP test for 1 to 31 October 2026.
+- `GLOSSARY.md` — new, from the Domain terms above, in its own commit `docs: glossary terms for dashboard-month-picker`.
 - `app/models/month_range.rb` — new: `QUICK_FILTERS`, `from_selection`, `month_count`, private class methods `spanning`, `quick_filter`, `picked`, `month`, and `private_class_method :new, :from_dates, :from_filter`.
 - `app/models/dashboard.rb` — `date_range:` keyword, `selectable_months`, `months_in_range` becomes `date_range.month_count`, `range_days` becomes `date_range.days`.
 - `app/controllers/dashboard_controller.rb` — builds the period with `MonthRange.from_selection`; comments updated.
@@ -248,7 +250,7 @@ Not checked: journal_administration has no Steep or rbs_rails. The `#:` comments
 
 1. Write the acceptance test "October 2026 shows the stored monthly amount as the budget goal" in `test/integration/dashboard_test.rb`. Run it and watch it fail: it shows 1.529,33 today.
 2. Add `DateRange#days` and `DateRange#month_count` with their unit tests. Point `Dashboard#months_in_range` and `range_days` at them. The existing suite stays green.
-3. Add `MonthRange` with its unit tests.
+3. Add `MonthRange` with its unit tests. Then make `DateRange.from_dates` return a `MonthRange` for a whole-month span, with its unit tests and the MCP test for 1 to 31 October 2026. Watch the MCP test fail first: it shows 1.529,33 until this step.
 4. Add the `date_range:` keyword to `Dashboard` and switch `DashboardController#index` to `MonthRange.from_selection`. Step 1's test goes green once the request uses `from_month` and `to_month`.
 5. Add `Dashboard#selectable_months` and `DashboardHelper#month_options` with their unit tests and the query-count test.
 6. Add `submit_on_change_controller.js` and rewrite the form in `index.html.erb`. Add the locale keys in en, nl and it, then run `i18n-tasks normalize`.
@@ -266,16 +268,16 @@ Not checked: journal_administration has no Steep or rbs_rails. The `#:` comments
 ## Risks
 
 - **Two counting rules.** A `MonthRange` counts whole months; every other `DateRange` keeps days / 30. The class decides the rule, so a reader sees it from the type, not from a flag.
-- **The MCP tool keeps the old miscount.** A whole month asked through MCP still scales by days / 30, so MCP and the dashboard can report different goals for the same month. The stage report puts this to Etienne. The fix would be one change: `from_dates` returns a `MonthRange` when its span is whole months.
+- **`from_dates` picks a class.** `DateRange.from_dates` now returns a `MonthRange` for a whole-month span, so `MonthRange` needs a private builder that `DateRange` can reach (for example `MonthRange.spanning` made public API of the pair, or a `DateRange` class method that calls `MonthRange.from_selection`-style construction). The implement stage chooses; invariant 1 and the "refuses to be built from exact days" test must still hold.
 - **Long option lists.** Each select has about 12 options per year of history. Year optgroups and type-ahead soften this.
 - **Date-dependent tests.** Fixture budgets and transactions sit relative to today. Acceptance tests with fixed months delete budgets in `setup`, as `DashboardTest::BudgetAmounts` already does, and create their own. Quick-filter tests use `travel_to`.
 - **`assert_queries_count`.** Rails 8.1 includes it in `ActiveSupport::TestCase`. If it does not load, count with `ActiveSupport::Notifications` instead, without a new dependency.
-- **Rejected:** `<input type="month">`, a JavaScript quick filter, replacing `DateRange`, and whole months for the MCP tool (see Alternatives and Design decisions).
+- **Rejected:** `<input type="month">`, a JavaScript quick filter and replacing `DateRange` (see Alternatives and Design decisions).
 
 Out of scope:
 
 - The transactions page filters and `date_filter_controller.js`.
-- `Assistant::BudgetStatus`, both its code and its behaviour.
+- `Assistant::BudgetStatus`'s code.
 - The formula of `historical_averages`.
 - Budget storage.
 - Daily or weekly views.
@@ -301,7 +303,9 @@ Out of scope:
 - Invariant: a selected period runs from the first day of a month to the last day of a month, enforced by `MonthRange.spanning` → `test/models/month_range_test.rb` `"from_selection with February 2026 runs from 1 to 28 February"`
 - Invariant: no caller builds a `MonthRange` with exact days, enforced by `private_class_method :new, :from_dates, :from_filter` → `test/models/month_range_test.rb` `"refuses to be built from exact days"` (`MonthRange.new`, `.from_dates` and `.from_filter` raise `NoMethodError`)
 - Invariant: an unreadable, day-carrying or reversed selection gives the current month, enforced by `MonthRange.month` and `picked` → `test/models/month_range_test.rb` `"from_selection falls back to the current month"` (cases: nil, `"October"`, `"2026-13"`, `"2026-10-15"`, reversed)
-- Invariant: any span that is not a `MonthRange` keeps days / 30, enforced by `DateRange#month_count` → `test/models/dashboard_test.rb` `"exact days keep the budget goal at days over thirty"` (`Dashboard.new(start_date: "2026-10-01", end_date: "2026-10-31")` gives 31/30 of the amount) and the unchanged `test/integration/assistant_test.rb`
+- Asking the MCP `budget_status` tool for 1 to 31 October 2026 reports the stored monthly amount, not 1.529,33 → `test/integration/assistant_test.rb` `"budget_status reports one month of budget for a whole October"`
+- Invariant: a span that is not whole calendar months keeps days / 30, enforced by `DateRange.from_dates` and `DateRange#month_count` → `test/models/dashboard_test.rb` `"exact days that are not whole months keep the budget goal at days over thirty"` (`Dashboard.new(start_date: "2026-10-01", end_date: "2026-10-20")` gives 20/30 of the amount)
+- Invariant: a whole-month span from exact days is a `MonthRange`, enforced by `DateRange.from_dates` → `test/models/date_range_test.rb` `"from_dates returns a MonthRange for 1 to 31 October"` and `"from_dates returns a plain DateRange for 15 to 20 October"`
 - Invariant: the selected months are always among the options, enforced by `Dashboard#selectable_months` → `test/models/dashboard_test.rb` `"selectable_months includes a period before the first booking"`
 
 Per changed file, the unit tests expected, named as behaviour:
@@ -322,7 +326,7 @@ Per changed file, the unit tests expected, named as behaviour:
 - `app/models/dashboard.rb`:
   - `Dashboard.new uses a given date_range`
   - `Dashboard#budget_amounts multiplies by the month count` (October 1×, February 1×, January–March 3×)
-  - `exact days keep the budget goal at days over thirty`
+  - `exact days that are not whole months keep the budget goal at days over thirty`
   - `current_year in October counts a January debit and not a November one`
   - `Dashboard#selectable_months runs newest first from the first booked month through the current month`
   - `includes a future booked month`
@@ -341,6 +345,10 @@ Test setup: fixtures stay as they are. Budget-goal tests first delete the `Budge
 
 ---
 Domain skills applied: software-design, glossary, diagrams, rails-architecture, rails-ui, rails-testing, ruby-style.
+
+## Amendment (coordinator, 2026-10-22)
+
+Etienne decided after the plan stage that the MCP `budget_status` tool also counts whole months, and that the glossary terms are written. Changed: invariant 4, the MCP design decision, Integration points, Files that change, Risks, Out of scope and the Proof list. Order of work gains one step between 3 and 4: make `DateRange.from_dates` return a `MonthRange` for a whole-month span, with its tests and the MCP test.
 
 ## Critique
 

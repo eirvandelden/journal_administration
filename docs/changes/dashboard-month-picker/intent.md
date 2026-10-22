@@ -18,7 +18,7 @@ Household members who read the dashboard. The dashboard page, its date filter fo
 
 - No gems, packages, migrations or deploy files are needed. No other permissions are requested.
 - Locale files stay normalized (`i18n-tasks normalize`).
-- The MCP endpoint and the budget pages do not use the dashboard dates and stay untouched.
+- The MCP `budget_status` tool uses the dashboard dates too. Its code stays as is; only the goal it reports changes (see In scope). The budget pages stay untouched.
 
 ## In scope
 
@@ -29,6 +29,7 @@ Household members who read the dashboard. The dashboard page, its date filter fo
 - A missing, unreadable or reversed month selection falls back to the current month.
 - Old links with exact days (`start_date`, `end_date`) stop working and fall back to the current month.
 - Show the selected period as months or years in the dashboard, never as days.
+- The MCP `budget_status` tool reports the same goal: a span that is whole calendar months scales by months, not days / 30.
 
 ## Out of scope
 
@@ -47,6 +48,7 @@ Household members who read the dashboard. The dashboard page, its date filter fo
 - The dashboard shows no field or label with a day of the month.
 - Choosing a "to" month before the "from" month shows the current month.
 - Opening `/dashboard?start_date=2026-10-15&end_date=2026-10-20` shows the current month.
+- Asking the MCP `budget_status` tool for 1 to 31 October 2026 reports the stored monthly amount, not 1.529,33.
 
 ## Flagged concerns
 
@@ -59,6 +61,8 @@ The scope choice was "month/year pickers only". With the old days / 30 maths a w
 - "This year" runs January through the current month — recommended option accepted, no reason given.
 - Old day-based URLs stop working — chosen over snapping them to whole months, no reason given.
 - Autonomous delivery, no Codex review — recommended options accepted, no reason given.
+- The MCP tool also counts whole months (added after the plan stage, 2026-10-22) — recommended option accepted, no reason given; it corrects the first draft's wrong claim that MCP does not use the dashboard dates.
+- Write the plan's glossary terms into a new `GLOSSARY.md` — recommended option accepted, no reason given.
 
 ## Open questions
 
