@@ -21,7 +21,7 @@
       <p><%= t(".never_bought") %></p>
     <% else %>
       <% if @purchases.size > 1 %>
-        <%= render "price_chart", purchases: @purchases.to_a.reverse %>
+        <%= render "products/price_chart", purchases: @purchases.to_a.reverse %>
       <% end %>
 
       <table id="purchases-table">

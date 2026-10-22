@@ -35,7 +35,7 @@ class PeopleTest < ActionDispatch::IntegrationTest
     get people_path
 
     assert_response :success
-    assert_select "td a", text: "Etienne"
+    assert_select "td a[href='#{person_path(people(:etienne))}']", text: "Etienne"
 
     get new_person_path
 

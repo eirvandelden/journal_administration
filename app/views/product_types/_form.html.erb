@@ -1,6 +1,6 @@
 <%# locals: (product_type:, categories:) %>
 <section>
-  <%= form_for product_type do |f| %>
+  <%= form_with model: product_type do |f| %>
     <% if product_type.errors.any? %>
       <div id="error_explanation">
         <h2>

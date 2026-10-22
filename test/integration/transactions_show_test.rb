@@ -120,4 +120,13 @@ class TransactionsShowTest < ActionDispatch::IntegrationTest
     assert_select "dd ul li", text: /Supermarket/
     assert_select "dd ul li", text: /10\.00/
   end
+
+  test "the edit page of a credit links back to the credit's own page" do
+    sign_in_as(@member)
+    credit = transactions(:credit_salary)
+
+    get edit_transaction_path(credit)
+
+    assert_select "a[href='#{credit_path(credit)}']"
+  end
 end

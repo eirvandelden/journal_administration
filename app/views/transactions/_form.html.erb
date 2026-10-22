@@ -1,7 +1,7 @@
 <%# locals: (transaction:, disabled: nil) %>
 
 <section>
-  <%= form_for transaction do |f| %>
+  <%= form_with model: transaction do |f| %>
     <% if transaction.errors.any? %>
       <div id="error_explanation">
         <h2><%= t('errors.template.header', count: transaction.errors.count, model: Transaction.model_name.human.downcase) %></h2>

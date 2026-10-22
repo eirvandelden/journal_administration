@@ -1,5 +1,5 @@
 <%# locals: (transaction:, transaction_split: nil) %>
-<% transaction_split = local_assigns[:transaction_split] || TransactionSplit.new(financial_transaction: transaction) %>
+<% transaction_split ||= TransactionSplit.new(financial_transaction: transaction) %>
 <section>
   <table>
     <thead>

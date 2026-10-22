@@ -78,7 +78,7 @@ class GroupsTest < ActionDispatch::IntegrationTest
     get groups_path
 
     assert_response :success
-    assert_select "td a", text: "Samen"
+    assert_select "td a[href='#{group_path(groups(:samen))}']", text: "Samen"
 
     get new_group_path
 

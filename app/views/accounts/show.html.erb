@@ -35,7 +35,7 @@
   <article>
     <h2><%= t(".aliases") %></h2>
     <ul>
-      <%= render @account.account_aliases %>
+      <%= render partial: "account_aliases/account_alias", collection: @account.account_aliases, as: :account_alias %>
     </ul>
     <%= render "account_aliases/form", account: @account, account_alias: @account.account_aliases.build %>
     <%= button_to t(".absorb_transactions"), account_transaction_absorption_path(@account) %>

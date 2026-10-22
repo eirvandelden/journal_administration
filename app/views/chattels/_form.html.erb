@@ -1,6 +1,6 @@
 <%# locals: (chattel:, brands_in_use:, disabled: nil) %>
 <section>
-  <%= form_for chattel do |f| %>
+  <%= form_with model: chattel do |f| %>
     <% if chattel.errors.any? %>
       <div id="error_explanation">
         <h2><%= t('errors.template.header', count: chattel.errors.count, model: Chattel.model_name.human.downcase) %></h2>

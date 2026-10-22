@@ -31,7 +31,7 @@
       <% @own_accounts.each do |account| %>
         <tr>
           <td>
-            <%= link_to t('.show'), account %>
+            <%= link_to t('.show'), account_path(account) %>
           </td>
           <td><%= account.id %></td>
           <td><%= account.account_number %></td>
@@ -90,7 +90,7 @@
       <% @external_accounts.each do |account| %>
         <tr>
           <td>
-            <%= link_to t('.show'), account %>
+            <%= link_to t('.show'), account_path(account) %>
           </td>
           <td><%= account.id %></td>
           <td><%= account.account_number %></td>
