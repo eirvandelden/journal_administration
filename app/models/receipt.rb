@@ -5,6 +5,7 @@
 class Receipt < ApplicationRecord
   include PdfAttachmentValidatable
   include Monetary
+  include Recordable
 
   monetary :total_amount
 

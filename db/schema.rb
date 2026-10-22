@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_22_090000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_22_120000) do
   create_table "account_aliases", force: :cascade do |t|
     t.integer "account_id", null: false
     t.string "pattern", null: false
@@ -222,6 +222,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_22_090000) do
     t.datetime "updated_at", null: false
     t.integer "payment_id"
     t.string "order_number"
+    t.boolean "packed", default: true, null: false
     t.index ["order_number"], name: "index_receipts_on_order_number", unique: true
     t.index ["payment_id"], name: "index_receipts_on_payment_id"
     t.index ["shop_id"], name: "index_receipts_on_shop_id"
