@@ -16,6 +16,7 @@ module Importing
       ORDER_NUMBER = /Bestelnummer:\s*(\d+)/
       # Every heading this reader steers by; without one of them it is not a slip
       HEADINGS = [ "Aantal", "Boodschappen totaal", "Totaal" ].freeze
+      TABLE_HEADING = [ "Aantal", "Prijs", "Totaal" ].freeze
 
       attr_reader :order_number, :delivered_on, :total_amount, :lines
 
@@ -38,35 +39,16 @@ module Importing
         blocks.grep(ORDER_NUMBER).any? &&
           blocks.grep(/Bedankt voor je bestelling/).none? &&
           blocks.grep(/Bezorging op/).any? &&
-          HEADINGS.all? { |heading| blocks.include?(heading) } &&
-          products_line_up?(blocks)
+          HEADINGS.all? { |heading| blocks.include?(heading) }
       end
       private_class_method :readable?
-
-      # Each product is written as four blocks: what it is, how many, the price
-      # each, and the price together. Anything else is not a slip we can read.
-      def self.products_line_up?(blocks)
-        (product_section(blocks).size % FIELDS_PER_PRODUCT).zero?
-      end
-      private_class_method :products_line_up?
-
-      # The blocks that describe the products packed, without the free extras
-      # Albert Heijn throws in. Read both while checking a mail and while
-      # parsing one. A section of products that could not be delivered has a
-      # table of its own above this one, so the table that counts is the last.
-      def self.product_section(blocks)
-        first = blocks.rindex("Aantal") + 3
-        last = [ blocks.index("Gratis toegevoegd"), blocks.index("Boodschappen totaal") ].compact.min
-
-        blocks[first...last]
-      end
 
       def initialize(blocks)
         @tokens = blocks
         @order_number = blocks.grep(ORDER_NUMBER).first[ORDER_NUMBER, 1]
         @delivered_on = date_in(blocks.grep(/Bezorging op/).first)
         @total_amount = amount_after(blocks, blocks.rindex("Totaal"))
-        @lines = read_lines
+        @lines = lines_from(products, discounts_in(blocks))
       end
 
       private
@@ -75,16 +57,11 @@ module Importing
 
       def settled_amount = total_amount - (stated("Overig totaal") || 0)
 
-      def read_lines
-        discounts = discounts_in(@tokens)
-        products.each_slice(FIELDS_PER_PRODUCT).map do |name, quantity, _shelf_price, total|
-          Line.new(name, quantity.to_i, Cents.from_euros(BigDecimal(total)), discounts.fetch(name, 0))
-        end
-      end
-
-      # The products packed, without the free extras Albert Heijn throws in
+      # The products packed, without the free extras Albert Heijn throws in. A section of products that
+      # could not be delivered has a table of its own above this one, so the table that counts is the last.
       def products
-        self.class.product_section(@tokens)
+        first = @tokens.rindex("Aantal") + TABLE_HEADING.size
+        section_between(@tokens, first, "Gratis toegevoegd", "Boodschappen totaal")
       end
     end
   end
