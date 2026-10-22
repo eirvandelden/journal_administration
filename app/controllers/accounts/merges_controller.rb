@@ -23,7 +23,7 @@ class Accounts::MergesController < ApplicationController
   def create
     duplicates = Account.where(id: duplicate_ids).to_a
     transactions = transactions_in(duplicates.map(&:id))
-    receipts = Receipt.where(shop_id: duplicates.map(&:id)).count
+    receipts = Account.receipts_count_by_account(duplicates.map(&:id)).values.sum
 
     if @account.merge(duplicates)
       redirect_to @account, notice: t(".success", transactions: t(".transactions", count: transactions),

@@ -68,6 +68,12 @@ class AccountMergesTest < ActionDispatch::IntegrationTest
     test "merging without picking duplicates counts no transactions" do
       assert_empty queries_matching(/SELECT COUNT\(\*\) FROM "transactions"/) { post account_merge_path(@target) }
     end
+
+    test "merging counts the receipts through the grouped count, not a plain one" do
+      plain = /SELECT COUNT\(\*\) FROM "receipts"/
+
+      assert_empty queries_matching(plain) { post account_merge_path(@target, duplicate_ids: [ @duplicate.id ]) }
+    end
   end
 
   class New < AccountMergesTest
