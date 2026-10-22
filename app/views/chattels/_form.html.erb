@@ -60,7 +60,7 @@
     <%= render "shared/action_row", form: f,
         cancel_path: chattel.persisted? ? chattel_path(chattel) : chattels_path,
         delete_form_id: (dom_id(chattel, :delete) if chattel.persisted?),
-        confirm: t("common.confirm_delete_named", name: chattel.name) %>
+        confirm: t("common.confirm_delete_named", name: chattel.name_in_database) %>
   <% end %>
   <% if chattel.persisted? %>
     <%= render "shared/delete_form", record: chattel, url: chattel_path(chattel) %>

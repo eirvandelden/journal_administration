@@ -12,7 +12,7 @@
   <%= render "shared/action_row", form: form,
       cancel_path: person.persisted? ? person_path(person) : people_path,
       delete_form_id: (dom_id(person, :delete) if person.persisted?),
-      confirm: t("common.confirm_delete_named", name: person.name) %>
+      confirm: t("common.confirm_delete_named", name: person.name_in_database) %>
 <% end %>
 <% if person.persisted? %>
   <%= render "shared/delete_form", record: person, url: person_path(person) %>

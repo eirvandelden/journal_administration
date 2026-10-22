@@ -12,7 +12,7 @@
   <%= render "shared/action_row", form: form,
       cancel_path: group.persisted? ? group_path(group) : groups_path,
       delete_form_id: (dom_id(group, :delete) if group.persisted?),
-      confirm: t("common.confirm_delete_named", name: group.name) %>
+      confirm: t("common.confirm_delete_named", name: group.name_in_database) %>
 <% end %>
 <% if group.persisted? %>
   <%= render "shared/delete_form", record: group, url: group_path(group) %>
