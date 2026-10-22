@@ -48,3 +48,21 @@ The six Round 2 findings hold at this SHA:
 No existing test was weakened, skipped or deleted in the fix commits.
 
 Outside this change: `transactions/_transaction.json.jbuilder` reads `from_account_id` and `to_account_id`, which no longer exist, so the JSON index and show views fail on origin/main too. `transaction_json_test.rb` stubs them. Propose a separate branch for it.
+
+## Round 5 — 2026-10-22T07:30Z — e95037f (claude)
+
+The branch is rebased onto `origin/main` (0026a36), which brought in appropriation charges and the headless-Edge system tests. Suite green (1150 runs, 0 failures). RuboCop, the herb linter and Brakeman are clean. `i18n-tasks normalize` changes nothing.
+
+Rebase check: main's new money code (`Appropriation#charged`, `#balance`, `charged_on`, the appropriation views and the `credit`/`debit` test helpers) reads Integer cents and renders through `cents_to_currency`. `e95037f` only rewrites euro literals in main's new tests as cents; no assertion was weakened, skipped or deleted. `db/schema.rb` differs from main's only in the ten money columns and the version. A sweep finds no `number_to_currency` outside `MoneyHelper` and no Float or BigDecimal money arithmetic left in `app/`.
+
+Compliance: every acceptance criterion keeps the test Round 2 listed, and every test named in the plan's Proof list exists under that name.
+
+- [ ] Nit: `euros_to_cents` assigns into the `permitted` parameters it receives, which the playbook forbids ("Never mutate a method's parameters"); return a copy instead, for example `permitted.merge(converted)` — `app/controllers/concerns/money_params.rb:15` → fixed (Return a copy from euros_to_cents instead of mutating its parameter)
+
+## Round 6 — 2026-10-22T07:34Z — abdcdcd (claude)
+
+No findings. Suite green (1150 runs, 0 failures). RuboCop, the herb linter, Brakeman and Bundler Audit are clean. `i18n-tasks normalize` changes nothing.
+
+The Round 5 nit holds: `euros_to_cents` builds a new `ActionController::Parameters` with `merge` and leaves its argument unchanged. `merge` keeps the permitted flag and the other keys, the `warranty_document` upload included. Both callers return its result, and `chattel_amounts_test.rb` and `transaction_amounts_test.rb` still cover the JSON euro input.
+
+No new public method, Law of Demeter chain, N+1 loop or glossary `Avoid:` word in the diff.
