@@ -6,6 +6,7 @@ class Receipt < ApplicationRecord
   include PdfAttachmentValidatable
   include Monetary
   include Recordable
+  include PaymentMatching
 
   monetary :total_amount
 
