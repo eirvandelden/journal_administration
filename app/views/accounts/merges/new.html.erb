@@ -43,8 +43,8 @@
       <% @duplicates.each do |duplicate| %>
         <li>
           <%= duplicate %> (<%= duplicate.numbers.to_sentence %>):
-          <%= t('.counts', transactions: t('.transactions', count: duplicate.transactions_count),
-                receipts: t('.receipts', count: duplicate.receipts_count)) %>
+          <%= t('.counts', transactions: t('.transactions', count: @transactions_by_account.fetch(duplicate.id, 0)),
+                receipts: t('.receipts', count: @receipts_by_account.fetch(duplicate.id, 0))) %>
         </li>
       <% end %>
     </ul>
