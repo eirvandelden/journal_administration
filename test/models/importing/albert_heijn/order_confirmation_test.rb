@@ -23,6 +23,16 @@ class Importing::AlbertHeijn::OrderConfirmationTest < ActiveSupport::TestCase
     assert_equal 238, krentenbol.paid_amount
   end
 
+  test "reads the total when a note about deposit and stamps sits between its heading and the amount" do
+    confirmation = Importing::AlbertHeijn::OrderConfirmation.parse(
+      file_fixture("albert_heijn_order_confirmation_deposit_note.txt").read
+    )
+
+    assert_equal "100000004", confirmation.order_number
+    assert_equal Date.new(2024, 8, 9), confirmation.delivered_on
+    assert_equal 9_398, confirmation.total_amount
+  end
+
   test "returns nothing for a packing slip" do
     assert_nil Importing::AlbertHeijn::OrderConfirmation.parse(file_fixture("albert_heijn_packing_slip.txt").read)
   end
