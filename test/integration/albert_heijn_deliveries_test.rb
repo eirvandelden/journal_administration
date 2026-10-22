@@ -139,12 +139,74 @@ class AlbertHeijnDeliveriesTest < ActionDispatch::IntegrationTest
     assert_equal pets, dog_food.reload.product_type.category
   end
 
+  test "a delivery links to the payment whose note names its order number" do
+    broccoli = Product.resolve_by_name("AH Broccoliroosjes")
+    classify(broccoli, brand: "AH", type: "Broccoli", category: categories(:household_groceries))
+    ask_assistant("import_albert_heijn_mail", mail: @packing_slip.sub("100000001", "74532780"))
+
+    answer = ask_assistant("link_deliveries_to_payments")
+
+    receipt = Receipt.find_by!(order_number: "74532780")
+
+    assert_equal transactions(:ordered_grocery), receipt.payment
+    assert_includes answer, "Linked order 74532780 to payment ##{receipt.payment.id}"
+    assert_equal [ categories(:household_groceries) ],
+      receipt.payment.explicit_transaction_splits.map(&:category)
+    assert_equal 149, receipt.payment.explicit_transaction_splits.sum(&:amount)
+  end
+
+  test "two fitting door-card payments leave the delivery unlinked and listed" do
+    ask_assistant("import_albert_heijn_mail", mail: @packing_slip)
+    receipt = Receipt.find_by!(order_number: "100000001")
+    2.times { |number| door_card_payment(11_500 - number * 100, receipt.issued_on) }
+
+    answer = ask_assistant("link_deliveries_to_payments")
+
+    assert_nil receipt.reload.payment
+    assert_includes answer, "Receipt ##{receipt.id}: order 100000001"
+    assert_includes ask_assistant("list_unlinked_deliveries"), "order 100000001"
+  end
+
+  test "a payment charged to an appropriation keeps its splits when linked" do
+    classify(Product.resolve_by_name("AH Broccoliroosjes"), brand: "AH", type: "Broccoli",
+      category: categories(:household_groceries))
+    ask_assistant("import_albert_heijn_mail", mail: @packing_slip.sub("100000001", "74532780"))
+    payment = transactions(:ordered_grocery)
+    payment.update!(appropriation: appropriations(:birthday_etienne))
+    splits_before = payment.transaction_splits.map(&:attributes)
+
+    ask_assistant("link_deliveries_to_payments")
+
+    assert_equal payment, Receipt.find_by!(order_number: "74532780").payment
+    assert_not_includes payment.reload.transaction_splits.map(&:category), categories(:household_groceries)
+    assert_equal splits_before, payment.reload.transaction_splits.map(&:attributes)
+  end
+
+  test "the new tools say which only read, which can be repeated, and which rewrite splits" do
+    post_to_assistant
+    tools = JSON.parse(response.body).dig("result", "tools").index_by { |tool| tool["name"] }
+
+    %w[list_unclassified_products list_product_types list_unlinked_deliveries].each do |name|
+      assert tools.fetch(name).dig("annotations", "readOnlyHint"), "#{name} should say it only reads"
+    end
+    %w[import_albert_heijn_mail create_household_category classify_product create_product_type].each do |name|
+      assert tools.fetch(name).dig("annotations", "idempotentHint"), "#{name} should say it can be repeated"
+    end
+    assert tools.fetch("link_deliveries_to_payments").dig("annotations", "destructiveHint")
+  end
+
   private
 
   def classify(product, brand:, type:, category:)
     ask_assistant("create_product_type", name: type, category_id: category.id)
     ask_assistant("classify_product", product_id: product.id, brand: brand,
       product_type_id: ProductType.where("LOWER(name) = ?", type.downcase).first.id)
+  end
+
+  def door_card_payment(amount, day)
+    note = "Pasvolgnr: 900 06-03-2026 09:58 Transactie: P00448 Term: --- Valutadatum: 06-03-2026"
+    Credit.create!(debitor: accounts(:albert_heijn), creditor: accounts(:checking), amount: amount,
+      booked_at: day.to_time + 12.hours, interest_at: day, note: note, original_note: note)
   end
 
   def packing_slip_for(order_number)
