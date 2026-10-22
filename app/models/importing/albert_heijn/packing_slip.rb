@@ -52,9 +52,10 @@ module Importing
 
       # The blocks that describe the products packed, without the free extras
       # Albert Heijn throws in. Read both while checking a mail and while
-      # parsing one.
+      # parsing one. A section of products that could not be delivered has a
+      # table of its own above this one, so the table that counts is the last.
       def self.product_section(blocks)
-        first = blocks.index("Aantal") + 3
+        first = blocks.rindex("Aantal") + 3
         last = [ blocks.index("Gratis toegevoegd"), blocks.index("Boodschappen totaal") ].compact.min
 
         blocks[first...last]

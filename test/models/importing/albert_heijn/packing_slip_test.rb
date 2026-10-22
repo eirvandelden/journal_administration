@@ -53,6 +53,16 @@ class Importing::AlbertHeijn::PackingSlipTest < ActiveSupport::TestCase
     assert_empty @slip.lines.select { |line| line.name == "uitjes zegel" }
   end
 
+  test "a product that could not be delivered is not a purchase" do
+    slip = Importing::AlbertHeijn::PackingSlip.parse(file_fixture("albert_heijn_packing_slip_with_unavailable_product.txt").read)
+
+    assert_equal "100000007", slip.order_number
+    assert_equal 13_053, slip.total_amount
+    assert_equal 53, slip.lines.size
+    assert_equal 14_118, slip.lines.sum(&:full_amount)
+    assert_empty slip.lines.select { |line| line.name == "AH Excellent Broodhaan" }
+  end
+
   test "mail that is not a packing slip is refused" do
     assert_nil Importing::AlbertHeijn::PackingSlip.parse("Beste familie, hier is een nieuwsbrief.")
   end
