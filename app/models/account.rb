@@ -110,15 +110,14 @@ class Account < ApplicationRecord
   #
   # @return [String] Account name if present, otherwise the lowest account number
   def to_s
-    label_from(name, numbers.compact.min)
+    label_from(name) { numbers.compact.min }
   end
 
   # The account's label as last saved, ignoring unsaved changes.
   #
   # @return [String] Stored name if present, otherwise the lowest stored account number
   def stored_label
-    stored_numbers = account_numbers.select(&:persisted?).filter_map(&:number_in_database)
-    label_from(name_in_database, stored_numbers.min)
+    label_from(name_in_database) { account_numbers.select(&:persisted?).filter_map(&:number_in_database).min }
   end
 
   # Returns the account numbers as strings
@@ -213,10 +212,11 @@ class Account < ApplicationRecord
   end
 
   # @param name [String, nil]
-  # @param number [String, nil]
+  # @param name [String, nil]
+  # @yieldreturn [String, nil] the number to fall back on, read only when the name is blank
   # @return [String] the name when present, otherwise the number
-  def label_from(name, number)
-    name.presence || number.to_s
+  def label_from(name)
+    name.presence || yield.to_s
   end
 
   # @param pattern [String]

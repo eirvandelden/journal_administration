@@ -24,9 +24,12 @@ class DeleteConfirmAfterRejectedSaveTest < ActionDispatch::IntegrationTest
   test "account confirm names the stored name after a rejected save" do
     account = accounts(:checking)
 
-    taken_number = accounts(:savings).account_number
+    taken_number = accounts(:savings).numbers.first
 
-    patch account_path(account), params: { account: { name: "Unsaved", account_number: taken_number } }
+    patch account_path(account),
+      params: { account: { name: "Unsaved", account_numbers_attributes: { "0" => { number: taken_number } } } }
+
+    assert_select "form > aside[role=alert] li"
 
     assert_stored_name_in_confirm account.name
   end
