@@ -107,4 +107,34 @@ class GroupsTest < ActionDispatch::IntegrationTest
     assert_equal groups(:samen), account.reload.group
     assert_nil account.person
   end
+
+  test "show page has no delete button" do
+    get group_path(groups(:samen))
+
+    assert_select "button.button-danger", count: 0
+    assert_select "input[name=_method][value=delete]", count: 0
+  end
+
+  test "edit page ends in an action row with Verwijderen…" do
+    group = groups(:samen)
+
+    get edit_group_path(group)
+
+    assert_select "form > footer button.button-danger[form='#{dom_id(group, :delete)}']"
+  end
+
+  test "a refused delete returns to the edit page with the reason" do
+    delete group_path(groups(:samen))
+
+    assert_redirected_to edit_group_path(groups(:samen))
+    assert_predicate flash[:alert], :present?
+  end
+
+  test "the index rows hold no action column and the name opens the group" do
+    get groups_path
+
+    assert_select "main > header > h1", count: 1
+    assert_select "main > header nav a[href='#{new_group_path}']", text: I18n.t("common.new")
+    assert_select "tbody td a", count: Group.count
+  end
 end

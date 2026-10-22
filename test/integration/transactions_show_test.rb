@@ -129,4 +129,34 @@ class TransactionsShowTest < ActionDispatch::IntegrationTest
 
     assert_select "a[href='#{credit_path(credit)}']"
   end
+
+  test "Nieuw bezit sits in the Acties menu beside Bewerken" do
+    sign_in_as(@member)
+
+    get transaction_url(@transaction)
+
+    assert_select "main > header nav > details > summary", text: I18n.t("common.actions_menu")
+    assert_select "main > header nav > details a[href=?]", new_chattel_path(purchase_transaction_id: @transaction.id)
+    assert_select "main > header nav > a[href=?]", edit_transaction_path(@transaction)
+    assert_select "main > header nav > details a[href=?]", edit_transaction_path(@transaction), count: 0
+  end
+
+  test "show page has no delete button" do
+    sign_in_as(@member)
+
+    get transaction_url(@transaction)
+
+    assert_select "button.button-danger", count: 0
+  end
+
+  test "the edit page ends the transaction form in an action row with Verwijderen…" do
+    sign_in_as(@member)
+
+    get edit_transaction_path(@transaction)
+
+    assert_select "form[action=?] > footer button.button-danger[form=?]",
+      polymorphic_path(@transaction), dom_id(@transaction, :delete)
+    assert_select "form##{dom_id(@transaction, :delete)}[action=?]", transaction_path(@transaction)
+    assert_select "main > .actions", count: 0
+  end
 end

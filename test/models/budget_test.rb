@@ -1,6 +1,19 @@
 require "test_helper"
 
 class BudgetTest < ActiveSupport::TestCase
+  test "to_s names the period, open-ended when the budget has no end" do
+    budget = budgets(:active_budget)
+    start = I18n.l(budget.starts_at.to_date, format: :long)
+
+    budget.ends_at = nil
+
+    assert_equal start, budget.to_s
+
+    budget.ends_at = budget.starts_at + 10.days
+
+    assert_equal "#{start} – #{I18n.l(budget.ends_at.to_date, format: :long)}", budget.to_s
+  end
+
   class Validations < ActiveSupport::TestCase
     def setup
       BudgetCategory.delete_all

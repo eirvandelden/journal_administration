@@ -107,7 +107,7 @@ class AccountNumbersTest < ActionDispatch::IntegrationTest
         }
       end
 
-      assert_select "#error_explanation"
+      assert_select "form > aside[role=alert] li"
     end
   end
 

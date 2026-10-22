@@ -11,11 +11,11 @@ class BudgetsTest < ApplicationSystemTestCase
     ends_at = starts_at + 6.days
 
     visit budgets_url
-    click_on I18n.t("budgets.index.new_budget", locale: locale)
+    click_on I18n.t("common.new", locale: locale)
 
     fill_in I18n.t("budgets.form.starts_at", locale: locale), with: starts_at
     fill_in I18n.t("budgets.form.ends_at", locale: locale), with: ends_at
-    click_on I18n.t("helpers.submit.create", model: Budget.model_name.human, locale: locale)
+    click_on I18n.t("common.save", locale: locale)
 
     assert_text I18n.t("budgets.create.success", locale: locale)
     assert_current_path budget_path(Budget.find_by!(starts_at: starts_at.beginning_of_day))
@@ -28,7 +28,7 @@ class BudgetsTest < ApplicationSystemTestCase
     visit edit_budget_url(budget)
 
     fill_in I18n.t("budgets.form.ends_at", locale: locale), with: ends_at
-    click_on I18n.t("helpers.submit.update", model: Budget.model_name.human, locale: locale)
+    click_on I18n.t("common.save", locale: locale)
 
     assert_text I18n.t("budgets.update.success", locale: locale)
     assert_current_path budget_path(budget)
@@ -39,7 +39,7 @@ class BudgetsTest < ApplicationSystemTestCase
     ends_at = starts_at + 6.days
 
     visit budgets_url
-    click_on I18n.t("budgets.index.new_budget", locale: locale)
+    click_on I18n.t("common.new", locale: locale)
 
     fill_in I18n.t("budgets.form.starts_at", locale: locale), with: starts_at
     fill_in I18n.t("budgets.form.ends_at", locale: locale), with: ends_at
@@ -51,7 +51,7 @@ class BudgetsTest < ApplicationSystemTestCase
       select categories(:groceries).name
       fill_in I18n.t("budgets.form.amount", locale: locale), with: "150.00"
     end
-    click_on I18n.t("helpers.submit.create", model: Budget.model_name.human, locale: locale)
+    click_on I18n.t("common.save", locale: locale)
 
     assert_text I18n.t("budgets.create.success", locale: locale)
     assert_equal [ categories(:groceries) ], Budget.find_by!(starts_at: starts_at.beginning_of_day).categories
@@ -67,7 +67,7 @@ class BudgetsTest < ApplicationSystemTestCase
     within first("[data-budget-categories-target='row']") do
       click_on I18n.t("budgets.form.remove", locale: locale)
     end
-    click_on I18n.t("helpers.submit.update", model: Budget.model_name.human, locale: locale)
+    click_on I18n.t("common.save", locale: locale)
 
     assert_text I18n.t("budgets.update.success", locale: locale)
     assert_empty budget.reload.categories

@@ -148,4 +148,12 @@ class MainDashboardTest < ActionDispatch::IntegrationTest
     assert_select "th", text: I18n.t("balance.budget"), count: 0
     assert_select "th", text: I18n.t("balance.status"), count: 0
   end
+
+  test "dashboard has a title bar h1 and a stacking balance table" do
+    get dashboard_index_url
+
+    assert_select "main > header > h1", count: 1
+    assert_select "table.debit_credit[data-stack=wide]"
+    assert_select "table.debit_credit tbody td:not([data-label])", count: 0
+  end
 end

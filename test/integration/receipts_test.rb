@@ -153,4 +153,11 @@ class ReceiptsTest < ActionDispatch::IntegrationTest
     assert_equal splits_before, transactions(:debit_grocery).reload.transaction_splits.map(&:attributes)
     assert_equal I18n.t("receipts.payment_links.create.nothing_to_split", locale: :en), flash[:notice]
   end
+
+  test "the index has a title bar h1 and every cell a data-label" do
+    get receipts_path
+
+    assert_select "main > header > h1", count: 1
+    assert_select "table[data-stack] tbody td:not([data-label])", count: 0
+  end
 end

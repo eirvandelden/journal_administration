@@ -137,4 +137,29 @@ class BudgetsTest < ActionDispatch::IntegrationTest
 
     assert_equal original_ends_at, active.ends_at
   end
+
+  test "the index rows carry no buttons and the date range links to the budget" do
+    get budgets_url
+
+    assert_select "tbody button", count: 0
+    assert_select "tbody td a[href='#{budget_path(budgets(:active_budget))}']"
+    assert_select "main > header nav a[href='#{new_budget_path}']", text: I18n.t("common.new")
+  end
+
+  test "the edit page ends in an action row with Verwijderen… and keeps Bedragen voorstellen after it" do
+    budget = budgets(:active_budget)
+
+    get edit_budget_url(budget)
+
+    assert_select "form > footer button.button-danger[form='#{dom_id(budget, :delete)}']"
+    assert_select "form##{dom_id(budget, :delete)}[action='#{budget_path(budget)}']"
+    assert_select "form > footer ~ p button[formaction='#{budget_suggestion_path(budget)}']"
+  end
+
+  test "the show page has no delete button and lists the period as a description list" do
+    get budget_url(budgets(:active_budget))
+
+    assert_select "button.button-danger", count: 0
+    assert_select "main dl dt", minimum: 2
+  end
 end

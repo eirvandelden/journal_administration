@@ -1,15 +1,6 @@
 <%# locals: (account:) %>
 <%= form_with model: account do |f| %>
-  <% if account.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= t('errors.template.header', count: account.errors.count, model: Account.model_name.human.downcase) %></h2>
-      <ul>
-        <% account.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
+  <%= render "shared/form_errors", record: account %>
 
   <div class="field">
     <%= f.label :id %>
@@ -40,8 +31,11 @@
     <%= f.select :category_id, grouped_category_options(selected: f.object.category_id), { include_blank: true } %>
   </div>
 
-  <nav>
-    <%= link_to t('common.cancel'), account.persisted? ? account_path(account) : accounts_path %>
-    <%= f.submit t('common.save') %>
-  </nav>
+  <%= render "shared/action_row", form: f,
+      cancel_path: account.persisted? ? account_path(account) : accounts_path,
+      delete_form_id: (dom_id(account, :delete) if account.persisted?),
+      confirm: t("common.confirm_delete_named", name: account.stored_label) %>
+<% end %>
+<% if account.persisted? %>
+  <%= render "shared/delete_form", record: account, url: account_path(account) %>
 <% end %>

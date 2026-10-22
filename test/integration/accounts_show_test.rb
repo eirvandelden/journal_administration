@@ -40,12 +40,12 @@ class AccountsShowTest < ActionDispatch::IntegrationTest
     assert_includes response.body, transactions(:debit_grocery).note
   end
 
-  test "show links a recent transaction to its show and edit page" do
+  test "show links a recent transaction to its show page" do
     get account_path(accounts(:checking))
 
     assert_response :success
     assert_select "a[href='#{transaction_path(transactions(:debit_grocery))}']"
-    assert_select "a[href='#{edit_transaction_path(transactions(:debit_grocery))}']"
+    assert_select "a[href='#{edit_transaction_path(transactions(:debit_grocery))}']", count: 0
   end
 
   test "show paginates recent transactions to the next page" do
@@ -93,18 +93,11 @@ class AccountsShowTest < ActionDispatch::IntegrationTest
     assert_includes response.body, transactions(:credit_salary).note
   end
 
-  test "show renders a destroy button" do
-    get account_path(accounts(:checking))
-
-    assert_response :success
-    assert_select "form[action='#{account_path(accounts(:checking))}']"
-  end
-
   test "edit renders a destroy button" do
     get edit_account_path(accounts(:checking))
 
     assert_response :success
-    assert_select "form[action='#{account_path(accounts(:checking))}']"
+    assert_select "form##{dom_id(accounts(:checking), :delete)}[action='#{account_path(accounts(:checking))}']"
   end
 
   test "destroy redirects to accounts index on success" do
@@ -112,13 +105,6 @@ class AccountsShowTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to accounts_url
     assert_equal I18n.t("accounts.destroy.success"), flash[:notice]
-  end
-
-  test "destroy redirects back with alert when account has transactions" do
-    delete account_path(accounts(:checking))
-
-    assert_redirected_to account_path(accounts(:checking))
-    assert_predicate flash[:alert], :present?
   end
 
   test "show offers to mark an external account as a shared provider" do
@@ -146,6 +132,19 @@ class AccountsShowTest < ActionDispatch::IntegrationTest
 
     get account_path(accounts(:checking))
 
-    assert_select "article p", text: /Delden Household/
+    assert_select "article dd", text: /Delden Household/
+  end
+
+  test "show page has no delete button" do
+    get account_path(accounts(:checking))
+
+    assert_select "button.button-danger", count: 0
+    assert_select "form[method=post] input[name=_method][value=delete]", count: 0
+  end
+
+  test "show page lists the fields as a description list" do
+    get account_path(accounts(:checking))
+
+    assert_select "main dl dt", minimum: 3
   end
 end

@@ -56,4 +56,13 @@ class Users::ProfilesTest < ActionDispatch::IntegrationTest
 
     assert_response :redirect
   end
+
+  test "the edit form ends in an action row of Annuleren and Opslaan" do
+    sign_in_as(@member)
+
+    get edit_user_profile_path(@member)
+
+    assert_select "form > footer a[role=button][href=?]", user_profile_path(@member)
+    assert_select "form > footer button.button-danger", count: 0
+  end
 end

@@ -214,6 +214,41 @@ class AppropriationsTest < ActionDispatch::IntegrationTest
     assert_not appropriation.reload.legacy_duplicate
   end
 
+  test "the index rows carry no buttons and the purpose links to the appropriation" do
+    travel_to Date.new(2026, 6, 15) do
+      get appropriations_path
+    end
+
+    assert_select "tbody button", count: 0
+    assert_select "tbody td a[href='#{appropriation_path(appropriations(:christmas_serena))}']"
+    assert_select "main > header nav a[href='#{new_appropriation_path}']", text: I18n.t("common.new")
+  end
+
+  test "the edit page ends in an action row with Verwijderen…" do
+    appropriation = appropriations(:christmas_serena)
+
+    get edit_appropriation_path(appropriation)
+
+    assert_select "form > footer button.button-danger[form='#{dom_id(appropriation, :delete)}']"
+    assert_select "form##{dom_id(appropriation, :delete)}[action='#{appropriation_path(appropriation)}']"
+  end
+
+  test "the show page has no delete button" do
+    get appropriation_path(appropriations(:christmas_serena))
+
+    assert_select "button.button-danger", count: 0
+  end
+
+  test "a refused delete returns to the edit page with the reason" do
+    appropriation = appropriations(:birthday_etienne)
+    transactions(:gift_payment).update!(appropriation:)
+
+    delete appropriation_path(appropriation)
+
+    assert_redirected_to edit_appropriation_path(appropriation)
+    assert_predicate flash[:alert], :present?
+  end
+
   private
 
   # How many queries read split parts while the block runs

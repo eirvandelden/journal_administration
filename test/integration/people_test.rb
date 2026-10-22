@@ -118,8 +118,45 @@ class PeopleTest < ActionDispatch::IntegrationTest
     patch account_path(account), params: { account: { managed_owner: "" } }
 
     assert_response :unprocessable_entity
-    assert_select "#error_explanation li",
+    assert_select "aside[role=alert] li",
       text: /cannot change its household ownership because it has transactions/
     assert_equal groups(:samen), account.reload.group
+  end
+
+  test "show page has no delete button" do
+    get person_path(people(:etienne))
+
+    assert_select "button.button-danger", count: 0
+    assert_select "input[name=_method][value=delete]", count: 0
+  end
+
+  test "edit page ends in an action row with Verwijderen…" do
+    person = people(:grandpa)
+
+    get edit_person_path(person)
+
+    assert_select "form > footer button.button-danger[form='#{dom_id(person, :delete)}']"
+    assert_select "form##{dom_id(person, :delete)}[action='#{person_path(person)}']"
+  end
+
+  test "saving a person without a name shows the error in an alert" do
+    patch person_path(people(:grandma)), params: { person: { name: "", household: false } }
+
+    assert_select "form > aside[role=alert] li"
+  end
+
+  test "a refused delete returns to the edit page with the reason" do
+    delete person_path(people(:etienne))
+
+    assert_redirected_to edit_person_path(people(:etienne))
+    assert_predicate flash[:alert], :present?
+  end
+
+  test "the index rows hold no action column and the name opens the person" do
+    get people_path
+
+    assert_select "main > header > h1", count: 1
+    assert_select "main > header nav a[href='#{new_person_path}']", text: I18n.t("common.new")
+    assert_select "tbody td a", count: Person.count
   end
 end

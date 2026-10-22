@@ -28,7 +28,7 @@ class ProductTypesTest < ActionDispatch::IntegrationTest
     end
 
     assert_response :unprocessable_entity
-    assert_select "#error_explanation li"
+    assert_select "aside[role=alert] li"
   end
 
   test "two product types cannot share a name" do
@@ -38,7 +38,7 @@ class ProductTypesTest < ActionDispatch::IntegrationTest
     end
 
     assert_response :unprocessable_entity
-    assert_select "#error_explanation li"
+    assert_select "aside[role=alert] li"
   end
 
   test "a product type page compares the brands we buy it from" do
@@ -66,5 +66,23 @@ class ProductTypesTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select "p", text: /#{Regexp.escape(I18n.t("product_types.show.never_bought", locale: :en))}/
+  end
+
+  test "the edit page has an action row of Annuleren and Opslaan without Verwijderen…" do
+    product_type = product_types(:naturel_chips)
+
+    get edit_product_type_path(product_type)
+
+    assert_select "main > header > h1", count: 1
+    assert_select "form > footer a[role=button][href=?]", product_type_path(product_type)
+    assert_select "form > footer button", count: 0
+  end
+
+  test "the index has + Nieuw, rows that open the product type and no action column" do
+    get product_types_path
+
+    assert_select "main > header nav a[href=?]", new_product_type_path, text: I18n.t("common.new")
+    assert_select "tbody td a[href=?]", product_type_path(product_types(:naturel_chips))
+    assert_select "tbody td a[href=?]", edit_product_type_path(product_types(:naturel_chips)), count: 0
   end
 end

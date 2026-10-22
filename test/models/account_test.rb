@@ -240,6 +240,23 @@ class AccountTest < ActiveSupport::TestCase
     assert_equal "Gezamenlijke Rekening", accounts(:checking).to_s
   end
 
+  test "stored_label returns the persisted name after an unsaved change" do
+    account = accounts(:checking)
+    account.name = ""
+
+    assert_equal "Gezamenlijke Rekening", account.stored_label
+  end
+
+  test "stored_label falls back to the lowest persisted number when the stored name is blank" do
+    account = Account.create!(name: "", account_numbers: [ AccountNumber.new(number: "NL00ZZZZ0000000002"),
+                                                           AccountNumber.new(number: "NL00AAAA0000000001") ])
+    account = Account.find(account.id)
+    account.name = "Nieuw"
+    account.account_numbers.build(number: "NL00AAAA0000000000")
+
+    assert_equal "NL00AAAA0000000001", account.stored_label
+  end
+
   test "to_s falls back to the first number" do
     account = Account.new(account_numbers: [ AccountNumber.new(number: "NL00TEST0000000001") ], name: "")
 

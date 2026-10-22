@@ -73,7 +73,7 @@ class AppropriationsController < ApplicationController
     if @appropriation.destroy
       redirect_to appropriations_path(year: @appropriation.budget_year), notice: t(".success")
     else
-      redirect_to @appropriation, alert: @appropriation.errors.full_messages.to_sentence
+      redirect_to edit_appropriation_path(@appropriation), alert: @appropriation.errors.full_messages.to_sentence
     end
   end
 
