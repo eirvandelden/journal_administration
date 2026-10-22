@@ -4,7 +4,7 @@ dialog#search-dialog {
   padding: 0;
   border: none;
   border-radius: 8px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 32px rgb(0 0 0 / 20%);
 }
 
 dialog#search-dialog article {

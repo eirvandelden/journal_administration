@@ -13,7 +13,7 @@ export default class extends Controller {
       try {
         await navigator.clipboard.writeText(text)
         return
-      } catch (_error) {
+      } catch {
         // Fall through to legacy fallback.
       }
     }
