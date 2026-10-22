@@ -13,8 +13,8 @@
 ActiveRecord::Schema[8.1].define(version: 2026_10_11_120000) do
   create_table "account_aliases", force: :cascade do |t|
     t.integer "account_id", null: false
-    t.datetime "created_at", null: false
     t.string "pattern", null: false
+    t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index "LOWER(pattern)", name: "index_account_aliases_on_lower_pattern", unique: true
     t.index ["account_id", "pattern"], name: "index_account_aliases_on_account_id_and_pattern", unique: true
@@ -23,12 +23,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_11_120000) do
 
   create_table "accounts", force: :cascade do |t|
     t.string "account_number"
-    t.integer "category_id"
-    t.datetime "created_at", null: false
     t.string "name"
     t.integer "owner"
-    t.boolean "payment_provider", default: false, null: false
+    t.integer "category_id"
+    t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "payment_provider", default: false, null: false
     t.integer "person_id"
     t.integer "group_id"
     t.index ["category_id"], name: "index_accounts_on_category_id"
@@ -39,24 +39,24 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_11_120000) do
   end
 
   create_table "active_storage_attachments", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "record_type", null: false
+    t.bigint "record_id", null: false
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
-    t.string "name", null: false
-    t.bigint "record_id", null: false
-    t.string "record_type", null: false
     t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
     t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
   end
 
   create_table "active_storage_blobs", force: :cascade do |t|
-    t.bigint "byte_size", null: false
-    t.string "checksum"
-    t.string "content_type"
-    t.datetime "created_at", null: false
-    t.string "filename", null: false
     t.string "key", null: false
+    t.string "filename", null: false
+    t.string "content_type"
     t.text "metadata"
     t.string "service_name", null: false
+    t.bigint "byte_size", null: false
+    t.string "checksum"
+    t.datetime "created_at", null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
@@ -67,13 +67,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_11_120000) do
   end
 
   create_table "appkit_push_subscriptions", force: :cascade do |t|
-    t.string "auth_key"
-    t.datetime "created_at", null: false
+    t.integer "user_id", null: false
     t.string "endpoint", null: false
     t.string "p256dh_key"
-    t.datetime "updated_at", null: false
+    t.string "auth_key"
     t.string "user_agent"
-    t.integer "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["endpoint"], name: "index_appkit_push_subscriptions_on_endpoint", unique: true
     t.index ["user_id"], name: "index_appkit_push_subscriptions_on_user_id"
   end
@@ -85,17 +85,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_11_120000) do
     t.decimal "amount", precision: 10, scale: 2, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "legacy_duplicate", default: false, null: false
     t.integer "person_id"
+    t.boolean "legacy_duplicate", default: false, null: false
     t.index "LOWER(purpose), person_id, budget_year", name: "index_appropriations_on_person_and_purpose_and_year", unique: true, where: "person_id IS NOT NULL AND legacy_duplicate = false"
     t.index ["person_id"], name: "index_appropriations_on_person_id"
     t.check_constraint "amount > 0", name: "check_appropriation_amount_positive"
   end
 
   create_table "budget_categories", force: :cascade do |t|
-    t.decimal "amount", precision: 10, scale: 2, null: false
     t.integer "budget_id", null: false
     t.integer "category_id", null: false
+    t.decimal "amount", precision: 10, scale: 2, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["budget_id", "category_id"], name: "index_budget_categories_on_budget_id_and_category_id", unique: true
@@ -105,40 +105,40 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_11_120000) do
   end
 
   create_table "budgets", force: :cascade do |t|
-    t.integer "closed_by_budget_id"
-    t.datetime "created_at", null: false
-    t.datetime "ends_at"
     t.datetime "starts_at", null: false
+    t.datetime "ends_at"
+    t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "closed_by_budget_id"
     t.index ["closed_by_budget_id"], name: "index_budgets_on_closed_by_budget_id"
     t.index ["starts_at"], name: "index_budgets_on_starts_at", unique: true
     t.check_constraint "ends_at IS NULL OR starts_at < ends_at", name: "check_budget_dates"
   end
 
   create_table "categories", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.integer "direction"
     t.string "name"
-    t.integer "parent_category_id"
+    t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "direction"
+    t.integer "parent_category_id"
     t.index ["id"], name: "index_categories_on_id"
     t.index ["parent_category_id"], name: "index_categories_on_parent_category_id"
   end
 
   create_table "chattels", force: :cascade do |t|
-    t.string "brand"
-    t.datetime "created_at", null: false
-    t.string "kind"
-    t.datetime "left_possession_at"
-    t.string "model_number"
     t.string "name", null: false
-    t.text "notes"
-    t.decimal "purchase_price", precision: 10, scale: 2
+    t.string "kind"
+    t.string "model_number"
+    t.string "serial_number"
     t.integer "purchase_transaction_id"
     t.datetime "purchased_at"
-    t.string "serial_number"
-    t.datetime "updated_at", null: false
     t.datetime "warranty_expires_at"
+    t.datetime "left_possession_at"
+    t.decimal "purchase_price", precision: 10, scale: 2
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "brand"
     t.index ["purchase_transaction_id"], name: "index_chattels_on_purchase_transaction_id"
   end
 
@@ -173,80 +173,80 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_11_120000) do
   end
 
   create_table "product_types", force: :cascade do |t|
+    t.string "name", null: false
     t.integer "category_id", null: false
     t.datetime "created_at", null: false
-    t.string "name", null: false
     t.datetime "updated_at", null: false
     t.index "LOWER(name)", name: "index_product_types_on_LOWER_name", unique: true
     t.index ["category_id"], name: "index_product_types_on_category_id"
   end
 
   create_table "products", force: :cascade do |t|
-    t.string "brand"
-    t.datetime "created_at", null: false
     t.string "name", null: false
-    t.string "normalized_name", null: false
+    t.string "brand"
     t.integer "product_type_id"
+    t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "normalized_name", null: false
     t.index ["normalized_name"], name: "index_products_on_normalized_name", unique: true
     t.index ["product_type_id"], name: "index_products_on_product_type_id"
   end
 
   create_table "receipt_lines", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.decimal "discount_amount", precision: 10, scale: 2, default: "0.0", null: false
-    t.decimal "full_amount", precision: 10, scale: 2, null: false
-    t.decimal "paid_amount", precision: 10, scale: 2, null: false
+    t.integer "receipt_id", null: false
     t.integer "product_id", null: false
     t.decimal "quantity", precision: 10, scale: 3, null: false
-    t.integer "receipt_id", null: false
+    t.decimal "full_amount", precision: 10, scale: 2, null: false
+    t.decimal "discount_amount", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "paid_amount", precision: 10, scale: 2, null: false
+    t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["product_id"], name: "index_receipt_lines_on_product_id"
     t.index ["receipt_id"], name: "index_receipt_lines_on_receipt_id"
   end
 
   create_table "receipts", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.date "issued_on", null: false
-    t.string "order_number"
-    t.integer "payment_id"
     t.integer "shop_id", null: false
+    t.date "issued_on", null: false
     t.decimal "total_amount", precision: 10, scale: 2, null: false
+    t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "payment_id"
+    t.string "order_number"
     t.index ["order_number"], name: "index_receipts_on_order_number", unique: true
     t.index ["payment_id"], name: "index_receipts_on_payment_id"
     t.index ["shop_id"], name: "index_receipts_on_shop_id"
   end
 
   create_table "sessions", force: :cascade do |t|
-    t.datetime "created_at", precision: nil, null: false
-    t.string "ip_address"
-    t.datetime "last_active_at", precision: nil, null: false
-    t.string "token", null: false
-    t.datetime "updated_at", precision: nil, null: false
-    t.string "user_agent"
     t.integer "user_id", null: false
+    t.string "token", null: false
+    t.string "ip_address"
+    t.string "user_agent"
+    t.datetime "last_active_at", precision: nil, null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["token"], name: "index_sessions_on_token", unique: true
     t.index ["user_id"], name: "index_sessions_on_user_id"
   end
 
   create_table "transaction_links", force: :cascade do |t|
-    t.datetime "created_at", null: false
     t.integer "source_transaction_id", null: false
     t.integer "transfer_id", null: false
+    t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["source_transaction_id"], name: "index_transaction_links_on_source_transaction_id"
     t.index ["transfer_id"], name: "index_transaction_links_on_transfer_id", unique: true
   end
 
   create_table "transaction_splits", force: :cascade do |t|
-    t.decimal "amount", precision: 10, scale: 2, null: false
-    t.integer "category_id"
-    t.datetime "created_at", null: false
-    t.text "note"
-    t.boolean "remainder", default: false, null: false
     t.integer "transaction_id", null: false
+    t.integer "category_id"
+    t.decimal "amount", precision: 10, scale: 2, null: false
+    t.text "note"
+    t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "remainder", default: false, null: false
     t.integer "appropriation_id"
     t.index ["appropriation_id"], name: "index_transaction_splits_on_appropriation_id"
     t.index ["category_id"], name: "index_transaction_splits_on_category_id"
@@ -255,19 +255,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_11_120000) do
   end
 
   create_table "transactions", force: :cascade do |t|
+    t.bigint "debitor_account_id"
+    t.bigint "creditor_account_id"
     t.decimal "amount", precision: 10, scale: 2
     t.datetime "booked_at", precision: nil
-    t.integer "category_id"
-    t.datetime "created_at", null: false
-    t.bigint "creditor_account_id"
-    t.bigint "debitor_account_id"
     t.datetime "interest_at", precision: nil
+    t.integer "category_id"
     t.text "note"
-    t.decimal "original_balance_after_mutation"
-    t.text "original_note"
-    t.string "original_tag"
     t.string "type"
+    t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "original_note"
+    t.decimal "original_balance_after_mutation"
+    t.string "original_tag"
     t.integer "appropriation_id"
     t.index ["appropriation_id"], name: "index_transactions_on_appropriation_id"
     t.index ["category_id"], name: "index_transactions_on_category_id"
@@ -275,18 +275,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_11_120000) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.boolean "active", default: true
-    t.string "assistant_token"
-    t.integer "color_scheme", default: 0, null: false
-    t.datetime "created_at", precision: nil, null: false
-    t.integer "dark_theme", default: 1, null: false
-    t.string "email_address", null: false
-    t.integer "light_theme", default: 1, null: false
-    t.integer "locale", default: 0, null: false
     t.string "name", null: false
+    t.string "email_address", null: false
     t.string "password_digest", null: false
     t.integer "role", null: false
+    t.boolean "active", default: true
+    t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
+    t.integer "locale", default: 0, null: false
+    t.integer "color_scheme", default: 0, null: false
+    t.integer "light_theme", default: 1, null: false
+    t.integer "dark_theme", default: 1, null: false
+    t.string "assistant_token"
     t.index ["assistant_token"], name: "index_users_on_assistant_token", unique: true
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
     t.index ["name"], name: "index_users_on_name", unique: true
