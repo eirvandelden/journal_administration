@@ -18,7 +18,8 @@ module Importing
       #: (String mail) -> OlderPackingSlip?
       def self.parse(mail)
         tokens = Reading.tokens(mail)
-        new(tokens) if readable?(tokens)
+        slip = new(tokens) if readable?(tokens)
+        slip if slip&.reconciles?
       end
 
       def self.readable?(tokens)
@@ -40,6 +41,10 @@ module Importing
       def packed? = true
 
       private
+
+      def shelf_amount = stated("Subtotaal boodschappen")
+
+      def settled_amount = stated("Subtotaal")
 
       def products
         first = @tokens.index("Prijs per stuk") + TABLE_HEADING.size

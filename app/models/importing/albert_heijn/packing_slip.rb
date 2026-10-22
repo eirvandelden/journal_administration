@@ -30,7 +30,8 @@ module Importing
         blocks = mail.split("\n\n").map(&:strip).reject(&:empty?)
         return nil unless readable?(blocks)
 
-        new(blocks)
+        slip = new(blocks)
+        slip if slip.reconciles?
       end
 
       def self.readable?(blocks)
@@ -60,7 +61,7 @@ module Importing
       end
 
       def initialize(blocks)
-        @blocks = blocks
+        @tokens = blocks
         @order_number = blocks.grep(ORDER_NUMBER).first[ORDER_NUMBER, 1]
         @delivered_on = date_in(blocks.grep(/Bezorging op/).first)
         @total_amount = amount_after(blocks, blocks.rindex("Totaal"))
@@ -68,6 +69,10 @@ module Importing
       end
 
       private
+
+      def shelf_amount = stated("Boodschappen totaal")
+
+      def settled_amount = total_amount - (stated("Overig totaal") || 0)
 
       def read_lines
         products.each_slice(FIELDS_PER_PRODUCT).map do |name, quantity, _shelf_price, total|
@@ -77,7 +82,7 @@ module Importing
 
       # The products packed, without the free extras Albert Heijn throws in
       def products
-        self.class.product_section(@blocks)
+        self.class.product_section(@tokens)
       end
 
       # A product can be discounted more than once on one slip — two promotions on
@@ -93,11 +98,11 @@ module Importing
       # Empty on a delivery where nothing was on bonus: the summary still names
       # the bonus row, but no detail section follows it.
       def bonuses
-        first = @blocks.rindex("Bonusvoordeel")
-        last = @blocks.index("Totaal voordeel")
+        first = @tokens.rindex("Bonusvoordeel")
+        last = @tokens.index("Totaal voordeel")
         return [] if first.nil? || last.nil? || last < first
 
-        @blocks[(first + 1)...last]
+        @tokens[(first + 1)...last]
       end
     end
   end

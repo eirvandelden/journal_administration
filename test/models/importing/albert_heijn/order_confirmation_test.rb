@@ -37,6 +37,18 @@ class Importing::AlbertHeijn::OrderConfirmationTest < ActiveSupport::TestCase
     assert_nil Importing::AlbertHeijn::OrderConfirmation.parse(file_fixture("albert_heijn_packing_slip.txt").read)
   end
 
+  test "a confirmation whose products do not add up to its shelf total is refused" do
+    mail = file_fixture("albert_heijn_order_confirmation.txt").read.sub(/(AH Aubergine\s+1\s+0\.92\s+)0\.92/, "\\10.93")
+
+    assert_nil Importing::AlbertHeijn::OrderConfirmation.parse(mail)
+  end
+
+  test "a confirmation whose total does not follow from its shelf total and bonus is refused" do
+    mail = file_fixture("albert_heijn_order_confirmation.txt").read.gsub("109.41", "109.42")
+
+    assert_nil Importing::AlbertHeijn::OrderConfirmation.parse(mail)
+  end
+
   test "is not packed" do
     assert_not @confirmation.packed?
   end

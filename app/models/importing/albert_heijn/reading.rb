@@ -19,7 +19,24 @@ module Importing
         mail.lines.map(&:strip).reject(&:empty?)
       end
 
+      # Whether what the mail lists adds up to what it states
+      #
+      # The lines make the shelf total, and the shelf total less the bonus makes what is settled before
+      # the extras. A mail that does not add up was misread or cut off, so it is not a basket.
+      #
+      #: () -> bool
+      def reconciles?
+        lines.sum(&:full_amount) == shelf_amount && shelf_amount - bonus_amount == settled_amount
+      end
+
       private
+
+      def stated(heading)
+        index = @tokens.index(heading)
+        amount_after(@tokens, index) if index
+      end
+
+      def bonus_amount = stated("Totaal voordeel")&.abs || 0
 
       def date_in(text)
         day, month, year = text.match(DELIVERY_DATE).captures
