@@ -1,0 +1,658 @@
+Albert Heijn
+
+Alle informatie over je bestelling
+
+
+https://example.com/ah-link
+
+ Albert Heijn
+
+Bedankt voor je bestelling, Familie
+
+ Bezorging op vrijdag 3 november 2023
+
+ 09:00 - 11:00
+
+ Straatnaam 1, 1234 AB Plaatsnaam
+
+ Bestelnummer: 100000003
+
+Bedankt voor
+je bestelling, Familie
+
+ Bezorging op
+vrijdag 3 november 2023
+
+ 09:00 - 11:00
+
+ Straatnaam 1, 1234 AB Plaatsnaam
+
+ Bestelnummer: 100000003
+
+ Betaalmethode
+
+ Je hebt betaald met de digitale betaalpas. Na bezorging wordt de
+ reservering van je betaalpas omgezet in een betaling van het
+ definitieve bedrag
+
+ Alcohol of medicijnen besteld? Dan mag alleen iemand van 18 jaar of
+ ouder de boodschappen aannemen.
+
+ Wat kan je verder verwachten?
+
+Tot donderdag 2 november 2023 12:00
+
+ kan je de bestelling en bezorgmoment nog wijzigen.
+
+Wijzig
+ je bestelling › (https://example.com/ah-link)
+
+ De wijziging van jouw bestelling is pas definitief als je de
+ bestelling opnieuw bevestigt.
+
+Na donderdag 2 november 2023 12:00
+
+ worden je boodschappen verzameld en ontvang je de pakbon van je
+ bestelling via een mail.
+
+ Bekijk of volg jouw bestelling.
+
+Volg
+ je bestelling › (https://example.com/ah-link)
+
+ Betaalmethode
+
+ Je hebt betaald met de digitale betaalpas. Na bezorging wordt de
+ reservering van je betaalpas omgezet in een betaling van het definitieve
+ bedrag
+
+ Alcohol of medicijnen besteld? Dan mag alleen iemand van 18 jaar of
+ ouder de boodschappen aannemen.
+
+ Wat kan je verder verwachten?
+
+Tot donderdag 2 november 2023 12:00
+
+ kan je de bestelling en bezorgmoment nog wijzigen.
+
+Wijzig
+ je bestelling › (https://example.com/ah-link)
+
+ De wijziging van jouw bestelling is pas definitief als je de bestelling
+ opnieuw bevestigt.
+
+Na donderdag 2 november 2023 12:00
+
+ worden je boodschappen verzameld en ontvang je de pakbon van je
+ bestelling via een mail.
+
+ Bekijk of volg jouw bestelling.
+
+Volg
+ je bestelling › (https://example.com/ah-link)
+
+ Jouw bestelling
+
+ Boodschappen
+52
+
+ 119.76
+
+ Voordeel
+
+ -15.70
+
+ Overig totaal
+
+ 5.35
+
+ Totaal
+
+ 109.41
+
+ Wat zit er in jouw bestelling?
+
+ Boodschappen
+52
+
+ Aantal
+
+ Prijs
+
+ Totaal
+
+ Albert Heijn
+
+ AH Allesreiniger oceaan
+
+ 1
+
+ 1.29
+
+ 1.29
+
+ AH Aubergine
+
+ 1
+
+ 0.92
+
+ 0.92
+
+ AH Courgette
+
+ 1
+
+ 0.79
+
+ 0.79
+
+ AH Couscous
+
+ 1
+
+ 1.19
+
+ 1.19
+
+ AH Extra lang lekker rozijnen krentenbol
+
+ 2
+
+ 2.19
+
+ 4.38
+
+ AH Gevuld eitje salade
+
+ 1
+
+ 2.39
+
+ 2.39
+
+ AH Hoestdrank broomhexine 8mg/5ml
+
+ 1
+
+ 3.95
+
+ 3.95
+
+ AH Ibuprofen
+
+ 2
+
+ 2.09
+
+ 4.18
+
+ AH Komkommer
+
+ 3
+
+ 0.79
+
+ 2.37
+
+ AH Luchtige crackers volkoren rijstebloem
+
+ 1
+
+ 1.19
+
+ 1.19
+
+ AH Luikse wafels
+
+ 1
+
+ 1.85
+
+ 1.85
+
+ AH Pizza kaas tomaat
+
+ 2
+
+ 1.39
+
+ 2.78
+
+ AH Quiche tomaat mozzarella volkoren bodem
+
+ 2
+
+ 3.99
+
+ 7.98
+
+ AH Quiche ui cheddar
+
+ 1
+
+ 3.99
+
+ 3.99
+
+ AH Rijstwafels naturel
+
+ 1
+
+ 0.55
+
+ 0.55
+
+ AH Rond volkoren heel
+
+ 1
+
+ 1.89
+
+ 1.89
+
+ AH Roomboter croissants
+
+ 1
+
+ 1.29
+
+ 1.29
+
+ AH Sanitairspons met zeem
+
+ 1
+
+ 1.89
+
+ 1.89
+
+ AH Siroop framboos
+
+ 1
+
+ 1.29
+
+ 1.29
+
+ AH Spaghetti
+
+ 1
+
+ 0.95
+
+ 0.95
+
+ AH Terra Falafelburger
+
+ 1
+
+ 2.29
+
+ 2.29
+
+ AH Terra Plantaardig rulgehakt
+
+ 1
+
+ 1.89
+
+ 1.89
+
+ AH Terra Plantaardige gehaktbal
+
+ 1
+
+ 1.99
+
+ 1.99
+
+ AH Tomaten gezeefd passata
+
+ 1
+
+ 0.89
+
+ 0.89
+
+ AH Tomatenblokjes
+
+ 1
+
+ 0.69
+
+ 0.69
+
+ AH Vrije uitloop-eisalade
+
+ 1
+
+ 2.29
+
+ 2.29
+
+ Arla Lactofree halfvolle melk lactosevrij
+
+ 2
+
+ 1.89
+
+ 3.78
+
+ Autodrop Smaak chaos mix total loss
+
+ 1
+
+ 2.59
+
+ 2.59
+
+ Bonzo Purina Bonzo Adult
+
+ 1
+
+ 7.99
+
+ 7.99
+
+ CêlaVíta Oma's verse opbak aardappeltjes rood
+
+ 1
+
+ 1.89
+
+ 1.89
+
+ CêlaVíta Verse minikrieltjes
+
+ 1
+
+ 1.65
+
+ 1.65
+
+ De Kleine Keuken Biologische mini koekjes 8+ mnd
+
+ 1
+
+ 2.99
+
+ 2.99
+
+ De Zaanse Hoeve Vanille vla
+
+ 2
+
+ 0.95
+
+ 1.90
+
+ De Zaanse Hoeve Yoghurt Griekse stijl 10% vet
+
+ 1
+
+ 2.09
+
+ 2.09
+
+ Disney Frozen multivitaminen gummies
+
+ 1
+
+ 13.95
+
+ 13.95
+
+ ERU Kids
+
+ 1
+
+ 1.39
+
+ 1.39
+
+ Garlan Verse roomkaas met kruiden
+
+ 1
+
+ 0.99
+
+ 0.99
+
+ Johma 100% plantaardige kip-kerriesalade
+
+ 1
+
+ 2.89
+
+ 2.89
+
+ Johma Farmer salade
+
+ 1
+
+ 2.45
+
+ 2.45
+
+ Liga Evergreen krenten
+
+ 1
+
+ 2.49
+
+ 2.49
+
+ Natuurfarm de Boed Mais-scharreleieren L
+
+ 1
+
+ 3.69
+
+ 3.69
+
+ Nurofen Kinderen bij koort en bij pijn
+
+ 1
+
+ 6.49
+
+ 6.49
+
+ Organix Boerderijdieren koekjes 1+jr
+
+ 1
+
+ 3.39
+
+ 3.39
+
+ Gratis toegevoegd
+
+ Lily's Kitchen Organic chicken supper
+
+ 1
+
+ 0.00
+
+ 0.00
+
+ Boodschappen totaal
+
+ 119.76
+
+ Bonusvoordeel
+
+ AH Extra lang lekker rozijnen krentenbol
+
+Bonus
+
+ 2.00
+
+ AH Quiche tomaat mozzarella volkoren bodem
+
+Bonus
+
+ 1.98
+
+ Arla Lactofree halfvolle melk lactosevrij
+
+Bonus
+
+ 0.95
+
+ AH Aubergine
+
+Bonus
+
+ 0.23
+
+ AH Gevuld eitje salade
+
+Bonus
+
+ 0.60
+
+ AH Quiche ui cheddar
+
+Bonus
+
+ 0.99
+
+ AH Rond volkoren heel
+
+Bonus
+
+ 0.90
+
+ AH Terra Falafelburger
+
+Bonus
+
+ 0.57
+
+ AH Terra Plantaardig rulgehakt
+
+Bonus
+
+ 0.47
+
+ AH Terra Plantaardige gehaktbal
+
+Bonus
+
+ 0.50
+
+ AH Vrije uitloop-eisalade
+
+Bonus
+
+ 0.57
+
+ Autodrop Smaak chaos mix total loss
+
+Bonus
+
+ 0.60
+
+ CêlaVíta Oma's verse opbak aardappeltjes rood
+
+Bonus
+
+ 0.95
+
+ CêlaVíta Verse minikrieltjes
+
+Bonus
+
+ 0.83
+
+ De Kleine Keuken Biologische mini koekjes 8+ mnd
+
+Bonus
+
+ 0.75
+
+ Johma 100% plantaardige kip-kerriesalade
+
+Bonus
+
+ 0.89
+
+ Johma Farmer salade
+
+Bonus
+
+ 0.45
+
+ Liga Evergreen krenten
+
+Bonus
+
+ 0.62
+
+ Organix Boerderijdieren koekjes 1+jr
+
+Bonus
+
+ 0.85
+
+ Totaal voordeel
+
+ 15.70
+
+ Overig
+
+ Geen servicekosten door Bezorgbundel onbeperkt 12 maanden
+
+ 0.00
+
+ Statiegeld Klapkratten (1)
+
+ 5.00
+
+ Statiegeld tasjes
+
+ 0.35
+
+ Lever je kratten, plastic tassen en flessen in bij de bezorger en we verrekenen dit direct
+ in het eindbedrag.
+
+ Overig totaal
+
+ 5.35
+
+ Dit is een automatische e-mail dus je kunt hier niet op reageren. Bij de klantenservice (https://example.com/ah-link) helpen we je graag.
+
+mijn gegevens (https://example.com/ah-link) |
+ privacy (https://example.com/ah-link) |
+ homepage (https://example.com/ah-link) |
+ vragen (https://example.com/ah-link) |
+ algemene voorwaarden (https://example.com/ah-link) |
+ https://example.com/ah-link
+https://example.com/ah-link verkrijgbaar op
+ ah.nl (https://example.com/ah-link)
+
+ Beleid rondom alcohol of medicijnen
+
+ Wij verkopen geen alcohol en medicijnen aan klanten jonger dan 18 jaar. Bestel je een of meer van deze producten? Onze bezorger vraagt dan altijd om een legitimatiebewijs als er twijfel bestaat over de leeftijd van de persoon aan wie de bestelling wordt afgegeven. We vragen om legitimatie aan klanten tot 25 jaar.
+
+ < 25 jaar? Laat je legitimatie zien!
+
+ < 18 jaar verkopen wij geen alcohol
+
+ Bestelling annuleren wanneer de bestelling nog niet is bezorgd of in het geval van niet-thuis op het geselecteerde tijdstip.
+
+ Je hebt je bestelling gedaan bij Albert Heijn B.V. Je kunt op de website bij Mijn Bestellingen (https://example.com/ah-link) zien of je je bestelling zelf kosteloos online kunt annuleren. Ben je hiervoor te laat, en wil je toch annuleren, of ben je niet thuis op het door jou voor bezorging geselecteerde tijdstip, dan zijn hier kosten aan verbonden. Albert Heijn brengt in elk van die gevallen 50 euro aan kosten in rekening.
+
+ Herroepingsrecht
+
+ Wil je bepaalde artikelen toch niet hebben en van jouw aankoop afzien? Dan kun je jouw aankoop herroepen (ontbinden). Dit is echter niet mogelijk voor jouw aankopen van o.a. verse producten, audio- en video-opnamen waarvan de verzegeling is verbroken, kranten en tijdschriften. De volledige lijst met uitzonderingen vind je in onze (toepasselijke) Algemene Voorwaarden (https://example.com/ah-link).
+
+ Artikelen waarop het herroepingsrecht van toepassing is, kun je tot 14 dagen na bezorging aan ons retourneren. Binnen deze termijn kun je het product inspecteren, voor zover dat nodig is om de aard, kenmerken en werking van het product vast te stellen. Indien je meer hebt gedaan dan het voorgaande, kan Albert Heijn waardevermindering -oplopend tot 100% - van het artikel in rekening brengen. Retourneren kan op twee manieren. Je kunt de producten kosteloos meegeven met de bezorger bij jouw volgende bestelling of afgeven bij een Pick Up Point. Maak hiervoor eerst gratis een afspraak met onze klantenservice (0800-0305). Je kunt er ook voor kiezen om de bestelling te herroepen door het ingevulde herroepingsformulier te verzenden naar het adres op het formulier. Je dient de producten in dat geval retour te zenden naar:
+Albert Heijn Retour/Ontbinding, T.a.v. Procesteamleider Operations, AH Online Homeshopcenter Utrecht, Kanaaldijk 3, 3542 AP, Utrecht
+.
+
+ Voor alle producten die je hebt gekocht, geldt de wettelijke garantie. Dit betekent dat de producten van Albert Heijn in goede staat verkeren en aan jouw redelijke verwachtingen voldoen. Toch iets mis met je bestelling? Meld het dan via het klachtenformulier (https://example.com/ah-link).
+
+ Wil je bepaalde artikelen toch niet hebben en van jouw aankoop afzien? Bekijk de voorwaarden (artikel 6) (https://example.com/ah-link) en het formulier (https://example.com/ah-link) waarmee je de overeenkomst kunt herroepen.
