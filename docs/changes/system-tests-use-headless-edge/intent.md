@@ -18,7 +18,7 @@ The system tests run in headless Edge. They start on the developer machine witho
 
 ## Constraints
 
-- Edge only: Chrome is no longer the driver, locally or in CI.
+- Edge locally, Chrome on CI (changed on 2026-10-22, see Decisions): Chrome is no longer the local driver. CI keeps the stock headless Chrome driver it used before this change.
 - No new gem and no system tool installs or upgrades (rules 8 and 11). Selenium Manager, already part of `selenium-webdriver`, may fetch the matching `msedgedriver` into its own cache.
 - Approved permission: a minimal edit of `.github/workflows` only when the plan shows CI cannot run Edge without it. Anything else there is a stop-and-ask.
 - Base on `origin/main`.
@@ -43,8 +43,12 @@ The system tests run in headless Edge. They start on the developer machine witho
 - No system test is skipped, removed or weakened to get there.
 - The test case no longer reads the Chrome for Testing cache.
 - Setting the Edge binary override makes the tests use that binary.
-- CI runs the system tests on Edge and stays green.
+- CI runs the system tests on its stock headless Chrome driver and stays green, with no flaky system-test job.
 
 ## Open questions
 
 None.
+
+## Decisions
+
+- 2026-10-22, Etienne, chose option 2 after the coordinator reported that headless Edge on the CI runner hangs or dies in about 27% of runs (11 runs with the latest flags; sandbox, first-run, GPU and renderer flags did not change it; one Edge instance runs, so parallelism is ruled out): "2" = run CI system tests on Chrome and keep Edge locally. This replaces the earlier "Edge only, locally and CI" answer.
