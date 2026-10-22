@@ -23,18 +23,11 @@ it:
     index:
       account_numbers: Numeri conto
       category: Categoria
-      confirm_destroy: Questo eliminerà il conto in modo permanente. Questa azione non può essere annullata.
-      destroy: Elimina
-      edit: Modifica
       external_accounts: Conti esterni
-      id: Id
       name: Nome
-      new_account: "➕ Nuovo conto"
       own_accounts: Conti di famiglia
       owner: Proprietario
-      show: Mostra
       title: Conti
-      update_transactions: Aggiorna transazioni
     merges:
       create:
         accounts:
@@ -280,10 +273,8 @@ it:
   admin:
     dashboard:
       index:
-        actions: Azioni
         admin_users: Amministratori
         created_at: Creato
-        edit: Modifica
         email: Email
         name: Nome
         recent_signups: Iscrizioni recenti
@@ -291,7 +282,6 @@ it:
         summary: Riepilogo
         title: Dashboard
         total_users: Utenti totali
-        view: Mostra
     nav:
       back_to_site: "🌐 Torna al sito"
       dashboard: "📊 Dashboard"
@@ -313,17 +303,11 @@ it:
         password_confirmation: Conferma password
         role: Ruolo
       index:
-        actions: Azioni
-        confirm_delete: Questo eliminerà l'utente e tutti i suoi dati in modo permanente.
         created_at: Creato
-        delete: Elimina
-        edit: Modifica
         email: Email
         name: Nome
-        new_user: Nuovo utente
         role: Ruolo
         title: Gestione utenti
-        view: Mostra
       new:
         submit: Crea utente
         title: Nuovo utente
@@ -352,12 +336,8 @@ it:
     index:
       balance: Residuo
       charged: Imputato
-      confirm_destroy: Rimuovere questo stanziamento?
-      delete: Rimuovi
-      edit: Modifica
       empty: Nessuno stanziamento per il %{year}.
       heading: Stanziamenti %{year}
-      new: "➕ Nuovo stanziamento"
       next_year: "%{year} →"
       previous_year: "← %{year}"
       total: Totale
@@ -402,12 +382,9 @@ it:
     index:
       active: Attivo
       categories: Categorie
-      confirm_destroy: Eliminare questo budget? Non è possibile annullare questa operazione.
       date_range: Intervallo di date
-      delete: Elimina
       edit: Modifica
       future: Futuro
-      new_budget: "➕ Nuovo Budget"
       past: Passato
       status: Stato
       title: Budget
@@ -424,11 +401,8 @@ it:
     destroy:
       success: "✅ Categoria eliminata con successo."
     index:
-      id: Id
       name: Nome
-      new_category: "➕ Nuova categoria"
       root_categories: Categorie principali
-      show: Mostra
       title: Categorie
     main: Categorie
     new:
@@ -440,11 +414,8 @@ it:
       success: "✅ Bene creato con successo."
     destroy:
       success: "✅ Bene eliminato con successo."
-    edit:
-      title: Modifica bene
     index:
       has_proof: "🧾"
-      new_chattel: "➕ Nuovo bene"
       no_proof: "-"
       proof_of_purchase: Prova
       title: Beni
@@ -462,9 +433,7 @@ it:
     cancel: Annulla
     confirm_delete_named: Eliminare "%{name}"? L'operazione non può essere annullata.
     confirm_destroy: Questo eliminerà il record in modo permanente. Questa azione non può essere annullata.
-    delete: Elimina
     delete_ellipsis: Elimina…
-    destroy: "🔥 Elimina"
     edit: "✏️ Modifica"
     new: "+ Nuovo"
     remove: Rimuovi
@@ -641,14 +610,11 @@ it:
     form:
       members: Membri
     index:
-      edit: Modifica
       heading: Gruppi
       members: Membri
-      new: "➕ Nuovo gruppo"
     new:
       heading: Nuovo gruppo
     show:
-      destroy: "🔥 Elimina gruppo"
       edit: "✏️ Modifica gruppo"
       members: Membri
     update:
@@ -765,13 +731,10 @@ it:
       'false': Fuori dal nucleo familiare
       'true': Membro del nucleo familiare
     index:
-      edit: Modifica
       heading: Persone
-      new: "➕ Nuova persona"
     new:
       heading: Nuova persona
     show:
-      destroy: "🔥 Elimina persona"
       edit: "✏️ Modifica persona"
     update:
       success: "✅ Persona aggiornata."
@@ -781,12 +744,10 @@ it:
     edit:
       heading: 'Tipo di prodotto: %{name}'
     index:
-      actions: Azioni
       category: Registrato come
       empty: Nessun tipo di prodotto.
       heading: Tipi di prodotto
       name: Nome
-      new: Nuovo tipo di prodotto
     new:
       heading: Nuovo tipo di prodotto
     show:
@@ -870,7 +831,6 @@ it:
       pages: Pagine
       transactions: Transazioni
     shortcut_hint: "⌘K"
-  show: Mostra
   support:
     array:
       last_word_connector: " e "
@@ -977,7 +937,6 @@ it:
         heading: "📥 Carica un nuovo CSV"
         submit: Carica
     index:
-      new_transaction: "➕ Nuova transazione"
       title: Transazioni
     new:
       title: "➕ Nuova transazione"
@@ -997,7 +956,6 @@ it:
       debitor: Debitore
       interest_date: Data valuta
       note: Nota
-      show: Mostra
       type: Tipo
     types:
       credit: Credito
@@ -1030,8 +988,6 @@ it:
       share_text: Questo link privato di accesso puo essere usato per accedere da un altro dispositivo o recuperare l'accesso.
       share_title: Il tuo link di accesso
     user:
-      confirm_remove: Questo rimuoverà permanentemente questa persona dall'account. Questa azione non può essere annullata.
-      remove_from_account: Rimuovi %{name} dall'account
       role_administrator: Amministratore
       role_label: 'Ruolo di %{name}: %{role}'
       role_member: Membro

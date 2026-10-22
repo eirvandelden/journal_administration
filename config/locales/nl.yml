@@ -23,18 +23,11 @@ nl:
     index:
       account_numbers: Rekeningnummers
       category: Categorie
-      confirm_destroy: Dit verwijdert de rekening permanent. Dit kan niet ongedaan worden gemaakt.
-      destroy: Verwijderen
-      edit: Bewerken
       external_accounts: Externe rekeningen
-      id: Id
       name: Naam
-      new_account: "➕ Nieuwe rekening"
       own_accounts: Familierekeningen
       owner: Eigenaar
-      show: Tonen
       title: Rekeningen
-      update_transactions: Transacties bijwerken
     merges:
       create:
         accounts:
@@ -280,10 +273,8 @@ nl:
   admin:
     dashboard:
       index:
-        actions: Acties
         admin_users: Beheerders
         created_at: Aangemaakt
-        edit: Bewerken
         email: E-mail
         name: Naam
         recent_signups: Recente registraties
@@ -291,7 +282,6 @@ nl:
         summary: Overzicht
         title: Dashboard
         total_users: Totaal gebruikers
-        view: Bekijken
     nav:
       back_to_site: "🌐 Terug naar site"
       dashboard: "📊 Dashboard"
@@ -313,17 +303,11 @@ nl:
         password_confirmation: Wachtwoord bevestigen
         role: Rol
       index:
-        actions: Acties
-        confirm_delete: Dit verwijdert de gebruiker en al hun gegevens permanent.
         created_at: Aangemaakt
-        delete: Verwijderen
-        edit: Bewerken
         email: E-mail
         name: Naam
-        new_user: Nieuwe gebruiker
         role: Rol
         title: Gebruikersbeheer
-        view: Bekijken
       new:
         submit: Gebruiker aanmaken
         title: Nieuwe gebruiker
@@ -352,12 +336,8 @@ nl:
     index:
       balance: Resterend
       charged: Geboekt
-      confirm_destroy: Deze begrotingspost verwijderen?
-      delete: Verwijderen
-      edit: Wijzigen
       empty: Nog geen begrotingsposten voor %{year}.
       heading: Begrotingsposten %{year}
-      new: "➕ Nieuwe begrotingspost"
       next_year: "%{year} →"
       previous_year: "← %{year}"
       total: Totaal
@@ -402,12 +382,9 @@ nl:
     index:
       active: Actief
       categories: Categorieën
-      confirm_destroy: Dit budget verwijderen? Dit kan niet ongedaan worden gemaakt.
       date_range: Datumbereik
-      delete: Verwijder
       edit: Bewerk
       future: Toekomstig
-      new_budget: "➕ Nieuw Budget"
       past: Verleden
       status: Status
       title: Budgetten
@@ -424,11 +401,8 @@ nl:
     destroy:
       success: "✅ Categorie succesvol verwijderd."
     index:
-      id: Id
       name: Naam
-      new_category: "➕ Nieuwe categorie"
       root_categories: Hoofd categorieën
-      show: Toon
       title: Categorieën
     main: Hoofdcategoriëen
     new:
@@ -440,11 +414,8 @@ nl:
       success: "✅ Bezitting succesvol aangemaakt."
     destroy:
       success: "✅ Bezitting succesvol verwijderd."
-    edit:
-      title: Bezitting bewerken
     index:
       has_proof: "🧾"
-      new_chattel: "➕ Nieuwe bezitting"
       no_proof: "-"
       proof_of_purchase: Bewijs
       title: Bezittingen
@@ -462,9 +433,7 @@ nl:
     cancel: Annuleren
     confirm_delete_named: '"%{name}" verwijderen? Dit kan niet ongedaan worden gemaakt.'
     confirm_destroy: Dit verwijdert het record permanent. Dit kan niet ongedaan worden gemaakt.
-    delete: Verwijderen
     delete_ellipsis: Verwijderen…
-    destroy: "🔥 Verwijderen"
     edit: "✏️ Bewerken"
     new: "+ Nieuw"
     remove: Verwijderen
@@ -641,14 +610,11 @@ nl:
     form:
       members: Leden
     index:
-      edit: Bewerken
       heading: Groepen
       members: Leden
-      new: "➕ Nieuwe groep"
     new:
       heading: Nieuwe groep
     show:
-      destroy: "🔥 Groep verwijderen"
       edit: "✏️ Groep bewerken"
       members: Leden
     update:
@@ -765,13 +731,10 @@ nl:
       'false': Buiten het huishouden
       'true': Lid van het huishouden
     index:
-      edit: Bewerken
       heading: Personen
-      new: "➕ Nieuwe persoon"
     new:
       heading: Nieuwe persoon
     show:
-      destroy: "🔥 Persoon verwijderen"
       edit: "✏️ Persoon bewerken"
     update:
       success: "✅ Persoon bijgewerkt."
@@ -781,12 +744,10 @@ nl:
     edit:
       heading: 'Productsoort: %{name}'
     index:
-      actions: Acties
       category: Geboekt als
       empty: Nog geen productsoorten.
       heading: Productsoorten
       name: Naam
-      new: Nieuwe productsoort
     new:
       heading: Nieuwe productsoort
     show:
@@ -870,7 +831,6 @@ nl:
       pages: Pagina's
       transactions: Transacties
     shortcut_hint: "⌘K"
-  show: Tonen
   support:
     array:
       last_word_connector: " en "
@@ -977,7 +937,6 @@ nl:
         heading: "📥 Nieuw CSV uploaden"
         submit: Uploaden
     index:
-      new_transaction: "➕ Nieuwe transactie"
       title: Transacties
     new:
       title: "➕ Nieuwe transactie"
@@ -997,7 +956,6 @@ nl:
       debitor: Debiteur
       interest_date: Rentedatum
       note: Opmerking
-      show: Tonen
       type: Type
     types:
       credit: Credit
@@ -1030,8 +988,6 @@ nl:
       share_text: Deze prive-aanmeldlink kan worden gebruikt om op een ander apparaat in te loggen of toegang te herstellen.
       share_title: Jouw aanmeldlink
     user:
-      confirm_remove: Dit verwijdert deze persoon permanent van de rekening. Dit kan niet ongedaan worden gemaakt.
-      remove_from_account: Verwijder %{name} van de rekening
       role_administrator: Beheerder
       role_label: 'Rol van %{name}: %{role}'
       role_member: Lid

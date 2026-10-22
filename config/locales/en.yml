@@ -23,18 +23,11 @@ en:
     index:
       account_numbers: Account numbers
       category: Category
-      confirm_destroy: This will permanently delete the account. This cannot be undone.
-      destroy: Destroy
-      edit: Edit
       external_accounts: External Accounts
-      id: Id
       name: Name
-      new_account: "➕ New Account"
       own_accounts: Family Accounts
       owner: Owner
-      show: Show
       title: Accounts
-      update_transactions: Update Transactions
     merges:
       create:
         accounts:
@@ -280,10 +273,8 @@ en:
   admin:
     dashboard:
       index:
-        actions: Actions
         admin_users: Administrators
         created_at: Created
-        edit: Edit
         email: Email
         name: Name
         recent_signups: Recent Signups
@@ -291,7 +282,6 @@ en:
         summary: Summary
         title: Dashboard
         total_users: Total Users
-        view: View
     nav:
       back_to_site: "🌐 Back to Site"
       dashboard: "📊 Dashboard"
@@ -313,17 +303,11 @@ en:
         password_confirmation: Confirm Password
         role: Role
       index:
-        actions: Actions
-        confirm_delete: This will permanently delete the user and all their data.
         created_at: Created
-        delete: Delete
-        edit: Edit
         email: Email
         name: Name
-        new_user: New User
         role: Role
         title: User Management
-        view: View
       new:
         submit: Create User
         title: New User
@@ -352,12 +336,8 @@ en:
     index:
       balance: Left
       charged: Charged
-      confirm_destroy: Remove this appropriation?
-      delete: Remove
-      edit: Change
       empty: No appropriations for %{year} yet.
       heading: Appropriations %{year}
-      new: "➕ New appropriation"
       next_year: "%{year} →"
       previous_year: "← %{year}"
       total: Total
@@ -402,12 +382,9 @@ en:
     index:
       active: Active
       categories: Categories
-      confirm_destroy: Delete this budget? This cannot be undone.
       date_range: Date Range
-      delete: Delete
       edit: Edit
       future: Future
-      new_budget: "➕ New Budget"
       past: Past
       status: Status
       title: Budgets
@@ -424,11 +401,8 @@ en:
     destroy:
       success: "✅ Category was successfully destroyed."
     index:
-      id: Id
       name: Name
-      new_category: "➕ New Category"
       root_categories: Root categories
-      show: Show
       title: Categories
     main: Categories
     new:
@@ -440,11 +414,8 @@ en:
       success: "✅ Chattel was successfully created."
     destroy:
       success: "✅ Chattel was successfully destroyed."
-    edit:
-      title: Editing chattel
     index:
       has_proof: "🧾"
-      new_chattel: "➕ New Chattel"
       no_proof: "-"
       proof_of_purchase: Proof
       title: Chattels
@@ -462,9 +433,7 @@ en:
     cancel: Cancel
     confirm_delete_named: Delete "%{name}"? This cannot be undone.
     confirm_destroy: This will permanently delete the record. This cannot be undone.
-    delete: Delete
     delete_ellipsis: Delete…
-    destroy: "🔥 Destroy"
     edit: "✏️ Edit"
     new: "+ New"
     remove: Remove
@@ -641,14 +610,11 @@ en:
     form:
       members: Members
     index:
-      edit: Edit
       heading: Groups
       members: Members
-      new: "➕ New group"
     new:
       heading: New group
     show:
-      destroy: "🔥 Delete group"
       edit: "✏️ Edit group"
       members: Members
     update:
@@ -765,13 +731,10 @@ en:
       'false': Outside household
       'true': Household member
     index:
-      edit: Edit
       heading: People
-      new: "➕ New person"
     new:
       heading: New person
     show:
-      destroy: "🔥 Delete person"
       edit: "✏️ Edit person"
     update:
       success: "✅ Person updated."
@@ -781,12 +744,10 @@ en:
     edit:
       heading: 'Product type: %{name}'
     index:
-      actions: Actions
       category: Booked as
       empty: No product types yet.
       heading: Product types
       name: Name
-      new: New product type
     new:
       heading: New product type
     show:
@@ -870,7 +831,6 @@ en:
       pages: Pages
       transactions: Transactions
     shortcut_hint: "⌘K"
-  show: Show
   support:
     array:
       last_word_connector: ", and "
@@ -977,7 +937,6 @@ en:
         heading: "📥 Upload new CSV"
         submit: Upload
     index:
-      new_transaction: "➕ New Transaction"
       title: Transactions
     new:
       title: "➕ New transaction"
@@ -997,7 +956,6 @@ en:
       debitor: Debitor
       interest_date: Interest date
       note: Note
-      show: Show
       type: Type
     types:
       credit: Credit
@@ -1030,8 +988,6 @@ en:
       share_text: This private sign-in URL can be used to sign in on another device or recover access.
       share_title: Your sign-in link
     user:
-      confirm_remove: This will permanently remove this person from the account. This cannot be undone.
-      remove_from_account: Remove %{name} from the account
       role_administrator: Administrator
       role_label: "%{name}'s role: %{role}"
       role_member: Member
