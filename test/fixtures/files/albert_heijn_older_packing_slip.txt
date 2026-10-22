@@ -1,0 +1,576 @@
+Pakbon
+
+Alsjeblieft, hier is jouw digitale pakbon
+
+https://example.com/ah-link
+
+ Albert Heijn
+
+Beste Familie,
+
+ Hier is jouw digitale pakbon. Hierop zie je precies wat er naar jou onderweg is en wat de prijs van je boodschappen is.
+
+Zomerkrassen
+
+ Heb je producten van de Zomerkrasactie in je bestelling? De korting zie je onder ‘Bonusvoordeel’.
+
+Factuur direct na bezorging zichtbaar
+
+ Op je factuur is ook het statiegeld zichtbaar dat de bezorger heeft verrekend.
+ Je factuur vind je direct na bezorging in de AH app of op ah.nl/facturen (https://example.com/ah-link)
+
+Statiegeld
+
+ Alle statiegeldartikelen kan je inleveren bij de bezorger.
+ Je kan maximaal 50 blikjes per bestelling inleveren. Verpak ze per 25 stuks
+ in een geleverde doorzichtige plastic tas of een leeg klapkrat. Meer info op ah.nl/statiegeld (https://example.com/ah-link)
+
+Jouw bestelling: 100000002
+
+ Op vrijdag 1 september 2023 tussen 09:00 en 11:00
+ worden je boodschappen op Straatnaam 1, 1234 AB Plaatsnaam geleverd.
+
+Kostenoverzicht
+
+Boodschappen
+45
+
+Aantal
+
+Prijs per stuk
+
+Totaal
+
+AH Biologisch Honing stroopwafels
+
+1
+
+2.29
+
+2.29
+
+AH Blanke vla
+
+1
+
+1.49
+
+1.49
+
+AH Bloemkoolroosjes voordeelverpakking
+
+1
+
+3.55
+
+3.55
+
+AH Broccoliroosjes
+
+1
+
+2.35
+
+2.35
+
+AH Cherrytomaten
+
+1
+
+1.09
+
+1.09
+
+AH Chips naturel
+
+1
+
+1.29
+
+1.29
+
+AH Chocolade repen melkvulling
+
+1
+
+1.79
+
+1.79
+
+AH Dikke maiswafel
+
+1
+
+0.99
+
+0.99
+
+AH Extra lang lekker volkoren bollen
+
+1
+
+1.99
+
+1.99
+
+AH Goudse jong belegen 48+ stuk
+
+1
+
+gew.
+
+8.11
+
+AH Halvarine light
+
+1
+
+1.35
+
+1.35
+
+AH Kokosmelk
+
+1
+
+2.45
+
+2.45
+
+AH Komkommer
+
+2
+
+0.75
+
+1.50
+
+AH Lactosevrije houdbare halfvolle melk
+
+2
+
+1.19
+
+2.38
+
+AH Liefde & Passie Brood spelt volkoren gesneden
+
+1
+
+3.19
+
+3.19
+
+AH Liefde & Passie Campagnard gesneden
+
+1
+
+2.69
+
+2.69
+
+AH Liefde & Passie Desem olijf met zongedroogde tomaat
+
+1
+
+2.99
+
+2.99
+
+AH Liefde & Passie Krent rogge
+
+1
+
+2.89
+
+2.89
+
+AH Liefde & Passie Mini brunchbroodjes
+
+1
+
+3.19
+
+3.19
+
+AH Liefde & Passie Spelt gesneden
+
+1
+
+3.19
+
+3.19
+
+AH Luikse wafels
+
+1
+
+1.85
+
+1.85
+
+AH Marie biscuits
+
+1
+
+0.79
+
+0.79
+
+AH Mini naanbrood naturel
+
+1
+
+1.89
+
+1.89
+
+AH Oranje zoete aardappel
+
+1
+
+2.99
+
+2.99
+
+AH Pizza kaas tomaat
+
+2
+
+1.39
+
+2.78
+
+AH Quiche mediterrane groenten
+
+1
+
+3.99
+
+3.99
+
+AH Quiche ui cheddar
+
+1
+
+3.99
+
+3.99
+
+AH Spinazie
+
+1
+
+1.09
+
+1.09
+
+AH Tuinerwten fijn
+
+1
+
+1.45
+
+1.45
+
+AH Vegan schnitzel
+
+1
+
+1.79
+
+1.79
+
+AH Vegetarische balletjes
+
+1
+
+1.69
+
+1.69
+
+AH Vlaaipunten mix
+
+1
+
+5.25
+
+5.25
+
+De Zaanse Hoeve Mild 45+ geraspt
+
+1
+
+2.69
+
+2.69
+
+De Zaanse Hoeve Yoghurt Griekse stijl
+
+1
+
+2.09
+
+2.09
+
+Delicata Reep wit
+
+1
+
+2.29
+
+2.29
+
+Grand' Italia Fusilli tradizionali
+
+1
+
+1.85
+
+1.85
+
+Grand' Italia Pesto alla Genovese
+
+1
+
+3.29
+
+3.29
+
+Grand' Italia Spaghetti tradizionali
+
+1
+
+1.85
+
+1.85
+
+Grand' Italia Sugocasa erbe pastasaus
+
+1
+
+2.99
+
+2.99
+
+Liga Belvita chocolade koekjes
+
+1
+
+2.99
+
+2.99
+
+OriNoko Chocoladepasta Melk
+
+1
+
+1.99
+
+1.99
+
+Perla Huisblends Aroma bonen
+
+1
+
+10.79
+
+10.79
+
+Sultana Fruitbiscuit appel smaak
+
+1
+
+1.99
+
+1.99
+
+Wasa Sandwich roomkaas bieslook 3-pack
+
+1
+
+2.19
+
+2.19
+
+Zuivelhoeve Boer'n vla vanille
+
+2
+
+1.99
+
+3.98
+
+Gratis bij je bestelling
+2
+
+Allerhande 5-2023
+
+1
+
+0.00
+
+Flyer Mijn Allerhande Weekmenu
+
+1
+
+0.00
+
+Subtotaal boodschappen
+
+ 121.29
+
+Bonusvoordeel
+
+AH Biologisch Honing stroopwafels
+Bonus
+
+-0.23
+
+AH Extra lang lekker volkoren bollen
+Bonus
+
+-1.99
+
+AH Liefde & Passie Brood spelt volkoren gesneden
+1 + 1 GRATIS
+
+-1.60
+
+AH Liefde & Passie Campagnard gesneden
+1 + 1 GRATIS
+
+-1.35
+
+AH Liefde & Passie Desem olijf met zongedroogde tomaat
+1 + 1 GRATIS
+
+-1.50
+
+AH Liefde & Passie Krent rogge
+1 + 1 GRATIS
+
+-1.45
+
+AH Liefde & Passie Mini brunchbroodjes
+1 + 1 GRATIS
+
+-1.60
+
+AH Liefde & Passie Spelt gesneden
+1 + 1 GRATIS
+
+-1.60
+
+AH Quiche mediterrane groenten
+2 VOOR 6.00
+
+-0.99
+
+AH Quiche ui cheddar
+2 VOOR 6.00
+
+-0.99
+
+AH Vlaaipunten mix
+50% KORTING
+
+-2.63
+
+Delicata Reep wit
+25% KORTING
+
+-0.57
+
+Grand' Italia Fusilli tradizionali
+2e GRATIS
+
+-0.93
+
+Grand' Italia Pesto alla Genovese
+2e GRATIS
+
+-1.65
+
+Grand' Italia Spaghetti tradizionali
+2e GRATIS
+
+-0.93
+
+Grand' Italia Sugocasa erbe pastasaus
+2e GRATIS
+
+-1.50
+
+Liga Belvita chocolade koekjes
+2e HALVE PRIJS
+
+-0.75
+
+Sultana Fruitbiscuit appel smaak
+2e HALVE PRIJS
+
+-0.50
+
+Zuivelhoeve Boer'n vla vanille
+2e GRATIS
+
+-1.99
+
+Totaal voordeel
+
+-24.75
+
+Subtotaal
+
+96.54
+
+Statiegeld geleverd
+
+5.00
+
+AH Klapkrat 1
+
+ Plastic tasje(s)
+3
+
+0.35
+
+Bezorgkosten
+
+ 0.00
+
+Koopzegels Premium
+192
+
+ 19.20
+
+Totaal*
+
+121.09
+
+ * Het totaalbedrag is nu nog exclusief de statiegeld producten die je mogelijk inlevert (bijvoorbeeld je krat). De verrekening van je ingeleverde statiegeld kun je direct na levering vinden op je factuur (op ah.nl/facturen (https://example.com/ah-link) of in de app (https://example.com/ah-link)).
+
+Ontbreekt er iets, of heb je een klacht over een online besteld product? Laat het hier (https://example.com/ah-link) weten.
+
+Heb je toch nog een vraag?
+
+Bekijk hier (https://example.com/ah-link) de meest gestelde vragen.
+
+https://example.com/ah-link
+ https://example.com/ah-link
+ https://example.com/ah-link
+ https://example.com/ah-link
+ https://example.com/ah-link
+
+ https://example.com/ah-link
+ https://example.com/ah-link
+
+mijn gegevens (https://example.com/ah-link) |
+ privacy (https://example.com/ah-link) |
+ homepage (https://example.com/ah-link) |
+ vragen (https://example.com/ah-link) |
+ algemene voorwaarden (https://example.com/ah-link) |
+ https://example.com/ah-link
+https://example.com/ah-link verkrijgbaar op
+ ah.nl (https://example.com/ah-link)
