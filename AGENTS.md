@@ -24,6 +24,7 @@ How the household runs its money, and the method to check transactions and budge
 - Setup: `bin/setup` (bundle install, `db:prepare`, clears logs/tmp, starts `bin/dev`).
 - Run: `bin/dev` (Rails + assets). Background jobs run inside Puma by default in development; set `SOLID_QUEUE_IN_PUMA=false` and run `bin/jobs` separately to change that.
 - Test: `bin/rails test` (Minitest, fixtures under `test/fixtures`).
+- System tests: `bin/rails test:system` runs headless Edge locally and headless Chrome on CI; set `EDGE_BIN` to use another Edge binary.
 - Lint: `bundle exec rubocop`, `npx @herb-tools/linter app/views/` (ERB), `bundle exec brakeman --no-pager -q`, `bundle exec bundler-audit check`. Locale files must stay normalized: `bundle exec i18n-tasks normalize`.
 - All of the above (plus tests) run automatically on `git push` via lefthook.
 
