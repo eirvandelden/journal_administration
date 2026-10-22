@@ -1,8 +1,10 @@
 require "test_helper"
 require_relative "../test_helpers/appropriation_payments"
+require_relative "../test_helpers/assistant_requests"
 
 class AssistantTest < ActionDispatch::IntegrationTest
   include AppropriationPayments
+  include AssistantRequests
 
   KEEP_ME_POSTED = "subscriptions/listen"
   METHOD_NOT_FOUND = -32601
@@ -608,13 +610,6 @@ class AssistantTest < ActionDispatch::IntegrationTest
     Rails.configuration.x.assistant_host = previous_host
   end
 
-  def ask_assistant(tool, arguments = {})
-    post_to_assistant(method: "tools/call", params: { name: tool, arguments: arguments })
-
-    assert_response :success
-    JSON.parse(response.body).dig("result", "content").map { |part| part["text"] }.join("\n")
-  end
-
   def planned_for(budget, category)
     budget.budget_categories.find_by(category: categories(category))&.amount
   end
@@ -641,12 +636,6 @@ class AssistantTest < ActionDispatch::IntegrationTest
     Category.insert_all(extra)
   end
 
-  def refused?(tool, arguments = {})
-    post_to_assistant(method: "tools/call", params: { name: tool, arguments: arguments })
-
-    JSON.parse(response.body).dig("result", "isError").present?
-  end
-
   def ask_to_be_kept_posted
     version = MCP::Configuration::LATEST_MODERN_PROTOCOL_VERSION
 
@@ -662,16 +651,5 @@ class AssistantTest < ActionDispatch::IntegrationTest
         "Mcp-Method" => KEEP_ME_POSTED
       }
     )
-  end
-
-  def post_to_assistant(method: "tools/list", params: {}, token: @user.assistant_token, headers: {})
-    post "/mcp", params: { jsonrpc: "2.0", id: 1, method: method, params: params }.to_json,
-      headers: assistant_headers(token: token).merge(headers)
-  end
-
-  def assistant_headers(token: @user.assistant_token)
-    headers = { "Content-Type" => "application/json", "Accept" => "application/json" }
-    headers["Authorization"] = "Bearer #{token}" if token
-    headers
   end
 end
