@@ -148,7 +148,7 @@ The work runs in two phases with a gate between them.
 - Annuleren: a link, `<a role="button" class="button-secondary">`, as the reference requires. The intent criterion now says so.
 - Title bar row: `main > header nav` is a column in mvpa.css. Phase 1 adds a wrapping row layout for it (`flex-direction: row; flex-wrap: wrap`), tested, shown in `demo.html`, with an `### Upgrading` step. On a phone the controls wrap instead of running off the edge.
 - Actions menu items that send a DELETE (an unlink) stay plain; the menu never holds `Delete…`, as the reference requires.
-- Base (2026-10-22): this branch is based on `main`, which contains #348 (`7bc7052`). Etienne briefly stacked it on `multiple-account-numbers-per-account` (#385) and then reverted that; #385 is not part of this change. Accounts keep main's single `account_number`, and the duplicate-number proof uses `Account`'s uniqueness validation.
+- Base (2026-10-22): this branch is based on `main`, which contains #348 (`7bc7052`). Etienne briefly stacked it on `multiple-account-numbers-per-account` (#385) and then reverted that. Main later took in #385 itself, so accounts use its account_numbers; the duplicate-number proof uses AccountNumber's uniqueness, and the #385 merge page gets the shared title bar.
 
 ## Out of scope
 
