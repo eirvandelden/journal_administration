@@ -9,7 +9,7 @@ class Accounts::MergesController < ApplicationController
   def new
     @query = merge_params[:query].to_s.strip
     @matches = candidates.includes(:account_numbers).search(@query)
-    @duplicates = candidates.where(id: duplicate_ids).order(:id).includes(:account_numbers)
+    @duplicates = candidates.where(id: duplicate_ids).order(:id).includes(:account_numbers).load
     @transactions_count = duplicate_ids.any? ? Transaction.by_account(@duplicates.ids).count : 0
     @receipts_count = Receipt.where(shop_id: @duplicates.ids).count
   end

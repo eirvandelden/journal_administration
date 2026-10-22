@@ -128,6 +128,19 @@ class AccountMergesTest < ActionDispatch::IntegrationTest
       assert_equal 1, reads.size
     end
 
+    test "the match list marks picked accounts without a query per match" do
+      3.times do |i|
+        Account.create!(name: "AH Extra #{i}", account_numbers: [ AccountNumber.new(number: "NL00EXTRA#{i}") ])
+      end
+
+      checks = queries_matching(/^SELECT 1 AS one FROM "accounts".*AND "accounts"\."id" = \?/) do
+        get new_account_merge_path(@target), params: { query: "AH", duplicate_ids: [ @duplicate.id ] }
+      end
+
+      assert_empty checks
+      assert_select "input[name='duplicate_ids[]'][value='#{@duplicate.id}'][checked]"
+    end
+
     test "the review step changes nothing" do
       assert_no_difference [ "Account.count", "AccountNumber.count" ] do
         get new_account_merge_path(@target), params: { duplicate_ids: [ @duplicate.id ] }
