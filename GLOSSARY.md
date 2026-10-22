@@ -1,8 +1,11 @@
 - **Appropriation** — a sum set aside for one purpose and one person in one budget year, saved for in a potje.
 - **Betaalrekening** — the ING current account where salary arrives and most fixed costs leave. Avoid: main account.
 - **Buffer** — the potje that holds the salary leftover and serves as the emergency fund.
+- **Delivery** — a receipt that carries an Albert Heijn order number; one order is one delivery. Avoid: order, bestelling.
 - **Door-card payment** — the card payment made at the door when a grocery delivery arrives, the bank note carries a pasvolgnr and no order number. Avoid: pin payment, terminal payment.
 - **Oranje Spaarrekening** — the ING savings account that holds the potjes.
+- **Order confirmation** — the mail Albert Heijn sends when an order is placed, "Bedankt voor jouw bestelling"; it lists what was ordered, not what was packed.
+- **Packed basket** — the lines of a delivery as read from a packing slip, stored as `receipts.packed`; an order confirmation alone gives no packed basket.
 - **Packing slip** — the mail that lists what was actually packed for a delivery, called "pakbon" in the older mails; it is the source of a receipt's lines. Avoid: invoice, factuur.
 - **Potje** — a virtual account inside a Spaarrekening with its own account number; it holds the money budgeted for one purpose. Avoid: pot, jar, envelope.
 - **Product type** — a shopping word for what a product is, such as "Naturel chips", regardless of brand; it carries the category its groceries book to. Called productsoort in Dutch. Avoid: product category.
