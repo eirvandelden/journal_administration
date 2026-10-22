@@ -212,7 +212,6 @@ class Account < ApplicationRecord
   end
 
   # @param name [String, nil]
-  # @param name [String, nil]
   # @yieldreturn [String, nil] the number to fall back on, read only when the name is blank
   # @return [String] the name when present, otherwise the number
   def label_from(name)
