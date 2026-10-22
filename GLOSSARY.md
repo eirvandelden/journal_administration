@@ -1,8 +1,13 @@
 - **Appropriation** — a sum set aside for one purpose and one person in one budget year, saved for in a potje.
 - **Betaalrekening** — the ING current account where salary arrives and most fixed costs leave. Avoid: main account.
+- **Budget goal** — the stored monthly `BudgetCategory#amount` times the month count; the dashboard's budget and target columns.
 - **Buffer** — the potje that holds the salary leftover and serves as the emergency fund.
+- **From month / to month** — the first and last calendar month of a period, written `YYYY-MM` in the request (`from_month`, `to_month`).
+- **Month count** — the number of months a span stands for when a monthly budget is scaled to it: whole calendar months for a period or any span of whole calendar months, days / 30 for any other span.
 - **Oranje Spaarrekening** — the ING savings account that holds the potjes.
+- **Period** — the span the dashboard reports on, from 00:00 on the first day of its from month to the end of the last day of its to month; held in a `MonthRange`.
 - **Potje** — a virtual account inside a Spaarrekening with its own account number; it holds the money budgeted for one purpose. Avoid: pot, jar, envelope.
+- **Quick filter** — a named period relative to today: `current_month`, `last_month`, `three_months`, `current_year`, `last_year`.
 - **Reserveringen** — the potje for saving ahead for recurring costs, such as insurance, the trimsalon and the dentist; the standard term is sinking fund.
 - **Samen** — the shared household: Etienne and his wife, with their joint Betaalrekening and potjes.
 - **Vaste lasten** — fixed monthly costs, mostly paid straight from the Betaalrekening.
