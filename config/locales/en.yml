@@ -454,12 +454,16 @@ en:
     update:
       success: "✅ Chattel was successfully updated."
   common:
+    actions_menu: Actions
     back: "↩️ Back"
     cancel: Cancel
+    confirm_delete_named: Delete "%{name}"? This cannot be undone.
     confirm_destroy: This will permanently delete the record. This cannot be undone.
     delete: Delete
+    delete_ellipsis: Delete…
     destroy: "🔥 Destroy"
     edit: "✏️ Edit"
+    new: "+ New"
     remove: Remove
     save: "💾 Save"
     show: "👁️ Show"

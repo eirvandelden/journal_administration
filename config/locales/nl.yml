@@ -454,12 +454,16 @@ nl:
     update:
       success: "✅ Bezitting succesvol bijgewerkt."
   common:
+    actions_menu: Acties
     back: "↩️ Terug"
     cancel: Annuleren
+    confirm_delete_named: '"%{name}" verwijderen? Dit kan niet ongedaan worden gemaakt.'
     confirm_destroy: Dit verwijdert het record permanent. Dit kan niet ongedaan worden gemaakt.
     delete: Verwijderen
+    delete_ellipsis: Verwijderen…
     destroy: "🔥 Verwijderen"
     edit: "✏️ Bewerken"
+    new: "+ Nieuw"
     remove: Verwijderen
     save: "💾 Opslaan"
     show: "👁️ Tonen"

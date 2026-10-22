@@ -454,12 +454,16 @@ it:
     update:
       success: "✅ Bene aggiornato con successo."
   common:
+    actions_menu: Azioni
     back: "↩️ Indietro"
     cancel: Annulla
+    confirm_delete_named: Eliminare "%{name}"? L'operazione non può essere annullata.
     confirm_destroy: Questo eliminerà il record in modo permanente. Questa azione non può essere annullata.
     delete: Elimina
+    delete_ellipsis: Elimina…
     destroy: "🔥 Elimina"
     edit: "✏️ Modifica"
+    new: "+ Nuovo"
     remove: Rimuovi
     save: "💾 Salva"
     show: "👁️ Mostra"
