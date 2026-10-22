@@ -1,6 +1,6 @@
 require "test_helper"
 
-class CategoriesCreateTest < ActionDispatch::IntegrationTest
+class CategoriesParentTest < ActionDispatch::IntegrationTest
   setup do
     sign_in_as(users(:member))
   end
@@ -19,9 +19,16 @@ class CategoriesCreateTest < ActionDispatch::IntegrationTest
   end
 
   test "updating a category with a blank parent clears the parent" do
-    category = categories(:groceries)
+    category = categories(:supermarket)
     patch category_path(category), params: { category: { parent_category_id: "" } }
 
     assert_nil category.reload.parent_category_id
+  end
+
+  test "updating a category without a parent param keeps its parent" do
+    category = categories(:supermarket)
+    patch category_path(category), params: { category: { name: "Boodschappen" } }
+
+    assert_equal categories(:groceries), category.reload.parent_category
   end
 end

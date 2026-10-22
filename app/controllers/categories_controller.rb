@@ -78,8 +78,6 @@ class CategoriesController < ApplicationController
   end
 
   def category_params
-    params.require(:category).permit(%i[name direction parent_category_id]).tap do |param|
-      param["parent_category_id"] = param["parent_category_id"].presence
-    end
+    params.require(:category).permit(%i[name direction parent_category_id])
   end
 end
