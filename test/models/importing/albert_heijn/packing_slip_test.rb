@@ -63,6 +63,26 @@ class Importing::AlbertHeijn::PackingSlipTest < ActiveSupport::TestCase
     assert_empty slip.lines.select { |line| line.name == "AH Excellent Broodhaan" }
   end
 
+  test "a multi-pack is one line with the quantity and price it was printed with" do
+    slip = Importing::AlbertHeijn::PackingSlip.parse(file_fixture("albert_heijn_packing_slip_with_multipack.txt").read)
+    wipes = slip.lines.select { |line| line.name.downcase.include?("waterdoekjes") }
+
+    assert_equal "100000008", slip.order_number
+    assert_equal 14_831, slip.total_amount
+    assert_equal 64, slip.lines.size
+    assert_equal [ "AH Baby waterdoekjes" ], wipes.map(&:name)
+    assert_equal [ 2, 258 ], [ wipes.first.quantity, wipes.first.full_amount ]
+  end
+
+  test "a package discount is folded into the line of the product it came off" do
+    slip = Importing::AlbertHeijn::PackingSlip.parse(file_fixture("albert_heijn_packing_slip_with_multipack.txt").read)
+    wipes = slip.lines.find { |line| line.name == "AH Baby waterdoekjes" }
+
+    assert_equal 13, wipes.discount_amount
+    assert_equal 16_615, slip.lines.sum(&:full_amount)
+    assert_equal 2_889, slip.lines.sum(&:discount_amount)
+  end
+
   test "mail that is not a packing slip is refused" do
     assert_nil Importing::AlbertHeijn::PackingSlip.parse("Beste familie, hier is een nieuwsbrief.")
   end
