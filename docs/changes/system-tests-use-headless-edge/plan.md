@@ -63,7 +63,7 @@ Facts checked while planning (2026-10-19):
 - Edge auto-updates. Selenium Manager resolves the matching driver per Edge version, so the drift that broke Chrome for Testing does not recur. A brief gap is possible if Edge updates before Microsoft publishes the driver.
 - CI depends on the runner image keeping Edge. If a future image drops it, Selenium Manager can still download Edge on Linux. A workflow edit stays out of scope unless CI proves it necessary.
 - A known date-dependent flake exists in the budget suggestion system test: it fails on days when an amount ends in 0. A red run from it is not a browser regression. Re-check on its failure message before attributing anything to Edge.
-- Rejected: `driven_by :selenium, using: :edge` — Rails yields `nil` options for `:edge`, so there is no way to add `--headless`. Rejected: patching `ActionDispatch::SystemTesting::Browser` — monkeypatching Rails for a test driver is worse than one registered driver. Rejected: keeping a Chrome fallback — the intent says Edge only.
+- Rejected: `driven_by :selenium, using: :edge` — Rails yields `nil` options for `:edge`, so there is no way to add `--headless`. Rejected: patching `ActionDispatch::SystemTesting::Browser` — monkeypatching Rails for a test driver is worse than one registered driver. Chrome as the CI driver was rejected at first (the intent said Edge only) and adopted on 2026-10-22 after Edge hung on CI (step 15).
 
 ## Out of scope
 
@@ -73,16 +73,16 @@ Facts checked while planning (2026-10-19):
 
 ## Proof
 
-- Running `bin/rails test:system` on this machine starts headless Edge and all system tests pass → check: `bin/rails db:test:prepare test:system` reports 17 runs, 0 failures, 0 errors, 0 skips; plus `test/application_system_test_case_test.rb` `"system tests are driven by headless Edge"` and `"Edge options run headless"`.
+- Running `bin/rails test:system` on this machine starts headless Edge and all system tests pass → check: `bin/rails db:test:prepare test:system` reports 17 runs, 0 failures, 0 errors, 0 skips; plus `test/application_system_test_case_test.rb` `"system tests are driven by headless Edge locally"` and `"Edge options run headless"`.
 - No system test is skipped, removed or weakened → check: `git diff origin/main --stat -- test/system` is empty and the suite reports 0 skips.
 - The test case no longer reads the Chrome for Testing cache → check: `grep -nE "cache/selenium|SE_CACHE_PATH|CHROME" test/application_system_test_case.rb test/application_system_test_case_test.rb` prints nothing; plus `test/application_system_test_case_test.rb` `"the Chrome for Testing lookup is gone"`.
 - Setting the Edge binary override makes the tests use that binary → `test/application_system_test_case_test.rb` `"EDGE_BIN sets the Edge binary"`; plus check: `EDGE_BIN=/nonexistent/msedge bin/rails test test/system/search_dialog_test.rb` errors on that path.
-- CI runs the system tests on Edge and stays green → check: the pull request's CI `system-test` job passes.
+- CI runs the system tests on the stock headless Chrome driver and stays green → check: the pull request's CI `system-test` job passes, and `"system tests are driven by the stock Selenium Chrome driver on CI"` covers the driver choice.
 
 Per changed file, the unit tests expected, named as behaviour:
 
 - `test/application_system_test_case.rb` (tested in `test/application_system_test_case_test.rb`):
-  - `"system tests are driven by headless Edge"` — `ApplicationSystemTestCase.driver.name == :headless_edge` and `Capybara.drivers` has `:headless_edge`.
+  - `"system tests are driven by headless Edge locally"` — `ApplicationSystemTestCase.driver_name(ci: false) == :headless_edge`; `"system tests are driven by the stock Selenium Chrome driver on CI"` — `driver_name(ci: true) == :selenium`.
   - `"the Edge driver drives Edge with the Edge options"` — `edge_driver(app, driver_class: fake, options: opts)` calls `fake.new(app, browser: :edge, options: opts)`.
   - `"the Edge driver opens a 1400 by 1400 window"` — the fake browser's window receives `Selenium::WebDriver::Dimension.new(1400, 1400)`.
   - `"Edge options run headless"` — `edge_options(binary: nil).args` includes `"--headless"`.
