@@ -62,6 +62,7 @@ class AssistantController < ActionController::API
       Assistant::ChargeToAppropriation,
       Assistant::FindAccounts,
       Assistant::FindUncategorizedTransactions,
+      Assistant::ImportAlbertHeijnMail,
       Assistant::ListAppropriations,
       Assistant::ListBudgets,
       Assistant::ListCategories,
