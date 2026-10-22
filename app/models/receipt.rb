@@ -51,11 +51,15 @@ class Receipt < ApplicationRecord
 
   # The payments that could have settled this receipt, for a person to choose between
   #
+  # An import books money out as a Credit whose debitor is the shop, so those are the payments;
+  # a Debit from the shop is a refund. A payment another receipt already holds is left out.
+  #
   # Deliberately not narrowed by amount: empty crates, bottles and cans are
   # settled at the door, so what the bank takes rarely equals the mail's total.
   def fitting_payments
-    Transaction.where(type: "Debit", creditor: shop)
-               .where(booked_at: (issued_on - BOOKING_WINDOW).beginning_of_day..(issued_on + BOOKING_WINDOW).end_of_day)
+    Credit.where(debitor: Account.where(name: shop.name))
+          .where(booked_at: (issued_on - BOOKING_WINDOW).beginning_of_day..(issued_on + BOOKING_WINDOW).end_of_day)
+          .where.not(id: Receipt.where.not(id: id).where.not(payment_id: nil).select(:payment_id))
   end
 
   private
