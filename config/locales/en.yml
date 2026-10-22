@@ -423,12 +423,14 @@ en:
       current_month: This month
       current_year: This year
       end_date: End date
+      from_month: From
       last_month: Last month
       last_year: Last year
       quick_filter: Quick filter
       select: Select
       start_date: Start date
       three_months: Last 3 months
+      to_month: Through
   date:
     abbr_day_names:
     - Sun

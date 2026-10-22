@@ -7,23 +7,22 @@ class DashboardFiltersTest < ApplicationSystemTestCase
     sign_in_as(@user)
   end
 
-  test "quick filter uses local month boundaries" do
-    set_browser_timezone("Europe/Amsterdam")
+  test "quick filter this year selects January through the current month" do
     visit dashboard_index_url
 
-    quick_filter.find("option", text: I18n.t("dashboard.filters.current_month", locale: locale)).select_option
+    quick_filter.find("option", text: I18n.t("dashboard.filters.current_year", locale: locale)).select_option
 
-    assert_selector "input[name='start_date'][value='#{Time.current.beginning_of_month.to_date.iso8601}']"
-    assert_selector "input[name='end_date'][value='#{Time.current.end_of_month.to_date.iso8601}']"
+    assert_select_value "from_month", Time.current.beginning_of_year.strftime("%Y-%m")
+    assert_select_value "to_month", Time.current.strftime("%Y-%m")
   end
 
   private
 
   def quick_filter
-    find("select[data-date-filter-target='quickFilter']")
+    find("select[name='filter']")
   end
 
-  def set_browser_timezone(timezone)
-    page.driver.browser.execute_cdp("Emulation.setTimezoneOverride", timezoneId: timezone)
+  def assert_select_value(name, value)
+    assert_selector "select[name='#{name}'] option[selected][value='#{value}']", visible: :all
   end
 end

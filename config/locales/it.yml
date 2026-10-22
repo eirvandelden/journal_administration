@@ -423,12 +423,14 @@ it:
       current_month: Questo mese
       current_year: Questo anno
       end_date: Data di fine
+      from_month: Da
       last_month: Mese scorso
       last_year: Anno scorso
       quick_filter: Filtro rapido
       select: Seleziona
       start_date: Data di inizio
       three_months: Ultimi 3 mesi
+      to_month: A
   date:
     abbr_day_names:
     - dom

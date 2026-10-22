@@ -27,16 +27,16 @@ class MainDashboardTest < ActionDispatch::IntegrationTest
     assert_select "svg[role='img']", minimum: 1
   end
 
-  test "dashboard with month_to_date filter shows transactions grouped by parent category" do
-    get dashboard_index_url, params: { filter: "month_to_date" }
+  test "dashboard with current_month filter shows transactions grouped by parent category" do
+    get dashboard_index_url, params: { filter: "current_month" }
 
     assert_response :success
     assert_select "td", text: categories(:groceries).name
     assert_select "td", text: categories(:income).name
   end
 
-  test "dashboard with year_to_date filter shows parent category totals" do
-    get dashboard_index_url, params: { filter: "year_to_date" }
+  test "dashboard with current_year filter shows parent category totals" do
+    get dashboard_index_url, params: { filter: "current_year" }
 
     assert_response :success
     assert_select "td", text: categories(:groceries).name
@@ -44,7 +44,7 @@ class MainDashboardTest < ActionDispatch::IntegrationTest
   end
 
   test "dashboard does not show child categories as separate rows" do
-    get dashboard_index_url, params: { filter: "year_to_date" }
+    get dashboard_index_url, params: { filter: "current_year" }
 
     assert_response :success
     assert_select "td", text: categories(:supermarket).full_name, count: 0
@@ -52,45 +52,121 @@ class MainDashboardTest < ActionDispatch::IntegrationTest
   end
 
   test "dashboard excludes transfer transactions" do
-    get dashboard_index_url, params: { filter: "year_to_date" }
+    get dashboard_index_url, params: { filter: "current_year" }
 
     assert_response :success
     assert_select "td", text: categories(:transfer).name, count: 0
   end
 
-  test "dashboard with start_date and end_date filters transactions" do
-    get dashboard_index_url, params: { start_date: "2026-01-01", end_date: "2026-12-31" }
+  test "dashboard with from_month and to_month filters transactions" do
+    get dashboard_index_url, params: { from_month: "2026-01", to_month: "2026-12" }
 
     assert_response :success
     assert_select "table.debit_credit"
   end
 
-  test "dashboard shows date filter form" do
+  test "dashboard shows the month filter form" do
     get dashboard_index_url
 
     assert_response :success
-    assert_select "form[data-controller='date-filter']"
-    assert_select "input[type='date'][name='start_date']"
-    assert_select "input[type='date'][name='end_date']"
+    assert_select "form[data-controller='submit-on-change']"
+    assert_select "select[name='from_month']"
+    assert_select "select[name='to_month']"
   end
 
-  test "date filter form has quick filter select" do
+  test "the filter form offers months and never a day" do
     get dashboard_index_url
 
-    assert_response :success
-    assert_select "select[data-date-filter-target='quickFilter']"
+    assert_select "input[type='date']", count: 0
+    assert_select "label", text: I18n.t("dashboard.filters.start_date", locale: users(:member).locale), count: 0
+    assert_select "label", text: I18n.t("dashboard.filters.end_date", locale: users(:member).locale), count: 0
+    assert_select "select[name='from_month'] option, select[name='to_month'] option" do |options|
+      assert(options.all? { |option| option["value"].match?(/\A\d{4}-\d{2}\z/) })
+    end
+    assert_current_month_selected
   end
 
-  test "dashboard with invalid custom dates falls back to the default range" do
-    get dashboard_index_url, params: { start_date: "not-a-date", end_date: "2026-03-31" }
+  test "the filter form labels its fields with months" do
+    get dashboard_index_url
+
+    assert_select "label[for='from_month']", text: I18n.t("dashboard.filters.from_month", locale: users(:member).locale)
+    assert_select "label[for='to_month']", text: I18n.t("dashboard.filters.to_month", locale: users(:member).locale)
+  end
+
+  test "the quick filter is a select that submits the form on change" do
+    get dashboard_index_url
+
+    assert_select "select[name='filter'][data-action='change->submit-on-change#submit']"
+  end
+
+  test "a to month before the from month shows the current month" do
+    get dashboard_index_url, params: { from_month: "2026-10", to_month: "2026-03" }
 
     assert_response :success
-    assert_select "input[name='start_date'][value='#{Time.current.beginning_of_month.to_date.iso8601}']"
-    assert_select "input[name='end_date'][value='#{Time.current.end_of_month.to_date.iso8601}']"
+    assert_current_month_selected
+  end
+
+  test "old links with days show the current month" do
+    get dashboard_index_url, params: { start_date: "2026-10-15", end_date: "2026-10-20" }
+
+    assert_response :success
+    assert_current_month_selected
+  end
+
+  class BudgetGoals < ActionDispatch::IntegrationTest
+    setup do
+      sign_in_as(users(:member))
+      BudgetCategory.delete_all
+      Budget.delete_all
+      budget = Budget.create!(starts_at: Time.zone.local(2024, 1, 1))
+      BudgetCategory.create!(budget:, category: categories(:housing), amount: 1480)
+    end
+
+    test "October 2026 shows the stored monthly amount as the budget goal" do
+      travel_to Time.zone.local(2026, 10, 22) do
+        assert_goal_of 1, from_month: "2026-10", to_month: "2026-10"
+      end
+    end
+
+    test "February 2026 shows the same budget goal as October 2026" do
+      travel_to Time.zone.local(2026, 10, 22) do
+        assert_goal_of 1, from_month: "2026-02", to_month: "2026-02"
+      end
+    end
+
+    test "January to March 2026 shows three times the monthly budget goal" do
+      travel_to Time.zone.local(2026, 10, 22) do
+        assert_goal_of 3, from_month: "2026-01", to_month: "2026-03"
+      end
+    end
+
+    test "this year in October shows ten months of budget and January through October" do
+      travel_to Time.zone.local(2026, 10, 22) do
+        assert_goal_of 10, filter: "current_year"
+        assert_select "select[name='from_month'] option[selected][value='2026-01']"
+        assert_select "select[name='to_month'] option[selected][value='2026-10']"
+      end
+    end
+
+    test "last year shows twelve months of budget" do
+      travel_to Time.zone.local(2026, 10, 22) do
+        assert_goal_of 12, filter: "last_year"
+      end
+    end
+
+    private
+
+    def assert_goal_of(months, **params)
+      get dashboard_index_url, params: params
+
+      assert_response :success
+      assert_select "td.amount",
+text: ActionController::Base.helpers.number_to_currency(1480 * months, locale: users(:member).locale)
+    end
   end
 
   test "dashboard shows budget columns when active budget exists" do
-    get dashboard_index_url, params: { filter: "month_to_date" }
+    get dashboard_index_url, params: { filter: "current_month" }
 
     assert_response :success
     assert_select "th", text: I18n.t("balance.budget")
@@ -99,7 +175,7 @@ class MainDashboardTest < ActionDispatch::IntegrationTest
   end
 
   test "dashboard shows budget chart heading when active budget exists" do
-    get dashboard_index_url, params: { filter: "month_to_date" }
+    get dashboard_index_url, params: { filter: "current_month" }
 
     assert_response :success
     assert_select "h2", text: I18n.t("dashboard.charts.budget_vs_actual")
@@ -108,7 +184,7 @@ class MainDashboardTest < ActionDispatch::IntegrationTest
   test "dashboard shows spending vs average chart when no active budget in date range" do
     Budget.destroy_all
 
-    get dashboard_index_url, params: { filter: "month_to_date" }
+    get dashboard_index_url, params: { filter: "current_month" }
 
     assert_response :success
     assert_select "h2", text: I18n.t("dashboard.charts.spending_vs_average")
@@ -117,7 +193,7 @@ class MainDashboardTest < ActionDispatch::IntegrationTest
   test "dashboard does not show budget columns when no active budget" do
     Budget.destroy_all
 
-    get dashboard_index_url, params: { filter: "month_to_date" }
+    get dashboard_index_url, params: { filter: "current_month" }
 
     assert_response :success
     assert_select "th", text: I18n.t("balance.budget"), count: 0
@@ -126,14 +202,14 @@ class MainDashboardTest < ActionDispatch::IntegrationTest
 
   test "dashboard shows spending_vs_average for a past range even when a current budget exists" do
     # active_budget fixture covers 2026-03-01 onwards; selecting 2025 has no matching budget
-    get dashboard_index_url, params: { start_date: "2025-01-01", end_date: "2025-12-31" }
+    get dashboard_index_url, params: { from_month: "2025-01", to_month: "2025-12" }
 
     assert_response :success
     assert_select "h2", text: I18n.t("dashboard.charts.spending_vs_average")
   end
 
   test "dashboard hides budget columns for a past range even when a current budget exists" do
-    get dashboard_index_url, params: { start_date: "2025-01-01", end_date: "2025-12-31" }
+    get dashboard_index_url, params: { from_month: "2025-01", to_month: "2025-12" }
 
     assert_response :success
     assert_select "th", text: I18n.t("balance.budget"), count: 0
@@ -141,11 +217,18 @@ class MainDashboardTest < ActionDispatch::IntegrationTest
   end
 
   test "dashboard hides budget columns when the selected range is broader than the budget period" do
-    get dashboard_index_url, params: { start_date: "2026-01-01", end_date: "2026-12-31" }
+    get dashboard_index_url, params: { from_month: "2026-01", to_month: "2026-12" }
 
     assert_response :success
     assert_select "h2", text: I18n.t("dashboard.charts.spending_vs_average")
     assert_select "th", text: I18n.t("balance.budget"), count: 0
     assert_select "th", text: I18n.t("balance.status"), count: 0
+  end
+
+  private
+
+  def assert_current_month_selected
+    assert_select "select[name='from_month'] option[selected][value='#{Date.current.strftime("%Y-%m")}']"
+    assert_select "select[name='to_month'] option[selected][value='#{Date.current.strftime("%Y-%m")}']"
   end
 end

@@ -1,25 +1,26 @@
+<% months = @dashboard.selectable_months %>
 <article>
-  <%= form_with url: dashboard_index_path, method: :get, data: { controller: "date-filter" } do |f| %>
+  <%= form_with url: dashboard_index_path, method: :get, data: { controller: "submit-on-change" } do |f| %>
     <fieldset>
-      <label><%= t("dashboard.filters.quick_filter") %></label>
-      <select data-date-filter-target="quickFilter" data-action="change->date-filter#applyQuickFilter">
-        <option value="">-- <%= t("dashboard.filters.select") %> --</option>
-        <option value="current_month"><%= t("dashboard.filters.current_month") %></option>
-        <option value="last_month"><%= t("dashboard.filters.last_month") %></option>
-        <option value="three_months"><%= t("dashboard.filters.three_months") %></option>
-        <option value="current_year"><%= t("dashboard.filters.current_year") %></option>
-        <option value="last_year"><%= t("dashboard.filters.last_year") %></option>
-      </select>
+      <%= f.label :filter, t("dashboard.filters.quick_filter") %>
+      <%= f.select :filter, [
+            [t("dashboard.filters.current_month"), "current_month"],
+            [t("dashboard.filters.last_month"), "last_month"],
+            [t("dashboard.filters.three_months"), "three_months"],
+            [t("dashboard.filters.current_year"), "current_year"],
+            [t("dashboard.filters.last_year"), "last_year"]
+          ], { include_blank: "-- #{t("dashboard.filters.select")} --", selected: nil },
+          data: { action: "change->submit-on-change#submit" } %>
     </fieldset>
 
     <fieldset>
-      <%= f.label :start_date, t("dashboard.filters.start_date") %>
-      <%= f.date_field :start_date, value: @dashboard.date_range.start_date.to_date, data: { "date-filter-target": "startDate" } %>
+      <%= f.label :from_month, t("dashboard.filters.from_month") %>
+      <%= f.select :from_month, month_options(months, selected: @dashboard.date_range.start_date.to_date) %>
     </fieldset>
 
     <fieldset>
-      <%= f.label :end_date, t("dashboard.filters.end_date") %>
-      <%= f.date_field :end_date, value: @dashboard.date_range.end_date.to_date, data: { "date-filter-target": "endDate" } %>
+      <%= f.label :to_month, t("dashboard.filters.to_month") %>
+      <%= f.select :to_month, month_options(months, selected: @dashboard.date_range.end_date.to_date) %>
     </fieldset>
 
     <button type="submit"><%= t("dashboard.filters.apply") %></button>
