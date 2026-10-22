@@ -21,6 +21,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_16_120000) do
     t.index ["account_id"], name: "index_account_aliases_on_account_id"
   end
 
+  create_table "account_numbers", force: :cascade do |t|
+    t.integer "account_id", null: false
+    t.datetime "created_at", null: false
+    t.string "number", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_account_numbers_on_account_id"
+    t.index ["number"], name: "index_account_numbers_on_number", unique: true
+  end
+
   create_table "accounts", force: :cascade do |t|
     t.string "account_number"
     t.string "name"
@@ -293,6 +302,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_16_120000) do
   end
 
   add_foreign_key "account_aliases", "accounts"
+  add_foreign_key "account_numbers", "accounts"
   add_foreign_key "accounts", "categories"
   add_foreign_key "accounts", "groups", on_delete: :restrict
   add_foreign_key "accounts", "people", on_delete: :restrict

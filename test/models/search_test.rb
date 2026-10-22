@@ -29,7 +29,16 @@ class SearchTest < ActiveSupport::TestCase
     assert_includes search.results[:accounts], accounts(:checking)
   end
 
-  test "results includes accounts matching by account_number" do
+  test "results include an account matching any of its numbers" do
+    albert_heijn = accounts(:albert_heijn)
+    albert_heijn.account_numbers.create!(number: "NL00ABNA9999999003")
+
+    search = Search.new(query: "NL00ABNA9999999003")
+
+    assert_includes search.results[:accounts], albert_heijn
+  end
+
+  test "results includes accounts matching by account number" do
     search = Search.new(query: "NL00INGB0123456789")
 
     assert_includes search.results[:accounts], accounts(:savings)

@@ -14,11 +14,14 @@ nl:
     destroy:
       success: "✅ Rekening succesvol verwijderd."
     form:
+      account_number: Rekeningnummer
+      account_numbers: Rekeningnummers
       external_owner: Externe rekening
       group_owner: "%{name} (groep)"
       person_owner: "%{name} (persoon)"
+      remove_number: Verwijderen
     index:
-      account_number: Rekeningnummer
+      account_numbers: Rekeningnummers
       category: Categorie
       confirm_destroy: Dit verwijdert de rekening permanent. Dit kan niet ongedaan worden gemaakt.
       destroy: Verwijderen
@@ -31,17 +34,51 @@ nl:
       owner: Eigenaar
       show: Tonen
       update_transactions: Transacties bijwerken
+    merges:
+      create:
+        accounts:
+          one: "%{count} rekening"
+          other: "%{count} rekeningen"
+        receipts:
+          one: "%{count} kassabon"
+          other: "%{count} kassabonnen"
+        success: "✅ %{accounts} samengevoegd met deze rekening. Verplaatst: %{transactions} en %{receipts}."
+        transactions:
+          one: "%{count} transactie"
+          other: "%{count} transacties"
+      new:
+        accounts:
+          one: "%{count} rekening"
+          other: "%{count} rekeningen"
+        confirm: "%{accounts} samenvoegen met %{account}? %{transactions} en %{receipts} verplaatsen. Dit kan niet ongedaan worden gemaakt."
+        counts: "%{transactions} en %{receipts} verplaatsen"
+        intro: "%{account} blijft bestaan en houdt zijn naam. De gekozen rekeningen geven hun transacties, kassabonnen, herkenningspatronen en rekeningnummers over en worden daarna verwijderd."
+        merge: Samenvoegen
+        no_matches: Geen externe rekeningen gevonden voor "%{query}".
+        receipts:
+          one: "%{count} kassabon"
+          other: "%{count} kassabonnen"
+        review: Samenvoegen controleren
+        review_heading: Klaar om samen te voegen
+        search: Zoek duplicaten op naam of rekeningnummer
+        search_submit: Zoeken
+        title: Duplicaten samenvoegen met %{account}
+        totals: In totaal verplaatsen %{transactions} en %{receipts}.
+        transactions:
+          one: "%{count} transactie"
+          other: "%{count} transacties"
     new:
       title: "➕ Nieuwe rekening"
     show:
       absorb_transactions: Transacties overnemen van duplicaten
-      account_number: 'Rekeningnummer:'
+      account_numbers: 'Rekeningnummers:'
       aliases: Herkenningspatronen
       category: 'Categorie:'
       confirm_move_to_merchants: Elke transactie op deze rekening verplaatsen naar de winkel die erin staat? Een transactie met de standaardcategorie van deze rekening krijgt de standaardcategorie van de winkel, of geen.
       edit: Bewerken
       id: 'Id:'
       mark_payment_provider: Markeer als gedeelde betaaldienstverlener
+      merge_duplicates: Duplicaten samenvoegen…
       move_to_merchants: Transacties naar hun winkels verplaatsen
       name: 'Naam:'
       owner: 'Eigenaar:'
@@ -63,6 +100,10 @@ nl:
         name: Naam
         number: Nummer
         payment_provider: Betaaldienstverlener
+      account/account_numbers:
+        number: Rekeningnummer
+      account_number:
+        number: Rekeningnummer
       appropriation:
         amount: Begroot bedrag
         budget_year: Begrotingsjaar
@@ -122,9 +163,16 @@ nl:
       models:
         account:
           attributes:
+            account_numbers:
+              duplicated: moeten onderling verschillen
             base:
               cannot_reclassify_with_transactions: kan het eigenaarschap van het huishouden niet wijzigen omdat er transacties zijn
               has_transactions: kan niet worden verwijderd omdat er transacties aan gekoppeld zijn
+              merge_household_duplicate: een gezinsrekening kan niet in een andere rekening worden samengevoegd
+              merge_into_household: een gezinsrekening kan geen duplicaten overnemen
+              merge_into_itself: kan niet met zichzelf worden samengevoegd
+              merge_nothing_picked: 'heeft niets om samen te voegen: kies minstens één duplicaat'
+              merge_provider_into_shop: een gedeelde betaaldienstverlener kan niet worden samengevoegd met een rekening die dat niet is
               one_owner_only: mag maar één eigenaar hebben
             payment_provider:
               must_be_external: moet een externe rekening zijn
@@ -134,6 +182,10 @@ nl:
               must_be_external: moet bij een externe rekening horen
             pattern:
               invalid_like_characters: mag geen %% of _ tekens bevatten
+        account_number:
+          attributes:
+            number:
+              taken_by: hoort al bij %{account}
         appropriation:
           attributes:
             base:

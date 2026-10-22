@@ -8,8 +8,12 @@ class Account < ApplicationRecord
   include Resolvable
   include BulkUpdatable
   include Searchable
+  include Mergeable
 
-  searchable_on :name, :account_number
+  # Numbers live in account_numbers. The old column stays until a separate change drops it.
+  self.ignored_columns += [ "account_number" ]
+
+  searchable_on :name, account_numbers: :number
 
   LEGACY_OWNERS = {
     "samen" => "Samen",
@@ -32,13 +36,19 @@ class Account < ApplicationRecord
   scope :external, -> { where.not(id: own.select(:id)) }
 
   has_many :account_aliases, dependent: :destroy
+  has_many :account_numbers, dependent: :destroy, inverse_of: :account
+  has_many :receipts, foreign_key: :shop_id, inverse_of: :shop, dependent: nil
+
+  accepts_nested_attributes_for :account_numbers,
+    allow_destroy: true,
+    reject_if: ->(attributes) { attributes["id"].blank? && attributes["number"].blank? }
 
   belongs_to :person, optional: true
   belongs_to :group, optional: true
 
   belongs_to :category, optional: true
 
-  validates :account_number, uniqueness: true, allow_blank: true
+  validate :numbers_are_distinct
   validate :one_managed_owner
   validate :managed_owner_exists
   validate :preserve_transaction_classification
@@ -98,11 +108,18 @@ class Account < ApplicationRecord
 
   # Returns human-readable string representation of the account
   #
-  # @return [String] Account name if present, otherwise account number
+  # @return [String] Account name if present, otherwise the lowest account number
   def to_s
     return name unless name.blank?
 
-    account_number
+    numbers.min.to_s
+  end
+
+  # Returns the account numbers as strings
+  #
+  # @return [Array<String>]
+  def numbers
+    account_numbers.reject(&:marked_for_destruction?).map(&:number)
   end
 
   # Reassigns transactions from any external account whose name exactly matches
@@ -114,6 +131,12 @@ class Account < ApplicationRecord
   end
 
   private
+
+  def numbers_are_distinct
+    return if numbers.uniq.size == numbers.size
+
+    errors.add(:account_numbers, :duplicated)
+  end
 
   # Prevents assigning both a person and a group to one account.
   # @return [void]

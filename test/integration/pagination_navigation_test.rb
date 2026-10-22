@@ -57,7 +57,7 @@ class PaginationNavigationTest < ActionDispatch::IntegrationTest
     def create_accounts(count)
       count.times do |index|
         Account.create!(
-          account_number: format("NL99TEST%010d", index),
+          account_numbers: [ AccountNumber.new(number: format("NL99TEST%010d", index)) ],
           name: "Pagination Account #{index}",
           owner: :samen
         )

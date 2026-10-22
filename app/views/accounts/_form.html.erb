@@ -15,10 +15,18 @@
     <%= f.label :id %>
     <%= f.text_field :id, disabled: :disabled %>
   </div>
-  <div class="field">
-    <%= f.label :account_number %>
-    <%= f.text_field :account_number %>
-  </div>
+  <fieldset class="field">
+    <legend><%= t('.account_numbers') %></legend>
+    <%= f.fields_for :account_numbers do |number_form| %>
+      <div>
+        <%= number_form.text_field :number, value: number_form.object.number.to_s, aria: { label: t('.account_number') } %>
+        <% if number_form.object.persisted? %>
+          <%= number_form.check_box :_destroy %>
+          <%= number_form.label :_destroy, t('.remove_number') %>
+        <% end %>
+      </div>
+    <% end %>
+  </fieldset>
   <div class="field">
     <%= f.label :name %>
     <%= f.text_field :name %>

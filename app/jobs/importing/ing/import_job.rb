@@ -20,7 +20,7 @@ module Importing
         row = Row.parse(csv_row)
         return unless row
 
-        our_account = Account.find_or_create_by(account_number: row.our_account_number)
+        our_account = Account.find_or_create_by_number(row.our_account_number)
         their_account = Account.resolve_for_import(
           account_number: row.their_account_number,
           description: row.description,

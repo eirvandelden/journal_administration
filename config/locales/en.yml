@@ -14,11 +14,14 @@ en:
     destroy:
       success: "✅ Account was successfully destroyed."
     form:
+      account_number: Account number
+      account_numbers: Account numbers
       external_owner: External account
       group_owner: "%{name} (group)"
       person_owner: "%{name} (person)"
+      remove_number: Remove
     index:
-      account_number: Account number
+      account_numbers: Account numbers
       category: Category
       confirm_destroy: This will permanently delete the account. This cannot be undone.
       destroy: Destroy
@@ -31,17 +34,51 @@ en:
       owner: Owner
       show: Show
       update_transactions: Update Transactions
+    merges:
+      create:
+        accounts:
+          one: "%{count} account"
+          other: "%{count} accounts"
+        receipts:
+          one: "%{count} receipt"
+          other: "%{count} receipts"
+        success: "✅ Merged %{accounts} into this account. Moved %{transactions} and %{receipts}."
+        transactions:
+          one: "%{count} transaction"
+          other: "%{count} transactions"
+      new:
+        accounts:
+          one: "%{count} account"
+          other: "%{count} accounts"
+        confirm: Merge %{accounts} into %{account}? %{transactions} and %{receipts} move. This cannot be undone.
+        counts: "%{transactions} and %{receipts} move"
+        intro: "%{account} stays and keeps its name. The accounts you pick give it their transactions, receipts, recognition patterns and account numbers, and are then removed."
+        merge: Merge
+        no_matches: No external accounts match "%{query}".
+        receipts:
+          one: "%{count} receipt"
+          other: "%{count} receipts"
+        review: Review merge
+        review_heading: Ready to merge
+        search: Find duplicates by name or account number
+        search_submit: Search
+        title: Merge duplicates into %{account}
+        totals: Together, %{transactions} and %{receipts} move.
+        transactions:
+          one: "%{count} transaction"
+          other: "%{count} transactions"
     new:
       title: "➕ New account"
     show:
       absorb_transactions: Absorb transactions from duplicates
-      account_number: 'Account number:'
+      account_numbers: 'Account numbers:'
       aliases: Recognition patterns
       category: 'Category:'
       confirm_move_to_merchants: Move every transaction on this account to the merchant named in it? A transaction still on this account's default category gets the merchant's default category, or none.
       edit: Edit
       id: 'Id:'
       mark_payment_provider: Mark as shared payment provider
+      merge_duplicates: Merge duplicates…
       move_to_merchants: Move transactions to their merchants
       name: 'Name:'
       owner: 'Owner:'
@@ -63,6 +100,10 @@ en:
         name: Name
         number: Number
         payment_provider: Payment provider
+      account/account_numbers:
+        number: Account number
+      account_number:
+        number: Account number
       appropriation:
         amount: Amount appropriated
         budget_year: Budget year
@@ -122,9 +163,16 @@ en:
       models:
         account:
           attributes:
+            account_numbers:
+              duplicated: must be different from the other numbers
             base:
               cannot_reclassify_with_transactions: cannot change its household ownership because it has transactions
               has_transactions: cannot be deleted because it has associated transactions
+              merge_household_duplicate: a family account cannot be merged into another account
+              merge_into_household: a family account cannot take over duplicates
+              merge_into_itself: cannot be merged into itself
+              merge_nothing_picked: 'has nothing to merge: pick at least one duplicate'
+              merge_provider_into_shop: a shared payment provider cannot be merged into an account that is not one
               one_owner_only: must have at most one owner
             payment_provider:
               must_be_external: must be an external account
@@ -134,6 +182,10 @@ en:
               must_be_external: must belong to an external account
             pattern:
               invalid_like_characters: must not contain %% or _ characters
+        account_number:
+          attributes:
+            number:
+              taken_by: already belongs to %{account}
         appropriation:
           attributes:
             base:

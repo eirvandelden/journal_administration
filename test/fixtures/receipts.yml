@@ -2,3 +2,8 @@ albert_heijn_friday:
   shop: albert_heijn
   issued_on: <%= Time.current.last_month.beginning_of_month.to_date.to_fs(:db) %>
   total_amount: 5000
+
+albert_heijn_duplicate_monday:
+  shop: albert_heijn_duplicate
+  issued_on: <%= Time.current.last_month.beginning_of_month.to_date.to_fs(:db) %>
+  total_amount: 2000
