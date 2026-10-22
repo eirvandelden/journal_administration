@@ -19,7 +19,8 @@ module Importing
       #: (String mail) -> OrderConfirmation?
       def self.parse(mail)
         tokens = Reading.tokens(mail)
-        new(tokens) if readable?(tokens)
+        confirmation = new(tokens) if readable?(tokens)
+        confirmation if confirmation&.reconciles?
       end
 
       def self.readable?(tokens)
@@ -41,6 +42,10 @@ module Importing
       def packed? = false
 
       private
+
+      def shelf_amount = stated("Boodschappen totaal")
+
+      def settled_amount = total_amount - (stated("Overig totaal") || 0)
 
       def products
         first = @tokens.rindex("Aantal") + TABLE_HEADING.size

@@ -108,6 +108,10 @@ class Importing::AlbertHeijn::PackingSlipTest < ActiveSupport::TestCase
     assert_nil Importing::AlbertHeijn::PackingSlip.parse(mangled)
   end
 
+  test "a slip whose total does not follow from its shelf total and bonus is refused" do
+    assert_nil Importing::AlbertHeijn::PackingSlip.parse(@slip_text.gsub("119.93", "119.94"))
+  end
+
   test "is packed" do
     assert_predicate Importing::AlbertHeijn::PackingSlip.parse(@slip_text), :packed?
   end
@@ -121,13 +125,14 @@ class Importing::AlbertHeijn::PackingSlipTest < ActiveSupport::TestCase
   private
 
   # The same mail with the bonus detail section taken out, as it arrives when
-  # nothing was on bonus: the summary still names the bonus row, no detail follows.
+  # nothing was on bonus: the summary still names the bonus row, no detail follows,
+  # and the total is the shelf total plus the deposit.
   def without_bonus_section(mail)
     blocks = mail.split("\n\n")
     stripped = blocks.map(&:strip)
     first = stripped.rindex("Bonusvoordeel")
     last = stripped.index("Totaal voordeel")
 
-    (blocks[0...first] + blocks[(last + 2)..]).join("\n\n")
+    (blocks[0...first] + blocks[(last + 2)..]).join("\n\n").gsub("119.93", "147.74").sub("-27.81", "0.00")
   end
 end

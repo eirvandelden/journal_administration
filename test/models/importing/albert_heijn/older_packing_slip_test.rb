@@ -34,6 +34,18 @@ class Importing::AlbertHeijn::OlderPackingSlipTest < ActiveSupport::TestCase
     assert_nil Importing::AlbertHeijn::OlderPackingSlip.parse(file_fixture("albert_heijn_packing_slip.txt").read)
   end
 
+  test "a slip whose products do not add up to its shelf total is refused" do
+    mail = file_fixture("albert_heijn_older_packing_slip.txt").read.sub(/(AH Komkommer\s+2\s+0\.75\s+)1\.50/, "\\11.51")
+
+    assert_nil Importing::AlbertHeijn::OlderPackingSlip.parse(mail)
+  end
+
+  test "a slip whose subtotal does not follow from its shelf total and bonus is refused" do
+    mail = file_fixture("albert_heijn_older_packing_slip.txt").read.sub(/(\nSubtotaal\s+)96\.54/, "\\196.55")
+
+    assert_nil Importing::AlbertHeijn::OlderPackingSlip.parse(mail)
+  end
+
   test "is packed" do
     assert_predicate @slip, :packed?
   end
