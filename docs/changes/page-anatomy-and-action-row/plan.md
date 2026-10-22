@@ -145,6 +145,7 @@ The work runs in two phases with a gate between them.
 - Annuleren: a link, `<a role="button" class="button-secondary">`, as the reference requires. The intent criterion now says so.
 - Title bar row: `main > header nav` is a column in mvpa.css. Phase 1 adds a wrapping row layout for it (`flex-direction: row; flex-wrap: wrap`), tested, shown in `demo.html`, with an `### Upgrading` step. On a phone the controls wrap instead of running off the edge.
 - Actions menu items that send a DELETE (an unlink) stay plain; the menu never holds `Delete…`, as the reference requires.
+- Stacked base (2026-10-22): this branch sits on `multiple-account-numbers-per-account`, which merges before this change. Phase 2 starts once that branch contains #348 (`7bc7052`); rebase onto it with `git rebase --onto`, and target the pull request at it while it is open. Its account screens and account-number validation replace the ones this plan names; re-verify the duplicate-number proof against `AccountNumber`.
 
 ## Out of scope
 
