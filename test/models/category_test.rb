@@ -211,4 +211,29 @@ class CategoryTest < ActiveSupport::TestCase
 
     assert_equal names.sort, names
   end
+
+  test "add_household_expense creates a child with the group's direction" do
+    category = Category.add_household_expense("Huisdieren")
+
+    assert_predicate category, :persisted?
+    assert_equal categories(:household_expenses), category.parent_category
+    assert_equal "debit", category.direction
+  end
+
+  test "add_household_expense places the category under Huishoudelijke uitgaven" do
+    assert_equal "Huishoudelijke uitgaven - Huisdieren", Category.add_household_expense("Huisdieren").full_name
+  end
+
+  test "add_household_expense returns the existing child, whatever its case" do
+    assert_no_difference "Category.count" do
+      assert_equal categories(:household_groceries), Category.add_household_expense(" boodschappen ")
+    end
+  end
+
+  test "add_household_expense raises when the group is missing" do
+    categories(:household_expenses).secondaries.update_all(parent_category_id: nil)
+    categories(:household_expenses).destroy!
+
+    assert_raises(ActiveRecord::RecordNotFound) { Category.add_household_expense("Huisdieren") }
+  end
 end

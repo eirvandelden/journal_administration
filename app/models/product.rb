@@ -1,8 +1,9 @@
 # Something bought in a shop, as it appears on an invoice line
 #
 # A product arrives from an invoice knowing only its name. Its brand and
-# product type are filled in by hand afterwards, so a product without
-# both is unclassified and still needs attention.
+# product type are filled in afterwards, by hand or by an assistant that
+# may fill blanks too, so a product without both is unclassified and still
+# needs attention.
 class Product < ApplicationRecord
   belongs_to :product_type, optional: true
   has_many :receipt_lines
@@ -35,6 +36,18 @@ class Product < ApplicationRecord
   end
 
   def unclassified? = brand.blank? || product_type.blank?
+
+  # Fills in what an assistant read, keeping every brand and product type already present
+  #
+  # A person who set a brand or type by hand never has it overwritten by a later run.
+  #
+  #: (?brand: String?, ?product_type: ProductType?) -> bool
+  def fill_in(brand: nil, product_type: nil)
+    self.brand = brand.strip if self.brand.blank? && brand.present?
+    self.product_type = product_type if self.product_type.blank? && product_type
+
+    save
+  end
 
   # Every time we bought this product, most recent invoice first
   def purchases

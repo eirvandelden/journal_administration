@@ -26,6 +26,7 @@ class CategoriesIndexTest < ActionDispatch::IntegrationTest
     assert_equal [
       I18n.t("categories.index.root_categories"),
       categories(:groceries).name,
+      categories(:household_expenses).name,
       categories(:housing).name,
       categories(:income).name
     ], headings
@@ -48,7 +49,7 @@ class CategoriesIndexTest < ActionDispatch::IntegrationTest
     get categories_path
 
     assert_response :success
-    assert_select "article", count: 5
+    assert_select "article", count: 6
     assert_select "td", text: categories(:bakery).name
     assert_select "td", text: categories(:supermarket).name
     assert_select "td", text: categories(:rent).name
