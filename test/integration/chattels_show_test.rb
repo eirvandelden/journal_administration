@@ -17,6 +17,15 @@ class ChattelsShowTest < ActionDispatch::IntegrationTest
     assert_select "main form", count: 0
   end
 
+  test "show page keeps the line breaks in the notes" do
+    sign_in_as(@member)
+    @chattel.update!(notes: "First line\nSecond line")
+
+    get chattel_url(@chattel)
+
+    assert_select "main dl dd br"
+  end
+
   test "show includes navigation to edit page" do
     sign_in_as(@member)
 

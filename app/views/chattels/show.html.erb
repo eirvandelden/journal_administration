@@ -5,10 +5,12 @@
 <% end %>
 <article>
   <dl>
-    <% %i[name brand kind model_number serial_number purchase_transaction_id notes].each do |attribute| %>
+    <% %i[name brand kind model_number serial_number purchase_transaction_id].each do |attribute| %>
       <dt><%= Chattel.human_attribute_name(attribute) %></dt>
       <dd><%= @chattel.public_send(attribute) %></dd>
     <% end %>
+    <dt><%= Chattel.human_attribute_name(:notes) %></dt>
+    <dd><%= simple_format(@chattel.notes) %></dd>
     <% %i[purchased_at warranty_expires_at left_possession_at].each do |attribute| %>
       <dt><%= Chattel.human_attribute_name(attribute) %></dt>
       <dd>
