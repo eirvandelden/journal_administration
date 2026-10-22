@@ -20,10 +20,20 @@ class DateRange
     parsed_start_date = Date.parse(start_date.to_s)
     parsed_end_date = Date.parse(end_date.to_s)
 
+    return MonthRange.spanning(parsed_start_date, parsed_end_date) if whole_months?(parsed_start_date, parsed_end_date)
+
     new(parsed_start_date.beginning_of_day, parsed_end_date.end_of_day)
   rescue Date::Error
     nil
   end
+
+  # A span that starts on the first day of a month and ends on the last day of a month
+  #
+  # @return [Boolean]
+  def self.whole_months?(start_date, end_date)
+    start_date == start_date.beginning_of_month && end_date == end_date.end_of_month
+  end
+  private_class_method :whole_months?
 
   # Creates a DateRange from a predefined filter
   #
@@ -60,6 +70,20 @@ class DateRange
   def initialize(start_date, end_date)
     @start_date = start_date
     @end_date = end_date
+  end
+
+  # Number of calendar days in the span, both ends included
+  #
+  # @return [Integer]
+  def days
+    (end_date.to_date - start_date.to_date).to_i + 1
+  end
+
+  # How many months a monthly budget counts for over this span: days / 30
+  #
+  # @return [Float]
+  def month_count
+    days / 30.0
   end
 
   # Returns the range as a Ruby Range object suitable for database queries

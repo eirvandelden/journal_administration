@@ -75,4 +75,29 @@ class DateRangeTest < ActiveSupport::TestCase
 
     assert_nil range
   end
+
+  test "days counts both ends" do
+    range = DateRange.from_dates("2026-10-15", "2026-10-20")
+
+    assert_equal 6, range.days
+  end
+
+  test "month_count is days over thirty" do
+    range = DateRange.from_dates("2026-10-11", "2026-10-20")
+
+    assert_in_delta 10 / 30.0, range.month_count
+  end
+
+  test "from_dates returns a MonthRange for 1 to 31 October" do
+    range = DateRange.from_dates("2026-10-01", "2026-10-31")
+
+    assert_instance_of MonthRange, range
+    assert_equal 1, range.month_count
+  end
+
+  test "from_dates returns a plain DateRange for 15 to 20 October" do
+    range = DateRange.from_dates("2026-10-15", "2026-10-20")
+
+    assert_instance_of DateRange, range
+  end
 end
