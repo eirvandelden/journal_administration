@@ -108,6 +108,16 @@ class Importing::AlbertHeijn::PackingSlipTest < ActiveSupport::TestCase
     assert_nil Importing::AlbertHeijn::PackingSlip.parse(mangled)
   end
 
+  test "is packed" do
+    assert_predicate Importing::AlbertHeijn::PackingSlip.parse(@slip_text), :packed?
+  end
+
+  test "returns nothing for an order confirmation" do
+    confirmation = file_fixture("albert_heijn_order_confirmation.txt").read
+
+    assert_nil Importing::AlbertHeijn::PackingSlip.parse(confirmation)
+  end
+
   private
 
   # The same mail with the bonus detail section taken out, as it arrives when
