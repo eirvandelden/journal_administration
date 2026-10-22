@@ -98,6 +98,23 @@ class CategoriesShowTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "show page has no delete button" do
+    get category_path(categories(:supermarket))
+
+    assert_select "button.button-danger", count: 0
+    assert_select "input[name=_method][value=delete]", count: 0
+    assert_select "main form", count: 0
+  end
+
+  test "edit page ends in an action row with Verwijderen…" do
+    category = categories(:supermarket)
+
+    get edit_category_path(category)
+
+    assert_select "form > footer button.button-danger[form='#{dom_id(category, :delete)}']"
+    assert_select "form##{dom_id(category, :delete)}[action='#{category_path(category)}']"
+  end
+
   private
 
   def split_row_pattern_for(amount:, category:, note:)
@@ -105,6 +122,6 @@ class CategoriesShowTest < ActionDispatch::IntegrationTest
     formatted_category = Regexp.escape(category.name)
     formatted_note = Regexp.escape(note)
 
-    %r{<td>#{formatted_amount}</td>\s*<td>.*?</td>\s*<td>#{formatted_category}</td>\s*<td>#{formatted_note}</td>}m
+    %r{#{formatted_amount}.*?<td[^>]*>#{formatted_category}</td>\s*<td[^>]*>#{formatted_note}</td>}m
   end
 end

@@ -429,6 +429,7 @@ it:
       new_category: "➕ Nuova categoria"
       root_categories: Categorie principali
       show: Mostra
+      title: Categorie
     main: Categorie
     new:
       title: "➕ Nuova categoria"
@@ -446,6 +447,7 @@ it:
       new_chattel: "➕ Nuovo bene"
       no_proof: "-"
       proof_of_purchase: Prova
+      title: Beni
     new:
       title: "➕ Nuovo bene"
     show:

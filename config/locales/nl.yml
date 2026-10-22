@@ -429,6 +429,7 @@ nl:
       new_category: "➕ Nieuwe categorie"
       root_categories: Hoofd categorieën
       show: Toon
+      title: Categorieën
     main: Hoofdcategoriëen
     new:
       title: "➕ Nieuwe categorie"
@@ -446,6 +447,7 @@ nl:
       new_chattel: "➕ Nieuwe bezitting"
       no_proof: "-"
       proof_of_purchase: Bewijs
+      title: Bezittingen
     new:
       title: "➕ Nieuwe bezitting"
     show:

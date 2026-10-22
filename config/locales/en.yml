@@ -429,6 +429,7 @@ en:
       new_category: "➕ New Category"
       root_categories: Root categories
       show: Show
+      title: Categories
     main: Categories
     new:
       title: "➕ New category"
@@ -446,6 +447,7 @@ en:
       new_chattel: "➕ New Chattel"
       no_proof: "-"
       proof_of_purchase: Proof
+      title: Chattels
     new:
       title: "➕ New chattel"
     show:

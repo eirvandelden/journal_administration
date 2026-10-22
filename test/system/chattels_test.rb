@@ -41,12 +41,12 @@ class ChattelsTest < ApplicationSystemTestCase
     assert_no_button I18n.t("common.destroy", locale: locale)
   end
 
-  test "should destroy Chattel from show page" do
-    visit chattel_url(@chattel)
+  test "should destroy Chattel from the edit page" do
+    visit edit_chattel_url(@chattel)
 
     assert_difference("Chattel.count", -1) do
       accept_confirm do
-        click_on I18n.t("common.destroy", locale: locale)
+        click_on I18n.t("common.delete_ellipsis", locale: locale)
       end
 
       assert_text "Chattel was successfully destroyed"
