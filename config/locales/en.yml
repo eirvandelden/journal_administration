@@ -33,6 +33,7 @@ en:
       own_accounts: Family Accounts
       owner: Owner
       show: Show
+      title: Accounts
       update_transactions: Update Transactions
     merges:
       create:

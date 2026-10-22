@@ -90,7 +90,7 @@ class AccountsController < ApplicationController
       end
     else
       respond_to do |format|
-        format.html { redirect_to @account, alert: @account.errors.full_messages.to_sentence }
+        format.html { redirect_to edit_account_path(@account), alert: @account.errors.full_messages.to_sentence }
         format.json { render json: @account.errors, status: :unprocessable_entity }
       end
     end

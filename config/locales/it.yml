@@ -33,6 +33,7 @@ it:
       own_accounts: Conti di famiglia
       owner: Proprietario
       show: Mostra
+      title: Conti
       update_transactions: Aggiorna transazioni
     merges:
       create:

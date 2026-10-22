@@ -1,10 +1,7 @@
-<% content_for(:title) { @account.name } %>
-<header>
-  <h1><%= @account.name %></h1>
-  <nav>
-    <%= link_to t('common.show'), account_path(@account) %>
-  </nav>
-</header>
+<% content_for(:title) { @account.to_s } %>
+<%= render layout: "shared/title_bar", locals: { title: @account.to_s } do %>
+  <%= link_to t('common.show'), account_path(@account) %>
+<% end %>
 <article>
   <%= render "accounts/form", account: @account %>
 </article>
@@ -12,8 +9,3 @@
 <article>
   <%= render "shared/recent_transactions", transactions: @account.recent_transactions %>
 </article>
-
-<footer>
-  <%= button_to t('common.destroy'), @account, method: :delete, class: "button-danger",
-      data: { turbo_confirm: t('common.confirm_destroy'), confirm_verb: t('common.delete') } %>
-</footer>

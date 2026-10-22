@@ -92,6 +92,30 @@ class AccountsIndexTest < ActionDispatch::IntegrationTest
     assert_select "#own-accounts-table tbody td", text: "Delden Household"
   end
 
+  test "rows carry no buttons and the name links to the account" do
+    get accounts_path
+
+    assert_select "tbody button", count: 0
+    assert_select "tbody input[type=submit]", count: 0
+    checking = accounts(:checking)
+
+    assert_select "#own-accounts-table tbody td a[href='#{account_path(checking)}']", text: checking.name
+  end
+
+  test "the title bar carries + Nieuw and no table shows a database id" do
+    get accounts_path
+
+    assert_select "main > header > h1", count: 1
+    assert_select "main > header nav a[href='#{new_account_path}']", text: I18n.t("common.new")
+    assert_select "th", text: I18n.t("accounts.index.id"), count: 0
+  end
+
+  test "every table cell carries a data-label" do
+    get accounts_path
+
+    assert_select "table[data-stack] tbody td:not([data-label])", count: 0
+  end
+
   private
 
   def number_at(accounts, offset)
