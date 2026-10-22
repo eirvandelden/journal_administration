@@ -107,7 +107,6 @@ class AccountsShowTest < ActionDispatch::IntegrationTest
     assert_equal I18n.t("accounts.destroy.success"), flash[:notice]
   end
 
-
   test "show offers to mark an external account as a shared provider" do
     get account_path(accounts(:adyen))
 
