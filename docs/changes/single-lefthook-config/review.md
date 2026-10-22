@@ -90,3 +90,34 @@ No new finding. All 208 `resolved` entries in `package-lock.json` point at `regi
 No finding. The npm switch changed no structure: one `lefthook.yml`, an exact `extends:` path, non-colliding names, `run: "true"` stubs, two short linter configs with one Rails exception each.
 
 Checks run at `9812997`: `bin/rails test` 1056 runs, 0 failures, 0 errors, 0 skips; rubocop no offenses; Brakeman no warnings; bundler-audit no vulnerabilities; stylelint, eslint, erb_lint, herb-lint and `yamllint lefthook.yml` clean; `npm ci --dry-run` clean; three pull checks as above.
+
+## Round 4 — 2026-10-22T07:39:14Z — eeaf426
+
+No `REVIEW.md` or `REVIEW.local.md` at the repository root, so the reviewer defaults apply: Bugs, Security, Compliance, Design.
+
+No open finding. This round reviews the rescoped change of 2026-10-22: stylelint, eslint and the `erb_lint` layout fix, with no lefthook change. The branch sits on `origin/main` `0026a36`.
+
+### Bugs
+
+No bug found. `import { Turbo } from "@hotwired/turbo-rails"` names the module that `config/importmap.rb` pins to `turbo.min.js`, and that file ends in `export{Wt as Turbo,...}`. The system test `chattels_test.rb` deletes a chattel through a `turbo_confirm` button and passes, so `application.js` still loads and Turbo still runs. `app/javascript/channels/index.js` was never pinned, and nothing imports it. The CSS edits change notation only: `width >= 769px` equals `min-width: 769px`, and `rgb(0 0 0 / 20%)` equals `rgba(0, 0, 0, 0.2)`.
+
+Pre-existing, outside this change: `application.js` sets `Turbo.config.drive.confirmationMethod`, a name that `turbo.min.js` never reads, and no view renders `#confirm-dialog`. The custom confirm handler is dead code on `main` too; the native confirm still runs. A follow-up can remove it.
+
+### Security
+
+No finding. All 209 `resolved` entries in `package-lock.json` point at `registry.npmjs.org`. The five packages are devDependencies; `.dockerignore` excludes `node_modules` and the `Dockerfile` runs no npm step, so the production image is unchanged. The dotfiles `stylelint` and `eslint` jobs run `npx --no`, so they never download a package. Round 2's `browserslist` note stays a dotfiles follow-up.
+
+### Compliance
+
+- `npx --no stylelint` and `npx --no eslint` pass on the existing CSS and JS → `npx --no stylelint "app/assets/stylesheets/**/*.css"` and `npx --no eslint .` exit 0. Both also exit 0 on every tracked `.css`, `.js` and `.mjs` file, which is what the dotfiles globs feed them. Proved.
+- `erb_lint` passes on both layouts → `erb_lint` on both files and `erb_lint --lint-all` (95 files) report no errors; `npx --no herb-lint app/views/` is clean. Proved.
+- The lefthook files are unchanged against `main` → `git diff --name-only origin/main...HEAD` lists no lefthook file. Proved.
+- `npm ci --dry-run` passes → exit 0; `npm install --package-lock-only` leaves `package-lock.json` unchanged; `npm ls` shows the five approved packages at the approved versions. Proved.
+- No existing test was weakened, skipped or deleted.
+- For the coordinator, not a code finding: `origin/single-lefthook-config` still holds the old lefthook history (12 commits, ending in `0f6b977`), so a plain push of this branch is refused as non-fast-forward. Pull request #378 is open with the old title "One lefthook config that builds on the dotfiles defaults". The branch needs `--force-with-lease` (rule 20), and `deliver` must replace the pull request title and body with this intent's scope.
+
+### Design
+
+No finding. Two short flat configs, each with one Rails-generated name allowed and a comment that says why. The JS edits are the smallest that satisfy `@eslint/js` recommended.
+
+Checks run at `eeaf426`: `bin/rails test` 1079 runs, 0 failures, 0 errors, 0 skips; `bin/rails test:system` 17 runs, 0 failures; rubocop no offenses; Brakeman no warnings; bundler-audit no vulnerabilities; stylelint, eslint, erb_lint and herb-lint clean; `npm ci --dry-run` clean.
