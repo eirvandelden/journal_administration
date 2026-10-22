@@ -1,0 +1,662 @@
+Pakbon
+
+Alsjeblieft, hier is jouw digitale pakbon
+
+https://example.com/ah-link
+
+ Albert Heijn
+
+Beste Familie,
+
+ Hier is jouw digitale pakbon. Hierop zie je precies wat er naar jou onderweg is en wat de prijs van je boodschappen is.
+
+Factuur direct na bezorging zichtbaar
+
+ Op je factuur is ook het statiegeld zichtbaar dat de bezorger heeft verrekend.
+ Je factuur vind je direct na bezorging in de AH app of op ah.nl/facturen (https://example.com/ah-link)
+
+Statiegeld
+
+ Alle statiegeldartikelen kan je inleveren bij de bezorger.
+ Je kan maximaal 50 blikjes per bestelling inleveren. Verpak ze per 25 stuks
+ in een geleverde doorzichtige plastic tas of een leeg klapkrat. Meer info op ah.nl/statiegeld (https://example.com/ah-link)
+
+Jouw bestelling: 100000006
+
+ Op vrijdag 27 oktober 2023 tussen 09:00 en 11:00
+ worden je boodschappen op Straatnaam 1, 1234 AB Plaatsnaam geleverd.
+
+Kostenoverzicht
+
+Boodschappen
+60
+
+Aantal
+
+Prijs per stuk
+
+Totaal
+
+AH Appelsap
+
+1
+
+1.49
+
+1.49
+
+AH Bananen tros
+
+1
+
+1.45
+
+1.45
+
+AH Basilicum
+
+1
+
+1.19
+
+1.19
+
+AH Biologisch Pizza mozzarella
+
+1
+
+3.19
+
+3.19
+
+AH Biologisch Rode bieten gekookt
+
+1
+
+1.49
+
+1.49
+
+AH Bladerdeeg
+
+1
+
+0.99
+
+0.99
+
+AH Bosui
+
+1
+
+0.72
+
+0.72
+
+AH Chocolade mini's met melkvulling
+
+1
+
+2.29
+
+2.29
+
+AH Chocolademelk zonder toegevoegde suiker
+
+1
+
+1.15
+
+1.15
+
+AH Cola zero
+
+1
+
+0.89
+
+0.89
+
+AH Courgette
+
+1
+
+0.75
+
+0.75
+
+AH Creme fraiche 30% vet
+
+1
+
+1.39
+
+1.39
+
+AH Dental sticks voor middelgrote hond
+
+1
+
+3.59
+
+3.59
+
+AH Duo chocoladeletter melk wit
+
+1
+
+1.39
+
+1.39
+
+AH Extra lang lekker mini rozijnenbol
+
+1
+
+1.79
+
+1.79
+
+AH Extra lang lekker tijger bruin heel
+
+2
+
+1.39
+
+2.78
+
+AH Farfalle
+
+1
+
+1.29
+
+1.29
+
+AH Goudse belegen 48+ geraspt
+
+1
+
+3.79
+
+3.79
+
+AH Goudse jong belegen 48+ stuk
+
+1
+
+gew.
+
+7.19
+
+AH Ice tea refreshing green tea
+
+2
+
+0.99
+
+1.98
+
+AH Komkommer
+
+3
+
+0.79
+
+2.37
+
+AH Krokante pizza 4 kazen
+
+1
+
+2.29
+
+2.29
+
+AH Lactosevrije houdbare halfvolle melk
+
+3
+
+1.19
+
+3.57
+
+AH Limoen los
+
+1
+
+0.69
+
+0.69
+
+AH Luikse wafels
+
+1
+
+1.85
+
+1.85
+
+AH Maiskorrels fris en knapperig 3-pack
+
+1
+
+1.99
+
+1.99
+
+AH Mini crackers naturel
+
+1
+
+1.39
+
+1.39
+
+AH Paprika mix
+
+1
+
+1.99
+
+1.99
+
+AH Perssinaasappelen
+
+1
+
+3.29
+
+3.29
+
+AH Proteïnereep pompoenpit & dadel
+
+1
+
+2.49
+
+2.49
+
+AH Roerbakgroente Italiaans
+
+1
+
+2.09
+
+2.09
+
+AH Rundvleesragout
+
+2
+
+1.59
+
+3.18
+
+AH Snoepgroente komkommer
+
+1
+
+1.99
+
+1.99
+
+AH Snoepgroente paprikamix
+
+1
+
+1.99
+
+1.99
+
+AH Snoepgroente tomaat
+
+1
+
+1.99
+
+1.99
+
+AH Soepstengels Naturel
+
+1
+
+0.75
+
+0.75
+
+AH Tauge
+
+2
+
+1.00
+
+2.00
+
+AH Terra Cashew spread sweet jalapeño
+
+1
+
+2.79
+
+2.79
+
+AH Terra Tempeh
+
+1
+
+1.49
+
+1.49
+
+AH Tomatenketchup
+
+1
+
+1.19
+
+1.19
+
+AH Tuinerwten fijn
+
+2
+
+0.85
+
+1.70
+
+AH Veldsla
+
+2
+
+1.19
+
+2.38
+
+AH Vers bladerdeeg
+
+1
+
+1.39
+
+1.39
+
+AH Wasverzachter wilde rozen
+
+1
+
+1.59
+
+1.59
+
+AH Water & fruit frisse appel
+
+1
+
+0.66
+
+0.66
+
+AH Wokgroente Chinees
+
+1
+
+2.19
+
+2.19
+
+AH Zwarte olijven plakjes
+
+1
+
+1.19
+
+1.19
+
+Choca Vlokken
+
+1
+
+1.59
+
+1.59
+
+De Zaanse Hoeve Yoghurt Griekse stijl 10% vet
+
+1
+
+2.09
+
+2.09
+
+Galbani Mozzarella mini
+
+2
+
+2.79
+
+5.58
+
+Hela Kruiden ketchup curry original
+
+1
+
+2.59
+
+2.59
+
+Homemade Pakket voor mini cupcakes
+
+1
+
+3.89
+
+3.89
+
+Kanis & Gunnink Medium roast koffiebonen XL-pak
+
+1
+
+8.49
+
+8.49
+
+Melkunie Rijstepap
+
+1
+
+2.29
+
+2.29
+
+MonChou Original verse roomkaas
+
+1
+
+1.69
+
+1.69
+
+Monin Siroop caramel sugar free
+
+1
+
+5.29
+
+5.29
+
+Nestlé Nesquik cacao
+
+1
+
+2.99
+
+2.99
+
+Souq Harissa met geconfijte citroen
+
+1
+
+3.49
+
+3.49
+
+Van Gilse Schenkstroop
+
+1
+
+1.89
+
+1.89
+
+Zespri Kiwi sungold
+
+1
+
+5.99
+
+5.99
+
+Gratis bij je bestelling
+3
+
+Pannen sparen 2023
+
+26
+
+0.00
+
+NPL hulp campagne 23
+
+19
+
+0.00
+
+Mora Empanada Cheesy Salsa
+
+1
+
+0.00
+
+Subtotaal boodschappen
+
+ 141.13
+
+Bonusvoordeel
+
+AH Biologisch Pizza mozzarella
+Bonus
+
+-0.32
+
+AH Biologisch Rode bieten gekookt
+Bonus
+
+-0.15
+
+AH Roerbakgroente Italiaans
+2e GRATIS
+
+-1.05
+
+AH Snoepgroente komkommer
+
+3 VOOR 5.00
+
+-0.00
+
+3 VOOR 5.00
+
+-0.32
+
+AH Snoepgroente paprikamix
+3 VOOR 5.00
+
+-0.33
+
+AH Snoepgroente tomaat
+
+3 VOOR 5.00
+
+-0.32
+
+3 VOOR 5.00
+
+-0.00
+
+AH Terra Cashew spread sweet jalapeño
+Bonus
+
+-0.28
+
+AH Terra Tempeh
+Bonus
+
+-0.15
+
+AH Wokgroente Chinees
+2e GRATIS
+
+-1.10
+
+Galbani Mozzarella mini
+2e GRATIS
+
+-2.79
+
+Totaal voordeel
+
+-6.81
+
+Subtotaal
+
+134.32
+
+Statiegeld geleverd
+
+10.50
+
+AH Cola zero 1
+
+AH Water & fruit frisse appel 1
+
+AH Klapkrat 2
+
+ Plastic tasje(s)
+2
+
+0.35
+
+Bezorgkosten
+
+ 0.00
+
+Totaal*
+
+145.17
+
+ * Het totaalbedrag is nu nog exclusief de statiegeld producten die je mogelijk inlevert (bijvoorbeeld je krat). De verrekening van je ingeleverde statiegeld kun je direct na levering vinden op je factuur (op ah.nl/facturen (https://example.com/ah-link) of in de app (https://example.com/ah-link)).
+
+Ontbreekt er iets, of heb je een klacht over een online besteld product? Laat het hier (https://example.com/ah-link) weten.
+
+Heb je toch nog een vraag?
+
+Bekijk hier (https://example.com/ah-link) de meest gestelde vragen.
+
+https://example.com/ah-link
+ https://example.com/ah-link
+ https://example.com/ah-link
+ https://example.com/ah-link
+ https://example.com/ah-link
+
+ https://example.com/ah-link
+ https://example.com/ah-link
+
+mijn gegevens (https://example.com/ah-link) |
+ privacy (https://example.com/ah-link) |
+ homepage (https://example.com/ah-link) |
+ vragen (https://example.com/ah-link) |
+ algemene voorwaarden (https://example.com/ah-link) |
+ https://example.com/ah-link
+https://example.com/ah-link verkrijgbaar op
+ ah.nl (https://example.com/ah-link)

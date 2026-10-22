@@ -3,12 +3,10 @@ module Importing
     # What the Albert Heijn mail readers share: the mail as a list of lines, Dutch dates, amounts,
     # and the rows of a product table
     #
-    # A product is four lines — name, quantity, price each, price together — and a bonus is three:
-    # the product it came off, the promotion, and the amount. Headings inside a table are not a
-    # product, so they are stepped over.
+    # A product is four lines — name, quantity, price each, price together. Headings inside a table are
+    # not a product, so they are stepped over. The bonuses are read by `Bonuses`.
     module Reading
       FIELDS_PER_PRODUCT = 4
-      FIELDS_PER_BONUS = 3
       DELIVERY_DATE = /(\d{1,2})\s+(\p{L}+)\s+(\d{4})/
       AMOUNT = /\A\d+\.\d{2}\z/
       PRICE_EACH = /\A(\d+\.\d{2}|gew\.)\z/
@@ -88,16 +86,7 @@ module Importing
         first = last && tokens[0...last].rindex("Bonusvoordeel")
         return {} if first.nil?
 
-        tokens[(first + 1)...last].each_slice(FIELDS_PER_BONUS).each_with_object(Hash.new(0)) do |bonus, all|
-          name, amount = name_and_amount(bonus)
-          all[name] += cents(amount).abs
-        end
-      end
-
-      # A bonus is a name, a promotion and an amount; older confirmations put the amount second
-      def name_and_amount(bonus)
-        name, second, third = bonus
-        [ name, second.match?(/\A-?\d+\.\d{2}\z/) ? second : third ]
+        Bonuses.new(tokens[(first + 1)...last]).by_product
       end
 
       # The tokens from the product table's first row up to the first of these ends, or the rest
