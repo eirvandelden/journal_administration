@@ -423,3 +423,17 @@ Domain skills applied: software-design, glossary, diagrams, rails-architecture, 
   - A test with two real threads is not added: SQLite tests run in a transaction per test, and a threaded test there is flaky rather than proving anything.
 - The new tools have no annotations and no metadata test → fixed (annotations listed per tool under `### Signatures`; the creates are find-or-create; a `tools/list` acceptance test checks the hints)
 - The ER diagram hides `order_number` and its unique index → fixed (before and after diagrams show `order_number` UNIQUE and the new `packed` column)
+
+## Plan departures
+
+### Fix round 1: real mails the readers could not parse
+
+Verification over the real mailbox refused 35 of 141 mails. Five layouts caused it. The readers now parse 140 of the 141 saved mails; the last is a copy cut off in transit.
+
+- Every reader refuses a mail whose numbers do not add up. The lines (plus any deposit row) must make the shelf total the mail states, and the shelf total less the stated bonus must make what is settled before the extras (the total less "Overig totaal" or "Totaal servicekosten"; the older packing slip states it as "Subtotaal"). `Reading#reconciles?` holds this, and each reader's `parse` returns nothing when it fails. The check reads stated totals only, so a bonus that names no product (a group such as "Alle Knorr wereldgerechten") leaves the lines paid in full without failing the check. It replaces the old rule that the product blocks must be a multiple of four.
+- `PackingSlip` finds product rows by their shape (name, whole quantity, price each, price together), as the other readers do, instead of counting four blocks per product. A block that is no row, such as the name of a multi-pack, is stepped over.
+- A multi-pack is one line, with the quantity and prices as printed on the inner row. The pack's own name block ("AH Baby Waterdoekjes 2-pack") is a heading and gives no line. The "Pakketkorting" section names the inner product ("AH Baby waterdoekjes", 5% volume discount, about 5% of the printed total) and folds into that line like any bonus. In two confirmations the section names the pack ("... 2-pack") and no product row bears that name; that discount is not tied to a line, because tying it would be a guess. The stated totals still add up.
+- Bonus entries are read by a new class, `Importing::AlbertHeijn::Bonuses`: a name, then a promotion and amount for each bonus. A promotion and amount without a name belong to the product above (a bonus repeated under one product is added up), and an amount of nothing is ignored. Order confirmations from before mid 2023 list a name, an amount and a promotion; the class detects that order.
+- A table of products that could not be delivered ("Niet leverbare producten") has a table of its own above the real one, so the real table is the last "Aantal" heading. Those products give no line.
+- A total can have a note in brackets ("(excl. klapkratten en Koopzegels)") and a euro sign between its heading and its amount. `amount_after` steps over both.
+- Order confirmations from before mid 2023 word their headings differently ("Bedankt voor jouw bestelling", "Jouw bestelling: N", "Totaal boodschappen") and carry a "+ Statiegeld" row inside the product table. `OrderConfirmation` reads both wordings. The deposit row is no product; it counts toward the shelf total only.
