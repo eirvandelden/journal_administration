@@ -35,7 +35,11 @@ module Importing
 
       def cents(text) = Cents.from_euros(BigDecimal(text))
 
-      def amount_after(tokens, index) = cents(tokens.fetch(index + 1))
+      # The amount a heading introduces, stepping over a note in brackets and a euro sign
+      def amount_after(tokens, index)
+        text = tokens.drop(index + 1).find { |token| !token.start_with?("(") }
+        cents(text.to_s.delete_prefix("€").strip)
+      end
 
       def lines_from(section, discounts)
         product_rows(section).map do |name, quantity, _price_each, total|
