@@ -9,12 +9,10 @@ module MoneyParams
   #
   # @param permitted [ActionController::Parameters]
   # @param keys [Array<Symbol>]
-  # @return [ActionController::Parameters]
+  # @return [ActionController::Parameters] a copy; the given parameters stay unchanged
   def euros_to_cents(permitted, *keys)
-    keys.each do |key|
-      permitted[key] = cents_from(permitted[key]) if permitted[key].is_a?(Numeric)
-    end
-    permitted
+    numbers = permitted.slice(*keys).to_h.select { |_key, value| value.is_a?(Numeric) }
+    permitted.merge(numbers.transform_values { |number| cents_from(number) })
   end
 
   def cents_from(number)
