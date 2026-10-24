@@ -60,6 +60,8 @@ module Receipt::PaymentMatching
 
   # The door-card payments close enough to the delivery, and no dearer than it, to have paid it
   #
+  # A basket dearer than the payment does not rule it out: crates returned at the door lower the charge.
+  #
   #: () -> Array[Transaction]
   def door_card_payments
     Credit.where.missing(:receipt)
@@ -67,10 +69,10 @@ module Receipt::PaymentMatching
           .where(booked_at: door_card_days)
           .where("original_note LIKE 'Pasvolgnr%' OR note LIKE 'Pasvolgnr%'")
           .where("amount <= :total AND amount * 100 >= :total * :kept", total: total_amount, kept: kept_percent)
-          .select { |payment| basket_fits?(payment) }
+          .to_a
   end
 
-  # Takes the payment as this delivery's and splits it, unless another receipt holds it by now
+  # Takes the payment as this delivery's and splits it when the basket fits, unless another receipt holds it by now
   #
   # The check and the link share one transaction, and SQLite opens each one with `BEGIN IMMEDIATE`,
   # so two links of one payment run one after the other and the second sees the first.

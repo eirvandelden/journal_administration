@@ -170,7 +170,7 @@ def self.link_payments
 `link_payments` rules:
 
 1. A delivery with exactly one ordered payment is linked to it. Two or more: not linked. The order number is decisive, so the link is made even when the basket costs more than the payment; `rewrite_payment_splits` then refuses and the splits stay as they are. This is how the acceptance criterion reads: linked, and "the payment's splits follow the basket when it fits".
-2. A delivery with no ordered payment is matched by door card. A door-card candidate must also pass `basket_fits?`: an inferred link never stands on a basket that does not fit. It links only when it has exactly one door-card candidate, and that payment is a door-card candidate of no other unlinked delivery.
+2. A delivery with no ordered payment is matched by door card. The basket need not fit: when it does not, the link is made and `rewrite_payment_splits` leaves the splits alone. It links only when it has exactly one door-card candidate, and that payment is a door-card candidate of no other unlinked delivery.
 3. A delivery with any ordered payment is never door-card matched.
 
 Note shapes, from the dev database's imported rows (333 of 356 Albert Heijn credits are door-card payments, all 20 incasso payments name an AE number):
@@ -257,7 +257,7 @@ N = lines in a basket, D = unlinked deliveries, C = categories in a basket.
 - A delivery is linked automatically only to a payment that fits it alone, in both directions. Enforced by `link_payments`.
 - An automatic link never takes a payment another receipt holds, and never replaces a link. Enforced by `where.missing(:receipt)` on every candidate query and by `unlinked_deliveries`.
 - A payment charged to an appropriation keeps its splits, and a basket dearer than its payment changes no splits. Enforced by the existing guards in `Receipt#rewrite_payment_splits`; an order-number link is still made.
-- A door-card link is never made on a basket dearer than the payment. Enforced by `basket_fits?` in the door-card candidates.
+- A door-card link on a basket dearer than the payment leaves the splits alone. Enforced by `rewrite_payment_splits`.
 
 ### Alternatives
 
@@ -277,7 +277,7 @@ N = lines in a basket, D = unlinked deliveries, C = categories in a basket.
 - `CreateProductType` accepts any category except Transfer. The intent lets a type use any existing category that fits; only new categories are limited to Huishoudelijke uitgaven.
 - No new person-facing page. The receipts list already marks each receipt "not settled", and the receipt page already lets a person pick its payment. `ListUnlinkedDeliveries` and the link tool's answer give the agent the list for its report.
 - `intent.md`'s `## Decisions` say "do both the import and the classification in one job" and "link deliveries to payments in this job, not in a separate one". This plan reads "job" as the one change and the one agent run that the flagged concerns describe ("Etienne chose to keep them as one intent"), not as one MCP call. One call cannot do the classification: the constraints give every judgement call to the agent, and the app only offers tools. So the agent's single run calls import, then classify, then link, all in this one change. If Etienne meant one MCP call, the plan is wrong on this point.
-- The intent's guard "a basket costing more than its payment is refused" is kept as `rewrite_payment_splits` keeps it: the splits are refused. An order-number link is still made, as the acceptance criterion for order 74532780 asks. A door-card link is never made on a basket that does not fit.
+- The intent's guard "a basket costing more than its payment is refused" is kept as `rewrite_payment_splits` keeps it: the splits are refused. A link is still made on an order-number match, as the acceptance criterion for order 74532780 asks, and on a door-card match too (fix round 2).
 
 ## Integration points
 
@@ -389,7 +389,7 @@ Out of scope, as `intent.md` lists: contacting Albert Heijn, reading mail inside
 - Invariant: an assistant's category is a child of Huishoudelijke uitgaven, enforced by `Category.add_household_expense` → `test/models/category_test.rb` `test "add_household_expense places the category under Huishoudelijke uitgaven"`
 - Invariant: one payment fitting two deliveries links neither, enforced by `Receipt.link_payments` → `test/models/receipt/payment_matching_test.rb` `test "a door-card payment that fits two deliveries links neither"`
 - Invariant: a payment held by a receipt is never offered or linked again, enforced by `where.missing(:receipt)` and the re-check in `settle_with` → `test/models/receipt/payment_matching_test.rb` `test "a payment another delivery holds is not linked"`
-- Invariant: a door-card link is never made on a basket dearer than the payment, enforced by `basket_fits?` in the door-card candidates → `test/models/receipt/payment_matching_test.rb` `test "a door-card payment smaller than the basket is not linked"`
+- Invariant: a door-card link on a basket dearer than the payment leaves the splits alone, enforced by `rewrite_payment_splits` → `test/models/receipt/payment_matching_test.rb` `test "links a door-card payment smaller than the basket and leaves its splits"`
 - Each new tool tells a client how it behaves → `test/integration/albert_heijn_deliveries_test.rb` `test "the new tools say which only read, which can be repeated, and which rewrite splits"` (reads `tools/list` and checks `readOnlyHint`, `idempotentHint` and `destructiveHint` as listed under `### Signatures`)
 
 Per changed file, the unit tests expected:
@@ -399,7 +399,7 @@ Per changed file, the unit tests expected:
 - `app/models/importing/albert_heijn/order_confirmation.rb`: `reads the order number, planned delivery date and total`, `reads one line per product`, `returns nothing for a packing slip`, `is not packed`.
 - `app/models/importing/albert_heijn/packing_slip.rb`: `is packed`.
 - `app/models/receipt/recordable.rb`: `record_basket creates a delivery for a new order number`, `replaces the lines of a changed basket`, `keeps a packed basket over a confirmation`, `lets a packing slip replace a confirmation`, `splits a linked payment again when the basket changes`, `books the delivery to the Albert Heijn B.V. account`.
-- `app/models/receipt/payment_matching.rb`: `link_payments links the payment that names the order number`, `does not match a longer AE number`, `leaves a delivery with two ordered payments unlinked`, `links the only door-card payment that fits`, `ignores a door-card payment more than 15% under the total`, `ignores a door-card payment above the total`, `ignores a door-card payment more than 3 days away`, `ignores a door-card payment smaller than the basket`, `links an ordered payment smaller than the basket and leaves its splits`, `leaves a delivery with two door-card candidates unlinked`, `does not link a payment another receipt took inside the same transaction`, `unlinked_deliveries lists deliveries without a payment`.
+- `app/models/receipt/payment_matching.rb`: `link_payments links the payment that names the order number`, `does not match a longer AE number`, `leaves a delivery with two ordered payments unlinked`, `links the only door-card payment that fits`, `ignores a door-card payment more than 15% under the total`, `ignores a door-card payment above the total`, `ignores a door-card payment more than 3 days away`, `links a door-card payment smaller than the basket and leaves its splits`, `links an ordered payment smaller than the basket and leaves its splits`, `leaves a delivery with two door-card candidates unlinked`, `does not link a payment another receipt took inside the same transaction`, `unlinked_deliveries lists deliveries without a payment`.
 - `app/models/receipt.rb`: `fitting_payments offers a payment to the shop`, `does not offer a refund from the shop`, `does not offer a payment another receipt holds`.
 - `app/models/product.rb`: `fill_in sets a blank brand and type`, `keeps a brand already present`, `keeps a type already present`.
 - `app/models/category.rb`: `add_household_expense creates a child with the group's direction`, `returns the existing child, whatever its case`.
@@ -437,3 +437,7 @@ Verification over the real mailbox refused 35 of 141 mails. Five layouts caused 
 - A table of products that could not be delivered ("Niet leverbare producten") has a table of its own above the real one, so the real table is the last "Aantal" heading. Those products give no line.
 - A total can have a note in brackets ("(excl. klapkratten en Koopzegels)") and a euro sign between its heading and its amount. `amount_after` steps over both.
 - Order confirmations from before mid 2023 word their headings differently ("Bedankt voor jouw bestelling", "Jouw bestelling: N", "Totaal boodschappen") and carry a "+ Statiegeld" row inside the product table. `OrderConfirmation` reads both wordings. The deposit row is no product; it counts toward the shelf total only.
+
+### Fix round 2: linking decisions from the real mailbox
+
+- Decision 1 (2026-10-24): a door-card match links even when the basket costs more than the payment. Crates returned at the door lower the bank charge, and 34 of 52 matches were refused. `door_card_payments` no longer asks `basket_fits?`; `rewrite_payment_splits` still refuses a basket that does not fit and a charged payment, so the splits stay as they were. The unique-candidate rule in both directions and the never-take-a-held-payment rule stay. This replaces the earlier rule that a door-card link never stands on a basket that does not fit.
