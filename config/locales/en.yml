@@ -644,6 +644,9 @@ en:
     en: English
     it: Italiano
     nl: Nederlands
+  layouts:
+    admin:
+      title: Admin - %{app}
   left: "📤 Left"
   main_nav:
     accounts: "🏦 %{model}"
