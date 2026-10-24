@@ -1,7 +1,5 @@
 <% content_for(:title) { t(".title") } %>
-<%= render layout: "shared/title_bar", locals: { title: t('.title') } do %>
-  <%= link_to t("common.back"), users_path %>
-<% end %>
+<%= render "shared/title_bar", title: t(".title") %>
 
 <article>
   <%= form_with model: @user, url: user_profile_path(@user) do |form| %>

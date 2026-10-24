@@ -110,8 +110,10 @@ nl:
         amount: Bedrag
         category: Categorie
       category:
+        direction: Richting
         kind: Type
         name: Naam
+        parent_category: Hoofdcategorie
       chattel:
         brand: Merk
         kind: Type
@@ -121,6 +123,7 @@ nl:
         notes: Notities
         purchase_price: Aankoopprijs
         purchase_transaction: Transactie
+        purchase_transaction_id: Aankooptransactie
         purchased_at: Aankoopdatum
         serial_number: Serienummer
         warranty_document: Garantiedocument
@@ -140,10 +143,21 @@ nl:
         account: Rekening
         amount: Bedrag
         appropriation: Begrotingspost
+        booked_at: Boekingsdatum
         category: Categorie
+        category_id: Categorie
+        creditor: Crediteur
         date: Datum
+        debitor: Debiteur
         description: Omschrijving
+        id: ID
+        interest_at: Rentedatum
+        note: Opmerking
+        original_balance_after_mutation: Oorspronkelijk saldo na mutatie
+        original_note: Oorspronkelijke omschrijving
+        original_tag: Oorspronkelijk label
         proof_of_purchase: Aankoopbewijs
+        type: Type
       transaction_split:
         appropriation: Begrotingspost
     errors:

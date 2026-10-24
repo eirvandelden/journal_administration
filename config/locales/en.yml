@@ -110,8 +110,10 @@ en:
         amount: Amount
         category: Category
       category:
+        direction: Direction
         kind: Kind
         name: Name
+        parent_category: Parent category
       chattel:
         brand: Brand
         kind: Kind
@@ -121,6 +123,7 @@ en:
         notes: Notes
         purchase_price: Purchase price
         purchase_transaction: Transaction
+        purchase_transaction_id: Purchase transaction
         purchased_at: Purchase Date
         serial_number: Serial Number
         warranty_document: Warranty document
@@ -140,10 +143,21 @@ en:
         account: Account
         amount: Amount
         appropriation: Appropriation
+        booked_at: Booked at
         category: Category
+        category_id: Category
+        creditor: Creditor
         date: Date
+        debitor: Debitor
         description: Description
+        id: Id
+        interest_at: Interest at
+        note: Note
+        original_balance_after_mutation: Original balance after mutation
+        original_note: Original note
+        original_tag: Original tag
         proof_of_purchase: Proof of purchase
+        type: Type
       transaction_split:
         appropriation: Appropriation
     errors:

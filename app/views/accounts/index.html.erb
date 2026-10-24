@@ -20,16 +20,7 @@
   <article id="<%= kind %>-accounts">
     <h2 id="<%= kind %>-accounts-heading"><%= table[:heading] %></h2>
 
-    <% if table[:page].number > 1 || table[:page].before_last? %>
-      <nav class="pagination">
-        <% if table[:page].number > 1 %>
-          <%= link_to t("pagination.previous"), url_for(request.query_parameters.merge(table[:page_param] => table[:page].number - 1)), rel: "prev" %>
-        <% end %>
-        <% if table[:page].before_last? %>
-          <%= link_to t("pagination.next"), url_for(request.query_parameters.merge(table[:page_param] => table[:page].next_param)), rel: "next" %>
-        <% end %>
-      </nav>
-    <% end %>
+    <%= render "shared/pagination", page: table[:page], param: table[:page_param] %>
 
     <table class="accounts" id="<%= kind %>-accounts-table" data-stack="medium" role="table"
            aria-labelledby="<%= kind %>-accounts-heading">
@@ -55,15 +46,6 @@
       </tbody>
     </table>
 
-    <% if table[:page].number > 1 || table[:page].before_last? %>
-      <nav class="pagination">
-        <% if table[:page].number > 1 %>
-          <%= link_to t("pagination.previous"), url_for(request.query_parameters.merge(table[:page_param] => table[:page].number - 1)), rel: "prev" %>
-        <% end %>
-        <% if table[:page].before_last? %>
-          <%= link_to t("pagination.next"), url_for(request.query_parameters.merge(table[:page_param] => table[:page].next_param)), rel: "next" %>
-        <% end %>
-      </nav>
-    <% end %>
+    <%= render "shared/pagination", page: table[:page], param: table[:page_param] %>
   </article>
 <% end %>

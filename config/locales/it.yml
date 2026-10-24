@@ -110,8 +110,10 @@ it:
         amount: Importo
         category: Categoria
       category:
+        direction: Direzione
         kind: Tipo
         name: Nome
+        parent_category: Categoria principale
       chattel:
         brand: Marca
         kind: Tipo
@@ -121,6 +123,7 @@ it:
         notes: Note
         purchase_price: Prezzo d'acquisto
         purchase_transaction: Transazione
+        purchase_transaction_id: Transazione d'acquisto
         purchased_at: Data d'acquisto
         serial_number: Numero seriale
         warranty_document: Documento di garanzia
@@ -140,10 +143,21 @@ it:
         account: Conto
         amount: Importo
         appropriation: Stanziamento
+        booked_at: Data registrazione
         category: Categoria
+        category_id: Categoria
+        creditor: Creditore
         date: Data
+        debitor: Debitore
         description: Descrizione
+        id: ID
+        interest_at: Data valuta
+        note: Nota
+        original_balance_after_mutation: Saldo originale dopo il movimento
+        original_note: Descrizione originale
+        original_tag: Etichetta originale
         proof_of_purchase: Prova d'acquisto
+        type: Tipo
       transaction_split:
         appropriation: Stanziamento
     errors:
