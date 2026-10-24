@@ -65,4 +65,20 @@ class Users::ProfilesTest < ActionDispatch::IntegrationTest
     assert_select "form > footer a[role=button][href=?]", user_profile_path(@member)
     assert_select "form > footer button.button-danger", count: 0
   end
+
+  test "your own profile edit page has no back link" do
+    sign_in_as(@member)
+
+    get edit_user_profile_path(@member)
+
+    assert_select "a[href=?]", users_path, count: 0
+  end
+
+  test "another user's profile page links back to the users list" do
+    sign_in_as(@member)
+
+    get user_profile_path(@other)
+
+    assert_select "a[href=?]", users_path, text: I18n.t("common.back", locale: @member.locale)
+  end
 end
