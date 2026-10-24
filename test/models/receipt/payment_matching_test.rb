@@ -94,6 +94,30 @@ class Receipt::PaymentMatchingTest < ActiveSupport::TestCase
     assert_empty payment.transaction_splits.where.not(appropriation: appropriations(:birthday_etienne))
   end
 
+  test "links a confirmation-only delivery to a door-card payment 20% above its total" do
+    delivery = delivery("100", total: 10_000, packed: false)
+    payment = door_card_payment(12_000)
+
+    assert_equal [ delivery ], Receipt.link_payments
+    assert_equal payment, delivery.reload.payment
+  end
+
+  test "ignores a door-card payment more than 30% above a confirmation-only total" do
+    delivery = delivery("100", total: 10_000, packed: false)
+    door_card_payment(13_100)
+
+    assert_empty Receipt.link_payments
+    assert_nil delivery.reload.payment
+  end
+
+  test "ignores a door-card payment above a packed delivery's total" do
+    delivery = delivery("100", total: 10_000, packed: true)
+    door_card_payment(12_000)
+
+    assert_empty Receipt.link_payments
+    assert_nil delivery.reload.payment
+  end
+
   test "leaves a delivery with two door-card candidates unlinked" do
     delivery = delivery("100", total: 10_000)
     door_card_payment(9_500)
@@ -156,9 +180,9 @@ class Receipt::PaymentMatchingTest < ActiveSupport::TestCase
 
   private
 
-  def delivery(order_number, total: 11_993, paid: 0)
+  def delivery(order_number, total: 11_993, paid: 0, packed: true)
     receipt = Receipt.create!(shop: accounts(:albert_heijn), issued_on: DAY.to_date, total_amount: total,
-      order_number: order_number)
+      order_number: order_number, packed: packed)
     line(receipt, paid) if paid.positive?
     receipt
   end

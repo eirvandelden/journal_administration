@@ -10,6 +10,7 @@ module Receipt::PaymentMatching
 
   DOOR_CARD_WINDOW = 3.days
   DOOR_CARD_SHORTFALL_PERCENT = 15
+  UNPACKED_SURPLUS_PERCENT = 30
 
   included do
     # Deliveries no payment is linked to yet, for a person to confirm
@@ -58,7 +59,10 @@ module Receipt::PaymentMatching
           .select { |payment| [ payment.note, payment.original_note ].any? { |note| note.to_s.match?(token) } }
   end
 
-  # The door-card payments close enough to the delivery, and no dearer than it, to have paid it
+  # The door-card payments close enough to the delivery to have paid it
+  #
+  # A packed delivery is no dearer than its total. One known only from an order confirmation may be up
+  # to 30% above it, because the estimate leaves out Koopzegels and crates.
   #
   # A basket dearer than the payment does not rule it out: crates returned at the door lower the charge.
   #
@@ -68,7 +72,8 @@ module Receipt::PaymentMatching
           .where(debitor: Account.where(name: Receipt::SHOP_NAME))
           .where(booked_at: door_card_days)
           .where("original_note LIKE 'Pasvolgnr%' OR note LIKE 'Pasvolgnr%'")
-          .where("amount <= :total AND amount * 100 >= :total * :kept", total: total_amount, kept: kept_percent)
+          .where("amount * 100 <= :total * :cap AND amount * 100 >= :total * :kept",
+                  total: total_amount, cap: ceiling_percent, kept: kept_percent)
           .to_a
   end
 
@@ -91,6 +96,8 @@ module Receipt::PaymentMatching
   private
 
   def kept_percent = 100 - DOOR_CARD_SHORTFALL_PERCENT
+
+  def ceiling_percent = packed? ? 100 : 100 + UNPACKED_SURPLUS_PERCENT
 
   def door_card_days
     (issued_on - DOOR_CARD_WINDOW).beginning_of_day..(issued_on + DOOR_CARD_WINDOW).end_of_day
