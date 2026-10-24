@@ -1,3 +1,4 @@
+require "test_helper"
 require "i18n/tasks"
 
 class I18nTest < ActiveSupport::TestCase
@@ -17,6 +18,15 @@ class I18nTest < ActiveSupport::TestCase
 
     assert_operator unused_keys.leaves.count, :<=, 450,
                     "#{unused_keys.leaves.count} unused i18n keys, run `i18n-tasks unused' to show them"
+  end
+
+  # Proves a view that calls t with an unknown key raises instead of falling back.
+  def test_missing_key_in_view_raises
+    error = assert_raises ActionView::Template::Error do
+      ApplicationController.render(inline: '<%= t("no.such.key") %>')
+    end
+
+    assert_kind_of I18n::MissingTranslationData, error.cause
   end
 
   def test_files_are_normalized
