@@ -381,7 +381,6 @@ nl:
     create:
       success: "✅ Budget is succesvol aangemaakt."
     destroy:
-      confirm: Dit budget verwijderen? Dit kan niet ongedaan worden gemaakt.
       success: "✅ Budget is succesvol verwijderd."
     edit:
       title: Budget bewerken
@@ -418,7 +417,7 @@ nl:
       name: Naam
       root_categories: Hoofd categorieën
       title: Categorieën
-    main: Hoofdcategoriëen
+    main: Hoofdcategorieën
     new:
       title: "➕ Nieuwe categorie"
     update:
@@ -461,7 +460,6 @@ nl:
       spending_vs_average: Uitgaven vs. historisch gemiddelde
     filters:
       apply: Toepassen
-      choose: Kies
       current_month: Deze maand
       current_year: Dit jaar
       end_date: Einddatum
@@ -895,10 +893,6 @@ nl:
         success: "✅ Boeking van het deel weggehaald."
       update:
         success: "✅ Deel op de begrotingspost geboekt."
-    create:
-      success: "✅ Splitsing toegevoegd."
-    destroy:
-      success: "✅ Splitsing verwijderd."
     split_indicator:
       one: Splitsing (1 deel)
       other: Splitsing (%{count} delen)
@@ -909,8 +903,6 @@ nl:
       category: Categorie
       note: Opmerking
       remainder_label: Restant
-    update:
-      success: "✅ Splitsing bijgewerkt."
   transactions:
     appropriation:
       not_charged: Niet op een begrotingspost geboekt
@@ -980,9 +972,6 @@ nl:
     profiles:
       edit:
         email_placeholder: E-mailadres
-        locale_en: "🇬🇧 English"
-        locale_it: "🇮🇹 Italiano"
-        locale_nl: "🇳🇱 Nederlands"
         name_placeholder: Naam
         password_placeholder: Wachtwoord wijzigen
         save_changes: Wijzigingen opslaan

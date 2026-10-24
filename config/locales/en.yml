@@ -381,7 +381,6 @@ en:
     create:
       success: "✅ Budget was successfully created."
     destroy:
-      confirm: Delete this budget? This cannot be undone.
       success: "✅ Budget was successfully deleted."
     edit:
       title: Edit Budget
@@ -461,7 +460,6 @@ en:
       spending_vs_average: Spending vs. historical average
     filters:
       apply: Apply
-      choose: Choose
       current_month: This month
       current_year: This year
       end_date: End date
@@ -640,8 +638,8 @@ en:
       create: Create %{model}
       submit: Save %{model}
       update: Update %{model}
-  home: "🏠 Thuis"
-  journal: "📔 Journaal"
+  home: "🏠 Home"
+  journal: "📔 Journal"
   language_names:
     en: English
     it: Italiano
@@ -895,10 +893,6 @@ en:
         success: "✅ Charge removed from the part."
       update:
         success: "✅ Part charged to the appropriation."
-    create:
-      success: "✅ Split added."
-    destroy:
-      success: "✅ Split removed."
     split_indicator:
       one: Split (1 part)
       other: Split (%{count} parts)
@@ -909,8 +903,6 @@ en:
       category: Category
       note: Note
       remainder_label: Remainder
-    update:
-      success: "✅ Split updated."
   transactions:
     appropriation:
       not_charged: Not charged to an appropriation
@@ -980,9 +972,6 @@ en:
     profiles:
       edit:
         email_placeholder: Email address
-        locale_en: "🇬🇧 English"
-        locale_it: "🇮🇹 Italiano"
-        locale_nl: "🇳🇱 Nederlands"
         name_placeholder: Name
         password_placeholder: Change password
         save_changes: Save changes

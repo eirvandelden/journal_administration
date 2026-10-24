@@ -144,31 +144,53 @@ search:
 ## Consider these keys used:
 ignore_unused:
   - '{activerecord,date,datetime,errors,helpers,number,support,time}.*'
+  # Kept so the Dutch spelling fix stays visible
+  - categories.main
 
-## Exclude these keys from the `i18n-tasks eq-base' report:
-# ignore_eq_base:
-#   all:
-#     - common.ok
-#   fr,es:
-#     - common.brand
-
-## Exclude these keys from the `i18n-tasks check-consistent-interpolations` report:
-# ignore_inconsistent_interpolations:
-# - 'activerecord.attributes.*'
-
-## Ignore these keys completely:
-# ignore:
-#  - kaminari.*
-
-## Sometimes, it isn't possible for i18n-tasks to match the key correctly,
-## e.g. in case of a relative key defined in a helper method.
-## In these cases you can use the built-in PatternMapper to map patterns to keys, e.g.:
-#
-# <%# I18n::Tasks.add_scanner 'I18n::Tasks::Scanners::PatternMapper',
-#       only: %w(*.html.haml *.html.slim),
-#       patterns: [['= title\b', '.page_title']] %>
-#
-# The PatternMapper can also match key literals via a special %{key} interpolation, e.g.:
-#
-# <%# I18n::Tasks.add_scanner 'I18n::Tasks::Scanners::PatternMapper',
-#       patterns: [['\bSpree\.t[( ]\s*%{key}', 'spree.%{key}']] %>
+## Exclude these keys from the `i18n-tasks eq-base' report.
+## A key may keep the English value only when that value is right in the other language.
+ignore_eq_base:
+  all:
+    # Identical in every language: names, symbols, emoji and format strings
+    - accounts.show.id
+    - activerecord.attributes.account.iban
+    - admin.dashboard.index.title
+    - admin.nav.dashboard
+    - appropriations.index.{next_year,previous_year}
+    - balance.budget
+    - budgets.show.title
+    - chattels.index.{has_proof,no_proof}
+    - date.formats.month_and_year
+    - errors.format
+    - language_names.*
+    - main_nav.*
+    - number.currency.format.{precision,significant,strip_insignificant_zeros}
+    - number.format.{round_mode,significant,strip_insignificant_zeros}
+    - number.human.decimal_units.{format,units.unit}
+    - number.human.format.{delimiter,precision,significant,strip_insignificant_zeros}
+    - number.human.storage_units.format
+    - number.human.storage_units.units.*
+    - number.percentage.format.{delimiter,format}
+    - number.precision.format.delimiter
+    - search.shortcut_hint
+    - support.array.words_connector
+    - time.{am,pm}
+    - time.formats.short
+    - users.profiles.edit.locale_{en,it,nl}
+  nl:
+    # Dutch uses the English word
+    - activerecord.attributes.transaction.type
+    - activerecord.models.product.one
+    - balance.{credit,status}
+    - budgets.index.status
+    - number.currency.format.negative_format
+    - receipts.basket.{bonus,product}
+    - todos.index.product
+    - transactions.filters.type
+    - transactions.table.type
+    - transactions.types.credit
+  it:
+    # Italian uses the English word
+    - admin.dashboard.index.email
+    - admin.users.{form,index,show}.email
+    - home

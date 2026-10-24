@@ -313,7 +313,7 @@ it:
         email: Email
         locale: Lingua
         name: Nome
-        password: Password
+        password: Parola d'accesso
         password_confirmation: Conferma password
         role: Ruolo
       index:
@@ -381,7 +381,6 @@ it:
     create:
       success: "✅ Budget creato con successo."
     destroy:
-      confirm: Eliminare questo budget? Non è possibile annullare questa operazione.
       success: "✅ Budget eliminato con successo."
     edit:
       title: Modifica Budget
@@ -461,7 +460,6 @@ it:
       spending_vs_average: Spese vs. media storica
     filters:
       apply: Applica
-      choose: Scegli
       current_month: Questo mese
       current_year: Questo anno
       end_date: Data di fine
@@ -895,10 +893,6 @@ it:
         success: "✅ Imputazione della parte rimossa."
       update:
         success: "✅ Parte imputata allo stanziamento."
-    create:
-      success: "✅ Divisione aggiunta."
-    destroy:
-      success: "✅ Divisione rimossa."
     split_indicator:
       one: Divisione (1 parte)
       other: Divisione (%{count} parti)
@@ -909,8 +903,6 @@ it:
       category: Categoria
       note: Nota
       remainder_label: Resto
-    update:
-      success: "✅ Divisione aggiornata."
   transactions:
     appropriation:
       not_charged: Non imputato a uno stanziamento
@@ -980,9 +972,6 @@ it:
     profiles:
       edit:
         email_placeholder: Indirizzo email
-        locale_en: "🇬🇧 English"
-        locale_it: "🇮🇹 Italiano"
-        locale_nl: "🇳🇱 Nederlands"
         name_placeholder: Nome
         password_placeholder: Cambia password
         save_changes: Salva modifiche
