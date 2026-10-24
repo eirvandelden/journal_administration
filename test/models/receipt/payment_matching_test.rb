@@ -73,12 +73,25 @@ class Receipt::PaymentMatchingTest < ActiveSupport::TestCase
     assert_nil delivery.reload.payment
   end
 
-  test "a door-card payment smaller than the basket is not linked" do
+  test "links a door-card payment smaller than the basket and leaves its splits" do
     delivery = delivery("100", total: 10_000, paid: 9_500)
-    door_card_payment(9_000)
+    payment = door_card_payment(9_000)
+    payment.transaction_splits.create!(category: categories(:supermarket), amount: 4_000)
+    splits_before = payment.reload.transaction_splits.map(&:attributes)
 
-    assert_empty Receipt.link_payments
-    assert_nil delivery.reload.payment
+    assert_equal [ delivery ], Receipt.link_payments
+    assert_equal payment, delivery.reload.payment
+    assert_equal splits_before, payment.reload.transaction_splits.map(&:attributes)
+  end
+
+  test "links a door-card payment charged to an appropriation and keeps its splits" do
+    delivery = delivery("100", total: 10_000, paid: 9_000)
+    payment = door_card_payment(9_500)
+    payment.update!(appropriation: appropriations(:birthday_etienne))
+
+    assert_equal [ delivery ], Receipt.link_payments
+    assert_equal appropriations(:birthday_etienne), payment.reload.appropriation
+    assert_empty payment.transaction_splits.where.not(appropriation: appropriations(:birthday_etienne))
   end
 
   test "leaves a delivery with two door-card candidates unlinked" do
