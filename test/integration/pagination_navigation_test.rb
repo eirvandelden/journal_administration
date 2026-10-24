@@ -21,6 +21,29 @@ class PaginationNavigationTest < ActionDispatch::IntegrationTest
     assert_select "nav.pagination a[rel='next']", 0
   end
 
+  test "external accounts pagination writes external_page" do
+    create_external_accounts(51)
+
+    get accounts_path
+
+    assert_response :success
+    assert_select "nav.pagination a[rel='next'][href*='external_page=2']", 2
+    assert_select "nav.pagination a[rel='next'][href*='own_page']", 0
+
+    get accounts_path, params: { external_page: 2 }
+
+    assert_select "nav.pagination a[rel='prev'][href*='external_page=1']", 2
+    assert_select "nav.pagination a[rel='next']", 0
+  end
+
+  test "accounts pagination keeps the other query parameters" do
+    create_accounts(51)
+
+    get accounts_path, params: { external_page: 1, q: "kept" }
+
+    assert_select "nav.pagination a[rel='next'][href*='own_page=2'][href*='external_page=1'][href*='q=kept']", 2
+  end
+
   test "transactions pagination keeps filter params and does not show next on overflow pages" do
     create_uncategorized_transactions(21)
 
@@ -60,6 +83,15 @@ class PaginationNavigationTest < ActionDispatch::IntegrationTest
           account_numbers: [ AccountNumber.new(number: format("NL99TEST%010d", index)) ],
           name: "Pagination Account #{index}",
           owner: :samen
+        )
+      end
+    end
+
+    def create_external_accounts(count)
+      count.times do |index|
+        Account.create!(
+          account_numbers: [ AccountNumber.new(number: format("NL98SHOP%010d", index)) ],
+          name: "External Pagination Account #{index}"
         )
       end
     end
