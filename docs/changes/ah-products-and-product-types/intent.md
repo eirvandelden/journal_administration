@@ -37,7 +37,7 @@ An agent reads the Albert Heijn basket mails and hands them to the app. Every or
 - Creating product types in Dutch shopping words (such as "Naturel chips") that group equal products across brands.
 - Creating a new category under "Huishoudelijke uitgaven" when no existing category fits.
 - Linking a delivery to its payment automatically when the bank note names the order number.
-- Linking a delivery to its payment automatically when a door-card payment falls within 3 days of delivery, sits at most 15% under the mail total, and is the only candidate that fits.
+- Linking a delivery to its payment automatically when a door-card payment falls within 3 days of delivery, sits at most 15% under the mail total (for a delivery known only from an order confirmation: at most 30% above it), and is the only candidate that fits. The basket costing more than the payment does not stop the link; it only leaves the payment's splits alone.
 - Listing every delivery that was not linked, so a person can confirm it.
 
 ## Out of scope
@@ -64,6 +64,8 @@ An agent reads the Albert Heijn basket mails and hands them to the app. Every or
 - When no existing category fits a product type, the agent creates one under "Huishoudelijke uitgaven" and the type uses it.
 - The delivery of order 74532780 is linked to the 131.66 payment whose bank note names AE74532780, and the payment's splits follow the basket when it fits.
 - A door-card payment within 3 days and 15% of a delivery's total, with two candidates that fit, is not linked and is listed instead.
+- A delivery whose basket costs more than its door-card payment (crates returned at the door) is linked to that payment, and the payment's splits stay as they were.
+- A delivery known only from an order confirmation is linked to a door-card payment that is up to 30% above its estimate (the estimate leaves out Koopzegels and crates).
 - A payment already charged to an appropriation keeps its splits after its delivery is linked.
 - A mail the reader cannot parse is skipped and reported, and nothing from it is saved.
 
@@ -84,6 +86,8 @@ An agent reads the Albert Heijn basket mails and hands them to the app. Every or
 - Confident enough to link means an order-number match, or a door-card match within 3 days and 15% — no reason given.
 - Name the change by the slug ah-products-and-product-types, with no issue — no reason given.
 - Deliver autonomously, with Codex review — no reason given.
+- Added 2026-10-24, after verifying on the real mailbox: link a delivery even when its basket costs more than the payment, and leave the splits alone then — crates returned at the door lower the bank charge, so 34 of 52 matches were otherwise refused.
+- Added 2026-10-24: for a delivery known only from an order confirmation, accept a bank charge up to 30% above the estimate — the estimate excludes Koopzegels and crates, so 11 matches were otherwise refused.
 
 ## Open questions
 
