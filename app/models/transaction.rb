@@ -60,7 +60,7 @@ class Transaction < ApplicationRecord
 
   before_validation :determine_debit_credit_or_transfer_type
 
-  validates :type, inclusion: { in: TYPES, message: "%{value} is not a valid type" }, presence: true
+  validates :type, inclusion: { in: TYPES, message: :invalid_type }, presence: true
   validates_pdf_attachment_of :proof_of_purchase
   validate :check_transfer_type_through_account_owners
   validate :transfer_must_not_be_charged
@@ -147,15 +147,15 @@ class Transaction < ApplicationRecord
   def check_transfer_type_through_account_owners
     if type == "Transfer"
       unless debitor_is_us? && creditor_is_us?
-        errors.add(:type, "must be Transfer only if both accounts have household owners")
+        errors.add(:type, :transfer_needs_household_accounts)
       end
     elsif type == "Debit"
       unless debitor_is_us?
-        errors.add(:type, "must be Debit only if debitor has a household owner")
+        errors.add(:type, :debit_needs_household_debitor)
       end
     elsif type == "Credit"
       unless creditor_is_us?
-        errors.add(:type, "must be Credit only if creditor has a household owner")
+        errors.add(:type, :credit_needs_household_creditor)
       end
     end
   end

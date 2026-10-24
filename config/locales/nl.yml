@@ -242,7 +242,11 @@ nl:
               charge_parts_instead: kan geen gesplitste betaling als geheel dragen; boek de delen afzonderlijk
               must_not_be_transfer: kan niet op een overboeking worden geboekt
             type:
+              credit_needs_household_creditor: moet alleen Credit zijn als de crediteur een eigenaar in het huishouden heeft
+              debit_needs_household_debitor: moet alleen Debit zijn als de debiteur een eigenaar in het huishouden heeft
               has_charged_parts: kan geen overboeking worden zolang delen op een begrotingspost zijn geboekt
+              invalid_type: "%{value} is geen geldig type"
+              transfer_needs_household_accounts: moet alleen Transfer zijn als beide rekeningen een eigenaar in het huishouden hebben
         transaction_link:
           attributes:
             source:

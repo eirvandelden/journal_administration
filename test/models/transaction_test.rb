@@ -32,6 +32,18 @@ class TransactionTest < ActiveSupport::TestCase
     assert_equal 3, Transaction::TYPES.size
   end
 
+  test "type error is localized in Dutch" do
+    transaction = Debit.new(type: "Debit", debitor: accounts(:unknown), creditor: accounts(:unknown), amount: 1000)
+
+    messages = I18n.with_locale(:nl) do
+      transaction.valid?
+      transaction.errors[:type]
+    end
+
+    assert_includes messages,
+                    "moet alleen Debit zijn als de debiteur een eigenaar in het huishouden heeft"
+  end
+
   test "type must be present" do
     transaction = Transaction.new(type: nil, amount: 1000)
 

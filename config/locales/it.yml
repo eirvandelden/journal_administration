@@ -242,7 +242,11 @@ it:
               charge_parts_instead: non può coprire un pagamento suddiviso per intero; imputa invece le sue parti
               must_not_be_transfer: non può essere imputato a un trasferimento
             type:
+              credit_needs_household_creditor: deve essere Credit solo se il creditore ha un titolare del nucleo familiare
+              debit_needs_household_debitor: deve essere Debit solo se il debitore ha un titolare del nucleo familiare
               has_charged_parts: non può diventare un trasferimento finché le sue parti sono imputate a uno stanziamento
+              invalid_type: "%{value} non è un tipo valido"
+              transfer_needs_household_accounts: deve essere Transfer solo se entrambi i conti hanno un titolare del nucleo familiare
         transaction_link:
           attributes:
             source:

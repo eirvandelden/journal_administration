@@ -242,7 +242,11 @@ en:
               charge_parts_instead: cannot take a split payment as a whole; charge its parts instead
               must_not_be_transfer: cannot be charged on a Transfer transaction
             type:
+              credit_needs_household_creditor: must be Credit only if creditor has a household owner
+              debit_needs_household_debitor: must be Debit only if debitor has a household owner
               has_charged_parts: cannot become Transfer while its parts are charged to an appropriation
+              invalid_type: "%{value} is not a valid type"
+              transfer_needs_household_accounts: must be Transfer only if both accounts have household owners
         transaction_link:
           attributes:
             source:
