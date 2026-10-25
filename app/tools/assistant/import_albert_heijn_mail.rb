@@ -25,7 +25,7 @@ module Assistant
 
     def self.describe(receipt, basket)
       kept = receipt.packed? && !basket.packed?
-      lines = receipt.lines.includes(:product).to_a
+      lines = receipt.lines.includes(product: :product_type).to_a
       products = lines.map(&:product)
       unclassified = products.filter_map { |product| product.id if product.unclassified? }.uniq
 
