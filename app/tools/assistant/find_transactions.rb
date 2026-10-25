@@ -45,7 +45,7 @@ module Assistant
       matches = matches.by_type(filters[:type]).by_category(filters[:category_id]&.to_s)
                        .by_account(filters[:account_id]).in_date_range(first_day, last_day)
       matches = matches.uncategorized if uncategorized
-      matches.includes(:debitor, :creditor, :category)
+      matches.includes(:debitor, :creditor, category: :parent_category)
     end
     private_class_method :narrowed
 

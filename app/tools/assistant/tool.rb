@@ -34,7 +34,8 @@ module Assistant
 
     # One line per part of a split payment, with the number to name it by and any charge
     def self.parts_list(transaction)
-      transaction.transaction_splits.includes(:category, :appropriation).order(:id).map do |part|
+      parts = transaction.transaction_splits.includes(category: :parent_category, appropriation: :person)
+      parts.order(:id).map do |part|
         charge = " charged to #{part.appropriation}" if part.appropriation
         remainder = " (remainder, rebuilt automatically)" if part.remainder?
         "#{part.id}: #{euros(part.amount)} #{part.category&.full_name || 'no category'} #{part.note}".squish +

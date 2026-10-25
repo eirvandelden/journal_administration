@@ -67,7 +67,8 @@ module Assistant
     private_class_method :link
 
     def self.unsplit_reason(receipt)
-      unclassified = receipt.lines.includes(:product).filter_map { |line| line.product if line.category.nil? }.uniq
+      lines = receipt.lines.includes(product: { product_type: :category })
+      unclassified = lines.filter_map { |line| line.product if line.category.nil? }.uniq
       return nothing_to_split if unclassified.empty?
 
       "The payment is not split: classify these products first with classify_product: " \

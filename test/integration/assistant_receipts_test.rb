@@ -102,11 +102,4 @@ class AssistantReceiptsTest < ActionDispatch::IntegrationTest
     type = ProductType.find_or_create_by!(name: "Test #{category.name}") { |new_type| new_type.category = category }
     product.update!(brand: "AH", product_type: type)
   end
-
-  def queries_for(&)
-    count = 0
-    counter = ->(*, payload) { count += 1 unless payload[:name] == "SCHEMA" }
-    ActiveSupport::Notifications.subscribed(counter, "sql.active_record", &)
-    count
-  end
 end

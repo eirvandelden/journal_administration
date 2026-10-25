@@ -28,4 +28,11 @@ module AssistantRequests
     headers["Authorization"] = "Bearer #{token}" if token
     headers
   end
+
+  def queries_for(&)
+    count = 0
+    counter = ->(*, payload) { count += 1 unless payload[:name] == "SCHEMA" }
+    ActiveSupport::Notifications.subscribed(counter, "sql.active_record", &)
+    count
+  end
 end
