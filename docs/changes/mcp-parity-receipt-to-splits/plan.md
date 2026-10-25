@@ -135,7 +135,7 @@ New tool classes in `app/tools/assistant/`, all `self.call(..., server_context:)
 
 Tool behaviour that the UI controllers already define, copied rather than moved:
 
-- The single-split tools save, then call `ensure_remainder_split`, as `TransactionSplitsController` does. They find a part only among `explicit_transaction_splits`, so the remainder split cannot be edited or deleted by hand.
+- The single-split tools save, then call `ensure_remainder_split`, as `TransactionSplitsController` does. `DeleteTransactionSplit` looks a part up among all splits and refuses the remainder with its own message, so the remainder split cannot be deleted by hand. The other single-split tools find parts only among `explicit_transaction_splits`.
 - `DeleteTransactionSplit` refuses a charged part: "Part #N is charged to <appropriation>; remove that charge in the app first." See Design decisions.
 - `LinkReceiptPayment` takes the steps of `Receipts::PaymentLinksController#create`: `fitting_payments.find_by(id:)` (refused with the list of fitting payments when nil), `basket_fits?`, `charged?`, then `update!(payment:)` and `rewrite_payment_splits` in one database transaction. It answers with the splits written, with their ids, so the assistant can charge each one next. When `rewrite_payment_splits` returns false it says the payment is linked but not split, and why: it names the unclassified products when there are any, and otherwise says the basket has nothing to split (no lines, or only free ones). A receipt linked to another payment is refused ("unlink first"); linking the same payment again re-splits it. A payment that already paid another receipt is refused, naming that receipt, and no split changes; the UI does not check this, but two baskets rewriting one payment's splits would silently undo each other.
 - `FileReceipt` refuses a shop that is one of our own accounts (`Account#external?` false): a receipt comes from a shop.
@@ -267,7 +267,7 @@ Out of scope: accounts, account aliases, transaction links; categories, budgets 
 - Invariant: filing never repeats a receipt, enforced by the `on: :file` validation on `Receipt` → `test/models/receipt_test.rb` `filing refuses a receipt with the same shop, day and total`
 - Invariant: a refused filing leaves no products behind, enforced by the rollback in `Receipt.file` → `test/models/receipt_test.rb` `a refused filing creates no products`
 - Invariant: the import job still updates a delivery by order number, unaffected by the duplicate rule → `test/jobs/importing/albert_heijn/import_job_test.rb` existing tests stay green
-- Invariant: the assistant never deletes a charged part or the remainder → `test/tools/assistant/delete_transaction_split_test.rb` `refuses a charged part` and `cannot find the remainder split`
+- Invariant: the assistant never deletes a charged part or the remainder → `test/tools/assistant/delete_transaction_split_test.rb` `refuses a charged part` and `explains that the remainder split is rebuilt and cannot be removed`
 - `AGENTS.md` carries the parity rule and checklist lines → check: `grep -n "MCP parity" AGENTS.md`
 
 Per changed file, the unit tests expected, named as behaviour:
@@ -289,7 +289,7 @@ Per changed file, the unit tests expected, named as behaviour:
 - `update_product_type.rb`: `renames a type or moves it to another category`, `refuses an unknown type`.
 - `create_transaction_split.rb`: `adds a part and keeps the remainder`, `refuses a part bigger than what is left`, `refuses a transfer`.
 - `update_transaction_split.rb`: `changes a part and keeps the remainder`, `refuses a part of another payment`.
-- `delete_transaction_split.rb`: `removes a part and keeps the remainder`, `refuses a charged part`, `cannot find the remainder split`.
+- `delete_transaction_split.rb`: `removes a part and keeps the remainder`, `refuses a charged part`, `explains that the remainder split is rebuilt and cannot be removed`.
 - `replace_transaction_splits.rb`: `replaces the parts and lists them`, `refuses a charged payment`, `refuses an unknown category`.
 - `find_transactions.rb`: `filters by type, category, account and period`, `lists only uncategorized ones when asked`, `searches note and amount`, `refuses a period that ends before it starts`.
 - `show_transaction.rb`: `shows parts with ids, charges and the remainder`, `names the receipt it paid`.
