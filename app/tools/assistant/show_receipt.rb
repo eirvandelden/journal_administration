@@ -14,32 +14,7 @@ module Assistant
       receipt = Receipt.find_by(id: receipt_id)
       return problem("No receipt ##{receipt_id} exists.") if receipt.nil?
 
-      answer([ summary(receipt), lines(receipt), fitting(receipt) ].compact.join("\n"))
+      answer(receipt_description(receipt))
     end
-
-    def self.summary(receipt)
-      payment = receipt.payment_id ? "settled by payment ##{receipt.payment_id}" : "no payment linked"
-      "#{receipt.id}: #{receipt.issued_on} #{receipt.shop.name} #{euros(receipt.total_amount)}, " \
-        "basket #{euros(receipt.basket_total)}, #{payment}"
-    end
-    private_class_method :summary
-
-    def self.lines(receipt)
-      lines = receipt.lines.includes(product: { product_type: { category: :parent_category } }).order(:id).map do |line|
-        "  line #{line.id}: product ##{line.product_id} #{line.product.name}, #{line.quantity} x, " \
-          "paid #{euros(line.paid_amount)} (shelf #{euros(line.full_amount)}), " \
-          "#{line.category&.full_name || 'unclassified'}"
-      end
-      lines.empty? ? "No lines." : "Lines:\n#{lines.join("\n")}"
-    end
-    private_class_method :lines
-
-    def self.fitting(receipt)
-      payments = receipt.fitting_payments.map do |payment|
-        "  #{payment.id}: #{payment.booked_at.to_date} #{euros(payment.amount)} #{payment.note}".rstrip
-      end
-      "Payments it could be linked to:\n#{payments.join("\n")}" if payments.any? && receipt.payment_id.nil?
-    end
-    private_class_method :fitting
   end
 end

@@ -49,8 +49,7 @@ module Assistant
       receipt = Receipt.file(shop:, issued_on:, total_amount:, lines:, order_number:)
       return refusal(receipt) unless receipt.persisted?
 
-      answer("Filed receipt ##{receipt.id}.\n#{ShowReceipt.call(receipt_id: receipt.id, server_context: nil)
-        .content.first[:text]}")
+      answer("Filed receipt ##{receipt.id}.\n#{receipt_description(receipt)}")
     end
     private_class_method :file
 

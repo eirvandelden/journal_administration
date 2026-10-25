@@ -1,6 +1,8 @@
 # Common ground for everything an assistant may do to the books
 module Assistant
   class Tool < MCP::Tool
+    extend ReceiptDescription
+
     #: (String message) -> MCP::Tool::Response
     def self.answer(message)
       MCP::Tool::Response.new([ { type: "text", text: message } ])
