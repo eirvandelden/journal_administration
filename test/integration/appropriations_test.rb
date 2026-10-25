@@ -123,6 +123,15 @@ class AppropriationsTest < ActionDispatch::IntegrationTest
     assert_select "tfoot", text: /#{Regexp.escape(currency(45000))}/
   end
 
+  test "each person heading spans every column of the table" do
+    get appropriations_path(year: 2026)
+
+    columns = css_select("thead th").size
+    spans = css_select("tbody th[scope=rowgroup]").map { |heading| heading["colspan"].to_i }
+
+    assert_equal [ columns ] * spans.size, spans
+  end
+
   test "the page shows this year's appropriations and totals unless another year is chosen" do
     travel_to Date.new(2026, 6, 15) do
       get appropriations_path
