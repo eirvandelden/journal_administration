@@ -60,7 +60,7 @@ class Product < ApplicationRecord
 
   # One line saying what the product is and whether it still needs classifying
   #
-  # @return [String]
+  #: () -> String
   def summary
     "#{id}: #{name}, brand #{brand.presence || 'none'}, type #{product_type&.name || 'none'}" \
       "#{' (unclassified)' if unclassified?}"
