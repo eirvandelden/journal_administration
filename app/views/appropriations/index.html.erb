@@ -7,7 +7,6 @@
 
 <% labels = {
   purpose: Appropriation.human_attribute_name(:purpose),
-  recipient: Appropriation.human_attribute_name(:recipient),
   amount: Appropriation.human_attribute_name(:amount),
   charged: t(".charged"),
   balance: t(".balance")
@@ -24,21 +23,24 @@
           <% end %>
         </tr>
       </thead>
-      <tbody role="rowgroup">
-        <% @appropriations.each do |appropriation| %>
+      <% @appropriations_per_person.each do |name, appropriations| %>
+        <tbody role="rowgroup">
           <tr role="row">
-            <td role="cell" data-label="<%= labels[:purpose] %>"><%= link_to appropriation.purpose, appropriation_path(appropriation) %></td>
-            <td role="cell" data-label="<%= labels[:recipient] %>"><%= appropriation.recipient_name %></td>
-            <td role="cell" data-label="<%= labels[:amount] %>"><data value="<%= appropriation.amount %>"><%= cents_to_currency(appropriation.amount) %></data></td>
-            <td role="cell" data-label="<%= labels[:charged] %>"><data value="<%= appropriation.charged %>"><%= cents_to_currency(appropriation.charged) %></data></td>
-            <td role="cell" data-label="<%= labels[:balance] %>"><%= render "appropriations/balance", appropriation: appropriation %></td>
+            <th scope="rowgroup" colspan="4" role="rowheader"><%= name %></th>
           </tr>
-        <% end %>
-      </tbody>
+          <% appropriations.each do |appropriation| %>
+            <tr role="row">
+              <td role="cell" data-label="<%= labels[:purpose] %>"><%= link_to appropriation.purpose, appropriation_path(appropriation) %></td>
+              <td role="cell" data-label="<%= labels[:amount] %>"><data value="<%= appropriation.amount %>"><%= cents_to_currency(appropriation.amount) %></data></td>
+              <td role="cell" data-label="<%= labels[:charged] %>"><data value="<%= appropriation.charged %>"><%= cents_to_currency(appropriation.charged) %></data></td>
+              <td role="cell" data-label="<%= labels[:balance] %>"><%= render "appropriations/balance", appropriation: appropriation %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      <% end %>
       <tfoot role="rowgroup">
         <tr role="row">
           <th role="cell" data-label="<%= labels[:purpose] %>"><%= t(".total") %></th>
-          <td role="cell" data-label="<%= labels[:recipient] %>"></td>
           <td role="cell" data-label="<%= labels[:amount] %>"><%= cents_to_currency(@appropriations.sum(&:amount)) %></td>
           <td role="cell" data-label="<%= labels[:charged] %>"><%= cents_to_currency(@appropriations.sum(&:charged)) %></td>
           <td role="cell" data-label="<%= labels[:balance] %>"><%= cents_to_currency(@appropriations.sum(&:balance)) %></td>
