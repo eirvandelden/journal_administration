@@ -283,6 +283,7 @@ Three architects each designed for one goal.
 ## Integration points
 
 - **appkit** (`github: "eirvandelden/appkit"`): `_nav` replaced, `_account_menu` and `Appkit::Menu*` added. Its own branch and pull request, merged before this app bumps it with `bundle update appkit` (approved in intent).
+  - Phase A runs from appkit's `docs/changes/navigation-hubs/plan.md` (commit `7791bce`), whose critique changed the API this plan's Signatures show. Phase B follows appkit's version: `Hub` takes `landing:` (Overzicht lands on `dashboard#index`, the other hubs on `hubs#show` with their id); `Appkit::Menu.new` takes no `action_name:` and gets `params: request.parameters`; `Link` is a plain class; a hub may hold only one page per controller; the layout calls `render layout: "appkit/shared/nav", locals: { menu:, user_name: } do … end` with the search button as the block.
 - **mvpa.css** (`github: "eirvandelden/mvpa.css"`): two upstream slices, the rail/hub column/tile grid slice (no intent yet) and `sheets-segmented-control-badges` (badges). This app bumps with `bundle update mvpa-css` (approved) after both merge. Markup contract this plan emits, for the rail slice to style:
   - `body > header` holds the shell: `nav.rail` (search `li`, hub `li`s with emoji and label, the account `li` with `<details>`), then `nav.hub-column` (an `h2` linking to the landing page, a `ul` of page links, each with `<data value>` when the count is above 0).
   - The rail marks the owning hub with `aria-current="true"`; the hub column marks the page with `aria-current="page"`.
