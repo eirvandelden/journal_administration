@@ -247,7 +247,7 @@ nl:
               charge_parts_instead: kan geen gesplitste betaling als geheel dragen; boek de delen afzonderlijk
               must_not_be_transfer: kan niet op een overboeking worden geboekt
             transaction_splits:
-              charged: kan niet worden vervangen zolang een deel op een begrotingspost is geboekt; haal die boeking eerst weg
+              charged: kunnen niet worden vervangen zolang een deel op een begrotingspost is geboekt; haal die boeking eerst weg
             type:
               credit_needs_household_creditor: moet alleen Credit zijn als de crediteur een eigenaar in het huishouden heeft
               debit_needs_household_debitor: moet alleen Debit zijn als de debiteur een eigenaar in het huishouden heeft

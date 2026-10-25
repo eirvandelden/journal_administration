@@ -594,8 +594,8 @@ class TransactionChargingTest < ActiveSupport::TestCase
 
     nl, it = %i[nl it].map { |locale| I18n.with_locale(locale) { payment.errors.full_messages.first } }
 
-    assert_match(/\ASplitsingen kan niet .* begrotingspost/, nl)
-    assert_match(/\ASuddivisioni non può .* imputata/, it)
+    assert_match(/\ASplitsingen kunnen niet .* begrotingspost/, nl)
+    assert_match(/\ASuddivisioni non possono .* imputata/, it)
   end
 
   test "replace_splits refuses a transfer with the books' reason" do
