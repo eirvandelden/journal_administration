@@ -25,12 +25,13 @@ module Assistant
 
     def self.describe(receipt, basket)
       kept = receipt.packed? && !basket.packed?
-      products = receipt.lines.includes(:product).map(&:product)
+      lines = receipt.lines.includes(:product).to_a
+      products = lines.map(&:product)
       unclassified = products.filter_map { |product| product.id if product.unclassified? }.uniq
 
       answer([
         "Receipt ##{receipt.id}: order #{receipt.order_number} delivered on #{receipt.issued_on}, " \
-          "#{receipt.lines.count} lines, #{receipt.packed? ? 'packed' : 'ordered'}.",
+          "#{lines.size} lines, #{receipt.packed? ? 'packed' : 'ordered'}.",
         (kept ? "Kept the packed basket already recorded over this order confirmation." : nil),
         "Unclassified products: #{unclassified.join(', ').presence || 'none'}."
       ].compact.join("\n"))
