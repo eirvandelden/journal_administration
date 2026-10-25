@@ -35,3 +35,10 @@ How the household runs its money, and the method to check transactions and budge
 - `bundle install` prints "Fetching" lines from the `useragent` GitHub gem to stdout; don't pipe bundler output into a file you expect to be clean.
 - Clear `tmp/cache/bootsnap` if code changes don't seem to take effect.
 - Every user has an `assistant_token` for MCP access; regenerate it via `regenerate_assistant_token`, read it with `bin/kamal console`. The MCP endpoint only answers on the host named by `ASSISTANT_HOST`.
+
+## MCP parity
+
+- Everything the UI lets a person list, show, create, edit or delete has an MCP tool in `app/tools/assistant/`, shipped in the same change as the UI.
+- `test/integration/assistant_parity_test.rb` fails for a routed UI action that has no tool in `TOOL_FOR` and no reason in `EXCLUDED`. Add the tool, or state why there is none.
+- Intent stage: ask which MCP tool the change needs, or why it needs none.
+- Plan stage: list the new or changed tools in `Files that change`, and the parity map entries with them.
