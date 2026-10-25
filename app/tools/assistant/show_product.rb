@@ -16,7 +16,7 @@ module Assistant
       purchases = product.purchases.limit(10).map do |line|
         "  receipt ##{line.receipt_id} #{line.receipt.issued_on}: #{line.quantity} x, paid #{euros(line.paid_amount)}"
       end
-      answer([ ListProducts.send(:describe, product), *("Purchases:" if purchases.any?), *purchases ].join("\n"))
+      answer([ product.summary, *("Purchases:" if purchases.any?), *purchases ].join("\n"))
     end
   end
 end

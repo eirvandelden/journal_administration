@@ -22,14 +22,8 @@ module Assistant
       return answer(unclassified ? "Every product is classified." : "No product is known yet.") if products.none?
 
       shown = products.limit(limit.clamp(1, HIGHEST_LIMIT)).to_a
-      answer([ *shown.map { |product| describe(product) }, held_back(products, shown) ].compact.join("\n"))
+      answer([ *shown.map(&:summary), held_back(products, shown) ].compact.join("\n"))
     end
-
-    def self.describe(product)
-      "#{product.id}: #{product.name}, brand #{product.brand.presence || 'none'}, " \
-        "type #{product.product_type&.name || 'none'}#{' (unclassified)' if product.unclassified?}"
-    end
-    private_class_method :describe
 
     def self.held_back(products, shown)
       total = products.count
