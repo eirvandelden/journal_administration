@@ -23,10 +23,12 @@ module Assistant
     end
 
     def fitting_payments_list(receipt)
+      return if receipt.payment_id
+
       payments = receipt.fitting_payments.map do |payment|
         "  #{payment.id}: #{payment.booked_at.to_date} #{euros(payment.amount)} #{payment.note}".rstrip
       end
-      "Payments it could be linked to:\n#{payments.join("\n")}" if payments.any? && receipt.payment_id.nil?
+      "Payments it could be linked to:\n#{payments.join("\n")}" if payments.any?
     end
   end
 end
