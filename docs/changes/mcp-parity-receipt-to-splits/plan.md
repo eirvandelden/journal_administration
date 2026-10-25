@@ -98,7 +98,7 @@ def self.file(shop:, issued_on:, total_amount:, lines:, order_number: nil)
 - Saves with `save(context: :file)` inside `transaction`, raising `ActiveRecord::Rollback` on failure so products made on the way disappear.
 - New private validation `must_not_repeat_a_filed_receipt, on: :file` adds `errors.add(:base, :repeats_filed_receipt, receipt: existing.id)` when a receipt with the same shop, issue date and total exists, or when the given `order_number` is already taken (the database index on `order_number` is unique, so this turns a `RecordNotUnique` into a plain refusal). The import job never uses the `:file` context, so its re-import by order number keeps working.
 
-`Assistant::Tool` (`app/tools/assistant/tool.rb`): one new private class helper, shared by most new tools.
+`Assistant::Tool` (`app/tools/assistant/tool.rb`): two new private class helpers, shared by most new tools. `parts_list(transaction)` (added during implementation) prints one line per split with its id, amount, category, any charge and a remainder mark, so every split tool answers the same way. `FindTransactions` takes `start_date`/`end_date` like `BudgetStatus` does, because `until` is a Ruby keyword.
 
 ```ruby
 # The books' own reason for refusing a record, as a problem
@@ -110,7 +110,7 @@ New tool classes in `app/tools/assistant/`, all `self.call(..., server_context:)
 
 | Tool | Mirrors | Input (required in bold) | Annotation |
 |---|---|---|---|
-| `FindTransactions` | `transactions#index` | type, category_id, account_id, from, until, uncategorized, query, limit | read_only |
+| `FindTransactions` | `transactions#index` | type, category_id, account_id, start_date, end_date, uncategorized, query, limit | read_only |
 | `ShowTransaction` | `transactions#show` | **transaction_id** | read_only |
 | `CreateTransaction` | `transactions#create` | **debitor_account_id**, **creditor_account_id**, **amount**, **booked_on**, interest_on, category_id, note | — |
 | `UpdateTransaction` | `transactions#update` | **transaction_id**, amount, booked_on, interest_on, category_id, note | idempotent |
@@ -204,7 +204,8 @@ No conflict with `intent.md`'s `## Decisions`.
 - `app/models/concerns/splittable.rb` — add `replace_splits`.
 - `app/models/receipt.rb` — add `Receipt.file` and the `on: :file` duplicate validation.
 - `config/locales/en.yml`, `nl.yml`, `it.yml` — `activerecord.errors.models.transaction.attributes.transaction_splits.charged` and `activerecord.errors.models.receipt.attributes.base.repeats_filed_receipt` (with `%{receipt}`).
-- `app/tools/assistant/tool.rb` — add the private `refusal(record)` helper.
+- `app/tools/assistant/tool.rb` — add the private `refusal(record)` and `parts_list(transaction)` helpers.
+- `test/test_helpers/assistant_tool_calls.rb` — `said`, `refused_response?`, `unsplit_debit`, `line` for the tool unit tests.
 - `app/tools/assistant/*.rb` — the 22 new tool classes in the table above.
 - `app/controllers/assistant_controller.rb` — list the 22 new tools, alphabetically as today.
 - `test/test_helpers/assistant_requests.rb` — new module with `ask_assistant`, `refused?`, `post_to_assistant`, `assistant_headers`, moved from `assistant_test.rb`.

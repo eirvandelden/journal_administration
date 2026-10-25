@@ -23,6 +23,22 @@ module Assistant
     end
     private_class_method :cents_from
 
+    # The books' own reason for refusing a record, as a problem
+    #: (ActiveRecord::Base record) -> MCP::Tool::Response
+    def self.refusal(record) = problem(record.errors.full_messages.to_sentence)
+    private_class_method :refusal
+
+    # One line per part of a split payment, with the number to name it by and any charge
+    def self.parts_list(transaction)
+      transaction.transaction_splits.includes(:category, :appropriation).order(:id).map do |part|
+        charge = " charged to #{part.appropriation}" if part.appropriation
+        remainder = " (remainder, rebuilt automatically)" if part.remainder?
+        "#{part.id}: #{euros(part.amount)} #{part.category&.full_name || 'no category'} #{part.note}".squish +
+          "#{remainder}#{charge}"
+      end.join("\n")
+    end
+    private_class_method :parts_list
+
     def self.two_decimals
       "An amount has at most two decimals, for example 12.50."
     end
