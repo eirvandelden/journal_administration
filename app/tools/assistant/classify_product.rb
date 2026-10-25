@@ -46,7 +46,7 @@ module Assistant
     end
     private_class_method :kept_from
 
-    def self.kept_brand?(product, brand) = brand.present? && product.brand.present? && product.brand != brand
+    def self.kept_brand?(product, brand) = brand.present? && product.brand.present? && product.brand != brand.strip
     private_class_method :kept_brand?
 
     def self.kept_type?(product, type) = type && product.product_type && product.product_type != type

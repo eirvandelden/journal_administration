@@ -25,6 +25,12 @@ product_type_id: product_types(:dishwashing_liquid).id)
     assert_not_includes text(response), "Kept"
   end
 
+  test "does not say it kept a brand that differs only by spaces" do
+    response = classify(products(:ah_ribbelchips).id, brand: " AH ")
+
+    assert_not_includes text(response), "Kept"
+  end
+
   test "takes either field alone" do
     assert_not classify(products(:andrelon_shampoo).id, brand: "Andrelon").error?
   end
