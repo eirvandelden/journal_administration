@@ -29,6 +29,10 @@ module Assistant
     )
 
     # Has no route: the UI only imports receipts
+    #: (
+    #|   shop_id: Integer, issued_on: String, total_amount: Numeric, lines: Array[Hash[Symbol, untyped]],
+    #|   server_context: untyped, ?order_number: String?
+    #| ) -> MCP::Tool::Response
     def self.call(shop_id:, issued_on:, total_amount:, lines:, server_context:, order_number: nil)
       shop = Account.find_by(id: shop_id)
       return problem("No account ##{shop_id} exists.") if shop.nil?

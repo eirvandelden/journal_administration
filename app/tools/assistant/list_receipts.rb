@@ -14,6 +14,7 @@ module Assistant
     )
 
     # Mirrors receipts#index
+    #: (server_context: untyped, ?limit: Integer) -> MCP::Tool::Response
     def self.call(server_context:, limit: DEFAULT_LIMIT)
       receipts = Receipt.includes(:shop).order(issued_on: :desc, id: :desc)
       return answer("No receipt is on file.") if receipts.none?

@@ -14,6 +14,9 @@ module Assistant
     )
 
     # Mirrors transaction_splits#create
+    #: (
+    #|   transaction_id: Integer, amount: Numeric, server_context: untyped, ?category_id: Integer?, ?note: String?
+    #| ) -> MCP::Tool::Response
     def self.call(transaction_id:, amount:, server_context:, category_id: nil, note: nil)
       transaction = Transaction.find_by(id: transaction_id)
       return problem("No transaction ##{transaction_id} exists.") if transaction.nil?

@@ -13,6 +13,7 @@ module Assistant
     )
 
     # Mirrors product_types#update
+    #: (product_type_id: Integer, server_context: untyped, ?category_id: Integer?, **untyped) -> MCP::Tool::Response
     def self.call(product_type_id:, server_context:, category_id: nil, **changes)
       type = ProductType.find_by(id: product_type_id)
       return problem("No product type ##{product_type_id} exists.") if type.nil?

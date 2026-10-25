@@ -9,6 +9,7 @@ module Assistant
     )
 
     # Mirrors products#show
+    #: (product_id: Integer, server_context: untyped) -> MCP::Tool::Response
     def self.call(product_id:, server_context:)
       product = Product.find_by(id: product_id)
       return problem("No product ##{product_id} exists.") if product.nil?

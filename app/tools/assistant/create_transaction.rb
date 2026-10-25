@@ -17,6 +17,10 @@ module Assistant
     )
 
     # Mirrors transactions#create
+    #: (
+    #|   debitor_account_id: Integer, creditor_account_id: Integer, amount: Numeric, booked_on: String,
+    #|   server_context: untyped, ?interest_on: String?, ?category_id: Integer?, ?note: String?
+    #| ) -> MCP::Tool::Response
     def self.call(debitor_account_id:, creditor_account_id:, amount:, booked_on:, server_context:,
       interest_on: nil, category_id: nil, note: nil)
       cents = cents_from(amount)

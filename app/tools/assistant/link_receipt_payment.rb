@@ -17,6 +17,7 @@ module Assistant
     )
 
     # Mirrors receipts/payment_links#create
+    #: (receipt_id: Integer, transaction_id: Integer, server_context: untyped) -> MCP::Tool::Response
     def self.call(receipt_id:, transaction_id:, server_context:)
       receipt = Receipt.find_by(id: receipt_id)
       return problem("No receipt ##{receipt_id} exists.") if receipt.nil?

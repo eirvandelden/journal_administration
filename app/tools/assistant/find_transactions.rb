@@ -22,6 +22,10 @@ module Assistant
     )
 
     # Mirrors transactions#index
+    #: (
+    #|   server_context: untyped, ?limit: Integer, ?uncategorized: bool, ?query: String?, ?start_date: String?,
+    #|   ?end_date: String?, **untyped
+    #| ) -> MCP::Tool::Response
     def self.call(server_context:, limit: DEFAULT_LIMIT, uncategorized: false, query: nil, start_date: nil,
       end_date: nil, **filters)
       first_day, last_day = start_date.presence && day(start_date), end_date.presence && day(end_date)

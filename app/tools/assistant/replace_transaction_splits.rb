@@ -26,6 +26,7 @@ module Assistant
     )
 
     # Has no route: the UI changes parts one at a time
+    #: (transaction_id: Integer, splits: Array[Hash[Symbol, untyped]], server_context: untyped) -> MCP::Tool::Response
     def self.call(transaction_id:, splits:, server_context:)
       transaction = Transaction.find_by(id: transaction_id)
       return problem("No transaction ##{transaction_id} exists.") if transaction.nil?

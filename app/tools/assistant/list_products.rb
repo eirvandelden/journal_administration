@@ -16,6 +16,7 @@ module Assistant
     )
 
     # Mirrors products#index
+    #: (server_context: untyped, ?unclassified: bool, ?limit: Integer) -> MCP::Tool::Response
     def self.call(server_context:, unclassified: false, limit: DEFAULT_LIMIT)
       products = unclassified ? Product.unclassified : Product.all
       products = products.includes(:product_type).order(:normalized_name)

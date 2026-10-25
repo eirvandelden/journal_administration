@@ -9,6 +9,7 @@ module Assistant
     )
 
     # Has no route: the UI never deletes a receipt
+    #: (receipt_id: Integer, server_context: untyped) -> MCP::Tool::Response
     def self.call(receipt_id:, server_context:)
       receipt = Receipt.find_by(id: receipt_id)
       return problem("No receipt ##{receipt_id} exists.") if receipt.nil?
