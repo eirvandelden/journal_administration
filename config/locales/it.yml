@@ -230,6 +230,10 @@ it:
           attributes:
             household:
               cannot_change_with_transactions: non può cambiare perché determina la classificazione del conto
+        receipt:
+          attributes:
+            base:
+              repeats_filed_receipt: "è già stato registrato come scontrino #%{receipt}"
         receipt_line:
           attributes:
             paid_amount:
@@ -241,6 +245,8 @@ it:
             appropriation:
               charge_parts_instead: non può coprire un pagamento suddiviso per intero; imputa invece le sue parti
               must_not_be_transfer: non può essere imputato a un trasferimento
+            transaction_splits:
+              charged: "non può essere sostituita finché una parte è addebitata a uno stanziamento; rimuovi prima quell'addebito"
             type:
               credit_needs_household_creditor: deve essere Credit solo se il creditore ha un titolare del nucleo familiare
               debit_needs_household_debitor: deve essere Debit solo se il debitore ha un titolare del nucleo familiare
