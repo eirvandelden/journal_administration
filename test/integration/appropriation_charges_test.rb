@@ -260,7 +260,49 @@ note: "Sinterklaas present for Chiara")
     assert_select "select[name='appropriation_charge[appropriation_id]'] option[selected]", count: 0
   end
 
+  test "the picker groups this year's appropriations per person, labelled by purpose and year" do
+    travel_to Date.new(2026, 10, 25) do
+      add_appropriation "Kerst", people(:chiara), 2026
+      add_appropriation "Kerst", people(:serena), 2026
+      add_appropriation "Sinterklaas", people(:serena), 2026
+
+      get edit_transaction_path(transactions(:gift_payment))
+
+      groups = css_select("select[name='appropriation_charge[appropriation_id]'] optgroup")
+      chiara, serena = %w[Chiara Serena].map { |name| groups.find { |group| group["label"] == name } }
+
+      assert_equal %w[Chiara Cosimo Etienne Serena], groups.map { |group| group["label"] }
+      assert_equal [ "Kerst 2026", "Sinterklaas 2026" ], chiara.css("option").map(&:text)
+      assert_equal [ "Christmas 2026", "Kerst 2026", "Sinterklaas 2026" ], serena.css("option").map(&:text)
+    end
+  end
+
+  test "the picker leaves out appropriations of other years" do
+    travel_to Date.new(2026, 10, 25) do
+      add_appropriation "Kerst", people(:chiara), 2025
+
+      get edit_transaction_path(transactions(:gift_payment))
+
+      assert_select "select[name='appropriation_charge[appropriation_id]'] option", text: /2025|2027/, count: 0
+    end
+  end
+
+  test "the picker keeps a payment's appropriation from another year selected in its person's group" do
+    travel_to Date.new(2026, 10, 25) do
+      old = add_appropriation("Kerst", people(:chiara), 2025)
+      transactions(:gift_payment).update!(appropriation: old)
+
+      get edit_transaction_path(transactions(:gift_payment))
+
+      assert_select "optgroup[label=Chiara] option[selected]", text: "Kerst 2025", count: 1
+    end
+  end
+
   private
+
+  def add_appropriation(purpose, person, year)
+    Appropriation.create!(purpose:, person:, budget_year: year, amount: 1_000)
+  end
 
   def charge(payment, to:)
     patch transaction_appropriation_charge_path(payment),
