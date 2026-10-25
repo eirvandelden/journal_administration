@@ -45,7 +45,7 @@ The household navigates by what they want to do. A rail holds five task hubs: �
 - **Hub column** next to the rail on a wide screen: the hub name (linking to the landing page), then its pages, each with a badge carrying the tile's count. A count of 0 shows no badge.
 - **Narrow window above phone width:** the hub column hides and the landing page takes over.
 - **Phone:** the rail becomes a five-tab bar of the hubs. The landing page is the list. Search sits in the title bar. The avatar that opens the account menu sits only in the Overzicht title bar.
-- **New filtered lists** behind the tiles: unclassified products, receipts without a linked payment, chattels whose warranty ends within 90 days.
+- **New filtered lists** behind the tiles: unclassified products, receipts without a linked payment, chattels whose warranty ends within 90 days, this year's appropriations with money left.
 - **Highlight.** The rail marks the hub that owns the current page, and the hub column marks the page, also on nested pages (show, edit, new). Verwerken owns its filtered lists. A record opened from them belongs to its own hub: a transaction lights Administratie.
 - **Origin-aware back link.** A page opened from a landing tile shows "‹ <hub>" in its title bar and returns to that landing page, even when the page belongs to another hub. A record opened from that list returns to the list. The origin survives show → edit → save or cancel. After Verwijderen… the user lands on the origin landing page. Without an origin, the back link goes to the record's index page, as today.
 - **Te doen** goes. Verwerken replaces it, and `/todo` redirects to the Verwerken landing page.
@@ -76,6 +76,7 @@ The household navigates by what they want to do. A rail holds five task hubs: �
 - A chattel whose warranty ends in 60 days counts on the Bezittingen tile; one whose warranty ends in 120 days does not.
 - A receipt without a linked payment counts on the Facturen tile, and the tile opens the receipts list filtered to those.
 - With no active budget, the Budgetten tile says so and opens Budgetten.
+- With one appropriation with money left and one spent in full, the Begrotingsposten tile shows 1 and opens the appropriations filtered to those with money left.
 - Overzicht opens the dashboard, with no hub column.
 - Opening `/todo` lands on the Verwerken landing page.
 - A family member who is not an admin sees Categorieën, Productsoorten, Gezinsleden and Groepen in Beheer, and no Gebruikers.
@@ -111,6 +112,7 @@ The household navigates by what they want to do. A rail holds five task hubs: �
 - Approve `bundle update appkit` and `bundle update mvpa-css` up front — no reason given.
 - Autonomous delivery, no Codex review — no reason given.
 - The Boodschappen Producten tile counts unclassified products (no type or no brand), the same as Verwerken — recommended option chosen; one definition, one list.
+- The Begrotingsposten tile opens a new "money left" filter, not the unfiltered list (decided after the plan stage, 2026-10-25) — recommended option chosen; a tile opens its list filtered where the count is filtered.
 
 ## Open questions
 
