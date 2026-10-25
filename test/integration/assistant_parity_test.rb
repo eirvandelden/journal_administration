@@ -46,7 +46,8 @@ class AssistantParityTest < ActionDispatch::IntegrationTest
   }.freeze
 
   LATER_SLICE = "a later parity slice: accounts, budgets, categories, appropriations and their gaps".freeze
-  NOT_BOOKKEEPING = "not bookkeeping: people, groups, chattels and sessions stay with the app".freeze
+  LATER_RECORDS = "a later parity slice: chattels, people and groups".freeze
+  NOT_BOOKKEEPING = "not bookkeeping: users and sessions stay with the app".freeze
   APP_ONLY = "belongs to the app itself, not the books: login, admin, PWA, preferences, health".freeze
   EXCLUDED = {
     "accounts#show" => LATER_SLICE, "accounts#create" => LATER_SLICE, "accounts#update" => LATER_SLICE,
@@ -63,12 +64,12 @@ class AssistantParityTest < ActionDispatch::IntegrationTest
     "transaction_splits/appropriation_charges#destroy" => "a later slice: removing a charge",
     "transactions/appropriation_charges#destroy" => "a later slice: removing a charge",
     "transactions/imports#create" => "bank-file import stays in the app",
-    "chattels#index" => NOT_BOOKKEEPING, "chattels#show" => NOT_BOOKKEEPING, "chattels#create" => NOT_BOOKKEEPING,
-    "chattels#update" => NOT_BOOKKEEPING, "chattels#destroy" => NOT_BOOKKEEPING,
-    "people#index" => NOT_BOOKKEEPING, "people#show" => NOT_BOOKKEEPING, "people#create" => NOT_BOOKKEEPING,
-    "people#update" => NOT_BOOKKEEPING, "people#destroy" => NOT_BOOKKEEPING,
-    "groups#index" => NOT_BOOKKEEPING, "groups#show" => NOT_BOOKKEEPING, "groups#create" => NOT_BOOKKEEPING,
-    "groups#update" => NOT_BOOKKEEPING, "groups#destroy" => NOT_BOOKKEEPING,
+    "chattels#index" => LATER_RECORDS, "chattels#show" => LATER_RECORDS, "chattels#create" => LATER_RECORDS,
+    "chattels#update" => LATER_RECORDS, "chattels#destroy" => LATER_RECORDS,
+    "people#index" => LATER_RECORDS, "people#show" => LATER_RECORDS, "people#create" => LATER_RECORDS,
+    "people#update" => LATER_RECORDS, "people#destroy" => LATER_RECORDS,
+    "groups#index" => LATER_RECORDS, "groups#show" => LATER_RECORDS, "groups#create" => LATER_RECORDS,
+    "groups#update" => LATER_RECORDS, "groups#destroy" => LATER_RECORDS,
     "users#index" => NOT_BOOKKEEPING, "users#update" => NOT_BOOKKEEPING, "users#destroy" => NOT_BOOKKEEPING,
     "users/profiles#show" => NOT_BOOKKEEPING, "users/profiles#create" => NOT_BOOKKEEPING,
     "users/profiles#update" => NOT_BOOKKEEPING, "users/profiles#destroy" => NOT_BOOKKEEPING,
