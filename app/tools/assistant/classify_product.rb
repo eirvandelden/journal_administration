@@ -41,9 +41,15 @@ module Assistant
     private_class_method :sentence_about
 
     def self.kept_from(product, brand, type)
-      [ ("the brand #{product.brand}" if brand.present? && product.brand.present?),
-        ("the type #{product.product_type.name}" if type && product.product_type) ].compact
+      [ ("the brand #{product.brand}" if kept_brand?(product, brand)),
+        ("the type #{product.product_type.name}" if kept_type?(product, type)) ].compact
     end
     private_class_method :kept_from
+
+    def self.kept_brand?(product, brand) = brand.present? && product.brand.present? && product.brand != brand
+    private_class_method :kept_brand?
+
+    def self.kept_type?(product, type) = type && product.product_type && product.product_type != type
+    private_class_method :kept_type?
   end
 end

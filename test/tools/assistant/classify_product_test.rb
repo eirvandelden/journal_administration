@@ -17,6 +17,14 @@ product_type_id: product_types(:dishwashing_liquid).id)
     assert_includes text(response), "Kept the brand AH and the type Naturel chips"
   end
 
+  test "does not say it kept what the caller asked for" do
+    product = products(:ah_ribbelchips)
+
+    response = classify(product.id, brand: product.brand, product_type_id: product.product_type_id)
+
+    assert_not_includes text(response), "Kept"
+  end
+
   test "takes either field alone" do
     assert_not classify(products(:andrelon_shampoo).id, brand: "Andrelon").error?
   end
