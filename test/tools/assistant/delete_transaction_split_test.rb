@@ -24,12 +24,15 @@ class Assistant::DeleteTransactionSplitTest < ActiveSupport::TestCase
     assert TransactionSplit.exists?(part.id)
   end
 
-  test "cannot find the remainder split" do
+  test "explains that the remainder split is rebuilt and cannot be removed" do
     payment = transactions(:debit_grocery)
     payment.ensure_remainder_split
     remainder = payment.transaction_splits.find_by!(remainder: true)
+    response = remove(payment, remainder.id)
 
-    assert refused_response?(remove(payment, remainder.id))
+    assert refused_response?(response)
+    assert_includes said(response), "Part ##{remainder.id} is the remainder"
+    assert_includes said(response), "cannot be removed"
     assert TransactionSplit.exists?(remainder.id)
   end
 

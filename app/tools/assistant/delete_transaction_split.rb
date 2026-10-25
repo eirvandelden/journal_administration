@@ -17,14 +17,20 @@ module Assistant
       transaction = Transaction.find_by(id: transaction_id)
       return problem("No transaction ##{transaction_id} exists.") if transaction.nil?
 
-      part = transaction.explicit_transaction_splits.find_by(id: transaction_split_id)
+      part = transaction.transaction_splits.find_by(id: transaction_split_id)
       return problem("Transaction ##{transaction_id} has no part ##{transaction_split_id} to remove.") if part.nil?
+      return problem(remainder(part)) if part.remainder?
       return problem(charged(part)) if part.appropriation
 
       part.destroy
       transaction.ensure_remainder_split
       answer("Removed part ##{part.id}.\n#{remaining(transaction)}")
     end
+
+    def self.remainder(part)
+      "Part ##{part.id} is the remainder; it is rebuilt automatically and cannot be removed."
+    end
+    private_class_method :remainder
 
     def self.charged(part)
       "Part ##{part.id} is charged to #{part.appropriation}; remove that charge in the app first."
