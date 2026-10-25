@@ -19,6 +19,33 @@ class Receipt < ApplicationRecord
   validates :issued_on, presence: true
   validates :total_amount, presence: true
   validates_pdf_attachment_of :invoice
+  validate :must_not_repeat_a_filed_receipt, on: :file
+
+  # Files a receipt with its basket in one step, or leaves nothing behind
+  #
+  # Products are found by name the way the importer finds them, so a name nobody has seen starts unclassified
+  #: (
+  #|   shop: Account, issued_on: Date, total_amount: Integer,
+  #|   lines: Array[{ name: String, quantity: Numeric, full_amount: Integer, discount_amount: Integer }],
+  #|   ?order_number: String?
+  #| ) -> Receipt
+  def self.file(shop:, issued_on:, total_amount:, lines:, order_number: nil)
+    receipt = new(shop:, issued_on:, total_amount:, order_number:)
+
+    transaction do
+      lines.each { |line| receipt.lines.build(filed_line(line)) }
+      raise ActiveRecord::Rollback unless receipt.save(context: :file)
+    end
+    receipt
+  end
+
+  def self.filed_line(line)
+    line.slice(:quantity, :full_amount, :discount_amount).merge(
+      product: Product.resolve_by_name(line[:name]),
+      paid_amount: line[:full_amount] - line[:discount_amount]
+    )
+  end
+  private_class_method :filed_line
 
   def basket_total = lines.sum(:paid_amount)
 
@@ -58,6 +85,16 @@ class Receipt < ApplicationRecord
   end
 
   private
+
+  def must_not_repeat_a_filed_receipt
+    existing = repeated_receipt
+    errors.add(:base, :repeats_filed_receipt, receipt: existing.id) if existing
+  end
+
+  def repeated_receipt
+    Receipt.find_by(shop:, issued_on:, total_amount:) ||
+      (Receipt.find_by(order_number:) if order_number.present?)
+  end
 
   # A category whose products all came free of charge is left out: a split of
   # nothing is not a split, and the books reject one.

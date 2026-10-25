@@ -230,6 +230,10 @@ en:
           attributes:
             household:
               cannot_change_with_transactions: cannot change because an account classification uses it
+        receipt:
+          attributes:
+            base:
+              repeats_filed_receipt: "has already been filed as receipt #%{receipt}"
         receipt_line:
           attributes:
             paid_amount:
@@ -241,6 +245,8 @@ en:
             appropriation:
               charge_parts_instead: cannot take a split payment as a whole; charge its parts instead
               must_not_be_transfer: cannot be charged on a Transfer transaction
+            transaction_splits:
+              charged: "cannot be replaced while a part is charged to an appropriation; remove that charge first"
             type:
               has_charged_parts: cannot become Transfer while its parts are charged to an appropriation
         transaction_link:

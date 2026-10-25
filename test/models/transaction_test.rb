@@ -550,6 +550,43 @@ class TransactionChargingTest < ActiveSupport::TestCase
     assert_predicate charged_part, :charged?
   end
 
+  test "replace_splits swaps the parts and rebuilds the remainder" do
+    payment = transactions(:debit_grocery)
+
+    assert payment.replace_splits([ { amount: 2000, category: categories(:groceries), note: nil } ])
+
+    assert_equal [ 2000 ], payment.explicit_transaction_splits.pluck(:amount)
+    assert_equal 3000, payment.transaction_splits.find_by(remainder: true).amount
+  end
+
+  test "replace_splits refuses a payment with a charged part" do
+    payment = transactions(:debit_grocery)
+    payment.explicit_transaction_splits.first.update!(appropriation: appropriations(:birthday_etienne))
+
+    assert_not payment.replace_splits([ { amount: 100, category: categories(:groceries), note: nil } ])
+
+    assert_includes payment.errors.full_messages.to_sentence, "charged"
+    assert_equal 2, payment.explicit_transaction_splits.count
+  end
+
+  test "replace_splits refuses a transfer with the books' reason" do
+    transfer = transactions(:transfer_savings)
+
+    assert_not transfer.replace_splits([ { amount: 100, category: categories(:groceries), note: nil } ])
+
+    assert_includes transfer.errors.full_messages.to_sentence, "Transfer"
+  end
+
+  test "replace_splits leaves the old parts when one new part is refused" do
+    payment = transactions(:debit_grocery)
+    before = payment.transaction_splits.order(:id).pluck(:id, :amount)
+
+    assert_not payment.replace_splits([ { amount: 100, category: categories(:groceries), note: nil },
+                                        { amount: 99_999, category: categories(:household), note: nil } ])
+
+    assert_equal before, payment.transaction_splits.order(:id).pluck(:id, :amount)
+  end
+
   private
 
   # Booked as a Debit although both accounts are ours, so only the charge can stop it becoming a Transfer.

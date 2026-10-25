@@ -191,4 +191,66 @@ class ReceiptTest < ActiveSupport::TestCase
       )
     end
   end
+
+  test "Receipt.file saves the receipt with its lines" do
+    receipt = file_receipt
+
+    assert_predicate receipt, :persisted?
+    assert_equal [ "Brood", "Melk" ], receipt.lines.map { |line| line.product.name }.sort
+  end
+
+  test "Receipt.file finds a known product by name however it is capitalised" do
+    receipt = file_receipt(lines: [ line("andrelon SHAMPOO") ])
+
+    assert_equal products(:andrelon_shampoo), receipt.lines.first.product
+  end
+
+  test "Receipt.file starts an unknown product unclassified" do
+    product = file_receipt.lines.first.product
+
+    assert_predicate product, :unclassified?
+  end
+
+  test "Receipt.file derives the paid amount from full and discount" do
+    receipt = file_receipt(lines: [ line("Brood", full_amount: 219, discount_amount: 70) ])
+
+    assert_equal 149, receipt.lines.first.paid_amount
+  end
+
+  test "filing refuses a receipt with the same shop, day and total" do
+    existing = receipts(:albert_heijn_friday)
+
+    receipt = file_receipt(issued_on: existing.issued_on, total_amount: existing.total_amount)
+
+    assert_not receipt.persisted?
+    assert_includes receipt.errors.full_messages.to_sentence, "##{existing.id}"
+  end
+
+  test "filing refuses an order number already taken" do
+    receipts(:albert_heijn_friday).update!(order_number: "AH-1")
+
+    receipt = file_receipt(order_number: "AH-1")
+
+    assert_not receipt.persisted?
+    assert_includes receipt.errors.full_messages.to_sentence, "##{receipts(:albert_heijn_friday).id}"
+  end
+
+  test "a refused filing creates no products" do
+    existing = receipts(:albert_heijn_friday)
+
+    assert_no_difference "Product.count" do
+      file_receipt(issued_on: existing.issued_on, total_amount: existing.total_amount)
+    end
+  end
+
+  private
+
+  def line(name, full_amount: 100, discount_amount: 0)
+    { name:, quantity: 1, full_amount:, discount_amount: }
+  end
+
+  def file_receipt(shop: accounts(:albert_heijn), issued_on: Date.new(2026, 1, 5), total_amount: 777,
+    lines: [ line("Brood"), line("Melk") ], order_number: nil)
+    Receipt.file(shop:, issued_on:, total_amount:, lines:, order_number:)
+  end
 end

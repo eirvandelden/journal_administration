@@ -61,6 +61,24 @@ module Splittable
     end
   end
 
+  # Swaps every part of this payment for the given ones, or changes nothing
+  #
+  # Refuses a charged payment, since replacing its splits would drop those charges
+  #: (Array[{ amount: Integer, category: Category?, note: String? }] parts) -> bool
+  def replace_splits(parts)
+    return refuse_charged_replacement if charged?
+
+    transaction do
+      transaction_splits.destroy_all
+      parts.each { |part| transaction_splits.create!(part) }
+      ensure_remainder_split
+    end
+    true
+  rescue ActiveRecord::RecordInvalid => error
+    error.record.errors.full_messages.each { |message| errors.add(:base, message) }
+    false
+  end
+
   # Returns the amount relevant to a category page.
   #
   # Falls back to the full transaction amount when the transaction is matched
@@ -84,6 +102,11 @@ module Splittable
   end
 
   private
+
+  def refuse_charged_replacement
+    errors.add(:transaction_splits, :charged)
+    false
+  end
 
   def amount_must_cover_explicit_splits
     return unless amount.present? && split?
