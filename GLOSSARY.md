@@ -1,13 +1,18 @@
 - **Appropriation** — a sum set aside for one purpose and one person in one budget year, saved for in a potje.
+- **Badge** — the count next to a page in the hub column; a count of 0 shows no badge.
 - **Beheer** — the set-up pages behind the account menu: Categorieën, Productsoorten, Gezinsleden, Groepen, and Gebruikers for admins.
 - **Betaalrekening** — the ING current account where salary arrives and most fixed costs leave. Avoid: main account.
 - **Buffer** — the potje that holds the salary leftover and serves as the emergency fund.
 - **Hub** — a task group in the rail: Overzicht, Verwerken, Plannen, Administratie or Boodschappen. Avoid: section, tab.
 - **Hub column** — the list of the current hub's pages, next to the rail on a wide screen.
 - **Landing page** — a hub's own page, with one tile per page and that page's count.
+- **Menu map** — the one description of the hubs, their pages and the account menu; the rail, the hub column, the landing pages and search all draw from it.
 - **Oranje Spaarrekening** — the ING savings account that holds the potjes.
+- **Origin** — the hub whose landing page started the current flow; it travels as the `from` query parameter.
+- **Page** — one entry of a hub: a label, the controllers it owns, an optional filter, its list path, its tile path and an optional count or summary.
 - **Potje** — a virtual account inside a Spaarrekening with its own account number; it holds the money budgeted for one purpose. Avoid: pot, jar, envelope.
 - **Rail** — the narrow column that holds search, the hubs and the account menu; on a phone it becomes the tab bar.
 - **Reserveringen** — the potje for saving ahead for recurring costs, such as insurance, the trimsalon and the dentist; the standard term is sinking fund.
 - **Samen** — the shared household: Etienne and his wife, with their joint Betaalrekening and potjes.
+- **Tile** — a page's entry on a landing page, with the count written out, also when it is 0.
 - **Vaste lasten** — fixed monthly costs, mostly paid straight from the Betaalrekening.
