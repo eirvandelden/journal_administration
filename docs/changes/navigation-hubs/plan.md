@@ -275,7 +275,10 @@ Three architects each designed for one goal.
 - **Hand-written back links.** `_title_bar` gains a `back:` local and renders `menu.back(back)`. Show and edit views of the tile resources (transactions, accounts, products, receipts, chattels, budgets, appropriations) switch to it. The `new` views keep their "Terug" link, since no tile opens them. The users and profile views are left to `ui-review-bug-fixes`.
 - **Admins** are checked with `administrator?`, as `Admin::BaseController#ensure_admin` does.
 - **One plan file for all phases.** The plan skill asks for one file per phase; the hand-over allowed only `plan.md`, so the phases below sit in this file, each with its gate.
-- Conflicts with intent's `## Decisions`: none found. One reading choice is flagged as a decision in the report: the Begrotingsposten tile opens the year's unfiltered list, because intent's "New filtered lists" names only three filters.
+- **Begrotingsposten tile opens a money-left filter.** `/appropriations?filter=money_left` lists this year's `Appropriation.with_money_left`; the hub column opens the full list. Etienne chose this on 2026-10-25, and intent's "New filtered lists" now names it.
+- **The mvpa.css rail slice adopts this plan's markup contract** (`nav.rail`, `nav.hub-column`, `ul.tiles`, phone-only search and 👤 in title bars). Etienne decided this on 2026-10-25; class names may still be negotiated in that slice.
+- **Phasing.** The implement stage delivers phase A as a verified appkit pull request and then pauses until Etienne merges it. Phase B starts after that merge; phase C waits for both mvpa.css slices.
+- Conflicts with intent's `## Decisions`: none found.
 
 ## Integration points
 
@@ -326,7 +329,7 @@ Phase B, this app:
   | admin users | `admin/users/index` | `admin/users/show`, `edit`, `_form` | `admin/users` |
 
   The implementer reads each listed file first and changes only the links, forms and redirects that exist; a view without a back link today gets `back:` only on show and edit.
-- `app/controllers/{products,receipts,chattels}_controller.rb` — index reads the new filters; `accounts_controller.rb` index uses `Account.untouched`.
+- `app/controllers/{products,receipts,chattels,appropriations}_controller.rb` — index reads the new filters; `accounts_controller.rb` index uses `Account.untouched`.
 - `app/models/{account,receipt,chattel,appropriation,dashboard,search}.rb` — scopes and methods above; `Search` drops `PAGES` and `Todo`.
 - `app/controllers/searches_controller.rb` — `Search.new(query: params[:q], pages: menu.links)`; `app/views/searches/_result_page.html.erb` — `link_to page.path`.
 - `app/views/layouts/application.html.erb` — renders `appkit/shared/nav` with the search button as its block; the search dialog stays.
@@ -389,7 +392,6 @@ Phase C (app). Gate: both mvpa.css slices are merged; then `bundle update mvpa-c
 - Renaming or moving existing resource routes.
 - The dashboard's content.
 - The MCP endpoint.
-- A filtered Begrotingsposten list (see the decision in the report).
 - New database indexes or migrations.
 
 ## Proof
@@ -406,6 +408,7 @@ Phase C (app). Gate: both mvpa.css slices are merged; then `bundle update mvpa-c
 - A chattel whose warranty ends in 60 days counts on the Bezittingen tile; one in 120 days does not → `test/integration/navigation_hubs_test.rb` `test_bezittingen_tile_counts_warranties_ending_within_90_days`
 - A receipt without a linked payment counts on the Facturen tile, and the tile opens the filtered receipts list → `test/integration/navigation_hubs_test.rb` `test_facturen_tile_counts_and_opens_receipts_without_payment`
 - With no active budget the Budgetten tile says so and opens Budgetten → `test/integration/navigation_hubs_test.rb` `test_budgetten_tile_without_active_budget`
+- With one appropriation with money left and one spent in full, the Begrotingsposten tile shows 1 and opens the appropriations filtered to money left → `test/integration/navigation_hubs_test.rb` `test_begrotingsposten_tile_counts_and_opens_appropriations_with_money_left`
 - Overzicht opens the dashboard, with no hub column → `test/integration/navigation_hubs_test.rb` `test_overzicht_is_the_dashboard_without_hub_column`
 - Opening `/todo` lands on the Verwerken landing page → `test/integration/navigation_hubs_test.rb` `test_todo_redirects_to_verwerken`
 - A non-admin sees Categorieën, Productsoorten, Gezinsleden and Groepen in Beheer, and no Gebruikers → `test/integration/navigation_hubs_test.rb` `test_member_sees_beheer_without_gebruikers`
