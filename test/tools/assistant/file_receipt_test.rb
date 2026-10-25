@@ -27,7 +27,8 @@ class Assistant::FileReceiptTest < ActiveSupport::TestCase
   test "refuses an order number already filed and names that receipt" do
     receipts(:albert_heijn_friday).update!(order_number: "AH-9")
 
-    assert_includes said(file(order_number: "AH-9")), "##{receipts(:albert_heijn_friday).id}"
+    assert_includes said(file(order_number: "AH-9")),
+      "This receipt has already been filed as receipt ##{receipts(:albert_heijn_friday).id}."
   end
 
   test "refuses an amount with a fraction of a cent" do

@@ -233,7 +233,7 @@ en:
         receipt:
           attributes:
             base:
-              repeats_filed_receipt: 'has already been filed as receipt #%{receipt}'
+              repeats_filed_receipt: 'This receipt has already been filed as receipt #%{receipt}.'
         receipt_line:
           attributes:
             paid_amount:

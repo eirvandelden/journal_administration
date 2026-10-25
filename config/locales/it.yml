@@ -233,7 +233,7 @@ it:
         receipt:
           attributes:
             base:
-              repeats_filed_receipt: 'è già stato registrato come scontrino #%{receipt}'
+              repeats_filed_receipt: 'Questo scontrino è già stato registrato come scontrino #%{receipt}.'
         receipt_line:
           attributes:
             paid_amount:

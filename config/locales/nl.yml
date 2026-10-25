@@ -233,7 +233,7 @@ nl:
         receipt:
           attributes:
             base:
-              repeats_filed_receipt: 'is al ingediend als bon #%{receipt}'
+              repeats_filed_receipt: 'Deze bon is al ingediend als bon #%{receipt}.'
         receipt_line:
           attributes:
             paid_amount:
