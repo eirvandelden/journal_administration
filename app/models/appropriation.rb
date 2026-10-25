@@ -56,12 +56,29 @@ class Appropriation < ApplicationRecord
     Person.find_by(name_key: name.downcase)
   end
 
+  # Its appropriations per person's name: people by name, then purposes A to Z, then budget year, ignoring letter case
+  #: () -> Hash[String, Array[Appropriation]]
+  def self.per_person
+    includes(:person).to_a.sort_by { |appropriation| reading_order(appropriation) }.group_by(&:recipient_name)
+  end
+
+  # Where an appropriation sorts when listed per person
+  #: (Appropriation) -> Array[String | Integer]
+  def self.reading_order(appropriation)
+    [ appropriation.recipient_name.downcase, appropriation.purpose.downcase, appropriation.budget_year ]
+  end
+  private_class_method :reading_order
+
   # The name a person recognises it by, e.g. "Birthday Etienne 2026"
   #
   # @return [String]
   def to_s
     "#{purpose} #{recipient_name} #{budget_year}"
   end
+
+  # The name it goes by among its person's appropriations, e.g. "Sinterklaas 2026"
+  #: () -> String
+  def purpose_and_year = "#{purpose} #{budget_year}"
 
   # The current managed recipient name.
   # @return [String]

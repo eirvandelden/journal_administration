@@ -142,6 +142,36 @@ class AppropriationTest < ActiveSupport::TestCase
     end
   end
 
+  test ".per_person groups by name and orders purposes A to Z" do
+    Appropriation.create!(purpose: "Kerst", person: people(:serena), budget_year: 2026, amount: 1000)
+    per_person = Appropriation.of_year(2026).per_person
+
+    assert_equal %w[Chiara Cosimo Etienne Serena], per_person.keys
+    assert_equal %w[Birthday Christmas], per_person["Etienne"].map(&:purpose)
+    assert_equal %w[Christmas Kerst], per_person["Serena"].map(&:purpose)
+    assert_equal Appropriation.of_year(2026).sort, per_person.values.flatten.sort
+  end
+
+  test ".per_person ignores letter case in names and purposes" do
+    people(:chiara).update!(name: "chiara")
+    Appropriation.create!(purpose: "advent", person: people(:serena), budget_year: 2026, amount: 1000)
+    per_person = Appropriation.of_year(2026).per_person
+
+    assert_equal %w[chiara Cosimo Etienne Serena], per_person.keys
+    assert_equal %w[advent Christmas], per_person["Serena"].map(&:purpose)
+  end
+
+  test ".per_person keeps a legacy appropriation without a person under its recipient" do
+    legacy = Appropriation.create!(purpose: "Trip", person: people(:grandma), budget_year: 2026, amount: 1000)
+    legacy.update_columns(person_id: nil, recipient: "Oma")
+
+    assert_equal [ legacy ], Appropriation.of_year(2026).per_person["Oma"]
+  end
+
+  test "#purpose_and_year reads \"Birthday 2026\"" do
+    assert_equal "Birthday 2026", appropriations(:birthday_etienne).purpose_and_year
+  end
+
   test ".of_year keeps only that year" do
     assert_equal [ appropriations(:birthday_chiara_next_year), appropriations(:birthday_etienne_next_year) ].sort,
       Appropriation.of_year(2027).sort

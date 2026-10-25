@@ -110,6 +110,28 @@ class AppropriationsTest < ActionDispatch::IntegrationTest
     assert_appropriation_row "Birthday", "Etienne", 15000, 0, 15000
   end
 
+  test "the year page shows one section per person and one grand total" do
+    get appropriations_path(year: 2026)
+
+    headings = css_select("tbody th[scope=rowgroup]").map { |heading| heading.text.strip }
+    etienne = css_select("tbody").find { |body| body.at_css("th")&.text&.strip == "Etienne" }
+
+    assert_equal %w[Chiara Cosimo Etienne Serena], headings
+    assert_equal %w[Birthday Christmas], etienne.css("td:first-child").map { |cell| cell.text.strip }
+    assert_select "thead th", text: Appropriation.human_attribute_name(:recipient), count: 0
+    assert_select "tfoot", count: 1
+    assert_select "tfoot", text: /#{Regexp.escape(currency(45000))}/
+  end
+
+  test "each person heading spans every column of the table" do
+    get appropriations_path(year: 2026)
+
+    columns = css_select("thead th").size
+    spans = css_select("tbody th[scope=rowgroup]").map { |heading| heading["colspan"].to_i }
+
+    assert_equal [ columns ] * spans.size, spans
+  end
+
   test "the page shows this year's appropriations and totals unless another year is chosen" do
     travel_to Date.new(2026, 6, 15) do
       get appropriations_path

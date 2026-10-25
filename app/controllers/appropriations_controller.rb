@@ -2,15 +2,15 @@
 class AppropriationsController < ApplicationController
   before_action :set_appropriation, only: %i[show edit update destroy]
 
-  # Lists the appropriations of one budget year, this year unless another is chosen.
+  # Lists the appropriations of one budget year per person, this year unless another is chosen.
   #
   # @action GET
   # @route /appropriations
-  # @return [void]
+  #: () -> void
   def index
     @year = chosen_year
-    @appropriations = Appropriation.of_year(@year).includes(:person).order(:purpose).to_a
-      .sort_by { |appropriation| [ appropriation.purpose.downcase, appropriation.recipient_name.downcase ] }
+    @appropriations_per_person = Appropriation.of_year(@year).per_person
+    @appropriations = @appropriations_per_person.values.flatten
   end
 
   # Shows one appropriation with the payments and split parts charged to it.
