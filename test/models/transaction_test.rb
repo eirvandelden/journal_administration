@@ -587,6 +587,17 @@ class TransactionChargingTest < ActiveSupport::TestCase
     assert_equal 2, payment.explicit_transaction_splits.count
   end
 
+  test "replace_splits names the splits in Dutch and Italian when a part is charged" do
+    payment = transactions(:debit_grocery)
+    payment.explicit_transaction_splits.first.update!(appropriation: appropriations(:birthday_etienne))
+    payment.replace_splits([ { amount: 100, category: categories(:groceries), note: nil } ])
+
+    nl, it = %i[nl it].map { |locale| I18n.with_locale(locale) { payment.errors.full_messages.first } }
+
+    assert_match(/\ASplitsingen kan niet .* begrotingspost/, nl)
+    assert_match(/\ASuddivisioni non può .* imputata/, it)
+  end
+
   test "replace_splits refuses a transfer with the books' reason" do
     transfer = transactions(:transfer_savings)
 

@@ -157,6 +157,7 @@ en:
         original_note: Original note
         original_tag: Original tag
         proof_of_purchase: Proof of purchase
+        transaction_splits: Transaction splits
         type: Type
       transaction_split:
         appropriation: Appropriation
