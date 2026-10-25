@@ -317,6 +317,14 @@ Test setup: existing fixtures (`users(:admin)` nl, `users(:member)` en, switched
 ---
 Domain skills applied: software-design, glossary, diagrams, rails-architecture, rails-testing, rails-ui (i18n), ruby-style, dependencies (none added).
 
+## Departures
+
+- The herb rule test writes samples to a `Dir.mktmpdir` under `Rails.root/test`, not `Rails.root/tmp`, and runs `herb-lint --no-timing --json` without `--force`. `tmp/` and `log/` are excluded, and the consent guard rejects any command with `--force`.
+- Step 2 found a real bug: `t(".key")` inside a `shared/title_bar` layout block resolves under `shared.title_bar`. The blocks in `accounts/show`, `admin/users/show`, `appropriations/index` and `appropriations/show` use absolute keys.
+- Five tests that read removed keys now use existing keys or literals (`main_nav.dashboard_filters`, `common.destroy`, `transactions.table.show`).
+- `it.admin.users.form.password` is "Parola d'accesso". Etienne can choose "Password" and allowlist it instead.
+- `activerecord.errors.models.transaction.attributes.type` already held `has_charged_parts`; the new keys join it.
+
 ## Critique
 
 ### Round 1 (codex exec -p terra)
