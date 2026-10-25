@@ -48,13 +48,14 @@ module Receipt::PaymentMatching
 
   # The payments whose bank note names this delivery's order number as a whole token
   #
-  # The number is matched whole, so `AE732868893` never matches order `73286889`.
+  # Only the shop's own credits count. The number is matched whole, so `AE732868893` never matches order `73286889`.
   #
   #: () -> Array[Transaction]
   def ordered_payments
     token = /\bAE#{Regexp.escape(order_number)}\b/
 
     Credit.where.missing(:receipt)
+          .where(debitor: Account.where(name: Receipt::SHOP_NAME))
           .where("original_note LIKE :like OR note LIKE :like", like: "%AE#{order_number}%")
           .select { |payment| [ payment.note, payment.original_note ].any? { |note| note.to_s.match?(token) } }
   end

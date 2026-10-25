@@ -171,6 +171,14 @@ class Receipt::PaymentMatchingTest < ActiveSupport::TestCase
     assert_nil delivery.reload.payment
   end
 
+  test "ignores an order-number payment from another shop" do
+    delivery = delivery("74532780", total: 11_993)
+    transactions(:ordered_grocery).update!(debitor: accounts(:jumbo))
+
+    assert_empty Receipt.link_payments
+    assert_nil delivery.reload.payment
+  end
+
   test "unlinked_deliveries lists deliveries without a payment" do
     open = delivery("100")
     delivery("200").update!(payment: transactions(:ordered_grocery))
