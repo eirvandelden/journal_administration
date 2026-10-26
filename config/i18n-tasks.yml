@@ -163,7 +163,7 @@ ignore_eq_base:
     - date.formats.month_and_year
     - errors.format
     - language_names.*
-    - main_nav.*
+    - main_nav.{accounts,appropriations,budgets,categories,chattels,product_types,products,receipts,todo}
     - number.currency.format.{precision,significant,strip_insignificant_zeros}
     - number.format.{round_mode,significant,strip_insignificant_zeros}
     - number.human.decimal_units.{format,units.unit}
@@ -176,7 +176,6 @@ ignore_eq_base:
     - support.array.words_connector
     - time.{am,pm}
     - time.formats.short
-    - users.profiles.edit.locale_{en,it,nl}
   nl:
     # Dutch uses the English word
     - activerecord.attributes.transaction.type
