@@ -23,8 +23,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_22_120000) do
 
   create_table "account_numbers", force: :cascade do |t|
     t.integer "account_id", null: false
-    t.datetime "created_at", null: false
     t.string "number", null: false
+    t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["account_id"], name: "index_account_numbers_on_account_id"
     t.index ["number"], name: "index_account_numbers_on_number", unique: true
