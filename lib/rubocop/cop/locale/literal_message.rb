@@ -49,6 +49,8 @@ module RuboCop
           (send (send _ :errors) :add _ $_ ...)
         PATTERN
 
+        private :flash_index_assignment?, :flash_writer?, :errors_add?
+
         def report(node)
           add_offense(node) if node && literal_with_letter?(node)
         end
