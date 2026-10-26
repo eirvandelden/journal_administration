@@ -35,6 +35,13 @@ class LiteralMessageTest < ActiveSupport::TestCase
     RUBY
   end
 
+  test "reports flash now notice and alert writers" do
+    assert_offense(<<~RUBY)
+      flash.now.alert = "Nope"
+                        ^^^^^^ #{MSG}
+    RUBY
+  end
+
   test "reports flash notice writer" do
     assert_offense(<<~RUBY)
       flash.notice = "Saved"

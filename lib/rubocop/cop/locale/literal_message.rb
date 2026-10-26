@@ -10,22 +10,8 @@ module RuboCop
         MESSAGE_KEYS = %i[notice alert message].freeze
         MESSAGE_VARIABLES = %i[notice alert @notice @alert].freeze
 
-        # @!method flash_index_assignment?(node)
-        def_node_matcher :flash_index_assignment?, <<~PATTERN
-          (send {(send nil? :flash) (send (send nil? :flash) :now)} :[]= _ $_)
-        PATTERN
-
-        # @!method flash_writer?(node)
-        def_node_matcher :flash_writer?, <<~PATTERN
-          (send (send nil? :flash) {:notice= :alert=} $_)
-        PATTERN
-
-        # @!method errors_add?(node)
-        def_node_matcher :errors_add?, <<~PATTERN
-          (send {(send _ :errors) (send nil? :errors)} :add _ $_ ...)
-        PATTERN
-
-        # Reports flash[:x] = "...", flash.now[:x] = "...", flash.notice = "..." and errors.add(:attr, "...").
+        # Reports flash[:x] = "...", flash.now[:x] = "...", flash.notice = "...", flash.now.alert = "..."
+        # and errors.add(:attr, "...").
         #: (RuboCop::AST::SendNode node) -> void
         def on_send(node)
           message = flash_index_assignment?(node) || flash_writer?(node) || errors_add?(node)
@@ -47,6 +33,21 @@ module RuboCop
         alias on_ivasgn on_lvasgn
 
         private
+
+        # @!method flash_index_assignment?(node)
+        def_node_matcher :flash_index_assignment?, <<~PATTERN
+          (send {(send nil? :flash) (send (send nil? :flash) :now)} :[]= _ $_)
+        PATTERN
+
+        # @!method flash_writer?(node)
+        def_node_matcher :flash_writer?, <<~PATTERN
+          (send {(send nil? :flash) (send (send nil? :flash) :now)} {:notice= :alert=} $_)
+        PATTERN
+
+        # @!method errors_add?(node)
+        def_node_matcher :errors_add?, <<~PATTERN
+          (send (send _ :errors) :add _ $_ ...)
+        PATTERN
 
         def report(node)
           add_offense(node) if node && literal_with_letter?(node)
