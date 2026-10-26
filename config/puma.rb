@@ -8,10 +8,12 @@ max_threads_count = ENV.fetch("RAILS_MAX_THREADS") { 5 }
 min_threads_count = ENV.fetch("RAILS_MIN_THREADS") { max_threads_count }
 threads min_threads_count, max_threads_count
 
+rails_env = ENV.fetch("RAILS_ENV", "development")
+
 # Specifies the `worker_timeout` threshold that Puma will use to wait before
 # terminating a worker in development environments.
 #
-worker_timeout 3600 if ENV.fetch("RAILS_ENV", "development") == "development"
+worker_timeout 3600 if rails_env == "development"
 
 # Specifies the `port` that Puma will listen on to receive requests; default is 3000.
 #
@@ -46,6 +48,11 @@ plugin :tmp_restart
 # (Appkit::SessionExpiryJob, queue cleanup, etc.) instead of queuing forever
 # with no worker. On by default in development; in production only where the
 # single deployed web role has to do the processing itself. Set
-# SOLID_QUEUE_IN_PUMA=false to run bin/jobs separately instead.
-run_jobs_in_puma = ENV.fetch("SOLID_QUEUE_IN_PUMA") { ENV.fetch("RAILS_ENV", "development") == "development" }
-plugin :solid_queue unless [ "", "false" ].include?(run_jobs_in_puma.to_s)
+# SOLID_QUEUE_IN_PUMA=false to run bin/jobs separately instead. Production runs
+# the dispatcher, scheduler and worker as threads in the Puma process; development forks them.
+run_jobs_in_puma = ENV.fetch("SOLID_QUEUE_IN_PUMA") { rails_env == "development" }
+unless [ "", "false" ].include?(run_jobs_in_puma.to_s)
+  plugin :solid_queue
+  # Saves memory; config/database.yml sizes the production pools for these threads.
+  solid_queue_mode :async if rails_env == "production"
+end
