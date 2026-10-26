@@ -70,6 +70,7 @@ Etienne pastes a receipt into an assistant. The assistant files the receipt, lin
 - A duplicate receipt is refused and the existing one named — recommended default accepted; it stops a double paste.
 - The staying-in-step guard is a parity test, an `AGENTS.md` rule and a plan-checklist line — chosen by Etienne, all three.
 - Autonomous delivery, no Codex review, no extra permissions — chosen by Etienne.
+- Main's contracts win for classify_product, create_product_type and list_product_types, and a new update_product replaces — chosen by Etienne after PR #390 shipped the same tool names; main's tools are live and never overwrite.
 
 ## Open questions
 
