@@ -27,10 +27,9 @@ class AssistantReceiptsTest < ActionDispatch::IntegrationTest
   test "a product nobody has seen before is listed as unclassified" do
     file_pasted_receipt
 
-    answer = ask_assistant("list_products", unclassified: true)
+    brood = Product.find_by!(name: "Brood")
 
-    assert_includes answer, "Brood"
-    assert_includes answer, "(unclassified)"
+    assert_includes ask_assistant("list_unclassified_products"), "#{brood.id}: Brood"
   end
 
   test "filing the same receipt twice is refused and names the first one" do

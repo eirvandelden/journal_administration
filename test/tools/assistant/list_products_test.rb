@@ -10,10 +10,9 @@ class Assistant::ListProductsTest < ActiveSupport::TestCase
     assert_includes text, "#{products(:ah_ribbelchips).id}: AH Naturel Ribbelchips, brand AH, type Naturel chips"
   end
 
-  test "lists only unclassified products when asked" do
-    text = said(Assistant::ListProducts.call(unclassified: true, server_context: nil))
+  test "flags the products still unclassified" do
+    text = said(Assistant::ListProducts.call(server_context: nil))
 
-    assert_includes text, "Andrelon shampoo"
-    assert_not_includes text, "Dreft"
+    assert_includes text, "#{products(:andrelon_shampoo).id}: Andrelon shampoo, brand none, type none (unclassified)"
   end
 end

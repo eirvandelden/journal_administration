@@ -13,13 +13,13 @@ class AssistantProductsTest < ActionDispatch::IntegrationTest
   test "classifying a product takes it off the unclassified list" do
     product = products(:andrelon_shampoo)
 
-    assert_includes ask_assistant("list_products", unclassified: true), "Andrelon shampoo"
+    assert_includes ask_assistant("list_unclassified_products"), "Andrelon shampoo"
 
     ask_assistant("classify_product", product_id: product.id, brand: "Andrelon",
       product_type_id: product_types(:dishwashing_liquid).id)
 
     assert_equal [ "Andrelon", product_types(:dishwashing_liquid) ], [ product.reload.brand, product.product_type ]
-    assert_not_includes ask_assistant("list_products", unclassified: true), "Andrelon shampoo"
+    assert_not_includes ask_assistant("list_unclassified_products"), "Andrelon shampoo"
   end
 
   test "the assistant manages product types" do

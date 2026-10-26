@@ -84,8 +84,8 @@ class AssistantParityTest < ActionDispatch::IntegrationTest
     "assistant#create" => "this is the MCP endpoint itself",
     "dashboard#index" => "a page of totals; budget_status and find_transactions answer the same questions",
     "searches#index" => "a page of search results; find_accounts and find_transactions search",
-    "todos#index" => "a page of open jobs; find_transactions with uncategorized and list_products with " \
-      "unclassified answer the same questions"
+    "todos#index" => "a page of open jobs; find_transactions with uncategorized and " \
+      "list_unclassified_products answer the same questions"
   }.freeze
 
   setup do

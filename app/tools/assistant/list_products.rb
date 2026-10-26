@@ -4,23 +4,21 @@ module Assistant
     DEFAULT_LIMIT = 25
     HIGHEST_LIMIT = 100
 
-    description "List products by name with brand and product type; ask for only the unclassified ones to see " \
-      "what still needs classifying."
+    description "List products by name with brand and product type, flagging the unclassified ones; " \
+      "list_unclassified_products lists only those."
     annotations read_only_hint: true
     input_schema(
       properties: {
-        unclassified: { type: "boolean", description: "Only products without a brand or a product type" },
         limit: { type: "integer", description: "How many to list at most (#{DEFAULT_LIMIT} by default, " \
           "#{HIGHEST_LIMIT} at the very most)" }
       }
     )
 
     # Mirrors products#index
-    #: (server_context: untyped, ?unclassified: bool, ?limit: Integer) -> MCP::Tool::Response
-    def self.call(server_context:, unclassified: false, limit: DEFAULT_LIMIT)
-      products = unclassified ? Product.unclassified : Product.all
-      products = products.includes(:product_type).order(:normalized_name)
-      return answer(unclassified ? "Every product is classified." : "No product is known yet.") if products.none?
+    #: (server_context: untyped, ?limit: Integer) -> MCP::Tool::Response
+    def self.call(server_context:, limit: DEFAULT_LIMIT)
+      products = Product.includes(:product_type).order(:normalized_name)
+      return answer("No product is known yet.") if products.none?
 
       shown = products.limit(limit.clamp(1, HIGHEST_LIMIT)).to_a
       answer([ *shown.map(&:summary), held_back(products, shown) ].compact.join("\n"))
