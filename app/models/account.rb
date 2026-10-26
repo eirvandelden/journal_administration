@@ -61,6 +61,8 @@ class Account < ApplicationRecord
   #
   #: () -> ActiveRecord::Relation
   def transactions
+    return Transaction.none unless persisted?
+
     Transaction
       .by_account(id)
       .includes(:creditor, :debitor, :category)

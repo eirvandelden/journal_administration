@@ -193,6 +193,10 @@ class AccountTest < ActiveSupport::TestCase
     assert_operator accounts(:checking).transactions.count, :>, 10
   end
 
+  test "transactions is empty for an account that is not saved" do
+    assert_empty Account.new.transactions
+  end
+
   # -- recent_transactions ----------------------------------------------------
 
   test "recent_transactions returns transactions where account is debitor" do
