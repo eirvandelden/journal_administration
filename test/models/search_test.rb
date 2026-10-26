@@ -89,8 +89,8 @@ class SearchTest < ActiveSupport::TestCase
   # -- page results -----------------------------------------------------------
 
   test "results includes pages matching nav labels" do
-    # "Thuis" is the home label in the en locale
-    search = Search.new(query: "Thuis")
+    # "Home" is the home label in the en locale
+    search = Search.new(query: "Home")
 
     assert search.results.key?(:pages)
   end

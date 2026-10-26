@@ -59,7 +59,7 @@ class ChattelsShowTest < ActionDispatch::IntegrationTest
     get chattels_url
 
     assert_response :success
-    assert_select "button", text: I18n.t("common.destroy"), count: 0
+    assert_select "button", text: I18n.t("common.delete_ellipsis"), count: 0
   end
 
   test "index has a title bar with + Nieuw and rows that open the chattel" do

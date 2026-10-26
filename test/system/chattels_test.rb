@@ -38,7 +38,7 @@ class ChattelsTest < ApplicationSystemTestCase
   test "index does not show destroy button" do
     visit chattels_url
 
-    assert_no_button I18n.t("common.destroy", locale: locale)
+    assert_no_button I18n.t("common.delete_ellipsis", locale: locale)
   end
 
   test "should destroy Chattel from the edit page" do

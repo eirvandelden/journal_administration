@@ -242,7 +242,11 @@ nl:
               charge_parts_instead: kan geen gesplitste betaling als geheel dragen; boek de delen afzonderlijk
               must_not_be_transfer: kan niet op een overboeking worden geboekt
             type:
+              credit_needs_household_creditor: moet alleen Credit zijn als de crediteur een eigenaar in het huishouden heeft
+              debit_needs_household_debitor: moet alleen Debit zijn als de debiteur een eigenaar in het huishouden heeft
               has_charged_parts: kan geen overboeking worden zolang delen op een begrotingspost zijn geboekt
+              invalid_type: "%{value} is geen geldig type"
+              transfer_needs_household_accounts: moet alleen Transfer zijn als beide rekeningen een eigenaar in het huishouden hebben
         transaction_link:
           attributes:
             source:
@@ -381,7 +385,6 @@ nl:
     create:
       success: "✅ Budget is succesvol aangemaakt."
     destroy:
-      confirm: Dit budget verwijderen? Dit kan niet ongedaan worden gemaakt.
       success: "✅ Budget is succesvol verwijderd."
     edit:
       title: Budget bewerken
@@ -418,7 +421,7 @@ nl:
       name: Naam
       root_categories: Hoofd categorieën
       title: Categorieën
-    main: Hoofdcategoriëen
+    main: Hoofdcategorieën
     new:
       title: "➕ Nieuwe categorie"
     update:
@@ -461,7 +464,6 @@ nl:
       spending_vs_average: Uitgaven vs. historisch gemiddelde
     filters:
       apply: Toepassen
-      choose: Kies
       current_month: Deze maand
       current_year: Dit jaar
       end_date: Einddatum
@@ -646,6 +648,9 @@ nl:
     en: English
     it: Italiano
     nl: Nederlands
+  layouts:
+    admin:
+      title: Beheer - %{app}
   left: "📤 Verlaten"
   main_nav:
     accounts: "🏦 %{model}"
@@ -895,10 +900,6 @@ nl:
         success: "✅ Boeking van het deel weggehaald."
       update:
         success: "✅ Deel op de begrotingspost geboekt."
-    create:
-      success: "✅ Splitsing toegevoegd."
-    destroy:
-      success: "✅ Splitsing verwijderd."
     split_indicator:
       one: Splitsing (1 deel)
       other: Splitsing (%{count} delen)
@@ -909,8 +910,6 @@ nl:
       category: Categorie
       note: Opmerking
       remainder_label: Restant
-    update:
-      success: "✅ Splitsing bijgewerkt."
   transactions:
     appropriation:
       not_charged: Niet op een begrotingspost geboekt
@@ -980,9 +979,6 @@ nl:
     profiles:
       edit:
         email_placeholder: E-mailadres
-        locale_en: "🇬🇧 English"
-        locale_it: "🇮🇹 Italiano"
-        locale_nl: "🇳🇱 Nederlands"
         name_placeholder: Naam
         password_placeholder: Wachtwoord wijzigen
         save_changes: Wijzigingen opslaan

@@ -164,7 +164,7 @@ class TransactionsIndexTest < ActionDispatch::IntegrationTest
     assert_select "main > header > h1", count: 1
     assert_select "main > header nav a[href=?]", new_transaction_path, text: I18n.t("common.new")
     assert_select "tbody td a[href=?]", debit_path(transactions(:debit_bakery))
-    assert_select "tbody td:first-child a", count: 0, text: I18n.t("transactions.table.show")
+    assert_select "tbody td:first-child a", count: 0, text: I18n.t("common.show")
   end
 
   test "index does not cut a long note short" do

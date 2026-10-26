@@ -1,4 +1,7 @@
 # The rules shared by every personal Ruby project
+require:
+  - ./lib/rubocop/cop/locale/literal_message.rb
+
 inherit_gem:
   rubocop-eirvandelden:
     - config/default.yml
@@ -7,3 +10,10 @@ inherit_gem:
 
 AllCops:
   TargetRubyVersion: 4.0
+
+# User-facing messages come from translation keys, not string literals
+Locale/LiteralMessage:
+  Enabled: true
+  Include:
+    - app/controllers/**/*.rb
+    - app/models/**/*.rb

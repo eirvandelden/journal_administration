@@ -19,7 +19,7 @@ class MainNavigationMenusTest < ApplicationSystemTestCase
   test "navigation does not show a separate filters menu" do
     visit root_url
 
-    assert_no_selector "header nav summary", text: I18n.t("main_nav.dashboard_filters", locale: locale)
+    assert_no_selector "header nav summary", text: "Filters"
   end
 
   test "navigation links to budgets" do

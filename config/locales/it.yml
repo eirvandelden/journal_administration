@@ -242,7 +242,11 @@ it:
               charge_parts_instead: non può coprire un pagamento suddiviso per intero; imputa invece le sue parti
               must_not_be_transfer: non può essere imputato a un trasferimento
             type:
+              credit_needs_household_creditor: deve essere Credit solo se il creditore ha un titolare del nucleo familiare
+              debit_needs_household_debitor: deve essere Debit solo se il debitore ha un titolare del nucleo familiare
               has_charged_parts: non può diventare un trasferimento finché le sue parti sono imputate a uno stanziamento
+              invalid_type: "%{value} non è un tipo valido"
+              transfer_needs_household_accounts: deve essere Transfer solo se entrambi i conti hanno un titolare del nucleo familiare
         transaction_link:
           attributes:
             source:
@@ -313,8 +317,8 @@ it:
         email: Email
         locale: Lingua
         name: Nome
-        password: Password
-        password_confirmation: Conferma password
+        password: Parola d'accesso
+        password_confirmation: Conferma parola d'accesso
         role: Ruolo
       index:
         created_at: Creato
@@ -381,7 +385,6 @@ it:
     create:
       success: "✅ Budget creato con successo."
     destroy:
-      confirm: Eliminare questo budget? Non è possibile annullare questa operazione.
       success: "✅ Budget eliminato con successo."
     edit:
       title: Modifica Budget
@@ -461,7 +464,6 @@ it:
       spending_vs_average: Spese vs. media storica
     filters:
       apply: Applica
-      choose: Scegli
       current_month: Questo mese
       current_year: Questo anno
       end_date: Data di fine
@@ -646,6 +648,9 @@ it:
     en: English
     it: Italiano
     nl: Nederlands
+  layouts:
+    admin:
+      title: Amministrazione - %{app}
   left: "📤 Usciti"
   main_nav:
     accounts: "🏦 %{model}"
@@ -895,10 +900,6 @@ it:
         success: "✅ Imputazione della parte rimossa."
       update:
         success: "✅ Parte imputata allo stanziamento."
-    create:
-      success: "✅ Divisione aggiunta."
-    destroy:
-      success: "✅ Divisione rimossa."
     split_indicator:
       one: Divisione (1 parte)
       other: Divisione (%{count} parti)
@@ -909,8 +910,6 @@ it:
       category: Categoria
       note: Nota
       remainder_label: Resto
-    update:
-      success: "✅ Divisione aggiornata."
   transactions:
     appropriation:
       not_charged: Non imputato a uno stanziamento
@@ -980,11 +979,8 @@ it:
     profiles:
       edit:
         email_placeholder: Indirizzo email
-        locale_en: "🇬🇧 English"
-        locale_it: "🇮🇹 Italiano"
-        locale_nl: "🇳🇱 Nederlands"
         name_placeholder: Nome
-        password_placeholder: Cambia password
+        password_placeholder: Cambia parola d'accesso
         save_changes: Salva modifiche
         sign_out: Esci
         title: Le tue impostazioni
