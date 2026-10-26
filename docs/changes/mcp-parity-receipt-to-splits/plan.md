@@ -166,7 +166,7 @@ Not checked: the project has no Steep or rbs_rails.
 - Only a fitting payment can be linked — `fitting_payments.find_by` in `LinkReceiptPayment`, as in the UI.
 - The assistant never links one payment to two receipts — the check in `LinkReceiptPayment`.
 - A receipt filed by the assistant comes from an external account — the check in `FileReceipt`.
-- The assistant never deletes a charged part or the remainder split — `DeleteTransactionSplit` and the explicit-only lookup.
+- The assistant never deletes a charged part or the remainder split — `DeleteTransactionSplit`'s charged check and its own remainder check, which refuses the remainder with its own message.
 - A request without a valid token or from another host is refused — `AssistantController`, unchanged.
 - Every routed UI action has a tool or a stated exclusion — the parity test.
 
