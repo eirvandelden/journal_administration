@@ -37,7 +37,7 @@ Not affected: the partial runs the same queries as before. Only the order of the
 
 - The add-split form lists its fields as `transaction_split[amount]`, `transaction_split[category_id]`, `transaction_split[note]`. Enforced by the markup order in `_table.html.erb`.
 - Each label stays paired with its field. The form builder writes `for`/`id`; the label moves together with its field.
-- The amount error `<p>` stays the element directly after the amount field. Enforced by moving the amount label, field and error as one block.
+- The amount error `<p>` stays the element directly after the amount field (Rails wraps an invalid field in `div.field_with_errors`, so the `<p>` follows that wrapper). Enforced by moving the amount label, field and error as one block.
 - The `financial_transaction` error `<p>` stays first in the fieldset. It is about the whole split, not one field.
 - The splits table columns stay category, amount, note, appropriation, actions. The change does not touch `<thead>`, `<tbody>` or `<tfoot>`.
 
@@ -89,7 +89,7 @@ Out of scope: the splits table columns, autofocus, the appropriation picker, and
 Per changed file, the unit tests expected:
 - `app/views/transaction_splits/_table.html.erb`: no unit tests; a view partial is proved by the integration tests above.
 
-Test setup: existing fixtures `users(:member)` and `transactions(:uncategorized)`. The order test does `get edit_transaction_url(debit)`, parses `Nokogiri::HTML5(response.body)`, takes `form[action="#{transaction_transaction_splits_path(debit)}"]`, and compares `fieldset input, fieldset select` ids and `fieldset label` `for`s with `%w[transaction_split_amount transaction_split_category_id transaction_split_note]`. The error test posts `amount: 999.99` as HTML and asserts `assert_select "input#transaction_split_amount + p"` with the `exceeds_transaction` message.
+Test setup: existing fixtures `users(:member)` and `transactions(:uncategorized)`. The order test does `get edit_transaction_url(debit)`, parses `Nokogiri::HTML5(response.body)`, takes `form[action="#{transaction_transaction_splits_path(debit)}"]`, and compares `fieldset input, fieldset select` ids and `fieldset label` `for`s with `%w[transaction_split_amount transaction_split_category_id transaction_split_note]`. The error test posts `amount: 999.99` as HTML and asserts `assert_select "div.field_with_errors:has(input#transaction_split_amount) + p"` with the `exceeds_transaction` message.
 
 ---
 Domain skills applied: rails-ui, rails-testing, software-design, glossary, diagrams.

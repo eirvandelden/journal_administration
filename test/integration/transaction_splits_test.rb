@@ -50,6 +50,16 @@ I18n.t("activerecord.errors.models.transaction_split.attributes.amount.exceeds_t
 I18n.t("activerecord.errors.models.transaction_split.attributes.amount.exceeds_transaction")
     end
 
+    test "with invalid amount places the error under the amount field" do
+      post transaction_transaction_splits_url(@debit),
+        params: { transaction_split: { amount: 999.99 } }
+
+      assert_response :unprocessable_entity
+      message = I18n.t("activerecord.errors.models.transaction_split.attributes.amount.exceeds_transaction")
+
+      assert_select "div.field_with_errors:has(input#transaction_split_amount) + p", text: /#{Regexp.escape(message)}/
+    end
+
     test "rejects transfer transactions" do
       transfer = transactions(:transfer_savings)
 
@@ -213,6 +223,17 @@ I18n.t("activerecord.errors.models.transaction_split.attributes.amount.exceeds_t
 
       assert_response :success
       assert_select "article turbo-frame#transaction_splits"
+    end
+
+    test "add-split form asks amount, then category, then note" do
+      debit = transactions(:uncategorized)
+      get edit_transaction_url(debit)
+
+      form = Nokogiri::HTML5(response.body).at_css("form[action='#{transaction_transaction_splits_path(debit)}']")
+      expected = %w[transaction_split_amount transaction_split_category_id transaction_split_note]
+
+      assert_equal expected, form.css("fieldset input, fieldset select").map { |field| field["id"] }
+      assert_equal expected, form.css("fieldset label").map { |label| label["for"] }
     end
 
     test "shows h2 heading for each section" do
