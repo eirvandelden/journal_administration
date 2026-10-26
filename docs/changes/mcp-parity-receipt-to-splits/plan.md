@@ -4,7 +4,9 @@ From `intent.md` (2026-10-25). Status: accepted.
 
 ## Context
 
-An assistant at `/mcp` reaches the books through `AssistantController`, which lists 14 `Assistant::Tool` classes in `app/tools/assistant/`. Each tool is a class method `self.call(..., server_context:)` that finds records, sends one model message and answers with `answer(text)` or `problem(text)`. Amounts cross the boundary as euros with two decimals (`euros`, `cents_from`), days as strict `YYYY-MM-DD` (`day`). This change adds 22 tools so an assistant can file a pasted receipt, link it to its payment, split the payment and classify products, plus a parity test and an `AGENTS.md` rule that keep the MCP in step with the UI.
+An assistant at `/mcp` reaches the books through `AssistantController`, which lists 14 `Assistant::Tool` classes in `app/tools/assistant/`. Each tool is a class method `self.call(..., server_context:)` that finds records, sends one model message and answers with `answer(text)` or `problem(text)`. Amounts cross the boundary as euros with two decimals (`euros`, `cents_from`), days as strict `YYYY-MM-DD` (`day`). This change adds 20 tools so an assistant can file a pasted receipt, link it to its payment, split the payment and edit products, plus a parity test and an `AGENTS.md` rule that keep the MCP in step with the UI.
+
+Main (PR #390) shipped `classify_product`, `create_product_type`, `list_product_types` and `list_unclassified_products` while this change was open. This change uses those tools as main ships them and adds none under their names; see Design decisions.
 
 ## Design
 
@@ -25,12 +27,12 @@ No term conflicts with `GLOSSARY.md`, which holds household money terms only.
 
 ```mermaid
 classDiagram
-  class AssistantController { -tools() 14 + 22 tool classes }
+  class AssistantController { -tools() 22 + 20 tool classes }
   class Tool { <<MCP::Tool>> answer() problem() euros() cents_from() day() }
   class ReplaceTransactionSplits
   class FileReceipt
   class LinkReceiptPayment
-  class OtherNewTools { 19 tools, one per UI action }
+  class OtherNewTools { 17 tools, one per UI action }
   class Transaction { +replace_splits(parts) bool; charged?(); ensure_remainder_split() }
   class TransactionSplit { amount category note remainder appropriation }
   class Receipt { +file(...)$ Receipt; basket_fits?(); rewrite_payment_splits(); fitting_payments() }
@@ -125,13 +127,13 @@ New tool classes in `app/tools/assistant/`, all `self.call(..., server_context:)
 | `DeleteReceipt` | no route | **receipt_id** | destructive |
 | `LinkReceiptPayment` | `receipts/payment_links#create` | **receipt_id**, **transaction_id** | destructive |
 | `UnlinkReceiptPayment` | `receipts/payment_links#destroy` | **receipt_id** | idempotent |
-| `ListProducts` | `products#index` | unclassified, limit | read_only |
+| `ListProducts` | `products#index` | limit | read_only |
 | `ShowProduct` | `products#show` | **product_id** | read_only |
-| `ClassifyProduct` | `products#update` | **product_id**, name, brand, product_type_id | idempotent |
-| `ListProductTypes` | `product_types#index` | — | read_only |
+| `UpdateProduct` | `products#update` | **product_id**, name, brand, product_type_id | idempotent |
 | `ShowProductType` | `product_types#show` | **product_type_id** | read_only |
-| `CreateProductType` | `product_types#create` | **name**, **category_id** | — |
 | `UpdateProductType` | `product_types#update` | **product_type_id**, name, category_id | idempotent |
+
+Main's tools fill the other product rows of the parity map, unchanged: `list_product_types` (`product_types#index`, also lists the brands in use) and `create_product_type` (`product_types#create`, finds a type by name whatever its case and refuses the Transfer category). Main's `classify_product` fills in only a blank brand or type through `Product#fill_in`, so it is the tool for an unclassified product; `UpdateProduct` replaces a brand or type already set and renames, as the products page does. Main's `list_unclassified_products` lists the unclassified products, so `ListProducts` has no filter of its own and only flags them.
 
 Tool behaviour that the UI controllers already define, copied rather than moved:
 
@@ -185,6 +187,7 @@ Not checked: the project has no Steep or rbs_rails.
 - **The duplicate rule is a validation context, not an always-on validation.** The import job finds deliveries by order number and must keep updating them; an always-on rule would make a corrected slip raise.
 - **`Receipt#rewrite_payment_splits` keeps its own loop** rather than calling `replace_splits`. Merging them is an orthogonal refactor; it is listed for a separate change.
 - **The parity map lives in the test file** and its granularity is `controller#action`, skipping the form pages `new` and `edit`. It reads tool names from a real `tools/list` request, so it tests what a client sees. Framework routes (`rails/*`, `turbo/*`, `active_storage/*`, `action_mailbox/*`) are skipped by prefix; every app and `appkit/*` controller must be mapped or excluded with a reason. A stale exclusion (no matching route) fails too.
+- **Main's contracts win for `classify_product`, `create_product_type` and `list_product_types`, and a new `update_product` replaces** — chosen by Etienne after PR #390 shipped the same tool names. Main's tools are live and never overwrite, so `update_product` carries the edit the products page offers.
 - **"This repository's plan and intent checklist" is a new `## MCP parity` section in `AGENTS.md`.** The repository has no checklist file; the intent and plan stages read `AGENTS.md` first, so the line lives there. The global `intent`/`plan` skills in the dotfiles are out of this repository and untouched.
 - **New public methods get inline RBS signatures (`#:`) and a one-line summary, no YARD tags**, as the personal-project rule in `ruby-style` says. Existing methods keep their YARD comments; converting them is out of scope. The project has no Steep, so nothing checks the signatures.
 - **New assistant integration tests go in new files per area.** `test/integration/assistant_test.rb` is 677 lines; its private request helpers move to `test/test_helpers/assistant_requests.rb` so the new files can share them.
@@ -193,7 +196,7 @@ No conflict with `intent.md`'s `## Decisions`.
 
 ## Integration points
 
-- MCP clients through `/mcp`: 22 new entries in `tools/list`, with descriptions and annotations.
+- MCP clients through `/mcp`: 20 new entries in `tools/list`, with descriptions and annotations.
 - `TransactionSplitsController`, `Receipts::PaymentLinksController`, `TransactionsController`, `ProductsController`, `ProductTypesController`: read as the reference behaviour, not changed.
 - `Importing::AlbertHeijn::ImportJob` and `Product.resolve_by_name`: the importer's product resolution is reused, the job is not changed.
 - `config/locales/{en,nl,it}.yml`: two new error messages, kept normalized with `i18n-tasks`.
@@ -206,10 +209,9 @@ No conflict with `intent.md`'s `## Decisions`.
 - `config/locales/en.yml`, `nl.yml`, `it.yml` — `activerecord.errors.models.transaction.attributes.transaction_splits.charged` and `activerecord.errors.models.receipt.attributes.base.repeats_filed_receipt` (with `%{receipt}`).
 - `app/tools/assistant/tool.rb` — add the private `refusal(record)` and `parts_list(transaction)` helpers.
 - `test/test_helpers/assistant_tool_calls.rb` — `said`, `refused_response?`, `unsplit_debit`, `line` for the tool unit tests.
-- `app/tools/assistant/*.rb` — the 22 new tool classes in the table above.
-- `app/controllers/assistant_controller.rb` — list the 22 new tools, alphabetically as today.
-- `test/test_helpers/assistant_requests.rb` — new module with `ask_assistant`, `refused?`, `post_to_assistant`, `assistant_headers`, moved from `assistant_test.rb`.
-- `test/integration/assistant_test.rb` — include the module, drop the moved helpers.
+- `app/tools/assistant/*.rb` — the 20 new tool classes in the table above.
+- `app/controllers/assistant_controller.rb` — list the 20 new tools beside main's.
+- `test/test_helpers/assistant_requests.rb` — main's module (main moved the helpers out of `assistant_test.rb`), plus `queries_for` for the query count tests.
 - `test/integration/assistant_receipts_test.rb`, `assistant_transactions_test.rb`, `assistant_transaction_splits_test.rb`, `assistant_products_test.rb` — acceptance tests.
 - `test/integration/assistant_parity_test.rb` — the parity test with `TOOL_FOR` and `EXCLUDED`.
 - `test/models/receipt_test.rb`, `test/models/transaction_test.rb` — unit tests of the two model messages.
@@ -218,12 +220,12 @@ No conflict with `intent.md`'s `## Decisions`.
 
 ## Order of work
 
-1. Move the request helpers to `test/test_helpers/assistant_requests.rb`; run `test/integration/assistant_test.rb` green.
+1. Use main's `test/test_helpers/assistant_requests.rb`; run `test/integration/assistant_test.rb` green.
 2. Write the acceptance test "the assistant files a pasted receipt with its lines" in `assistant_receipts_test.rb`, run it, watch it fail (unknown tool).
 3. `Receipt.file` with its unit tests and the locale message; then `FileReceipt`, registered in the controller; acceptance test green. Add the duplicate and unknown-product acceptance tests and make them pass.
 4. `ListReceipts`, `ShowReceipt`, `DeleteReceipt`, each with its unit test.
-5. `ListProducts`, `ShowProduct`, `ClassifyProduct`; acceptance test "classifying a product takes it off the unclassified list".
-6. `ListProductTypes`, `ShowProductType`, `CreateProductType`, `UpdateProductType`.
+5. `ListProducts`, `ShowProduct`, `UpdateProduct`; acceptance tests "classifying a product takes it off the unclassified list" (main's `classify_product`) and "editing a product replaces the brand and type it already had".
+6. `ShowProductType`, `UpdateProductType`.
 7. `LinkReceiptPayment`, `UnlinkReceiptPayment`; acceptance test "linking splits the payment by the basket", then the whole-flow test that charges a returned split with `charge_to_appropriation`.
 8. `CreateTransactionSplit`, `UpdateTransactionSplit`, `DeleteTransactionSplit`; acceptance tests for the remainder, the over-amount refusal and the Transfer refusal.
 9. `Transaction#replace_splits` with its unit tests and locale message; `ReplaceTransactionSplits`; acceptance tests for the charged refusal and the all-or-nothing replace.
@@ -235,7 +237,7 @@ No conflict with `intent.md`'s `## Decisions`.
 
 ## Risks
 
-- **Count of tools.** 22 more tools lengthen `tools/list` for every client. Descriptions stay one or two sentences.
+- **Count of tools.** 20 more tools lengthen `tools/list` for every client. Descriptions stay one or two sentences.
 - **Copied controller steps drift.** `LinkReceiptPayment` and the split tools repeat controller steps; a later change to one side must reach the other. The parity test catches a missing tool, not a diverging one. Mitigation: each tool's comment names the controller action it mirrors.
 - **Duplicate rule false positive.** Two shopping trips at one shop on one day with the same total are refused; the refusal names the existing receipt, so a person can tell.
 - **Charged part refusal blocks the assistant** until a later slice adds a tool to remove a charge.
@@ -257,7 +259,7 @@ Out of scope: accounts, account aliases, transaction links; categories, budgets 
 - Replacing all splits of an uncharged payment gives the new set in one step, or nothing at all → `test/integration/assistant_transaction_splits_test.rb` `replacing the parts swaps the whole set` and `a replacement with one bad part changes nothing`
 - Filing a receipt twice is refused the second time and names the existing receipt → `test/integration/assistant_receipts_test.rb` `filing the same receipt twice is refused and names the first one`
 - A product nobody has seen before appears as an unclassified product → `test/integration/assistant_receipts_test.rb` `a product nobody has seen before is listed as unclassified`
-- Classifying a product sets its brand and product type, and it leaves the unclassified list → `test/integration/assistant_products_test.rb` `classifying a product takes it off the unclassified list`
+- Classifying a product sets its brand and product type, and it leaves the unclassified list → `test/integration/assistant_products_test.rb` `classifying a product takes it off the unclassified list` (main's `classify_product`, which fills blanks) and `editing a product replaces the brand and type it already had, as the app does` (`update_product`)
 - Deleting a transaction gives the delete, or the books' refusal → `test/integration/assistant_transactions_test.rb` `the assistant deletes a transaction` and `deleting a transaction a chattel was bought with is refused`
 - A request without a valid token, or from another host, is refused as today → `test/integration/assistant_test.rb` existing token and host tests, plus `test/integration/assistant_receipts_test.rb` `filing a receipt without a valid token is turned away`
 - A new routed UI resource with no MCP tool and no exclusion fails the parity test → `test/integration/assistant_parity_test.rb` `every routed UI action has a tool or a stated exclusion` and `an unmapped route is reported by name`
@@ -280,12 +282,10 @@ Per changed file, the unit tests expected, named as behaviour:
 - `delete_receipt.rb`: `deletes the receipt and its lines and says the splits stay`, `refuses an unknown receipt`.
 - `link_receipt_payment.rb`: `links and lists the splits written`, `refuses a payment that does not fit and lists the ones that do`, `refuses a basket bigger than the payment`, `refuses a charged payment`, `links without splitting and names the unclassified products`, `links without splitting and says an empty basket has nothing to split`, `refuses a receipt linked to another payment`, `refuses a payment that paid another receipt and changes no split`.
 - `unlink_receipt_payment.rb`: `unlinks and says the splits stay`, `says when nothing was linked`.
-- `list_products.rb`: `lists products with brand and type`, `lists only unclassified products when asked`.
+- `list_products.rb`: `lists products with brand and type`, `flags the products still unclassified`.
 - `show_product.rb`: `shows the product with its purchases`, `refuses an unknown product`.
-- `classify_product.rb`: `sets brand and product type`, `refuses an unknown product type`, `passes on the books' refusal`.
-- `list_product_types.rb`: `lists types with their category`.
+- `update_product.rb`: `replaces a brand and product type already set`, `renames a product and keeps what it was not asked to change`, `refuses an unknown product`, `refuses an unknown product type`, `passes on the books' refusal`.
 - `show_product_type.rb`: `shows the type with its latest purchase per product`, `refuses an unknown type`.
-- `create_product_type.rb`: `creates a type booked to a category`, `refuses a name already taken`.
 - `update_product_type.rb`: `renames a type or moves it to another category`, `refuses an unknown type`.
 - `create_transaction_split.rb`: `adds a part and keeps the remainder`, `refuses a part bigger than what is left`, `refuses a transfer`.
 - `update_transaction_split.rb`: `changes a part and keeps the remainder`, `refuses a part of another payment`.
