@@ -87,6 +87,8 @@ production:
   primary:
     <<: *default
     database: storage/db/production.sqlite3
+    # Request threads plus the 3 job threads Solid Queue runs in the Puma process (config/queue.yml).
+    pool: <%= ENV.fetch("RAILS_MAX_THREADS", 5).to_i + 3 %>
   cache:
     <<: *default
     database: storage/db/production_cache.sqlite3
@@ -95,6 +97,8 @@ production:
     <<: *default
     database: storage/db/production_queue.sqlite3
     migrations_paths: db/queue_migrate
+    # Request threads plus every Solid Queue thread in the Puma process (async mode, config/puma.rb).
+    pool: <%= ENV.fetch("RAILS_MAX_THREADS", 5).to_i + 15 %>
   cable:
     <<: *default
     database: storage/db/production_cable.sqlite3
