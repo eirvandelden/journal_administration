@@ -22,6 +22,12 @@ class TransactionLinksControllerTest < ActionDispatch::IntegrationTest
       assert_select "td", text: /Transfer to savings/
     end
 
+    test "links each found transfer's amount to that transfer" do
+      get transaction_transaction_links_path(@transaction), params: { query: "savings" }
+
+      assert_select "tbody a[href='#{transfer_path(transactions(:transfer_savings))}'][data-turbo-frame='_top']"
+    end
+
     test "excludes transfers already linked to this transaction" do
       get transaction_transaction_links_path(@transaction), params: { query: "groceries" }
 
