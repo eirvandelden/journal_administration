@@ -318,7 +318,7 @@ it:
         locale: Lingua
         name: Nome
         password: Parola d'accesso
-        password_confirmation: Conferma password
+        password_confirmation: Conferma parola d'accesso
         role: Ruolo
       index:
         created_at: Creato
@@ -980,7 +980,7 @@ it:
       edit:
         email_placeholder: Indirizzo email
         name_placeholder: Nome
-        password_placeholder: Cambia password
+        password_placeholder: Cambia parola d'accesso
         save_changes: Salva modifiche
         sign_out: Esci
         title: Le tue impostazioni
