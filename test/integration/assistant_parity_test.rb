@@ -57,8 +57,9 @@ class AssistantParityTest < ActionDispatch::IntegrationTest
     "appropriations#show" => LATER_SLICE, "appropriations#destroy" => LATER_SLICE,
     "budgets#destroy" => LATER_SLICE, "budgets/suggestions#create" => LATER_SLICE,
     "budgets/suggestions#update" => LATER_SLICE,
-    "categories#show" => LATER_SLICE, "categories#create" => LATER_SLICE, "categories#update" => LATER_SLICE,
-    "categories#destroy" => LATER_SLICE,
+    "categories#show" => LATER_SLICE, "categories#update" => LATER_SLICE, "categories#destroy" => LATER_SLICE,
+    "categories#create" => "a later parity slice: create_household_category adds a category only under " \
+      "#{Category::HOUSEHOLD_EXPENSES}, not anywhere the app can",
     "transaction_links#index" => LATER_SLICE, "transaction_links#create" => LATER_SLICE,
     "transaction_links#destroy" => LATER_SLICE,
     "transaction_splits/appropriation_charges#destroy" => "a later slice: removing a charge",
