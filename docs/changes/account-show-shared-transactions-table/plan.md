@@ -196,6 +196,7 @@ For the transaction link tables:
 - `app/views/transactions/_table.html.erb` — remove the filters render.
 - `app/views/transactions/index.html.erb` — render the filters before the table.
 - `test/models/account_test.rb` — unit tests for `Account#transactions`.
+- `test/integration/account_merges_test.rb` — the test "a transaction from any of the three numbers shows under the merged account" asserted `transaction_path`; it asserts `polymorphic_path` now (found during implementation).
 - `test/integration/accounts_show_test.rb` — new acceptance tests; update two tests whose assertions encode the old reduced table (see Order of work, step 6).
 - `app/views/transaction_links/_balance_table.html.erb` — link the source transaction's amount and each linked transfer's amount to that transaction, breaking out of the frame.
 - `app/views/transaction_links/_suggestions.html.erb` — link each suggested transfer's amount to that transfer, breaking out of the frame.
