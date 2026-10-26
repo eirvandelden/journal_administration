@@ -31,12 +31,12 @@ class ReceiptsTest < ActionDispatch::IntegrationTest
   end
 
   test "a receipt says which payment settled it" do
-    @receipt.update!(payment: transactions(:debit_grocery))
+    @receipt.update!(payment: transactions(:credit_grocery))
 
     get receipt_path(@receipt)
 
     assert_response :success
-    assert_select "a[href=?]", transaction_path(transactions(:debit_grocery))
+    assert_select "a[href=?]", transaction_path(transactions(:credit_grocery))
   end
 
   test "a receipt that nothing has settled says so" do
@@ -59,14 +59,14 @@ class ReceiptsTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select "#payment-picker"
-    assert_select "input[value=?]", transactions(:debit_grocery).id.to_s
+    assert_select "input[value=?]", transactions(:credit_grocery).id.to_s
   end
 
   test "choosing a payment settles the receipt and splits it by the basket" do
-    post receipt_payment_link_path(@receipt), params: { receipt: { payment_id: transactions(:debit_grocery).id } }
+    post receipt_payment_link_path(@receipt), params: { receipt: { payment_id: transactions(:credit_grocery).id } }
 
     assert_redirected_to receipt_path(@receipt)
-    assert_equal transactions(:debit_grocery), @receipt.reload.payment
+    assert_equal transactions(:credit_grocery), @receipt.reload.payment
     assert_equal(
       { categories(:groceries) => 298, categories(:household) => 349 },
       @receipt.payment.explicit_transaction_splits.to_h { |split| [ split.category, split.amount ] }
@@ -74,7 +74,7 @@ class ReceiptsTest < ActionDispatch::IntegrationTest
   end
 
   test "a receipt that is already settled offers no picker" do
-    @receipt.update!(payment: transactions(:debit_grocery))
+    @receipt.update!(payment: transactions(:credit_grocery))
 
     get receipt_path(@receipt)
 
@@ -94,25 +94,25 @@ class ReceiptsTest < ActionDispatch::IntegrationTest
 
   test "a basket costing more than the payment leaves the payment's splits alone" do
     @receipt.lines.first.update!(full_amount: 6000, discount_amount: 0, paid_amount: 6000)
-    splits_before = transactions(:debit_grocery).transaction_splits.map(&:attributes)
+    splits_before = transactions(:credit_grocery).transaction_splits.map(&:attributes)
 
-    post receipt_payment_link_path(@receipt), params: { receipt: { payment_id: transactions(:debit_grocery).id } }
+    post receipt_payment_link_path(@receipt), params: { receipt: { payment_id: transactions(:credit_grocery).id } }
 
     assert_redirected_to receipt_path(@receipt)
-    assert_equal splits_before, transactions(:debit_grocery).reload.transaction_splits.map(&:attributes)
+    assert_equal splits_before, transactions(:credit_grocery).reload.transaction_splits.map(&:attributes)
   end
 
   test "a basket costing more than the payment does not settle the receipt either" do
     @receipt.lines.first.update!(full_amount: 6000, discount_amount: 0, paid_amount: 6000)
 
-    post receipt_payment_link_path(@receipt), params: { receipt: { payment_id: transactions(:debit_grocery).id } }
+    post receipt_payment_link_path(@receipt), params: { receipt: { payment_id: transactions(:credit_grocery).id } }
 
     assert_nil @receipt.reload.payment
   end
 
   test "a receipt cannot be settled against a charged payment" do
     payment = Transaction.create!(
-      type: "Debit", debitor: accounts(:checking), creditor: accounts(:albert_heijn), amount: 5000,
+      type: "Credit", debitor: accounts(:albert_heijn), creditor: accounts(:checking), amount: 5000,
       booked_at: @receipt.issued_on, interest_at: @receipt.issued_on, appropriation: appropriations(:birthday_etienne)
     )
 
@@ -125,7 +125,7 @@ class ReceiptsTest < ActionDispatch::IntegrationTest
   end
 
   test "a receipt settled by mistake can be unsettled" do
-    @receipt.update!(payment: transactions(:debit_grocery))
+    @receipt.update!(payment: transactions(:credit_grocery))
 
     delete receipt_payment_link_path(@receipt)
 
@@ -145,12 +145,12 @@ class ReceiptsTest < ActionDispatch::IntegrationTest
   end
   test "settling a delivery of unclassified products keeps the payment's own categories" do
     @receipt.lines.each { |line| line.product.update!(product_type: nil) }
-    splits_before = transactions(:debit_grocery).transaction_splits.map(&:attributes)
+    splits_before = transactions(:credit_grocery).transaction_splits.map(&:attributes)
 
-    post receipt_payment_link_path(@receipt), params: { receipt: { payment_id: transactions(:debit_grocery).id } }
+    post receipt_payment_link_path(@receipt), params: { receipt: { payment_id: transactions(:credit_grocery).id } }
 
-    assert_equal transactions(:debit_grocery), @receipt.reload.payment
-    assert_equal splits_before, transactions(:debit_grocery).reload.transaction_splits.map(&:attributes)
+    assert_equal transactions(:credit_grocery), @receipt.reload.payment
+    assert_equal splits_before, transactions(:credit_grocery).reload.transaction_splits.map(&:attributes)
     assert_equal I18n.t("receipts.payment_links.create.nothing_to_split", locale: :en), flash[:notice]
   end
 

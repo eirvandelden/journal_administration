@@ -79,14 +79,24 @@ class ReceiptTest < ActiveSupport::TestCase
   end
 
   test "a receipt offers the payments made to that shop around its date" do
-    assert_includes receipts(:albert_heijn_friday).fitting_payments, transactions(:debit_grocery)
+    assert_includes receipts(:albert_heijn_friday).fitting_payments, transactions(:credit_grocery)
+  end
+
+  test "a receipt does not offer a refund from the shop" do
+    assert_not_includes receipts(:albert_heijn_friday).fitting_payments, transactions(:debit_grocery)
+  end
+
+  test "a receipt does not offer a payment another receipt holds" do
+    receipts(:albert_heijn_duplicate_monday).update!(payment: transactions(:credit_grocery))
+
+    assert_not_includes receipts(:albert_heijn_friday).fitting_payments, transactions(:credit_grocery)
   end
 
   test "a receipt offers a payment even when the amount differs, since empties are settled at the door" do
     receipt = receipts(:albert_heijn_friday)
     receipt.update!(total_amount: 11_993)
 
-    assert_includes receipt.fitting_payments, transactions(:debit_grocery)
+    assert_includes receipt.fitting_payments, transactions(:credit_grocery)
   end
 
   test "a receipt does not offer payments to another shop" do
@@ -131,7 +141,7 @@ class ReceiptTest < ActiveSupport::TestCase
   test "a payment booked late on the last day of the window is still offered" do
     receipt = receipts(:albert_heijn_friday)
     late = Transaction.create!(
-      type: "Debit", debitor: accounts(:checking), creditor: accounts(:albert_heijn), amount: 1200,
+      type: "Credit", debitor: accounts(:albert_heijn), creditor: accounts(:checking), amount: 1200,
       booked_at: receipt.issued_on + 7.days + 18.hours, interest_at: receipt.issued_on + 7.days
     )
 

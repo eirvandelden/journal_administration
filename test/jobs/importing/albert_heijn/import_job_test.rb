@@ -72,9 +72,7 @@ class Importing::AlbertHeijn::ImportJobTest < ActiveJob::TestCase
 
     assert_equal 149, receipt.payment.explicit_transaction_splits.sum(:amount)
 
-    dearer = @slip.sub(" AH Broccoliroosjes \n\n 1 \n\n 1.49 \n\n 1.49 ",
-                       " AH Broccoliroosjes \n\n 1 \n\n 2.49 \n\n 2.49 ")
-    Importing::AlbertHeijn::ImportJob.perform_now(dearer)
+    Importing::AlbertHeijn::ImportJob.perform_now(dearer_slip)
 
     assert_equal 249, receipt.payment.reload.explicit_transaction_splits.sum(:amount)
   end
@@ -88,9 +86,7 @@ class Importing::AlbertHeijn::ImportJobTest < ActiveJob::TestCase
     part = receipt.payment.explicit_transaction_splits.first
     part.update!(appropriation: appropriations(:birthday_etienne))
 
-    dearer = @slip.sub(" AH Broccoliroosjes \n\n 1 \n\n 1.49 \n\n 1.49 ",
-                       " AH Broccoliroosjes \n\n 1 \n\n 2.49 \n\n 2.49 ")
-    Importing::AlbertHeijn::ImportJob.perform_now(dearer)
+    Importing::AlbertHeijn::ImportJob.perform_now(dearer_slip)
 
     assert_equal [ part ], receipt.payment.reload.explicit_transaction_splits.to_a
     assert_equal 149, part.reload.amount
@@ -98,6 +94,12 @@ class Importing::AlbertHeijn::ImportJobTest < ActiveJob::TestCase
   end
 
   private
+
+  # The slip with the broccoli one euro dearer, and the totals it states following suit
+  def dearer_slip
+    @slip.sub(" AH Broccoliroosjes \n\n 1 \n\n 1.49 \n\n 1.49 ", " AH Broccoliroosjes \n\n 1 \n\n 2.49 \n\n 2.49 ")
+         .gsub("137.39", "138.39").gsub("119.93", "120.93")
+  end
 
   def big_enough_payment(receipt)
     Transaction.create!(

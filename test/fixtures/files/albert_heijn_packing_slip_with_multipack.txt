@@ -1,0 +1,873 @@
+Albert Heijn
+
+Bekijk je bestelling.
+
+
+ https://example.com/ah-link
+
+ Albert Heijn
+
+Je boodschappen
+ zijn ingepakt!
+
+ Bezorging op
+vrijdag 3 mei 2024
+
+ 09:00 - 11:00
+
+ Straatnaam 1, 1234 AB Plaatsnaam
+ Bestelnummer: 100000008
+
+Je boodschappen
+ zijn ingepakt!
+
+ Bezorging op
+vrijdag 3 mei 2024
+
+ 09:00 - 11:00
+
+ Straatnaam 1, 1234 AB Plaatsnaam
+ Bestelnummer: 100000008
+
+ Beste Familie,
+ Nog even en dan komen we je boodschappen bezorgen. Je vindt hier alle producten die in jouw bestelling zitten.
+
+ Je factuur kun je bekijken na bezorging
+
+ Je vindt deze dan in de AH app of op ah.nl (https://example.com/ah-link) bij 'Mijn bestellingen'. Op de factuur zie je ook de verrekening van lege kratten, tassen, flessen en blikjes.
+
+ Je factuur kun je bekijken na bezorging
+
+ Je vindt deze dan in de AH app of op ah.nl (https://example.com/ah-link) bij 'Mijn bestellingen'. Op de factuur zie je ook de verrekening van lege kratten, tassen, flessen en blikjes.
+
+Jouw bestelling
+
+ Boodschappen
+64
+
+ 166.15
+
+ Bonusvoordeel
+
+ -28.89
+
+ Overig totaal
+
+ 11.05
+
+ Totaal
+
+ 148.31
+
+Wat zit er in jouw bestelling?
+
+ Boodschappen
+64
+
+ Aantal
+
+ Prijs
+
+ Totaal
+
+ AH Bananen tros
+
+ 1
+
+ 1.55
+
+ 1.55
+
+ AH Biologisch Luchtige babysnacks tomatenwieltjes 7+m
+
+ 1
+
+ 0.85
+
+ 0.85
+
+ AH Biologisch Ribbelchips paprika smaak
+
+ 1
+
+ 1.69
+
+ 1.69
+
+ AH Bitter lemon
+
+ 1
+
+ 0.99
+
+ 0.99
+
+ AH Borrelpakket loaded nacho's
+
+ 1
+
+ 5.99
+
+ 5.99
+
+ AH Drinkyoghurt framboos
+
+ 1
+
+ 1.29
+
+ 1.29
+
+ AH Extra lang lekker mini rozijnenbol
+
+ 1
+
+ 1.79
+
+ 1.79
+
+ AH Farmer salade
+
+ 1
+
+ 1.89
+
+ 1.89
+
+ AH Fijngesneden ijsbergsla
+
+ 1
+
+ 0.99
+
+ 0.99
+
+ AH Franse baguettes
+
+ 1
+
+ 0.75
+
+ 0.75
+
+ AH Fruitbiscuit yoghurt aardbeismaak
+
+ 1
+
+ 1.35
+
+ 1.35
+
+ AH Greenfields Beefburger naturel
+
+ 1
+
+ 3.99
+
+ 3.99
+
+ AH Greenfields Beefburger tomaat
+
+ 1
+
+ 3.99
+
+ 3.99
+
+ AH Halfvolle yoghurt perzik
+
+ 1
+
+ 1.79
+
+ 1.79
+
+ AH Hamburgerbroodjes
+
+ 1
+
+ 1.89
+
+ 1.89
+
+ AH Kleur beschermer doekjes
+
+ 1
+
+ 1.79
+
+ 1.79
+
+ AH Knijpfruit appel-aardbei
+
+ 1
+
+ 1.89
+
+ 1.89
+
+ AH Komkommer
+
+ 2
+
+ 0.85
+
+ 1.70
+
+ AH Krokante pizza margherita
+
+ 1
+
+ 2.39
+
+ 2.39
+
+ AH Lactosevrije houdbare halfvolle melk
+
+ 9
+
+ 1.19
+
+ 10.71
+
+ AH Luikse wafels
+
+ 1
+
+ 1.85
+
+ 1.85
+
+ AH Luxe hamburgerbroodjes
+
+ 1
+
+ 1.79
+
+ 1.79
+
+ AH Meergranenbiscuit rozijn
+
+ 1
+
+ 1.09
+
+ 1.09
+
+ AH Mozzarella
+
+ 1
+
+ 0.89
+
+ 0.89
+
+ AH Multifruit drink
+
+ 1
+
+ 3.39
+
+ 3.39
+
+ AH Pittige kip karamba salade
+
+ 1
+
+ 2.49
+
+ 2.49
+
+ AH Pizza kaas tomaat
+
+ 1
+
+ 1.39
+
+ 1.39
+
+ AH Roerbakgroente Italiaans fijngesneden
+
+ 1
+
+ 2.99
+
+ 2.99
+
+ AH Romaatjes
+
+ 1
+
+ 2.39
+
+ 2.39
+
+ AH Roomboter kaneelstengels
+
+ 1
+
+ 1.89
+
+ 1.89
+
+ AH Roomboter spritsen
+
+ 1
+
+ 1.89
+
+ 1.89
+
+ AH Roomkaas met kruiden
+
+ 1
+
+ 0.85
+
+ 0.85
+
+ AH Siroop framboos
+
+ 2
+
+ 1.99
+
+ 3.98
+
+ AH Toiletpapier 2-laags
+
+ 1
+
+ 6.49
+
+ 6.49
+
+ AH Tomaten gezeefd passata
+
+ 1
+
+ 0.89
+
+ 0.89
+
+ AH Vanillevla
+
+ 1
+
+ 1.49
+
+ 1.49
+
+ AH Vloer nederlands volkoren heel
+
+ 1
+
+ 2.69
+
+ 2.69
+
+ AH Vloer nederlands wit heel
+
+ 1
+
+ 2.69
+
+ 2.69
+
+ AH Voor in de oven scharrel kip sweet chili
+
+ 1
+
+ gew.
+
+ 5.84
+
+ AH Vruchtenkoeken
+
+ 1
+
+ 1.89
+
+ 1.89
+
+ AH Wokgroente Chinees
+
+ 1
+
+ 2.29
+
+ 2.29
+
+ AH Zoete aardappelblokjes
+
+ 1
+
+ 2.99
+
+ 2.99
+
+ Antinori Santa Cristina Toscana rosso
+
+ 1
+
+ 5.49
+
+ 5.49
+
+ Beemster Belegen 48+ stuk
+
+ 1
+
+ gew.
+
+ 8.92
+
+ Choca Vlokken
+
+ 1
+
+ 1.79
+
+ 1.79
+
+ De Kleine Keuken Biologische rozijntjes 12+ mnd
+
+ 1
+
+ 3.29
+
+ 3.29
+
+ De Zaanse Hoeve Kinderkwark
+
+ 1
+
+ 0.85
+
+ 0.85
+
+ De Zaanse Hoeve Mild 45+ geraspt
+
+ 1
+
+ 2.59
+
+ 2.59
+
+ De Zaanse Hoeve Yoghurt Griekse stijl 10% vet
+
+ 1
+
+ 1.99
+
+ 1.99
+
+ Eru Kids
+
+ 1
+
+ 1.49
+
+ 1.49
+
+ Etos Handzeep hygiene navul
+
+ 1
+
+ 2.29
+
+ 2.29
+
+ Etos Handzeep lotus & waterlilly
+
+ 2
+
+ 1.85
+
+ 3.70
+
+ Etos Paracetamol ovale tabletten 500 mg
+
+ 2
+
+ 0.85
+
+ 1.70
+
+ Free Brew Brewed craft soda organic blood orange
+
+ 1
+
+ 1.79
+
+ 1.79
+
+ Hi-Five Ice tea green tea yuzu
+
+ 1
+
+ 2.29
+
+ 2.29
+
+ Komo Trekbandzakken 60 liter
+
+ 1
+
+ 2.09
+
+ 2.09
+
+ Koopmans Mix voor zomercake
+
+ 1
+
+ 2.95
+
+ 2.95
+
+ Nix & Kix Sparkling raspberry rhubarb
+
+ 1
+
+ 1.59
+
+ 1.59
+
+ Remia Fritessaus classic
+
+ 1
+
+ 1.99
+
+ 1.99
+
+ Remia Salata mosterd honing dressing
+
+ 1
+
+ 1.79
+
+ 1.79
+
+ Solatio Prosecco rosé doc
+
+ 1
+
+ 7.79
+
+ 7.79
+
+ Sore Junior maisfingers wortel tomaat.
+
+ 1
+
+ 1.99
+
+ 1.99
+
+ Wostok Dadel-granaatappel
+
+ 1
+
+ 1.79
+
+ 1.79
+
+AH Baby Waterdoekjes 2-pack
+
+ AH Baby waterdoekjes
+
+ 2
+
+ 1.29
+
+ 2.58
+
+ Gratis toegevoegd
+
+ bakjes sparen 2024
+
+ 27
+
+ 0.00
+
+ Boodschappen totaal
+
+ 166.15
+
+Bonusvoordeel
+
+ AH Biologisch Luchtige babysnacks tomatenwieltjes 7+m
+
+Bonus
+
+ -0.09
+
+ AH Biologisch Ribbelchips paprika smaak
+
+Bonus
+
+ -0.17
+
+ AH Borrelpakket loaded nacho's
+
+25% KORTING
+
+ -1.50
+
+ AH Farmer salade
+
+2 VOOR 3.50
+
+ -0.38
+
+ AH Greenfields Beefburger naturel
+
+1 + 1 GRATIS
+
+ -1.99
+
+ AH Greenfields Beefburger tomaat
+
+1 + 1 GRATIS
+
+ -2.00
+
+ AH Hamburgerbroodjes
+
+25% KORTING
+
+ -0.47
+
+ AH Luxe hamburgerbroodjes
+
+25% KORTING
+
+ -0.45
+
+ AH Pittige kip karamba salade
+
+2 VOOR 3.50
+
+ -0.50
+
+ AH Roerbakgroente Italiaans fijngesneden
+
+1 + 1 GRATIS
+
+ -1.50
+
+ AH Romaatjes
+
+VOOR 1.69
+
+ -0.70
+
+ AH Roomboter kaneelstengels
+
+3 VOOR 5.00
+
+ -0.23
+
+ AH Roomboter spritsen
+
+3 VOOR 5.00
+
+ -0.22
+
+ AH Vloer nederlands volkoren heel
+
+2 VOOR 4.00
+
+ -0.69
+
+ AH Vloer nederlands wit heel
+
+2 VOOR 4.00
+
+ -0.69
+
+ AH Voor in de oven scharrel kip sweet chili
+
+25% KORTING
+
+ -1.46
+
+ AH Vruchtenkoeken
+
+3 VOOR 5.00
+
+ -0.22
+
+ AH Wokgroente Chinees
+
+1 + 1 GRATIS
+
+ -1.15
+
+ AH Zoete aardappelblokjes
+
+Bonus
+
+ -0.45
+
+ Antinori Santa Cristina Toscana rosso
+
+2e HALVE PRIJS
+
+ -1.37
+
+ Beemster Belegen 48+ stuk
+
+25% KORTING
+
+ -2.23
+
+ Choca Vlokken
+
+Bonus
+
+ -0.27
+
+ De Kleine Keuken Biologische rozijntjes 12+ mnd
+
+Bonus
+
+ -0.49
+
+ Etos Handzeep hygiene navul
+
+2 + 1 GRATIS
+
+ -0.76
+
+ Etos Handzeep lotus & waterlilly
+
+2 + 1 GRATIS
+
+ -1.24
+
+ Free Brew Brewed craft soda organic blood orange
+
+VOOR 0.99
+
+ -0.80
+
+VOOR 0.99
+
+ -0.10
+
+ Hi-Five Ice tea green tea yuzu
+
+VOOR 0.99
+
+ -0.10
+
+VOOR 0.99
+
+ -1.30
+
+ Koopmans Mix voor zomercake
+
+25% KORTING
+
+ -0.74
+
+ Nix & Kix Sparkling raspberry rhubarb
+
+VOOR 0.99
+
+ -0.60
+
+ Remia Fritessaus classic
+
+25% KORTING
+
+ -0.50
+
+ Remia Salata mosterd honing dressing
+
+25% KORTING
+
+ -0.45
+
+ Solatio Prosecco rosé doc
+
+2e HALVE PRIJS
+
+ -1.95
+
+ Sore Junior maisfingers wortel tomaat.
+
+Bonus
+
+ -0.20
+
+ Wostok Dadel-granaatappel
+
+VOOR 0.99
+
+ -0.80
+
+Pakketkorting
+
+ AH Baby waterdoekjes
+
+5% VOLUME VOORDEEL Pakketkorting
+
+ -0.13
+
+ Totaal voordeel
+
+ -28.89
+
+Overig
+
+ Bezorgkosten
+
+ 0.00
+
+ Statiegeld
+
+ 10.70
+
+ AH Bitter lemon
+
+ 0.25
+
+ Free Brew Brewed craft soda organic blood orange
+
+ 0.15
+
+ Hi-Five Ice tea green tea yuzu
+
+ 0.15
+
+ Nix & Kix Sparkling raspberry rhubarb
+
+ 0.15
+
+ AH Klapkrat
+
+ 10.00
+
+ Plastic tasje(s)
+
+ 0.35
+
+ Alle statiegeldartikelen kan je inleveren bij de bezorger. Je kan maximaal 50 blikjes per bestelling inleveren. Verpak ze per 25 stuks in een geleverde doorzichtige plastic tas of een leeg klapkrat. We verrekenen dit direct in het eindbedrag. Meer info op ah.nl/statiegeld (https://example.com/ah-link)
+
+ Overig totaal
+
+ 11.05
+
+Totaal
+
+ 148.31
+
+ We behandelen je boodschappen met de grootste zorg. Klopt er toch iets niet? Meld het dan via dit formulier (https://example.com/ah-link).
+
+ Dit is een automatische e-mail dus je kunt hier niet op reageren. Bij de klantenservice (https://example.com/ah-link) helpen we je graag.
+
+ mijn gegevens (https://example.com/ah-link) | privacy (https://example.com/ah-link) | homepage (https://example.com/ah-link) | vragen (https://example.com/ah-link) | algemene voorwaarden (https://example.com/ah-link) | https://example.com/ah-link https://example.com/ah-link verkrijgbaar op ah.nl (https://example.com/ah-link)

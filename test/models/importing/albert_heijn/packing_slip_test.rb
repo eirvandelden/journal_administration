@@ -53,6 +53,36 @@ class Importing::AlbertHeijn::PackingSlipTest < ActiveSupport::TestCase
     assert_empty @slip.lines.select { |line| line.name == "uitjes zegel" }
   end
 
+  test "a product that could not be delivered is not a purchase" do
+    slip = Importing::AlbertHeijn::PackingSlip.parse(file_fixture("albert_heijn_packing_slip_with_unavailable_product.txt").read)
+
+    assert_equal "100000007", slip.order_number
+    assert_equal 13_053, slip.total_amount
+    assert_equal 53, slip.lines.size
+    assert_equal 14_118, slip.lines.sum(&:full_amount)
+    assert_empty slip.lines.select { |line| line.name == "AH Excellent Broodhaan" }
+  end
+
+  test "a multi-pack is one line with the quantity and price it was printed with" do
+    slip = Importing::AlbertHeijn::PackingSlip.parse(file_fixture("albert_heijn_packing_slip_with_multipack.txt").read)
+    wipes = slip.lines.select { |line| line.name.downcase.include?("waterdoekjes") }
+
+    assert_equal "100000008", slip.order_number
+    assert_equal 14_831, slip.total_amount
+    assert_equal 64, slip.lines.size
+    assert_equal [ "AH Baby waterdoekjes" ], wipes.map(&:name)
+    assert_equal [ 2, 258 ], [ wipes.first.quantity, wipes.first.full_amount ]
+  end
+
+  test "a package discount is folded into the line of the product it came off" do
+    slip = Importing::AlbertHeijn::PackingSlip.parse(file_fixture("albert_heijn_packing_slip_with_multipack.txt").read)
+    wipes = slip.lines.find { |line| line.name == "AH Baby waterdoekjes" }
+
+    assert_equal 13, wipes.discount_amount
+    assert_equal 16_615, slip.lines.sum(&:full_amount)
+    assert_equal 2_889, slip.lines.sum(&:discount_amount)
+  end
+
   test "mail that is not a packing slip is refused" do
     assert_nil Importing::AlbertHeijn::PackingSlip.parse("Beste familie, hier is een nieuwsbrief.")
   end
@@ -101,6 +131,23 @@ class Importing::AlbertHeijn::PackingSlipTest < ActiveSupport::TestCase
     assert_equal 100, tuna.discount_amount
   end
 
+  test "a second bonus under no product name belongs to the product above it" do
+    tuna_bonus = " AH Tonijnsalade \n\nBonus\n\n -0.75 \n\n"
+    continued = @slip_text.sub(tuna_bonus, "#{tuna_bonus} 2 VOOR 3.50 \n\n -0.25 \n\n")
+    slip = Importing::AlbertHeijn::PackingSlip.parse(continued)
+
+    assert_equal 100, slip.lines.find { |line| line.name == "AH Tonijnsalade" }.discount_amount
+    assert_equal 2781 + 25, slip.lines.sum(&:discount_amount)
+  end
+
+  test "an empty bonus is ignored" do
+    tuna_bonus = " AH Tonijnsalade \n\nBonus\n\n -0.75 \n\n"
+    empty = "#{tuna_bonus} 2 VOOR 3.50 \n\n -0.00 \n\n"
+    slip = Importing::AlbertHeijn::PackingSlip.parse(@slip_text.sub(tuna_bonus, empty))
+
+    assert_equal 75, slip.lines.find { |line| line.name == "AH Tonijnsalade" }.discount_amount
+  end
+
   test "a slip whose product rows do not line up is refused" do
     mangled = @slip_text.sub(" AH Broccoliroosjes \n\n 1 \n\n 1.49 \n\n 1.49 \n\n",
 " AH Broccoliroosjes \n\n 1 \n\n 1.49 \n\n")
@@ -108,16 +155,31 @@ class Importing::AlbertHeijn::PackingSlipTest < ActiveSupport::TestCase
     assert_nil Importing::AlbertHeijn::PackingSlip.parse(mangled)
   end
 
+  test "a slip whose total does not follow from its shelf total and bonus is refused" do
+    assert_nil Importing::AlbertHeijn::PackingSlip.parse(@slip_text.gsub("119.93", "119.94"))
+  end
+
+  test "is packed" do
+    assert_predicate Importing::AlbertHeijn::PackingSlip.parse(@slip_text), :packed?
+  end
+
+  test "returns nothing for an order confirmation" do
+    confirmation = file_fixture("albert_heijn_order_confirmation.txt").read
+
+    assert_nil Importing::AlbertHeijn::PackingSlip.parse(confirmation)
+  end
+
   private
 
   # The same mail with the bonus detail section taken out, as it arrives when
-  # nothing was on bonus: the summary still names the bonus row, no detail follows.
+  # nothing was on bonus: the summary still names the bonus row, no detail follows,
+  # and the total is the shelf total plus the deposit.
   def without_bonus_section(mail)
     blocks = mail.split("\n\n")
     stripped = blocks.map(&:strip)
     first = stripped.rindex("Bonusvoordeel")
     last = stripped.index("Totaal voordeel")
 
-    (blocks[0...first] + blocks[(last + 2)..]).join("\n\n")
+    (blocks[0...first] + blocks[(last + 2)..]).join("\n\n").gsub("119.93", "147.74").sub("-27.81", "0.00")
   end
 end

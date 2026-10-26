@@ -43,3 +43,18 @@ household:
 gifts:
   name: Gifts
   direction: debit
+
+# What an assistant files groceries under
+household_expenses:
+  name: Huishoudelijke uitgaven
+  direction: debit
+
+household_groceries:
+  name: Boodschappen
+  direction: debit
+  parent_category: household_expenses
+
+household_cleaning:
+  name: Huishoudelijk
+  direction: debit
+  parent_category: household_expenses

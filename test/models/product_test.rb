@@ -90,6 +90,42 @@ class ProductTest < ActiveSupport::TestCase
     assert_equal small, count_queries { Product.resolve_by_name("AH Something Else New") }
   end
 
+  test "fill_in sets a blank brand and type" do
+    product = products(:andrelon_shampoo)
+
+    assert product.fill_in(brand: " Andrelon ", product_type: product_types(:dishwashing_liquid))
+
+    assert_equal "Andrelon", product.reload.brand
+    assert_equal product_types(:dishwashing_liquid), product.product_type
+  end
+
+  test "fill_in keeps a brand and type already present" do
+    product = products(:ah_ribbelchips)
+
+    product.fill_in(brand: "Albert Heijn", product_type: product_types(:dishwashing_liquid))
+
+    assert_equal "AH", product.reload.brand
+    assert_equal product_types(:naturel_chips), product.product_type
+  end
+
+  test "fill_in keeps a brand already present while filling the type" do
+    product = products(:andrelon_shampoo)
+    product.update!(brand: "Andrelon")
+
+    product.fill_in(brand: "Other", product_type: product_types(:dishwashing_liquid))
+
+    assert_equal [ "Andrelon", product_types(:dishwashing_liquid) ], [ product.brand, product.product_type ]
+  end
+
+  test "fill_in keeps a type already present while filling the brand" do
+    product = products(:andrelon_shampoo)
+    product.update!(product_type: product_types(:naturel_chips))
+
+    product.fill_in(brand: "Andrelon", product_type: product_types(:dishwashing_liquid))
+
+    assert_equal [ "Andrelon", product_types(:naturel_chips) ], [ product.brand, product.product_type ]
+  end
+
   private
 
   def count_queries(&block)
