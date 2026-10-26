@@ -28,7 +28,7 @@ class AssistantParityTest < ActionDispatch::IntegrationTest
     "product_types#update" => "update_product_type",
     "products#index" => "list_products",
     "products#show" => "show_product",
-    "products#update" => "classify_product",
+    "products#update" => "update_product",
     "receipts#index" => "list_receipts",
     "receipts#show" => "show_receipt",
     "receipts/payment_links#create" => "link_receipt_payment",

@@ -96,6 +96,7 @@ class AssistantController < ActionController::API
       Assistant::ShowTransaction,
       Assistant::StartBudget,
       Assistant::UnlinkReceiptPayment,
+      Assistant::UpdateProduct,
       Assistant::UpdateProductType,
       Assistant::UpdateTransaction,
       Assistant::UpdateTransactionSplit

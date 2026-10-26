@@ -22,6 +22,17 @@ class AssistantProductsTest < ActionDispatch::IntegrationTest
     assert_not_includes ask_assistant("list_unclassified_products"), "Andrelon shampoo"
   end
 
+  test "editing a product replaces the brand and type it already had, as the app does" do
+    product = products(:ah_ribbelchips)
+
+    answer = ask_assistant("update_product", product_id: product.id, name: "Lay's Naturel", brand: "Lay's",
+      product_type_id: product_types(:dishwashing_liquid).id)
+
+    assert_equal [ "Lay's Naturel", "Lay's", product_types(:dishwashing_liquid) ],
+      [ product.reload.name, product.brand, product.product_type ]
+    assert_includes answer, "Updated product #{product.id}"
+  end
+
   test "the assistant manages product types" do
     ask_assistant("create_product_type", name: "Shampoo", category_id: categories(:household).id)
     type = ProductType.find_by!(name: "Shampoo")
