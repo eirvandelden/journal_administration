@@ -323,6 +323,7 @@ Domain skills applied: software-design, glossary, diagrams, rails-architecture, 
 - Step 2 found a real bug: `t(".key")` inside a `shared/title_bar` layout block resolves under `shared.title_bar`. The blocks in `accounts/show`, `admin/users/show`, `appropriations/index` and `appropriations/show` use absolute keys.
 - Five tests that read removed keys now use existing keys or literals (`main_nav.dashboard_filters`, `common.destroy`, `transactions.table.show`).
 - `it.admin.users.form.password` is "Parola d'accesso". Etienne can choose "Password" and allowlist it instead.
+- The system test's `CHROME` selector uses `label:not(:has(select))`, not `label`, so option text, which is user data, stays out of the search.
 - `activerecord.errors.models.transaction.attributes.type` already held `has_charged_parts`; the new keys join it.
 
 ## Critique
