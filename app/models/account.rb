@@ -57,16 +57,22 @@ class Account < ApplicationRecord
 
   before_destroy :check_no_transactions_exist
 
+  # Every transaction where this account is debitor or creditor, newest booked first
+  #
+  #: () -> ActiveRecord::Relation
+  def transactions
+    Transaction
+      .by_account(id)
+      .includes(:creditor, :debitor, :category)
+      .order(id: :desc)
+  end
+
   # Returns the 10 most recent transactions involving this account as debitor or creditor
   #
   # @param limit [Integer] Maximum number of transactions to return
   # @return [ActiveRecord::Relation] Transactions ordered by most recent first
   def recent_transactions(limit: 10)
-    Transaction
-      .includes(:creditor, :debitor, :category)
-      .where("debitor_account_id = :id OR creditor_account_id = :id", id: id)
-      .order(booked_at: :desc, id: :desc)
-      .limit(limit)
+    transactions.limit(limit)
   end
 
   # Returns true when the account has no household owner.
