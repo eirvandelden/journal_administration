@@ -120,15 +120,17 @@ class AccountsShowTest < ActionDispatch::IntegrationTest
       )
     end
 
+    oldest_path = polymorphic_path(Transaction.find(oldest.id))
+
     get account_path(accounts(:checking))
 
     assert_select "a[rel='next']"
-    assert_not_includes response.body, "/#{oldest.id}"
+    assert_not_includes response.body, oldest_path
 
     get css_select("a[rel='next']").first["href"]
 
     assert_select "a[rel='prev']"
-    assert_includes response.body, "/#{oldest.id}"
+    assert_includes response.body, oldest_path
   end
 
   test "edit renders recent transactions heading" do
