@@ -24,10 +24,7 @@ class AccountsController < ApplicationController
   #
   # @return [void]
   def show
-    @transactions_page =
-      GearedPagination::Recordset.new(@account.recent_transactions(limit: nil), per_page: [ 20 ])
-        .page(params[:transactions_page])
-    @transactions = @transactions_page.records
+    @transactions = set_page_and_extract_portion_from @account.transactions, per_page: [ 20 ]
   end
 
   # Renders form for creating a new account

@@ -44,8 +44,60 @@ class AccountsShowTest < ActionDispatch::IntegrationTest
     get account_path(accounts(:checking))
 
     assert_response :success
-    assert_select "a[href='#{transaction_path(transactions(:debit_grocery))}']"
+    assert_select "a[href='#{polymorphic_path(transactions(:debit_grocery))}']"
     assert_select "a[href='#{edit_transaction_path(transactions(:debit_grocery))}']", count: 0
+  end
+
+  test "show lists the interest date column" do
+    get account_path(accounts(:checking))
+
+    assert_select "table.transactions thead th", count: 8
+    assert_select "table.transactions thead th", text: I18n.t("transactions.table.interest_date")
+    interest_at = transactions(:debit_grocery).interest_at
+
+    assert_select "table.transactions time[datetime='#{interest_at.to_date.iso8601}']"
+  end
+
+  test "show renders split sub-rows with amount category and note" do
+    get account_path(accounts(:checking))
+
+    assert_select "tr.split-row", count: 2
+    assert_select "tr.split-row", text: /Supermarket items/
+    assert_select "tr.split-row", text: /Bakery items/
+    assert_select "tr.split-row data[value='3000']"
+    assert_select "tr.split-row data[value='1000']"
+  end
+
+  test "show links the amount to the transaction which offers edit" do
+    get account_path(accounts(:checking))
+    href = css_select("table.transactions a[href='#{polymorphic_path(transactions(:debit_grocery))}']").first["href"]
+
+    get href
+
+    assert_response :success
+    assert_select "a[href='#{edit_transaction_path(transactions(:debit_grocery))}']"
+  end
+
+  test "show renders an empty table for an account without transactions" do
+    get account_path(accounts(:jumbo))
+
+    assert_response :success
+    assert_select "table.transactions tbody tr", count: 0
+  end
+
+  test "show renders no filters form" do
+    get account_path(accounts(:checking))
+
+    assert_select "form[action='#{transactions_path}'][method='get']", count: 0
+  end
+
+  test "show runs the same number of queries for 21 and 41 transactions" do
+    create_checking_transactions(21)
+    small = count_queries { get account_path(accounts(:checking)) }
+    create_checking_transactions(20)
+    large = count_queries { get account_path(accounts(:checking)) }
+
+    assert_equal small, large
   end
 
   test "show paginates recent transactions to the next page" do
@@ -71,12 +123,12 @@ class AccountsShowTest < ActionDispatch::IntegrationTest
     get account_path(accounts(:checking))
 
     assert_select "a[rel='next']"
-    assert_not_includes response.body, transaction_path(oldest)
+    assert_not_includes response.body, "/#{oldest.id}"
 
-    get account_path(accounts(:checking), transactions_page: 2)
+    get css_select("a[rel='next']").first["href"]
 
     assert_select "a[rel='prev']"
-    assert_includes response.body, transaction_path(oldest)
+    assert_includes response.body, "/#{oldest.id}"
   end
 
   test "edit renders recent transactions heading" do
@@ -146,5 +198,27 @@ class AccountsShowTest < ActionDispatch::IntegrationTest
     get account_path(accounts(:checking))
 
     assert_select "main dl dt", minimum: 3
+  end
+
+  private
+
+  def create_checking_transactions(count)
+    count.times do |index|
+      Transaction.create!(
+        amount: 10 + index,
+        booked_at: 2.days.from_now + index.minutes,
+        interest_at: 2.days.from_now + index.minutes,
+        debitor: accounts(:checking),
+        creditor: accounts(:albert_heijn),
+        category: categories(:supermarket)
+      )
+    end
+  end
+
+  def count_queries(&block)
+    count = 0
+    counter = ->(*, payload) { count += 1 unless %w[SCHEMA TRANSACTION].include?(payload[:name]) }
+    ActiveSupport::Notifications.subscribed(counter, "sql.active_record", &block)
+    count
   end
 end
