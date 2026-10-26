@@ -6,7 +6,7 @@ class Assistant::UnlinkReceiptPaymentTest < ActiveSupport::TestCase
 
   test "unlinks and says the splits stay" do
     receipt = receipts(:albert_heijn_friday)
-    receipt.update!(payment: transactions(:debit_grocery))
+    receipt.update!(payment: transactions(:credit_grocery))
 
     text = said(Assistant::UnlinkReceiptPayment.call(receipt_id: receipt.id, server_context: nil))
 

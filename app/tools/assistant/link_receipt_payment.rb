@@ -3,8 +3,9 @@ module Assistant
   class LinkReceiptPayment < Tool
     description "Link a receipt to the payment that settled it and split that payment per category, the way " \
       "the basket divides. Answers with the splits written, so each can be charged with " \
-      "charge_to_appropriation. Refused for a payment that does not fit, a basket bigger than the payment, a " \
-      "charged payment, or a payment that paid another receipt. Linking the same payment again re-splits it."
+      "charge_to_appropriation. Refused for a payment that does not fit (one the shop did not book around the " \
+      "receipt's day, or one another receipt holds), a basket bigger than the payment, or a charged payment. " \
+      "Linking the same payment again re-splits it."
     annotations destructive_hint: true
     input_schema(
       properties: {
@@ -33,7 +34,6 @@ module Assistant
 
     def self.refused(receipt, payment)
       return linked_elsewhere(receipt) if linked_elsewhere?(receipt, payment)
-      return "Payment ##{payment.id} already paid receipt ##{payment.receipt.id}." if paid_another?(receipt, payment)
       return too_big(receipt, payment) unless receipt.basket_fits?(payment)
 
       "Payment ##{payment.id} is charged to an appropriation; remove that charge in the app first." if payment.charged?
@@ -52,9 +52,6 @@ module Assistant
 
     def self.linked_elsewhere?(receipt, payment) = receipt.payment_id && receipt.payment_id != payment.id
     private_class_method :linked_elsewhere?
-
-    def self.paid_another?(receipt, payment) = payment.receipt && payment.receipt != receipt
-    private_class_method :paid_another?
 
     def self.link(receipt, payment)
       split = Receipt.transaction do

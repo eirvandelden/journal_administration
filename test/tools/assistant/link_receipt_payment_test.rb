@@ -7,7 +7,7 @@ class Assistant::LinkReceiptPaymentTest < ActiveSupport::TestCase
   test "links and lists the splits written" do
     text = said(link)
 
-    assert_equal transactions(:debit_grocery), receipts(:albert_heijn_friday).reload.payment
+    assert_equal transactions(:credit_grocery), receipts(:albert_heijn_friday).reload.payment
     assert_includes text, "2.98 Groceries"
     assert_includes text, "3.49 Household"
   end
@@ -16,12 +16,11 @@ class Assistant::LinkReceiptPaymentTest < ActiveSupport::TestCase
     response = link(payment: transactions(:uncategorized))
 
     assert refused_response?(response)
-    assert_includes said(response), "#{transactions(:debit_grocery).id}: "
+    assert_includes said(response), "#{transactions(:credit_grocery).id}: "
   end
 
   test "refuses a basket bigger than the payment" do
-    transactions(:debit_grocery).transaction_splits.destroy_all
-    transactions(:debit_grocery).update!(amount: 500)
+    transactions(:credit_grocery).update!(amount: 500)
 
     response = link
 
@@ -30,7 +29,7 @@ class Assistant::LinkReceiptPaymentTest < ActiveSupport::TestCase
   end
 
   test "refuses a charged payment" do
-    transaction_splits(:split_grocery_bakery).update!(appropriation: appropriations(:birthday_etienne))
+    transactions(:credit_grocery).update!(appropriation: appropriations(:birthday_etienne))
 
     assert_includes said(link), "charged to an appropriation"
   end
@@ -41,7 +40,7 @@ class Assistant::LinkReceiptPaymentTest < ActiveSupport::TestCase
     text = said(link)
 
     assert_includes text, "AH Naturel Ribbelchips"
-    assert_equal transactions(:debit_grocery), receipts(:albert_heijn_friday).reload.payment
+    assert_equal transactions(:credit_grocery), receipts(:albert_heijn_friday).reload.payment
   end
 
   test "links without splitting and says an empty basket has nothing to split" do
@@ -57,20 +56,19 @@ class Assistant::LinkReceiptPaymentTest < ActiveSupport::TestCase
   end
 
   test "refuses a payment that paid another receipt and changes no split" do
-    other = receipts(:albert_heijn_duplicate_monday)
-    other.update!(payment: transactions(:debit_grocery))
-    before = transactions(:debit_grocery).transaction_splits.pluck(:id, :amount)
+    receipts(:albert_heijn_duplicate_monday).update!(payment: transactions(:credit_grocery))
 
     response = link
 
     assert refused_response?(response)
-    assert_includes said(response), "already paid receipt ##{other.id}"
-    assert_equal before, transactions(:debit_grocery).transaction_splits.pluck(:id, :amount)
+    assert_includes said(response), "does not fit"
+    assert_nil receipts(:albert_heijn_friday).reload.payment
+    assert_empty transactions(:credit_grocery).transaction_splits
   end
 
   private
 
-  def link(payment: transactions(:debit_grocery))
+  def link(payment: transactions(:credit_grocery))
     Assistant::LinkReceiptPayment.call(receipt_id: receipts(:albert_heijn_friday).id,
       transaction_id: payment.id, server_context: nil)
   end

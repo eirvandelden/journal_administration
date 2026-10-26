@@ -10,12 +10,12 @@ class Assistant::ShowReceiptTest < ActiveSupport::TestCase
     text = said(Assistant::ShowReceipt.call(receipt_id: receipt.id, server_context: nil))
 
     assert_includes text, "product ##{products(:dreft_dishwashing_liquid).id} Dreft afwasmiddel"
-    assert_includes text, "#{transactions(:debit_grocery).id}: "
+    assert_includes text, "#{transactions(:credit_grocery).id}: "
   end
 
   test "does not look for fitting payments when the receipt is already linked" do
     receipt = receipts(:albert_heijn_friday)
-    receipt.update!(payment: transactions(:debit_grocery))
+    receipt.update!(payment: transactions(:credit_grocery))
     queries = []
     subscriber = ->(*, payload) { queries << payload[:sql] }
 

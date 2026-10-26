@@ -44,7 +44,7 @@ class AssistantReceiptsTest < ActionDispatch::IntegrationTest
 
   test "linking a receipt splits its payment the way the basket divides" do
     receipt = receipts(:albert_heijn_friday)
-    payment = transactions(:debit_grocery)
+    payment = transactions(:credit_grocery)
 
     answer = ask_assistant("link_receipt_payment", receipt_id: receipt.id, transaction_id: payment.id)
 
@@ -56,15 +56,17 @@ class AssistantReceiptsTest < ActionDispatch::IntegrationTest
   end
 
   test "a pasted receipt ends as a split payment with a part charged to an appropriation" do
-    file_pasted_receipt(issued_on: transactions(:debit_grocery).booked_at.to_date.to_s)
+    payment = transactions(:credit_grocery)
+    file_pasted_receipt(issued_on: payment.booked_at.to_date.to_s)
     receipt = Receipt.order(:id).last
     receipt.lines.each { |line| classify(line.product, categories(:groceries)) }
 
-    ask_assistant("link_receipt_payment", receipt_id: receipt.id, transaction_id: transactions(:debit_grocery).id)
-    part = transactions(:debit_grocery).reload.explicit_transaction_splits.first
+    ask_assistant("link_receipt_payment", receipt_id: receipt.id, transaction_id: payment.id)
+    part = payment.reload.explicit_transaction_splits.first
     answer = ask_assistant("charge_to_appropriation", appropriation_id: appropriations(:birthday_etienne).id,
-      transaction_id: transactions(:debit_grocery).id, transaction_split_id: part.id)
+      transaction_id: payment.id, transaction_split_id: part.id)
 
+    assert_equal receipt, payment.receipt
     assert_equal appropriations(:birthday_etienne), part.reload.appropriation
     assert_includes answer, "Charged"
   end
