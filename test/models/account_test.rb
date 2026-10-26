@@ -143,6 +143,56 @@ class AccountTest < ActiveSupport::TestCase
     assert_predicate accounts(:savings), :valid?
   end
 
+  # -- transactions -----------------------------------------------------------
+
+  test "transactions returns transactions where account is debitor" do
+    assert_includes accounts(:checking).transactions, transactions(:debit_grocery)
+  end
+
+  test "transactions returns transactions where account is creditor" do
+    assert_includes accounts(:checking).transactions, transactions(:credit_salary)
+  end
+
+  test "transactions excludes another account's transaction" do
+    other = Transaction.create!(
+      amount: 5, booked_at: Time.current, interest_at: Time.current,
+      debitor: accounts(:savings), creditor: accounts(:albert_heijn), category: categories(:supermarket)
+    )
+
+    assert_not_includes accounts(:checking).transactions, other
+  end
+
+  test "transactions orders by booked date then id descending" do
+    timestamp = 90.days.from_now
+    first, second = 2.times.map do
+      Transaction.create!(
+        amount: 8000, booked_at: timestamp, interest_at: timestamp,
+        debitor: accounts(:checking), creditor: accounts(:albert_heijn), category: categories(:supermarket)
+      )
+    end
+
+    assert_equal [ second.id, first.id ], accounts(:checking).transactions.first(2).map(&:id)
+  end
+
+  test "transactions preloads associations used by the table" do
+    transaction = accounts(:checking).transactions.first
+
+    %i[creditor debitor category].each do |association|
+      assert_predicate transaction.association(association), :loaded?, "#{association} not preloaded"
+    end
+  end
+
+  test "transactions has no limit" do
+    11.times do |index|
+      Transaction.create!(
+        amount: 1000 + index, booked_at: 20.days.from_now + index.minutes, interest_at: 20.days.from_now,
+        debitor: accounts(:checking), creditor: accounts(:albert_heijn), category: categories(:supermarket)
+      )
+    end
+
+    assert_operator accounts(:checking).transactions.count, :>, 10
+  end
+
   # -- recent_transactions ----------------------------------------------------
 
   test "recent_transactions returns transactions where account is debitor" do
