@@ -369,6 +369,7 @@ Phase B (app). Gate: the appkit pull request is merged; then `bundle update appk
 
 Phase C (app). Gate: both mvpa.css slices are merged; then `bundle update mvpa-css`.
 
+0. Follow the `### Upgrading` steps in mvpa.css's CHANGELOG for #45 (merged 2026-10-26 as `890d132`). mvpa.css now ships the title-bar heading wrap, so delete the app's local rule in `app/assets/stylesheets/local/layout/title_bar.css` (`min-width: 0; overflow-wrap: anywhere;`).
 1. System tests at phone width (five-tab bar, avatar only on Overzicht), at a width between phone and the hub-column breakpoint (no hub column, landing reachable from the rail), and no sideways scroll at laptop, narrow and phone width on the hub pages and the existing page list. Take the breakpoints from the merged mvpa.css.
 2. Full suite, linters, and a look at each hub in the browser at the three widths.
 
