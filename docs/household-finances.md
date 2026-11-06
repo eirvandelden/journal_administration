@@ -5,16 +5,19 @@ This document describes how the household runs its money. It holds the method on
 ```mermaid
 flowchart LR
   Salary["Salary (one earner)"] --> Samen["Samen Betaalrekening"]
-  Benefits["Child benefits: KGB monthly, kinderbijslag quarterly"] -->|all of it| Kinderen
+  Benefits["Child benefits: KGB monthly, kinderbijslag quarterly"] --> Samen
   subgraph Potjes["Samen potjes (Oranje Spaarrekening)"]
     Kinderen["Kinderen"]
-    Others["Five other potjes"]
+    Others["Five salary potjes"]
     Huis["Huis"]
     Vakantie["Vakantie"]
     Projecten["Projecten"]
     Buffer["Buffer"]
   end
-  Samen -->|fill each potje on salary day| Others
+  Samen -->|monthly transfers after the salary| Others
+  Samen -->|child benefits, minus the children's own savings accounts| Kinderen
+  Others -->|pulled before or after a purchase| Samen
+  Kinderen -->|pulled before or after a purchase| Samen
   Samen -->|equal amount| Personal["Personal Betaalrekening (each partner)"]
   Samen -->|direct debit| Fixed["Vaste lasten, Verzekeringen, Abonnementen, Heffingen"]
   Samen -->|Onvoorzien leftover on the 21st| Projecten
@@ -60,7 +63,7 @@ The household uses Dutch terms. The standard financial term stands next to each 
 
 ## Income
 
-Household income is the salary only, from one earner. Etienne's partner has no income. Child benefits are not household income. The KGB arrives monthly, around the 20th. The kinderbijslag arrives quarterly. All child benefits go to Kinderen and pay only for the children: clothing, furniture, hobbies, gifts, toys and parties, care and school, and their savings. Kinderen keeps about one quarter of the kinderbijslag, because it arrives per quarter.
+Household income is the salary only, from one earner. Etienne's partner has no income. Child benefits are not household income. The KGB arrives monthly, around the 20th. The kinderbijslag arrives quarterly. All child benefits go to Kinderen and pay only for the children: clothing, furniture, hobbies, gifts, toys and parties, care and school, and their savings. Kinderen holds about one quarter's worth of kinderbijslag in reserve, because it arrives only four times a year.
 
 ## Bank accounts and potjes
 
@@ -85,7 +88,7 @@ The Samen Oranje Spaarrekening holds ten potjes, all active. The potje names are
 
 ## Salary routine
 
-The salary arrives in the Samen Betaalrekening. Then each Samen potje is filled, and each partner gets the personal allowance. Onvoorzien stays behind on the Betaalrekening.
+The salary arrives in the Samen Betaalrekening. After it arrives, monthly transfers from the Betaalrekening fill five potjes: Boodschappen en huishouden, Auto en vervoer, Reserveringen, Vrije tijd en hobby and Cadeautjes. They also pay each partner's personal allowance. Onvoorzien stays behind on the Betaalrekening. The salary does not fill Kinderen, Huis, Vakantie, Projecten or Buffer. Kinderen is filled from the child benefits. The KGB arrives monthly on the Betaalrekening, around the 20th. It pays the children's own savings accounts, and the rest moves to Kinderen with the monthly transfers after the salary. The kinderbijslag arrives quarterly on the Betaalrekening and moves to Kinderen soon after it arrives. Huis and Vakantie are filled only from the windfalls. Buffer gets only the windfall leftovers. Projecten gets tax refunds, the monthly leftover on the 21st and Buffer's share above its target.
 
 ## Windfalls
 
@@ -120,9 +123,9 @@ Appropriations (earmarked funds) for the children are saved for in Kinderen. The
 The standard terms are agent-supplied.
 
 - Envelope budgeting: the household budgets with potjes. A potje is still called a potje.
-- Zero-based budgeting: on salary day every euro of the salary gets a destination: potjes, personal allowances, fixed costs and Onvoorzien.
+- Zero-based budgeting: on salary day every euro of the salary gets a destination: the five salary potjes, personal allowances, fixed costs and Onvoorzien.
 - Sinking fund: Reserveringen saves ahead for recurring costs.
-- Pay yourself first: the potjes and the savings are filled on salary day, before spending.
+- Pay yourself first: the five salary potjes are filled by the monthly transfers after the salary, before spending. Savings move first when each windfall arrives, not on salary day.
 - Emergency fund: Buffer.
 
 ## App categories
