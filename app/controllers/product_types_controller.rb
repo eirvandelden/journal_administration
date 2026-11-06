@@ -4,14 +4,12 @@ class ProductTypesController < ApplicationController
 
   # Lists the product types with the category each is booked to
   #
-  #
   #: () -> void
   def index
     @product_types = ProductType.includes(:category).order(:name)
   end
 
   # Compares the products of this type and totals what we spend on them
-  #
   #
   #: () -> void
   def show
@@ -21,7 +19,6 @@ class ProductTypesController < ApplicationController
 
   # Renders the form for a new product type
   #
-  #
   #: () -> void
   def new
     @product_type = ProductType.new
@@ -30,14 +27,12 @@ class ProductTypesController < ApplicationController
 
   # Renders the form for an existing product type
   #
-  #
   #: () -> void
   def edit
     @categories = Category.order(:name)
   end
 
   # Creates a product type
-  #
   #
   #: () -> void
   def create
@@ -50,7 +45,6 @@ class ProductTypesController < ApplicationController
   end
 
   # Updates a product type
-  #
   #
   #: () -> void
   def update

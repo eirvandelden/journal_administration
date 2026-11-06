@@ -5,7 +5,6 @@ module Receipts
 
     # Links the chosen payment to the receipt and splits it by the basket
     #
-    #
     #: () -> void
     def create
       payment = chosen_payment
@@ -24,7 +23,6 @@ module Receipts
 
     # Lets a person undo settling the wrong payment. The splits already written
     # stay as they are: what the payment carried before is not recoverable.
-    #
     #
     #: () -> void
     def destroy

@@ -4,7 +4,6 @@ class CategoriesController < ApplicationController
 
   # Lists all categories grouped by parent category.
   #
-  #
   #: () -> void
   def index
     @category_groups = Category.includes(:parent_category)
@@ -14,12 +13,10 @@ class CategoriesController < ApplicationController
 
   # Displays a single category
   #
-  #
   #: () -> void
   def show; end
 
   # Renders form for creating a new category
-  #
   #
   #: () -> void
   def new
@@ -28,12 +25,10 @@ class CategoriesController < ApplicationController
 
   # Renders form for editing a category
   #
-  #
   #: () -> void
   def edit; end
 
   # Creates a new category
-  #
   #
   #: () -> void
   def create
@@ -52,7 +47,6 @@ class CategoriesController < ApplicationController
 
   # Updates a category
   #
-  #
   #: () -> void
   def update
     respond_to do |format|
@@ -67,7 +61,6 @@ class CategoriesController < ApplicationController
   end
 
   # Deletes a category
-  #
   #
   #: () -> void
   def destroy

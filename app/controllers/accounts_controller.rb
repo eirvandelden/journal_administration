@@ -4,7 +4,6 @@ class AccountsController < ApplicationController
 
   # Lists all accounts with pagination
   #
-  #
   #: () -> void
   def index
     own_accounts = Account.own.includes(:account_numbers, :person, group: :people).order(:id)
@@ -23,7 +22,6 @@ class AccountsController < ApplicationController
 
   # Displays a single account
   #
-  #
   #: () -> void
   def show
     @transactions_page =
@@ -34,7 +32,6 @@ class AccountsController < ApplicationController
 
   # Renders form for creating a new account
   #
-  #
   #: () -> void
   def new
     @account = Account.new
@@ -43,14 +40,12 @@ class AccountsController < ApplicationController
 
   # Renders form for editing an account
   #
-  #
   #: () -> void
   def edit
     @account.account_numbers.build
   end
 
   # Creates a new account
-  #
   #
   #: () -> void
   def create
@@ -68,7 +63,6 @@ class AccountsController < ApplicationController
   end
 
   # Updates an account
-  #
   #
   #: () -> void
   def update

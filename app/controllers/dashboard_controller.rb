@@ -11,7 +11,6 @@ class DashboardController < ApplicationController
   # @action GET
   # @route /dashboard
   #
-  #
   #: () -> void
   def index
     @dashboard = Dashboard.new(start_date: params[:start_date], end_date: params[:end_date], filter: params[:filter])

@@ -9,20 +9,17 @@ class Users::ProfilesController < ApplicationController
 
   # Displays a user's profile
   #
-  #
   #: () -> void
   def show
   end
 
   # Renders form for editing the current user's profile
   #
-  #
   #: () -> void
   def edit
   end
 
   # Updates the current user's profile information
-  #
   #
   #: () -> void
   def update

@@ -4,14 +4,12 @@ class ProductsController < ApplicationController
 
   # Lists the products, marking the ones still needing classification
   #
-  #
   #: () -> void
   def index
     @products = set_page_and_extract_portion_from Product.includes(:product_type).order(:name), per_page: [ 20 ]
   end
 
   # Displays one product with every purchase of it
-  #
   #
   #: () -> void
   def show
@@ -20,14 +18,12 @@ class ProductsController < ApplicationController
 
   # Renders the form for classifying a product
   #
-  #
   #: () -> void
   def edit
     load_form_choices
   end
 
   # Records a product's brand and type
-  #
   #
   #: () -> void
   def update

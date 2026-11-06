@@ -10,7 +10,6 @@ class ChattelsController < ApplicationController
   # Separates active items into warrantied, out-of-warranty, and unknown warranty status,
   # plus items that have left possession.
   #
-  #
   #: () -> void
   def index
     scope = Chattel.includes(:warranty_document_attachment, purchase_transaction: :proof_of_purchase_attachment)
@@ -22,13 +21,11 @@ class ChattelsController < ApplicationController
 
   # Displays a single chattel
   #
-  #
   #: () -> void
   def show
   end
 
   # Renders form for creating a new chattel
-  #
   #
   #: () -> void
   def new
@@ -37,13 +34,11 @@ class ChattelsController < ApplicationController
 
   # Renders form for editing a chattel
   #
-  #
   #: () -> void
   def edit
   end
 
   # Creates a new chattel
-  #
   #
   #: () -> void
   def create
@@ -62,7 +57,6 @@ class ChattelsController < ApplicationController
 
   # Updates a chattel
   #
-  #
   #: () -> void
   def update
     respond_to do |format|
@@ -77,7 +71,6 @@ class ChattelsController < ApplicationController
   end
 
   # Deletes a chattel
-  #
   #
   #: () -> void
   def destroy

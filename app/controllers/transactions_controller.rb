@@ -24,12 +24,10 @@ class TransactionsController < ApplicationController
 
   # Displays a single transaction
   #
-  #
   #: () -> void
   def show; end
 
   # Renders form for creating a new transaction
-  #
   #
   #: () -> void
   def new
@@ -38,12 +36,10 @@ class TransactionsController < ApplicationController
 
   # Renders form for editing a transaction
   #
-  #
   #: () -> void
   def edit; end
 
   # Creates a new transaction
-  #
   #
   #: () -> void
   def create
@@ -62,7 +58,6 @@ class TransactionsController < ApplicationController
 
   # Updates a transaction
   #
-  #
   #: () -> void
   def update
     respond_to do |format|
@@ -77,7 +72,6 @@ class TransactionsController < ApplicationController
   end
 
   # Deletes a transaction
-  #
   #
   #: () -> void
   def destroy

@@ -23,7 +23,6 @@ class TodosController < ApplicationController
 
   # Renders the todo index page
   #
-  #
   #: () -> void
   def index
     todo = Todo.new

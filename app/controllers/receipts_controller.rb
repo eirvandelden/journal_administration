@@ -4,14 +4,12 @@ class ReceiptsController < ApplicationController
 
   # Lists the invoices, most recent first
   #
-  #
   #: () -> void
   def index
     @receipts = set_page_and_extract_portion_from receipts, per_page: [ 20 ]
   end
 
   # Displays one invoice with its basket, and the payments that could settle it
-  #
   #
   #: () -> void
   def show

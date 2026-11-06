@@ -4,7 +4,6 @@ class Accounts::TransactionsBulkController < ApplicationController
 
   # Updates all uncategorized transactions in an account to the account's category
   #
-  #
   #: () -> void
   def update
     updated_count = @account.update_uncategorized_transactions!
