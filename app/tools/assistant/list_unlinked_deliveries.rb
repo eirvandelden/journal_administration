@@ -5,12 +5,12 @@ module Assistant
       "to confirm on the receipts page."
     annotations read_only_hint: true
 
+    #: (server_context: untyped) -> MCP::Tool::Response
     def self.call(server_context:)
       answer(describe(Receipt.unlinked_deliveries.order(:issued_on, :id)))
     end
 
-    # @param deliveries [Enumerable<Receipt>]
-    # @return [String]
+    #: (Receipt::ActiveRecord_Relation deliveries) -> String
     def self.describe(deliveries)
       lines = deliveries.map do |delivery|
         "Receipt ##{delivery.id}: order #{delivery.order_number} on #{delivery.issued_on}, " \

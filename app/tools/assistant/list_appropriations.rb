@@ -12,7 +12,7 @@ module Assistant
       required: [ "budget_year" ]
     )
 
-    # @return [MCP::Tool::Response]
+    #: (budget_year: Integer, server_context: untyped) -> MCP::Tool::Response
     def self.call(budget_year:, server_context:)
       appropriations = Appropriation.of_year(budget_year).includes(:person).order(:purpose)
 
@@ -22,6 +22,8 @@ module Assistant
     end
 
     # One line per appropriation, amounts written as appropriated, charged and left
+    #
+    #: (Appropriation appropriation) -> String
     def self.describe(appropriation)
       "#{appropriation.id}: #{appropriation.purpose} for #{appropriation.recipient_name}, " \
         "appropriated #{money(appropriation.amount)}, charged #{money(appropriation.charged)}, " \
@@ -30,6 +32,8 @@ module Assistant
     private_class_method :describe
 
     # An amount with two decimals
+    #
+    #: (Integer cents) -> String
     def self.money(cents) = euros(cents)
     private_class_method :money
   end

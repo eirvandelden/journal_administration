@@ -7,12 +7,14 @@ module Assistant
       "At most #{HIGHEST_COUNT} are listed."
     annotations read_only_hint: true
 
+    #: (server_context: untyped) -> MCP::Tool::Response
     def self.call(server_context:)
       categories = Category.includes(:parent_category).limit(HIGHEST_COUNT)
 
       answer([ *categories.map { |category| describe(category) }, held_back(categories) ].compact.join("\n"))
     end
 
+    #: (Category category) -> String
     def self.describe(category)
       "#{category.id}: #{category.full_name}"
     end
@@ -20,6 +22,8 @@ module Assistant
 
     # An assistant reading a list it believes is complete files transactions under the wrong
     # category rather than asking, so a shortened list has to say so.
+    #
+    #: (Category::ActiveRecord_Relation categories) -> String?
     def self.held_back(categories)
       total = Category.count
 

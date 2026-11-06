@@ -7,6 +7,7 @@ module Assistant
       "running now, and how many categories it plans for. At most #{HIGHEST_COUNT} are listed."
     annotations read_only_hint: true
 
+    #: (server_context: untyped) -> MCP::Tool::Response
     def self.call(server_context:)
       budgets = Budget.includes(:budget_categories).order(starts_at: :desc).limit(HIGHEST_COUNT)
 
@@ -15,11 +16,13 @@ module Assistant
       answer([ *budgets.map { |budget| describe(budget) }, held_back(budgets) ].compact.join("\n"))
     end
 
+    #: (Budget budget) -> String
     def self.describe(budget)
       "#{budget.id}: #{period(budget)}, #{standing(budget)}, #{plan(budget)}"
     end
     private_class_method :describe
 
+    #: (Budget budget) -> String
     def self.period(budget)
       return "#{budget.starts_at.to_date} onwards" if budget.ends_at.nil?
 
@@ -27,6 +30,7 @@ module Assistant
     end
     private_class_method :period
 
+    #: (Budget budget) -> String
     def self.standing(budget)
       return "running now" if budget.active?
       return "starts later" if budget.future?
@@ -35,6 +39,7 @@ module Assistant
     end
     private_class_method :standing
 
+    #: (Budget budget) -> String
     def self.plan(budget)
       planned = budget.budget_categories.size
 
@@ -44,6 +49,7 @@ module Assistant
     end
     private_class_method :plan
 
+    #: (Budget::ActiveRecord_Relation budgets) -> String?
     def self.held_back(budgets)
       total = Budget.count
 

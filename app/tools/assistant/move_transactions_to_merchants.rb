@@ -14,6 +14,7 @@ module Assistant
       required: [ "account_id" ]
     )
 
+    #: (account_id: Integer, server_context: untyped) -> MCP::Tool::Response
     def self.call(account_id:, server_context:)
       account = Account.find_by(id: account_id)
       return problem("No account ##{account_id} exists.") if account.nil?
@@ -24,6 +25,7 @@ module Assistant
       problem("Moving failed and nothing was moved: #{error.message}")
     end
 
+    #: (Integer count, Account account) -> String
     def self.moved(count, account)
       return "Moved 1 transaction from #{account} to its merchant." if count == 1
 

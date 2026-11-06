@@ -11,6 +11,7 @@ module Assistant
       required: [ "mail" ]
     )
 
+    #: (mail: String, server_context: untyped) -> MCP::Tool::Response
     def self.call(mail:, server_context:)
       basket = Importing::AlbertHeijn::BasketMail.parse(mail)
       return problem("No Albert Heijn basket could be read from this mail, so nothing was saved.") if basket.nil?
@@ -23,6 +24,9 @@ module Assistant
       describe(Receipt.record_basket(basket), basket)
     end
 
+    # @rbs! type basket = (Importing::AlbertHeijn::PackingSlip | Importing::AlbertHeijn::OlderPackingSlip | Importing::AlbertHeijn::OrderConfirmation)
+
+    #: (Receipt receipt, basket basket) -> String
     def self.describe(receipt, basket)
       kept = receipt.packed? && !basket.packed?
       lines = receipt.lines.includes(product: :product_type).to_a

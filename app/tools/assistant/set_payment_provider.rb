@@ -14,6 +14,7 @@ module Assistant
       required: [ "account_id", "shared" ]
     )
 
+    #: (account_id: Integer, shared: bool, server_context: untyped) -> MCP::Tool::Response
     def self.call(account_id:, shared:, server_context:)
       account = Account.find_by(id: account_id)
       return problem("No account ##{account_id} exists.") if account.nil?
