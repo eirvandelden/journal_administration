@@ -11,7 +11,7 @@ module Importing
       DELIVERY_LINE = /\AOp \p{L}+ \d{1,2} \p{L}+ \d{4}/
       TABLE_HEADING = [ "Prijs per stuk", "Totaal" ].freeze
 
-      attr_reader :order_number, :delivered_on, :total_amount, :lines
+      attr_reader :order_number, :delivered_on, :total_amount, :lines #: untyped
 
       # Reads an older packing slip mail, or nothing when the mail is not one
       #
@@ -22,6 +22,7 @@ module Importing
         slip if slip&.reconciles?
       end
 
+      #: (Array[String] tokens) -> bool
       def self.readable?(tokens)
         tokens.grep(ORDER_NUMBER).any? && tokens.grep(DELIVERY_LINE).any? &&
           tokens.include?("Kostenoverzicht") && tokens.include?("Subtotaal boodschappen") &&
@@ -29,6 +30,7 @@ module Importing
       end
       private_class_method :readable?
 
+      #: (Array[String] tokens) -> void
       def initialize(tokens)
         @tokens = tokens
         @order_number = tokens.grep(ORDER_NUMBER).first[ORDER_NUMBER, 1]
