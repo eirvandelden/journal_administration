@@ -24,7 +24,7 @@ The household navigates by what they want to do. A rail holds five task hubs: ðŸ
 - The hub names stay: Overzicht, Verwerken, Plannen, Administratie, Boodschappen.
 - A hub can grow past five pages. Contracten joins Administratie later.
 - Rail, hub column and tile grid styles come from mvpa.css. A separate mvpa.css slice adds them first; this slice waits for it and then bumps the gem.
-- Count badges come from the parallel mvpa.css slice `sheets-segmented-control-badges`.
+- Count badges come from the mvpa.css slice `sheets-segmented-control-badges` (#45, merged 2026-10-26 as `890d132`).
 - appkit's shell nav merges before this app uses it. appkit's CHANGELOG gets an `### Upgrading` entry, written as steps an agent in another app can follow.
 - Existing resource routes stay. Only the menu, the landing pages and the redirects change.
 - Stays clear of the parallel slices `ui-review-bug-fixes` (this app) and `sheets-segmented-control-badges` (mvpa.css).
@@ -87,7 +87,7 @@ The household navigates by what they want to do. A rail holds five task hubs: ðŸ
 
 ## Flagged concerns
 
-- This slice depends on an mvpa.css slice for the rail, hub column and tile grid that has no intent yet, and on the open `sheets-segmented-control-badges` slice for badges. Chosen side: wait for both (upstream first), so the app PR merges after them.
+- This slice depends on an mvpa.css slice for the rail, hub column and tile grid that has no intent yet, and on the `sheets-segmented-control-badges` slice for badges, which merged on 2026-10-26 (#45, `890d132`). Chosen side: wait for both (upstream first), so the app PR merges after them; only the rail slice remains.
 - Replacing appkit's `_nav` changes every app that uses appkit. Chosen side: replace it, and document the steps in appkit's `### Upgrading` entry.
 - The rail highlights the owning hub, while the back link returns to the origin hub. A transaction opened from Verwerken lights Administratie and leads back to Verwerken. Chosen side: both, as decided.
 

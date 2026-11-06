@@ -272,23 +272,28 @@ Three architects each designed for one goal.
 - **The badge is left out at 0** by appkit's nav as well as hidden by mvpa.css, so a test can check it without CSS.
 - **Budgetten summary reuses `Dashboard`** for the current month: `budget_summary` adds up the existing `budget_amounts` and `budget_actuals` over the debit categories, so refunds and splits count as they do on the dashboard, and the tile and the dashboard agree.
 - **The phone avatar is "👤"**, labelled with the user's name; the app has no avatar image. The Begrotingsposten count is this year's appropriations with money left.
-- **Hand-written back links.** `_title_bar` gains a `back:` local and renders `menu.back(back)`. Show and edit views of the tile resources (transactions, accounts, products, receipts, chattels, budgets, appropriations) switch to it. The `new` views keep their "Terug" link, since no tile opens them. The users and profile views are left to `ui-review-bug-fixes`.
+- **Hand-written back links.** `_title_bar` gains a `back:` local and renders `menu.back(back)` as the first item of the title bar's `<nav>`, so mvpa.css (#49) draws it as a page-action link with no local CSS; the title bar renders its `<nav>` when there is a back link or a control. Show and edit views of the tile resources (transactions, accounts, products, receipts, chattels, budgets, appropriations) switch to it. The `new` views keep their "Terug" link, since no tile opens them. The users and profile views are left to `ui-review-bug-fixes`.
 - **Admins** are checked with `administrator?`, as `Admin::BaseController#ensure_admin` does.
 - **One plan file for all phases.** The plan skill asks for one file per phase; the hand-over allowed only `plan.md`, so the phases below sit in this file, each with its gate.
 - **Begrotingsposten tile opens a money-left filter.** `/appropriations?filter=money_left` lists this year's `Appropriation.with_money_left`; the hub column opens the full list. Etienne chose this on 2026-10-25, and intent's "New filtered lists" now names it.
 - **The mvpa.css rail slice adopts this plan's markup contract** (`nav.rail`, `nav.hub-column`, `ul.tiles`, phone-only search and 👤 in title bars). Etienne decided this on 2026-10-25; class names may still be negotiated in that slice.
-- **Phasing.** The implement stage delivers phase A as a verified appkit pull request and then pauses until Etienne merges it. Phase B starts after that merge; phase C waits for both mvpa.css slices.
+- **Phasing.** The implement stage delivers phase A as a verified appkit pull request and then pauses until Etienne merges it. Phase B starts after that merge; phase C waits for the mvpa.css rail slice. The badges slice merged on 2026-10-26 (#45, `890d132`).
+- **Amount links keep `<data>` outside the link.** mvpa.css (#45) draws every `a data` as a count pill and hides `a data[value="0"]`. The transaction amount cells therefore render `<data value><a>amount</a></data>`: the amount stays a link to the transaction, reads as plain text, and a zero amount stays visible.
+- **Account menu in the title bar's `<nav>`.** On Overzicht `_account_menu` (`avatar: true`) renders inside the title bar's `<nav>`, as `shared/_actions_menu` does, so mvpa.css already draws it as a pull-down; the rail slice adds only the phone-only visibility rule.
+- **The shell owns its header track.** mvpa.css (#47) gives the nav-only sidebar track only to `body > header:has(> nav:only-child)`, so Overzicht (rail only) and the other hubs (rail plus hub column) would get different layouts. The rail slice styles `body > header:has(> nav.rail)` with its own tracks: one for the rail, and a second one when `nav.hub-column` is present. The markup stays as the contract says.
 - Conflicts with intent's `## Decisions`: none found.
 
 ## Integration points
 
 - **appkit** (`github: "eirvandelden/appkit"`): `_nav` replaced, `_account_menu` and `Appkit::Menu*` added. Its own branch and pull request, merged before this app bumps it with `bundle update appkit` (approved in intent).
   - Phase A runs from appkit's `docs/changes/navigation-hubs/plan.md` (commit `7791bce`), whose critique changed the API this plan's Signatures show. Phase B follows appkit's version: `Hub` takes `landing:` (Overzicht lands on `dashboard#index`, the other hubs on `hubs#show` with their id); `Appkit::Menu.new` takes no `action_name:` and gets `params: request.parameters`; `Link` is a plain class; a hub may hold only one page per controller; the layout calls `render layout: "appkit/shared/nav", locals: { menu:, user_name: } do … end` with the search button as the block. Beheer (`setup`) is a hub with `rail: false`, so it gets a hub column and highlighting but no rail entry. Landing-page tiles link with `menu.tile_path(page)`, which starts the origin; `carry` only forwards an existing one. A record request (an `id`) always belongs to the unfiltered page, even with a filter in its query.
-- **mvpa.css** (`github: "eirvandelden/mvpa.css"`): two upstream slices, the rail/hub column/tile grid slice (no intent yet) and `sheets-segmented-control-badges` (badges). This app bumps with `bundle update mvpa-css` (approved) after both merge. Markup contract this plan emits, for the rail slice to style:
+- **mvpa.css** (`github: "eirvandelden/mvpa.css"`): two upstream slices. `sheets-segmented-control-badges` (badges) merged on 2026-10-26 (#45, `890d132`); the rail/hub column/tile grid slice has no intent yet. This app bumps with `bundle update mvpa-css` (approved) after the rail slice merges. Markup contract this plan emits, for the rail slice to style:
   - `body > header` holds the shell: `nav.rail` (search `li`, hub `li`s with emoji and label, the account `li` with `<details>`), then `nav.hub-column` (an `h2` linking to the landing page, a `ul` of page links, each with `<data value>` when the count is above 0).
-  - The rail marks the owning hub with `aria-current="true"`; the hub column marks the page with `aria-current="page"`.
+  - The rail marks the owning hub with `aria-current="true"`; the hub column marks the page with `aria-current="page"`. mvpa.css styles only `aria-current="page"` today, so the rail slice styles `"true"`.
+  - `body > header` holds two `<nav>`s on a hub page and one on Overzicht. The rail slice gives `body > header:has(> nav.rail)` its own tracks (rail, plus hub column when present) instead of relying on #47's `nav:only-child` track.
   - A landing page renders `ul.tiles` of `li > a` tiles in `main`.
-  - Every title bar renders a search button; the Overzicht title bar also renders the account menu. The rail slice shows these only at phone width and hides the rail's own search and account entry there.
+  - Every title bar renders a search button; the Overzicht title bar also renders the account menu inside its `<nav>` (a `<details>` pull-down). The rail slice shows these only at phone width and hides the rail's own search and account entry there.
+  - mvpa.css already ships the nav link rows with emoji and hover, the `details` disclosure, the hub column `h2`, the phone tab bar with its pop-up, the corner badges and the title-bar pull-down. The rail slice still needs: the rail and hub column tracks above, the `aria-current="true"` style, hiding the search button and the account `<li>` in the phone bar, hiding `nav.hub-column` at phone width (the bar scrolls sideways without it), and the `ul.tiles` grid with the link wiggle excluded. It aligns or drops the "Landing tile" demo example.
   - No local CSS for the shell; anything missing goes upstream. The app's `local/layout/main_navigation.css` (styles every `nav`) goes, and the `body > header` rules in `local/layout/application_page.css` are removed or narrowed so they do not override the rail.
 - **Search dialog**: the rail's search button keeps `data-action="click->search-dialog#open"`; ⌘K stays bound by `search_dialog_controller.js`.
 - **appkit Voorkeuren** renders this app's layout, so `menu` must resolve there. appkit's sign-in, first-run and session-transfer pages use appkit's `login` layout and stay outside the shell.
@@ -334,15 +339,15 @@ Phase B, this app:
 - `app/models/{account,receipt,chattel,appropriation,dashboard,search}.rb` — scopes and methods above; `Search` drops `PAGES` and `Todo`.
 - `app/controllers/searches_controller.rb` — `Search.new(query: params[:q], pages: menu.links)`; `app/views/searches/_result_page.html.erb` — `link_to page.path`.
 - `app/views/layouts/application.html.erb` — renders `appkit/shared/nav` with the search button as its block; the search dialog stays.
-- `app/views/shared/_title_bar.html.erb` — `back:` local, the back link, the phone search button.
+- `app/views/shared/_title_bar.html.erb` — `back:` local, the back link as the first `<nav>` item, the phone search button; the `<nav>` renders when there is a back link or a control.
 - `app/views/shared/_action_row.html.erb`, `app/views/shared/_delete_form.html.erb` — `hidden_field_tag :from, menu.origin_key` when there is an origin; Annuleren through `menu.carry`.
-- `app/views/dashboard/index.html.erb` — the account menu (`avatar: true`) in its title bar.
+- `app/views/dashboard/index.html.erb` — the account menu (`avatar: true`) in its title bar's `<nav>`.
 - `app/assets/stylesheets/local/layout/main_navigation.css` — removed, with its line in the layout index; `local/layout/application_page.css` — `body > header` rules removed or narrowed.
 - `config/locales/{nl,en,it}.yml` — hub, page, tile and back-link strings; remove `main_nav.*` and `todos.*` keys that go unused; `bundle exec i18n-tasks normalize`.
 - Deleted: `app/models/todo.rb`, `app/controllers/todos_controller.rb`, `app/helpers/todos_helper.rb`, `app/views/todos/`, `app/views/layouts/admin.html.erb`, `test/models/todo_test.rb`, `test/integration/todos_index_test.rb`, `test/helpers/todos_helper_test.rb`.
 - Tests rewritten: `test/integration/main_navigation_test.rb`, `test/system/main_navigation_menus_test.rb`, and the `todo` references in `test/integration/{index_pages,page_headings,pagination_navigation}_test.rb` and `test/system/responsive_tables_test.rb`.
 
-Phase C, this app: `Gemfile.lock` (appkit and mvpa-css bumps) and the system tests that need the mvpa.css layout.
+Phase C, this app: `Gemfile.lock` (appkit and mvpa-css bumps), `app/views/transactions/_table.html.erb` and `app/views/shared/_recent_transactions.html.erb` (`<data>` outside the amount link), `app/assets/stylesheets/local/layout/title_bar.css` (deleted, with its `@import` in `local/layout/index.css`), and the system tests that need the mvpa.css layout.
 
 ## Order of work
 
@@ -367,15 +372,17 @@ Phase B (app). Gate: the appkit pull request is merged; then `bundle update appk
 9. Dashboard title-bar account menu (👤) and the title-bar search button; remove `main_navigation.css` and narrow `application_page.css`.
 10. Locales normalized; rubocop, herb-lint, brakeman, bundler-audit, the full test suite.
 
-Phase C (app). Gate: both mvpa.css slices are merged; then `bundle update mvpa-css`.
+Phase C (app). Gate: the mvpa.css rail slice is merged (badges merged as #45); then `bundle update mvpa-css`.
 
-0. Follow the `### Upgrading` steps in mvpa.css's CHANGELOG for #45 (merged 2026-10-26 as `890d132`). mvpa.css now ships the title-bar heading wrap, so delete the app's local rule in `app/assets/stylesheets/local/layout/title_bar.css` (`min-width: 0; overflow-wrap: anywhere;`).
+0. Follow the `### Upgrading` steps in mvpa.css's CHANGELOG from `2be440b` to the new pin: #45 (`890d132`), #46, #47, #48, #49, #50 and the rail slice. The app imports the packaged `mvpa/mvpa.css`, so the "add partials to your stylesheet links" steps do not apply; #46 (period navigation) and #47 (nav-only header paint) need no app change, as no app `nav` matches them and the app paints no nav-only header.
+   - #45 step 5: write the failing test first, then move `<data>` out of the amount link in `transactions/_table.html.erb:34-36` and `shared/_recent_transactions.html.erb:35-37` (`<data value><a>…</a></data>`). The plain-cell `<data>` in `receipts/index`, `appropriations/index` and `chattels/_table` stay.
+   - #45 step 6: mvpa.css now ships the title-bar heading wrap. Delete `app/assets/stylesheets/local/layout/title_bar.css`, which holds only that rule, and its `@import` in `local/layout/index.css`.
 1. System tests at phone width (five-tab bar, avatar only on Overzicht), at a width between phone and the hub-column breakpoint (no hub column, landing reachable from the rail), and no sideways scroll at laptop, narrow and phone width on the hub pages and the existing page list. Take the breakpoints from the merged mvpa.css.
-2. Full suite, linters, and a look at each hub in the browser at the three widths.
+2. Full suite, linters, and a look at each hub in the browser at the three widths. Check `tr.unconsolidated` (`local/modules/transactions.css`) and the form errors (`local/modules/form_errors.css`) in the dark themes, since #50 darkens the surfaces.
 
 ## Risks
 
-- **Upstream dependencies.** The rail/hub-column/tile slice in mvpa.css has no intent yet, so the markup contract above may need a change when it is designed. The app pull request cannot merge before both mvpa.css slices and the appkit pull request.
+- **Upstream dependencies.** The rail/hub-column/tile slice in mvpa.css has no intent yet, so the markup contract above may need a change when it is designed. The app pull request cannot merge before that slice and the appkit pull request. Until the rail slice lands, #47 gives Overzicht (one `nav`) and the other hubs (two) different header layouts; the slice's own `nav.rail` track removes that.
 - **appkit consumers.** Replacing `_nav` breaks any other app that renders it; the `### Upgrading` entry is the mitigation.
 - **Voorkeuren.** appkit's preferences page renders this app's layout. If it does not inherit `MenuMap`, the layout fails there. A test renders Voorkeuren with the shell. The login-layout pages are not affected.
 - **Origin coverage.** The matrix is long; a missed form drops `from` and ends the flow early, which falls back to today's behaviour, not an error.
@@ -387,7 +394,7 @@ Phase C (app). Gate: both mvpa.css slices are merged; then `bundle update mvpa-c
 
 ## Out of scope
 
-- The mvpa.css work itself: rail, hub column, tile grid, badges.
+- The mvpa.css work itself: rail, hub column, tile grid, badges (badges merged as #45).
 - Segmented controls, sheets, a "Nieuwe categorie…" sheet.
 - The Contracten page.
 - The fixes in `ui-review-bug-fixes`.
@@ -418,6 +425,7 @@ Phase C (app). Gate: both mvpa.css slices are merged; then `bundle update mvpa-c
 - At phone width the bottom bar shows exactly the five hubs, the Overzicht title bar holds the avatar and other title bars do not → `test/system/navigation_hubs_test.rb` `test_phone_tab_bar_and_avatar_only_on_overzicht`
 - Narrower than the hub column but wider than a phone, the hub column is gone and the landing page is reachable from the rail → `test/system/navigation_hubs_test.rb` `test_narrow_window_hides_hub_column_and_keeps_landing_page`
 - No page scrolls sideways at any width → `test/system/responsive_tables_test.rb` `test_no_page_scrolls_sideways_at_laptop_narrow_or_phone_width` (the page list gains the six landing pages, drops `todo_url`)
+- A transaction amount, zero included, links to its transaction and is not drawn as a count pill → `test/integration/transaction_amounts_test.rb` `test_an_amount_link_sits_inside_its_data_element` (journal and dashboard lists: every amount `<a>` sits inside a `<data>`, no `a data` exists, and a zero amount's link shows its text)
 - Query count: a Verwerken page adds exactly three COUNT queries, and its landing page runs each count once for tile and badge → `test/integration/hub_queries_test.rb` `test_verwerken_counts_run_once_per_request`
 - Query count: the Plannen landing page runs the same number of queries with 1 and with 10 charged appropriations → `test/integration/hub_queries_test.rb` `test_plannen_landing_query_count_is_independent_of_appropriations`
 - Query count: `Appropriation.with_money_left.count` runs one query → `test/models/appropriation_test.rb` `test_with_money_left_counts_in_one_query`
