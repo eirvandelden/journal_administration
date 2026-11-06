@@ -20,7 +20,8 @@ Every environment that uses the SQLite database: development, test, CI and produ
 - Patch bump inside 2.10. No `Gemfile` constraint change: `>= 2.0` already allows 2.10.2.
 - No gem is added or removed. No deploy files, migrations or system tools.
 - Permissions approved: the `sqlite3` patch bump only (playbook rule 11). Nothing under rules 8, 9, 12 or 13.
-- Pushing skips only the pre-push `bundler_audit` command (`LEFTHOOK_EXCLUDE=bundler_audit`). Before that push, Claude runs rubocop, herb, Brakeman and the tests by hand, and confirms Bundler Audit reports no `sqlite3` advisory.
+- Pushing skips only the pre-push `bundler_audit` and `rubocop` commands (`LEFTHOOK_EXCLUDE=bundler_audit,rubocop`). Before that push, Claude runs herb, Brakeman and the tests by hand, confirms rubocop adds no new offense, and confirms Bundler Audit reports no `sqlite3` advisory.
+- The pull request's `ci / lint` and `ci / scan_ruby` jobs stay red for failures that exist on `main` (`fix-rbs-inline-offenses`, `bump-rails-security-advisories`). Every other CI job must be green.
 
 ## In scope
 
@@ -36,13 +37,16 @@ Every environment that uses the SQLite database: development, test, CI and produ
 
 - Bundler Audit reports no `sqlite3` advisory.
 - The `Gemfile.lock` diff holds only `sqlite3` lines.
-- The full test suite, system tests, rubocop, herb and Brakeman stay green.
+- The full test suite, system tests, herb and Brakeman stay green.
+- Rubocop reports no offense that `main` does not already have.
 - The branch reaches `origin` while the other gems still fail Bundler Audit.
 
 ## Decisions
 
 - Fix sqlite3 in its own change and merge it first; `bump-rails-security-advisories` then no longer needs its sqlite3 bump — Etienne: "if we merge this first it closes, just do what i said".
-- Push with only the pre-push audit hook skipped — chosen so this change can merge first; CI never runs Bundler Audit, so only this one local check is skipped.
+- Push with only the pre-push audit hook skipped — chosen so this change can merge first. (Correction found in planning: CI does run Bundler Audit, through the appkit reusable workflow.)
+- Push now and accept the pre-existing red `ci / lint` and `ci / scan_ruby` jobs; skip the rubocop pre-push hook too; the rubocop criterion becomes "no new offense" — Etienne chose this so the merge-first order holds; both reds have their own changes.
+- Dependabot PR #401 makes the same bump; this change goes ahead and #401 closes when it merges — Etienne: "i dont care about dependabot opened prs".
 - Deliver autonomously, no Codex review — chosen because a one-gem patch bump needs no second reviewer; same mode as the sibling advisory changes.
 
 ## Open questions

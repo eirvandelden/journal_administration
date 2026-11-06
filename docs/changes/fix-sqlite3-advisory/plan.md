@@ -58,7 +58,7 @@ The existing suite runs the `busy_handler_timeout` path on every test connection
 
 - The gem source `https://gem.coop` (the `source` in `Gemfile` and the `remote` in `Gemfile.lock`): `bundle update` resolves `sqlite3` 2.10.2 there and fetches checksums for every locked platform.
 - Bundler Audit: its advisory database must no longer list `sqlite3`. Refresh it with `bundle exec bundler-audit update` before the check.
-- Lefthook pre-push (`lefthook.yml`): runs rubocop, herb, Brakeman, `bundler_audit` and the tests. The push skips only `bundler_audit` with `LEFTHOOK_EXCLUDE=bundler_audit`.
+- Lefthook pre-push (`lefthook.yml`): runs rubocop, herb, Brakeman, `bundler_audit` and the tests. The push skips `bundler_audit` and `rubocop` with `LEFTHOOK_EXCLUDE=bundler_audit,rubocop`; see `## Coordinator decisions`.
 - CI (`.github/workflows/ci.yml`, shared appkit workflow): runs `bin/bundler-audit` on the pull request; see `## Design decisions`.
 - Production (Kamal, Linux) installs the native gem for its platform from the lockfile. No deploy file changes.
 - Dependabot pull request #401 (`dependabot/bundler/sqlite3-2.10.2`) makes the same bump. Open Dependabot pull requests are out of scope; it becomes redundant once this change merges.
@@ -79,7 +79,7 @@ No other file changes. Not `Gemfile`, not `db/schema.rb`, not any file under `ap
 6. Run the audit check from `## Proof`. The other gems may still fail Bundler Audit; that is expected.
 7. Run the checks by hand: `bundle exec rubocop`, `npx @herb-tools/linter app/views/`, `bundle exec brakeman --no-pager -q`, `bin/rails test`, `bin/rails test:system`.
 8. Commit `Gemfile.lock` alone: `Bump sqlite3 to 2.10.2 for GHSA-4fqr-96q8-xrfx`.
-9. Push with `LEFTHOOK_EXCLUDE=bundler_audit git push -u origin HEAD`, with the worktree `bin/` first on `PATH`. Run the push check from `## Proof`.
+9. Push with `LEFTHOOK_EXCLUDE=bundler_audit,rubocop git push -u origin HEAD`, with the worktree `bin/` first on `PATH`. Run the push check from `## Proof`.
 
 ## Risks
 
@@ -94,8 +94,9 @@ No other file changes. Not `Gemfile`, not `db/schema.rb`, not any file under `ap
 
 - Bundler Audit reports no `sqlite3` advisory → check: `bundle exec bundler-audit update && ! bundle exec bundler-audit check 2>&1 | grep -q "Name: sqlite3"` exits 0.
 - The `Gemfile.lock` diff holds only `sqlite3` lines → check: all of `git diff --quiet main -- Gemfile`, `test "$(git diff --numstat main -- Gemfile.lock)" = "$(printf '20\t20\tGemfile.lock')"` and `! git diff -U0 main -- Gemfile.lock | grep '^[-+] ' | grep -qv 'sqlite3 (2\.10\.'` exit 0, and `git diff --name-only main` lists only `Gemfile.lock` and files under `docs/changes/fix-sqlite3-advisory/`.
-- The full test suite, system tests, rubocop, herb and Brakeman stay green → check: `bin/rails test`, `bin/rails test:system`, `bundle exec rubocop`, `npx @herb-tools/linter app/views/` and `bundle exec brakeman --no-pager -q` each exit 0.
-- The branch reaches `origin` while the other gems still fail Bundler Audit → check: `LEFTHOOK_EXCLUDE=bundler_audit git push -u origin HEAD` exits 0, then `test "$(git rev-parse HEAD)" = "$(git ls-remote origin refs/heads/fix-sqlite3-advisory | cut -f1)"` exits 0.
+- The full test suite, system tests, herb and Brakeman stay green → check: `bin/rails test`, `bin/rails test:system`, `npx @herb-tools/linter app/views/` and `bundle exec brakeman --no-pager -q` each exit 0.
+- Rubocop reports no offense that `main` does not already have → check: the offense count of `bundle exec rubocop --format offenses` on the branch equals the count on `main` (only `Gemfile.lock` changes, and rubocop does not inspect it).
+- The branch reaches `origin` while the other gems still fail Bundler Audit → check: `LEFTHOOK_EXCLUDE=bundler_audit,rubocop git push -u origin HEAD` exits 0, then `test "$(git rev-parse HEAD)" = "$(git ls-remote origin refs/heads/fix-sqlite3-advisory | cut -f1)"` exits 0.
 - Invariant: the app loads `sqlite3` 2.10.2, enforced by `Gemfile.lock` and Bundler → check: `bundle exec ruby -e 'require "sqlite3"; puts SQLite3::VERSION'` prints `2.10.2`.
 - Invariant: `mini_portile2`, `RUBY VERSION` and `BUNDLED WITH` stay unchanged, enforced by the diff checks above → check: `grep -q "mini_portile2 (2.8.9)" Gemfile.lock && grep -q "4.0.22" Gemfile.lock` exits 0.
 
@@ -103,6 +104,11 @@ Per changed file, the unit tests expected:
 - `Gemfile.lock`: none; configuration has no tests. The existing suite proves the behaviour stays the same.
 
 Test setup: existing fixtures under `test/fixtures`; nothing new.
+
+## Coordinator decisions (2026-11-06)
+
+- Etienne chose to push now and accept the pre-existing red `ci / lint` (RbsInline offenses, `fix-rbs-inline-offenses`) and `ci / scan_ruby` (other advisories, `bump-rails-security-advisories`) jobs. The push also skips the rubocop pre-push hook. The rubocop criterion is "no new offense".
+- Dependabot PR #401 stays out of scope; this change goes ahead.
 
 ## Out of scope
 
