@@ -43,5 +43,7 @@
   </article>
 <% end %>
 
-<h2><%= t("transactions.recent.heading") %></h2>
-<%= render "transactions/table", transactions: @transactions, page: @page %>
+<article>
+  <h2><%= t("transactions.recent.heading") %></h2>
+  <%= render "transactions/table", transactions: @transactions, page: @page %>
+</article>

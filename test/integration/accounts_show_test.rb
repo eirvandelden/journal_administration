@@ -13,6 +13,13 @@ class AccountsShowTest < ActionDispatch::IntegrationTest
     assert_select "h2", text: I18n.t("transactions.recent.heading")
   end
 
+  test "show renders the transactions heading and table inside a card" do
+    get account_path(accounts(:checking))
+
+    assert_select "article > h2", text: I18n.t("transactions.recent.heading")
+    assert_select "article > table.transactions"
+  end
+
   test "show does not render recognition patterns for a family account" do
     get account_path(accounts(:checking))
 
