@@ -1,4 +1,5 @@
 class Admin::DashboardController < Admin::BaseController
+  #: () -> void
   def index
     @users = User.all.order(created_at: :desc).limit(10)
     @total_users = User.count

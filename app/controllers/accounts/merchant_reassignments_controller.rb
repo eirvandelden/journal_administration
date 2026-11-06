@@ -6,6 +6,8 @@ class Accounts::MerchantReassignmentsController < ApplicationController
   #
   # @action POST
   # @route /accounts/:account_id/merchant_reassignment
+  #
+  #: () -> void
   def create
     count = @account.move_transactions_to_merchants
     redirect_to @account, notice: t("merchant_reassignments.create.success", count: count)

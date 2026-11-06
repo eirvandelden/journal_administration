@@ -5,7 +5,8 @@ class PeopleController < ApplicationController
   # Lists managed people.
   # @action GET
   # @route /people
-  # @return [void]
+  #
+  #: () -> void
   def index
     @people = Person.order(:name)
   end
@@ -13,13 +14,15 @@ class PeopleController < ApplicationController
   # Shows a person.
   # @action GET
   # @route /people/:id
-  # @return [void]
+  #
+  #: () -> void
   def show; end
 
   # Renders the form for a new person.
   # @action GET
   # @route /people/new
-  # @return [void]
+  #
+  #: () -> void
   def new
     @person = Person.new
   end
@@ -27,13 +30,15 @@ class PeopleController < ApplicationController
   # Renders the form for editing a person.
   # @action GET
   # @route /people/:id/edit
-  # @return [void]
+  #
+  #: () -> void
   def edit; end
 
   # Creates a person.
   # @action POST
   # @route /people
-  # @return [void]
+  #
+  #: () -> void
   def create
     @person = Person.new(person_params)
     return redirect_to @person, notice: t("people.create.success") if @person.save
@@ -44,7 +49,8 @@ class PeopleController < ApplicationController
   # Updates a person.
   # @action PATCH
   # @route /people/:id
-  # @return [void]
+  #
+  #: () -> void
   def update
     return redirect_to @person, notice: t("people.update.success") if @person.update(person_params)
 
@@ -56,7 +62,8 @@ class PeopleController < ApplicationController
   # Deletes an unused person.
   # @action DELETE
   # @route /people/:id
-  # @return [void]
+  #
+  #: () -> void
   def destroy
     return redirect_to people_path, notice: t("people.destroy.success") if @person.destroy
 

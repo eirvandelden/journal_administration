@@ -5,7 +5,8 @@ class GroupsController < ApplicationController
   # Lists groups.
   # @action GET
   # @route /groups
-  # @return [void]
+  #
+  #: () -> void
   def index
     @groups = Group.includes(:people).order(:name)
   end
@@ -13,13 +14,15 @@ class GroupsController < ApplicationController
   # Shows a group and its members.
   # @action GET
   # @route /groups/:id
-  # @return [void]
+  #
+  #: () -> void
   def show; end
 
   # Renders the form for a new group.
   # @action GET
   # @route /groups/new
-  # @return [void]
+  #
+  #: () -> void
   def new
     @group = Group.new
   end
@@ -27,13 +30,15 @@ class GroupsController < ApplicationController
   # Renders the form for editing a group.
   # @action GET
   # @route /groups/:id/edit
-  # @return [void]
+  #
+  #: () -> void
   def edit; end
 
   # Creates a group.
   # @action POST
   # @route /groups
-  # @return [void]
+  #
+  #: () -> void
   def create
     @group = Group.new(group_params)
     return redirect_to @group, notice: t("groups.create.success") if @group.save
@@ -44,7 +49,8 @@ class GroupsController < ApplicationController
   # Updates a group's name and people.
   # @action PATCH
   # @route /groups/:id
-  # @return [void]
+  #
+  #: () -> void
   def update
     return redirect_to @group, notice: t("groups.update.success") if @group.update(group_params)
 
@@ -56,7 +62,8 @@ class GroupsController < ApplicationController
   # Deletes a group that owns no account.
   # @action DELETE
   # @route /groups/:id
-  # @return [void]
+  #
+  #: () -> void
   def destroy
     return redirect_to groups_path, notice: t("groups.destroy.success") if @group.destroy
 

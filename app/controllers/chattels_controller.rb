@@ -10,7 +10,8 @@ class ChattelsController < ApplicationController
   # Separates active items into warrantied, out-of-warranty, and unknown warranty status,
   # plus items that have left possession.
   #
-  # @return [void]
+  #
+  #: () -> void
   def index
     scope = Chattel.includes(:warranty_document_attachment, purchase_transaction: :proof_of_purchase_attachment)
     @warrantied = scope.active.warrantied
@@ -21,26 +22,30 @@ class ChattelsController < ApplicationController
 
   # Displays a single chattel
   #
-  # @return [void]
+  #
+  #: () -> void
   def show
   end
 
   # Renders form for creating a new chattel
   #
-  # @return [void]
+  #
+  #: () -> void
   def new
     @chattel = Chattel.new(purchase_transaction_id: params[:purchase_transaction_id])
   end
 
   # Renders form for editing a chattel
   #
-  # @return [void]
+  #
+  #: () -> void
   def edit
   end
 
   # Creates a new chattel
   #
-  # @return [void]
+  #
+  #: () -> void
   def create
     @chattel = Chattel.new(chattel_params)
 
@@ -57,7 +62,8 @@ class ChattelsController < ApplicationController
 
   # Updates a chattel
   #
-  # @return [void]
+  #
+  #: () -> void
   def update
     respond_to do |format|
       if @chattel.update(chattel_params)
@@ -72,7 +78,8 @@ class ChattelsController < ApplicationController
 
   # Deletes a chattel
   #
-  # @return [void]
+  #
+  #: () -> void
   def destroy
     @chattel.destroy!
 

@@ -6,6 +6,8 @@ class Accounts::AccountAliasesController < ApplicationController
   #
   # @action POST
   # @route /accounts/:account_id/account_aliases
+  #
+  #: () -> void
   def create
     @account_alias = @account.account_aliases.build(account_alias_params)
 
@@ -20,6 +22,8 @@ class Accounts::AccountAliasesController < ApplicationController
   #
   # @action DELETE
   # @route /accounts/:account_id/account_aliases/:id
+  #
+  #: () -> void
   def destroy
     @account.account_aliases.find(params[:id]).destroy
     redirect_to @account, notice: t("account_aliases.destroy.success")

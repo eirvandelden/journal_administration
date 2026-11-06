@@ -9,19 +9,22 @@ class Users::ProfilesController < ApplicationController
 
   # Displays a user's profile
   #
-  # @return [void]
+  #
+  #: () -> void
   def show
   end
 
   # Renders form for editing the current user's profile
   #
-  # @return [void]
+  #
+  #: () -> void
   def edit
   end
 
   # Updates the current user's profile information
   #
-  # @return [void]
+  #
+  #: () -> void
   def update
     if @user.update(user_params)
       redirect_to user_profile_path(@user), notice: t(".success")

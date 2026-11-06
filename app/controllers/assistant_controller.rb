@@ -11,6 +11,8 @@ class AssistantController < ActionController::API
   #
   # @action POST
   # @route /mcp
+  #
+  #: () -> void
   def create
     status, headers, body = transport.handle_request(request)
 

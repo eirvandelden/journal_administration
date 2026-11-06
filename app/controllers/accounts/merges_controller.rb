@@ -6,6 +6,8 @@ class Accounts::MergesController < ApplicationController
   #
   # @action GET
   # @route /accounts/:account_id/merge/new
+  #
+  #: () -> void
   def new
     @query = merge_params[:query].to_s.strip
     @matches = candidates.includes(:account_numbers).search(@query)
@@ -20,6 +22,8 @@ class Accounts::MergesController < ApplicationController
   #
   # @action POST
   # @route /accounts/:account_id/merge
+  #
+  #: () -> void
   def create
     duplicates = Account.where(id: duplicate_ids).to_a
     transactions = transactions_in(duplicates.map(&:id))

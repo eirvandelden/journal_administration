@@ -4,28 +4,32 @@ class ProductsController < ApplicationController
 
   # Lists the products, marking the ones still needing classification
   #
-  # @return [void]
+  #
+  #: () -> void
   def index
     @products = set_page_and_extract_portion_from Product.includes(:product_type).order(:name), per_page: [ 20 ]
   end
 
   # Displays one product with every purchase of it
   #
-  # @return [void]
+  #
+  #: () -> void
   def show
     @purchases = @product.purchases
   end
 
   # Renders the form for classifying a product
   #
-  # @return [void]
+  #
+  #: () -> void
   def edit
     load_form_choices
   end
 
   # Records a product's brand and type
   #
-  # @return [void]
+  #
+  #: () -> void
   def update
     return redirect_to products_path, notice: t(".success") if @product.update(product_params)
 

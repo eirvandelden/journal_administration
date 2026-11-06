@@ -4,7 +4,8 @@ class Accounts::TransactionsBulkController < ApplicationController
 
   # Updates all uncategorized transactions in an account to the account's category
   #
-  # @return [void]
+  #
+  #: () -> void
   def update
     updated_count = @account.update_uncategorized_transactions!
     flash[:notice] =

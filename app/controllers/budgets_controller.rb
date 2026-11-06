@@ -6,7 +6,8 @@ class BudgetsController < ApplicationController
   #
   # @action GET
   # @route /budgets
-  # @return [void]
+  #
+  #: () -> void
   def index
     @budgets = Budget.order(starts_at: :desc).includes(:budget_categories)
   end
@@ -15,14 +16,16 @@ class BudgetsController < ApplicationController
   #
   # @action GET
   # @route /budgets/:id
-  # @return [void]
+  #
+  #: () -> void
   def show; end
 
   # Renders the form for creating a new budget.
   #
   # @action GET
   # @route /budgets/new
-  # @return [void]
+  #
+  #: () -> void
   def new
     @budget = Budget.new
     @budget.budget_categories.build
@@ -32,14 +35,16 @@ class BudgetsController < ApplicationController
   #
   # @action GET
   # @route /budgets/:id/edit
-  # @return [void]
+  #
+  #: () -> void
   def edit; end
 
   # Creates a new budget.
   #
   # @action POST
   # @route /budgets
-  # @return [void]
+  #
+  #: () -> void
   def create
     @budget = Budget.new(budget_params)
 
@@ -54,7 +59,8 @@ class BudgetsController < ApplicationController
   #
   # @action PATCH
   # @route /budgets/:id
-  # @return [void]
+  #
+  #: () -> void
   def update
     if @budget.update(budget_params)
       redirect_to @budget, notice: t("budgets.update.success")
@@ -67,7 +73,8 @@ class BudgetsController < ApplicationController
   #
   # @action DELETE
   # @route /budgets/:id
-  # @return [void]
+  #
+  #: () -> void
   def destroy
     @budget.destroy
     redirect_to budgets_url, notice: t("budgets.destroy.success")
