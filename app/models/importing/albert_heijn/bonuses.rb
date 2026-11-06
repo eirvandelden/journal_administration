@@ -11,6 +11,7 @@ module Importing
       FIELDS_PER_ENTRY = 3
 
       # @param entries [Array<String>] the lines between the "Bonusvoordeel" heading and "Totaal voordeel"
+      #: (Array[String] entries) -> void
       def initialize(entries)
         @entries = entries
       end

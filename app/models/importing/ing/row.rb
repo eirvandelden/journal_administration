@@ -5,14 +5,23 @@ module Importing
     # Parses raw CSV data into a structured object with typed accessors and
     # convenience predicates for transaction direction.
     class Row
-      attr_reader :date, :initiator_name, :our_account_number, :their_account_number,
-                  :code, :direction, :amount, :mutation_kind, :description,
-                  :original_balance, :original_tag
+      attr_reader :date #: DateTime
+      attr_reader :initiator_name #: String
+      attr_reader :our_account_number #: String
+      attr_reader :their_account_number #: String
+      attr_reader :code #: String
+      attr_reader :direction #: String
+      attr_reader :amount #: Integer
+      attr_reader :mutation_kind #: String
+      attr_reader :description #: String
+      attr_reader :original_balance #: String
+      attr_reader :original_tag #: String
 
       # Parses a raw CSV row into a Row object
       #
       # @param csv_row [Array<String>] A row from the ING CSV export
       # @return [Row, nil] Parsed row, or nil if the row is a header row
+      #: (Array[String] csv_row) -> Row?
       def self.parse(csv_row)
         return nil if csv_row[0] == "Datum"
 
@@ -33,11 +42,13 @@ module Importing
 
       # @return [Integer] cents
       # @raise [ArgumentError] when the text is not an amount
+      #: (String text) -> Integer
       def self.parse_amount(text)
         Cents.parse(text) || raise(ArgumentError, "not an amount: #{text.inspect}")
       end
       private_class_method :parse_amount
 
+      #: (date: DateTime, amount: Integer, **String) -> void
       def initialize(date:, initiator_name:, our_account_number:, their_account_number:,
                      code:, direction:, amount:, mutation_kind:, description:,
                      original_balance:, original_tag:)
@@ -57,6 +68,7 @@ module Importing
       # Builds the transaction note from available fields, omitting blank values
       #
       # @return [String] Newline-joined non-blank fields from description, code, and mutation_kind
+      #: () -> String
       def note
         [ description, code, mutation_kind ].compact_blank.join("\n")
       end
@@ -64,6 +76,7 @@ module Importing
       # Returns true if this is a debit transaction (money leaving our account)
       #
       # @return [Boolean]
+      #: () -> bool
       def debit?
         direction == "Af"
       end
@@ -71,6 +84,7 @@ module Importing
       # Returns true if this is a credit transaction (money entering our account)
       #
       # @return [Boolean]
+      #: () -> bool
       def credit?
         direction == "Bij"
       end
