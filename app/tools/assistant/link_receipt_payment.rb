@@ -32,6 +32,7 @@ module Assistant
       link(receipt, payment)
     end
 
+    #: (Receipt receipt, Transaction payment) -> String?
     def self.refused(receipt, payment)
       return linked_elsewhere(receipt) if linked_elsewhere?(receipt, payment)
       return too_big(receipt, payment) unless receipt.basket_fits?(payment)
@@ -40,19 +41,23 @@ module Assistant
     end
     private_class_method :refused
 
+    #: (Receipt receipt) -> String
     def self.linked_elsewhere(receipt)
       "Receipt ##{receipt.id} is linked to payment ##{receipt.payment_id}; unlink it first."
     end
     private_class_method :linked_elsewhere
 
+    #: (Receipt receipt, Transaction payment) -> String
     def self.too_big(receipt, payment)
       "The basket (#{euros(receipt.basket_total)}) is bigger than the payment (#{euros(payment.amount)})."
     end
     private_class_method :too_big
 
+    #: (Receipt receipt, Transaction payment) -> bool
     def self.linked_elsewhere?(receipt, payment) = receipt.payment_id && receipt.payment_id != payment.id
     private_class_method :linked_elsewhere?
 
+    #: (Receipt receipt, Transaction payment) -> MCP::Tool::Response
     def self.link(receipt, payment)
       split = Receipt.transaction do
         receipt.update!(payment: payment)
@@ -64,6 +69,7 @@ module Assistant
     end
     private_class_method :link
 
+    #: (Receipt receipt) -> String
     def self.unsplit_reason(receipt)
       lines = receipt.lines.includes(product: { product_type: :category })
       unclassified = lines.filter_map { |line| line.product if line.category.nil? }.uniq
@@ -74,11 +80,13 @@ module Assistant
     end
     private_class_method :unsplit_reason
 
+    #: () -> String
     def self.nothing_to_split
       "The basket has nothing to split (no lines, or only free ones); the payment is not split."
     end
     private_class_method :nothing_to_split
 
+    #: (Receipt receipt, Integer transaction_id) -> String
     def self.not_fitting(receipt, transaction_id)
       fitting = receipt.fitting_payments.map do |payment|
         "#{payment.id}: #{payment.booked_at.to_date} #{euros(payment.amount)}"

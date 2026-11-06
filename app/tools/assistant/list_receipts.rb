@@ -23,12 +23,14 @@ module Assistant
       answer([ *shown.map { |receipt| describe(receipt) }, held_back(receipts, shown) ].compact.join("\n"))
     end
 
+    #: (Receipt receipt) -> String
     def self.describe(receipt)
       payment = receipt.payment_id ? "payment ##{receipt.payment_id}" : "no payment linked"
       "#{receipt.id}: #{receipt.issued_on} #{receipt.shop.name} #{euros(receipt.total_amount)}, #{payment}"
     end
     private_class_method :describe
 
+    #: (ActiveRecord::Relation receipts, Array[Receipt] shown) -> String?
     def self.held_back(receipts, shown)
       total = receipts.count
       return nil if total <= shown.length

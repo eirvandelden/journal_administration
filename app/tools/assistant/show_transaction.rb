@@ -19,6 +19,7 @@ module Assistant
       answer(sections.compact.join("\n"))
     end
 
+    #: (Transaction transaction) -> String
     def self.summary(transaction)
       "#{transaction.id}: #{transaction.type} #{transaction.booked_at.to_date} #{euros(transaction.amount)} " \
         "from #{transaction.debitor&.name} to #{transaction.creditor&.name}, interest on " \
@@ -27,11 +28,13 @@ module Assistant
     end
     private_class_method :summary
 
+    #: (Transaction transaction) -> String?
     def self.charge(transaction)
       " charged to #{transaction.appropriation}" if transaction.appropriation
     end
     private_class_method :charge
 
+    #: (Transaction transaction) -> String
     def self.parts(transaction)
       return "No parts." unless transaction.transaction_splits.exists?
 
@@ -39,12 +42,14 @@ module Assistant
     end
     private_class_method :parts
 
+    #: (Transaction transaction) -> String?
     def self.receipt(transaction)
       paid = transaction.receipt
       "Paid receipt ##{paid.id} from #{paid.shop.name}." if paid
     end
     private_class_method :receipt
 
+    #: (Transaction transaction) -> String?
     def self.chattels(transaction)
       bought = transaction.chattels.map { |chattel| "##{chattel.id} #{chattel.name}" }
       "Bought with it: #{bought.join(', ')}." if bought.any?

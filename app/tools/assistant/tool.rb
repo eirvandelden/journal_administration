@@ -35,6 +35,7 @@ module Assistant
     private_class_method :refusal
 
     # One line per part of a split payment, with the number to name it by and any charge
+    #: (Transaction transaction) -> String
     def self.parts_list(transaction)
       parts = transaction.transaction_splits.includes(category: :parent_category, appropriation: :person)
       parts.order(:id).map do |part|

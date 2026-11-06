@@ -38,6 +38,7 @@ module Assistant
       answer("Replaced the parts of transaction ##{transaction.id}:\n#{parts_list(transaction)}")
     end
 
+    #: (Array[untyped] splits) -> (MCP::Tool::Response | Array[Hash[Symbol, untyped]])
     def self.parts_from(splits)
       splits.each_with_object([]) do |split, parts|
         part = split.to_h.with_indifferent_access

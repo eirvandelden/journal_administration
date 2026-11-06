@@ -29,6 +29,7 @@ module Assistant
       answer("Updated transaction ##{transaction.id}.")
     end
 
+    #: (Hash[Symbol, untyped] changes) -> (MCP::Tool::Response | Hash[Symbol, untyped])
     def self.attributes_from(changes)
       problem_found = [ amount_in(changes), days_in(changes), category_in(changes) ]
       problem_found.find { |found| found.is_a?(MCP::Tool::Response) } ||
@@ -36,6 +37,7 @@ module Assistant
     end
     private_class_method :attributes_from
 
+    #: (Hash[Symbol, untyped] changes) -> (MCP::Tool::Response | Hash[Symbol, untyped])
     def self.amount_in(changes)
       return {} unless changes.key?(:amount)
 
@@ -44,6 +46,7 @@ module Assistant
     end
     private_class_method :amount_in
 
+    #: (Hash[Symbol, untyped] changes) -> (MCP::Tool::Response | Hash[Symbol, untyped])
     def self.days_in(changes)
       { booked_at: :booked_on, interest_at: :interest_on }.each_with_object({}) do |(column, name), found|
         next unless changes.key?(name)
@@ -56,6 +59,7 @@ module Assistant
     end
     private_class_method :days_in
 
+    #: (Hash[Symbol, untyped] changes) -> (MCP::Tool::Response | Hash[Symbol, untyped])
     def self.category_in(changes)
       return {} unless changes.key?(:category_id)
 

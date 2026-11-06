@@ -29,10 +29,7 @@ module Assistant
     )
 
     # Has no route: the UI only imports receipts
-    #: (
-    #|   shop_id: Integer, issued_on: String, total_amount: Numeric, lines: Array[Hash[Symbol, untyped]],
-    #|   server_context: untyped, ?order_number: String?
-    #| ) -> MCP::Tool::Response
+    #: (shop_id: Integer, issued_on: String, total_amount: Numeric, **untyped) -> MCP::Tool::Response
     def self.call(shop_id:, issued_on:, total_amount:, lines:, server_context:, order_number: nil)
       shop = Account.find_by(id: shop_id)
       return problem("No account ##{shop_id} exists.") if shop.nil?
@@ -49,6 +46,7 @@ module Assistant
       file(shop, issued, total, basket, order_number.presence)
     end
 
+    #: (Account shop, Date issued_on, Integer total_amount, Array[untyped] lines, String? order_number) -> MCP::Tool::Response
     def self.file(shop, issued_on, total_amount, lines, order_number)
       receipt = Receipt.file(shop:, issued_on:, total_amount:, lines:, order_number:)
       return refusal(receipt) unless receipt.persisted?
@@ -57,6 +55,7 @@ module Assistant
     end
     private_class_method :file
 
+    #: (Array[untyped] lines) -> (MCP::Tool::Response | Array[Hash[Symbol, untyped]])
     def self.basket_from(lines)
       return problem("A receipt needs at least one line.") if lines.empty?
 
@@ -66,6 +65,7 @@ module Assistant
     end
     private_class_method :basket_from
 
+    #: (Hash[Symbol, untyped] line) -> (MCP::Tool::Response | Hash[Symbol, untyped])
     def self.basket_line(line)
       full = cents_from(line[:full_amount])
       discount = cents_from(line[:discount_amount] || 0)

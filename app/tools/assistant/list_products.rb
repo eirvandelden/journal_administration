@@ -24,6 +24,7 @@ module Assistant
       answer([ *shown.map(&:summary), held_back(products, shown) ].compact.join("\n"))
     end
 
+    #: (ActiveRecord::Relation products, Array[Product] shown) -> String?
     def self.held_back(products, shown)
       total = products.count
       return nil if total <= shown.length

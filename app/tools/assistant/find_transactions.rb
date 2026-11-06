@@ -22,10 +22,7 @@ module Assistant
     )
 
     # Mirrors transactions#index
-    #: (
-    #|   server_context: untyped, ?limit: Integer, ?uncategorized: bool, ?query: String?, ?start_date: String?,
-    #|   ?end_date: String?, **untyped
-    #| ) -> MCP::Tool::Response
+    #: (server_context: untyped, ?limit: Integer, ?query: String?, **untyped) -> MCP::Tool::Response
     def self.call(server_context:, limit: DEFAULT_LIMIT, uncategorized: false, query: nil, start_date: nil,
       end_date: nil, **filters)
       first_day, last_day = start_date.presence && day(start_date), end_date.presence && day(end_date)
@@ -39,11 +36,13 @@ module Assistant
       answer([ *shown.map { |transaction| describe(transaction) }, held_back(matches, shown) ].compact.join("\n"))
     end
 
+    #: (String? start_date, Date? first_day, String? end_date, Date? last_day) -> bool
     def self.unreadable?(start_date, first_day, end_date, last_day)
       (start_date.present? && first_day.nil?) || (end_date.present? && last_day.nil?)
     end
     private_class_method :unreadable?
 
+    #: (Hash[Symbol, untyped] filters, String? query, bool? uncategorized, Date? first_day, Date? last_day) -> ActiveRecord::Relation
     def self.narrowed(filters, query, uncategorized, first_day, last_day)
       matches = query.present? ? Transaction.search(query).unscope(:limit) : Transaction.all
       matches = matches.by_type(filters[:type]).by_category(filters[:category_id]&.to_s)
@@ -53,6 +52,7 @@ module Assistant
     end
     private_class_method :narrowed
 
+    #: (Transaction transaction) -> String
     def self.describe(transaction)
       "#{transaction.id}: #{transaction.type} #{transaction.booked_at.to_date} #{euros(transaction.amount)} " \
         "from #{transaction.debitor&.name} to #{transaction.creditor&.name}, " \
@@ -60,6 +60,7 @@ module Assistant
     end
     private_class_method :describe
 
+    #: (ActiveRecord::Relation matches, Array[Transaction] shown) -> String?
     def self.held_back(matches, shown)
       total = matches.count
       return nil if total <= shown.length

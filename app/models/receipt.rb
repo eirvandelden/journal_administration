@@ -26,11 +26,7 @@ class Receipt < ApplicationRecord
   # Files a receipt with its basket in one step, or leaves nothing behind
   #
   # Products are found by name the way the importer finds them, so a name nobody has seen starts unclassified
-  #: (
-  #|   shop: Account, issued_on: Date, total_amount: Integer,
-  #|   lines: Array[{ name: String, quantity: Numeric, full_amount: Integer, discount_amount: Integer }],
-  #|   ?order_number: String?
-  #| ) -> Receipt
+  #: (shop: Account, issued_on: Date, total_amount: Integer, lines: Array[untyped], ?order_number: String?) -> Receipt
   def self.file(shop:, issued_on:, total_amount:, lines:, order_number: nil)
     receipt = new(shop:, issued_on:, total_amount:, order_number:)
 
@@ -41,6 +37,7 @@ class Receipt < ApplicationRecord
     receipt
   end
 
+  #: (Hash[Symbol, untyped] line) -> Hash[Symbol, untyped]
   def self.filed_line(line)
     line.slice(:quantity, :full_amount, :discount_amount).merge(
       product: Product.resolve_by_name(line[:name]),

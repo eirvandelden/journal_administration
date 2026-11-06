@@ -14,9 +14,7 @@ module Assistant
     )
 
     # Mirrors transaction_splits#create
-    #: (
-    #|   transaction_id: Integer, amount: Numeric, server_context: untyped, ?category_id: Integer?, ?note: String?
-    #| ) -> MCP::Tool::Response
+    #: (transaction_id: Integer, amount: Numeric, server_context: untyped, ?category_id: Integer?, ?note: String?) -> MCP::Tool::Response
     def self.call(transaction_id:, amount:, server_context:, category_id: nil, note: nil)
       transaction = Transaction.find_by(id: transaction_id)
       return problem("No transaction ##{transaction_id} exists.") if transaction.nil?
@@ -30,6 +28,7 @@ module Assistant
       add(transaction, transaction.transaction_splits.build(amount: cents, category: category, note: note))
     end
 
+    #: (Transaction transaction, TransactionSplit part) -> MCP::Tool::Response
     def self.add(transaction, part)
       return refusal(part) unless part.save
 

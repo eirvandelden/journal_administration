@@ -21,6 +21,7 @@ module Assistant
       problem("Transaction ##{transaction_id} cannot be deleted: #{bought_with(transaction)} was bought with it.")
     end
 
+    #: (Transaction transaction) -> String
     def self.bought_with(transaction)
       transaction.chattels.reload.map { |chattel| "chattel ##{chattel.id} #{chattel.name}" }.to_sentence
     end

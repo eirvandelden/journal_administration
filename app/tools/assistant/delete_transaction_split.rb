@@ -28,16 +28,19 @@ module Assistant
       answer("Removed part ##{part.id}.\n#{remaining(transaction)}")
     end
 
+    #: (TransactionSplit part) -> String
     def self.remainder(part)
       "Part ##{part.id} is the remainder; it is rebuilt automatically and cannot be removed."
     end
     private_class_method :remainder
 
+    #: (TransactionSplit part) -> String
     def self.charged(part)
       "Part ##{part.id} is charged to #{part.appropriation}; remove that charge in the app first."
     end
     private_class_method :charged
 
+    #: (Transaction transaction) -> String
     def self.remaining(transaction)
       return "Transaction ##{transaction.id} has no parts left." unless transaction.transaction_splits.exists?
 
