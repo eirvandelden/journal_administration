@@ -3,6 +3,7 @@ require File.expand_path("../../config/environment", File.dirname(__FILE__))
 
 class Backup
   class << self
+    #: () -> void
     def create
       dest = SQLite3::Database.new(backup_filename)
       backup = SQLite3::Backup.new(dest, "main", User.connection.raw_connection, "main")
