@@ -7,11 +7,13 @@ class BackfillUnicodeNameKeys < ActiveRecord::Migration[8.1]
     self.table_name = "groups"
   end
 
+  #: () -> void
   def up
     PersonRecord.find_each { |person| person.update_columns(name_key: person.name.downcase) }
     GroupRecord.find_each { |group| group.update_columns(name_key: group.name.downcase) }
   end
 
+  #: () -> void
   def down
     PersonRecord.update_all(name_key: nil)
     GroupRecord.update_all(name_key: nil)

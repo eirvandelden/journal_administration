@@ -2,6 +2,7 @@
 # trimmed, spaces removed, upper case. Blank numbers are skipped. Raw SQL, because Account
 # ignores the old column.
 class CopyAccountNumbersFromAccounts < ActiveRecord::Migration[8.1]
+  #: () -> void
   def up
     execute <<~SQL.squish
       INSERT INTO account_numbers (account_id, number, created_at, updated_at)
@@ -12,6 +13,7 @@ class CopyAccountNumbersFromAccounts < ActiveRecord::Migration[8.1]
     SQL
   end
 
+  #: () -> void
   def down
     raise ActiveRecord::IrreversibleMigration
   end
