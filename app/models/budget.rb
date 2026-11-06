@@ -31,18 +31,18 @@ class Budget < ApplicationRecord
   scope :chronological, -> { order(starts_at: :asc) }
   scope :starting_after, ->(day) { where("starts_at > ?", day.in_time_zone.end_of_day).chronological }
 
-  # @return [String] The period the budget covers, for example "1 January 2026 – 31 December 2026"
+  #: () -> String
   def to_s
     [ starts_at, ends_at ].compact.map { |moment| I18n.l(moment.to_date, format: :long) }.join(" – ")
   end
 
-  # @return [Boolean]
+  #: () -> bool
   def active? = starts_at <= Time.current && (ends_at.nil? || ends_at > Time.current)
 
-  # @return [Boolean]
+  #: () -> bool
   def future? = starts_at > Time.current
 
-  # @return [Boolean]
+  #: () -> bool
   def past? = ends_at.present? && ends_at <= Time.current
 
   # Plans what a category may cost per month, replacing whatever was planned for it before.
@@ -50,9 +50,7 @@ class Budget < ApplicationRecord
   # A refused allocation is not left behind on the budget: built through the association, it would
   # stay in the collection and make every later save of the budget fail on its behalf.
   #
-  # @param category [Category] The category to plan for
-  # @param amount [Numeric] What it may cost per month
-  # @return [BudgetCategory] The allocation, carrying its errors when it could not be saved
+  #: (category: Category, amount: Integer) -> BudgetCategory
   def plan(category:, amount:)
     allocation = BudgetCategory.find_or_initialize_by(budget: self, category: category)
     allocation.amount = amount
@@ -67,7 +65,7 @@ class Budget < ApplicationRecord
   #
   # Divides exactly and rounds once, to whole cents, at the end.
   #
-  # @return [Hash{Category => Integer}] cents
+  #: () -> Hash[Category, Integer]
   def suggested_amounts
     lookback = suggestion_lookback_range
     period_days = suggestion_period_days
@@ -85,7 +83,7 @@ class Budget < ApplicationRecord
   # Builds or updates in-memory budget_categories based on suggested_amounts.
   # Call save to persist.
   #
-  # @return [void]
+  #: () -> void
   def apply_suggestions
     suggested_amounts.each do |category, amount|
       existing = budget_categories.find { |bc| bc.category_id == category.id }

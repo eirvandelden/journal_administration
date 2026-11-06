@@ -4,49 +4,60 @@
 # profit/loss. Uses STI types (Debit/Credit) to identify family transactions without
 # requiring a specific account.
 class Dashboard
-  # @return [DateRange] The date range for the dashboard
-  attr_reader :date_range
+  # The date range for the dashboard
+  attr_reader :date_range #: DateRange
 
   # Initializes a new dashboard
   #
-  # @param filter [String, nil] Date range filter (e.g., "last_month", "year_to_date")
-  # @param start_date [String, Date, nil] Custom start date (overrides filter)
-  # @param end_date [String, Date, nil] Custom end date (overrides filter)
+  # The filter is a date range name (e.g., "last_month", "year_to_date").
+  # A custom start and end date override the filter.
+  #
+  #: (?filter: String?, ?start_date: (String | Date)?, ?end_date: (String | Date)?) -> void
   def initialize(filter: nil, start_date: nil, end_date: nil)
     @date_range = custom_date_range(start_date, end_date) || DateRange.from_filter(filter)
   end
 
   # Returns debit transactions grouped by category with totals
   #
-  # @return [Hash{Category => Integer}] Categories mapped to debit cents
+  # Categories map to debit cents.
+  #
+  #: () -> Hash[Category?, Integer]
   def debit_transactions
     @debit_transactions ||= grouped_transactions_for(Debit)
   end
 
   # Returns credit transactions grouped by category with totals
   #
-  # @return [Hash{Category => Integer}] Categories mapped to credit cents
+  # Categories map to credit cents.
+  #
+  #: () -> Hash[Category?, Integer]
   def credit_transactions
     @credit_transactions ||= grouped_transactions_for(Credit)
   end
 
   # Calculates total debit amount
   #
-  # @return [Integer] Sum of all debit transactions, in cents
+  # The sum of all debit transactions, in cents.
+  #
+  #: () -> Integer
   def debit_total
     debit_transactions.values.sum
   end
 
   # Calculates total credit amount (excluding transfers)
   #
-  # @return [Integer] Sum of all credit transactions, in cents
+  # The sum of all credit transactions, in cents.
+  #
+  #: () -> Integer
   def credit_sub_total
     credit_transactions.values.sum
   end
 
   # Returns ordered category name labels derived from credit_transactions
   #
-  # @return [Array<String>] Category names; nil category maps to the uncategorized label
+  # A nil category maps to the uncategorized label.
+  #
+  #: () -> Array[String]
   def chart_labels
     credit_transactions.keys.map { |category| category&.name || I18n.t("common.uncategorized") }
   end
@@ -57,7 +68,9 @@ class Dashboard
   # Each average is: (sum_over_lookback / 365) × selected_days, divided exactly and
   # rounded once to whole cents.
   #
-  # @return [Array<Integer>] Scaled averages in cents, in the same order as chart_labels
+  # The scaled averages are in cents, in the same order as chart_labels.
+  #
+  #: () -> Array[Integer]
   def historical_averages
     lookback = lookback_date_range
     totals = grouped_transactions_for(Credit, range: lookback)
@@ -69,14 +82,16 @@ class Dashboard
 
   # Calculates profit or loss (debit - credit)
   #
-  # @return [Integer] Profit if positive, loss if negative, in cents
+  # Profit is positive, loss is negative, in cents.
+  #
+  #: () -> Integer
   def profit_or_loss
     debit_total - credit_sub_total
   end
 
   # Returns the budget covering the selected date range, if any.
   #
-  # @return [Budget, nil]
+  #: () -> Budget?
   def active_budget
     @active_budget ||= Budget
       .where("starts_at <= ?", date_range.start_date)
@@ -88,7 +103,9 @@ class Dashboard
   # Returns budget amounts per parent category keyed by Category, scaled from the
   # budget's stored monthly amount to the number of months in the selected date range.
   #
-  # @return [Hash{Category => Integer}] cents
+  # The amounts are in cents.
+  #
+  #: () -> Hash[Category, Integer]
   def budget_amounts
     return {} unless active_budget
 
@@ -103,7 +120,9 @@ class Dashboard
 
   # Calculates total credit including profit/loss adjustment
   #
-  # @return [Integer] Credit subtotal plus profit/loss, in cents
+  # The credit subtotal plus profit/loss, in cents.
+  #
+  #: () -> Integer
   def credit_total
     credit_sub_total + profit_or_loss
   end
@@ -111,7 +130,9 @@ class Dashboard
   # Returns each category's net amount for budget comparison: its debit total minus
   # its credit total, so a refund offsets the spending it was refunding.
   #
-  # @return [Hash{Category => Integer}] cents
+  # The amounts are in cents.
+  #
+  #: () -> Hash[Category, Integer]
   def budget_actuals
     @budget_actuals ||= (debit_transactions.keys | credit_transactions.keys).compact.index_with do |category|
       debit_transactions[category].to_i - credit_transactions[category].to_i

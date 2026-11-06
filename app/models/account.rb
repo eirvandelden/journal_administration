@@ -59,8 +59,7 @@ class Account < ApplicationRecord
 
   # Returns the 10 most recent transactions involving this account as debitor or creditor
   #
-  # @param limit [Integer] Maximum number of transactions to return
-  # @return [ActiveRecord::Relation] Transactions ordered by most recent first
+  #: (?limit: Integer?) -> Transaction::ActiveRecord_Relation
   def recent_transactions(limit: 10)
     Transaction
       .includes(:creditor, :debitor, :category)
@@ -71,26 +70,28 @@ class Account < ApplicationRecord
 
   # Returns true when the account has no household owner.
   #
-  # @return [Boolean]
+  #: () -> bool
   def external?
     !household_owned?
   end
 
   # Whether this account belongs to a household person or group.
-  # @return [Boolean]
+  #
+  #: () -> bool
   def household_owned?
     person&.household? || group&.household? || false
   end
 
   # The current managed owner's name, or nil for an external account.
-  # @return [String, nil]
+  #
+  #: () -> String?
   def owner_name
     group&.name || person&.name
   end
 
   # Selects exactly one managed owner from the account form.
-  # @param value [String]
-  # @return [void]
+  #
+  #: (String value) -> void
   def managed_owner=(value)
     kind, id = value.to_s.split("_", 2)
     self.person_id = kind == "person" ? id : nil
@@ -98,7 +99,8 @@ class Account < ApplicationRecord
   end
 
   # The managed owner selection shown by the account form.
-  # @return [String]
+  #
+  #: () -> String
   def managed_owner
     return "group_#{group_id}" if group_id.present?
     return "person_#{person_id}" if person_id.present?
@@ -108,21 +110,21 @@ class Account < ApplicationRecord
 
   # Returns human-readable string representation of the account
   #
-  # @return [String] Account name if present, otherwise the lowest account number
+  #: () -> String
   def to_s
     label_from(name) { numbers.compact.min }
   end
 
   # The account's label as last saved, ignoring unsaved changes.
   #
-  # @return [String] Stored name if present, otherwise the lowest stored account number
+  #: () -> String
   def stored_label
     label_from(name_in_database) { account_numbers.select(&:persisted?).filter_map(&:number_in_database).min }
   end
 
   # Returns the account numbers as strings
   #
-  # @return [Array<String>]
+  #: () -> Array[String]
   def numbers
     account_numbers.reject(&:marked_for_destruction?).map(&:number)
   end
@@ -130,7 +132,7 @@ class Account < ApplicationRecord
   # Reassigns transactions from any external account whose name exactly matches
   # one of this account's alias patterns to self.
   #
-  # @return [Integer] Number of transactions reassigned
+  #: () -> Integer
   def absorb_transactions_from_aliases
     account_aliases.sum { |a| absorb_transactions_for(a.pattern) }
   end

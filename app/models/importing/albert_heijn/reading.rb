@@ -12,8 +12,9 @@ module Importing
       PRICE_EACH = /\A(\d+\.\d{2}|gew\.)\z/
       DEPOSIT_ROW = /\A\+ Statiegeld/
 
-      # @param mail [String] the mail as text
-      # @return [Array<String>] every line of the mail with something on it, without its padding
+      # Every line of the mail with something on it, without its padding
+      #
+      #: (String mail) -> Array[String]
       def self.tokens(mail)
         mail.lines.map(&:strip).reject(&:empty?)
       end

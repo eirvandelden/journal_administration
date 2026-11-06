@@ -43,8 +43,7 @@ class Category < ApplicationRecord
 
   # Returns the most recent transactions for this category and its children
   #
-  # @param limit [Integer] Maximum number of transactions to return
-  # @return [ActiveRecord::Relation] Transactions ordered by most recent first
+  #: (?limit: Integer) -> Transaction::ActiveRecord_Relation
   def recent_transactions(limit: 10)
     matching_category_ids = children.select(:id)
     unsplit_transaction_ids = Transaction.where(category_id: matching_category_ids)
@@ -65,26 +64,26 @@ class Category < ApplicationRecord
   #
   # Child categories match themselves; parent categories match all children.
   #
-  # @return [Array<Integer>]
+  #: () -> Array[Integer]
   def recent_transaction_category_ids
     @recent_transaction_category_ids ||= children.ids
   end
 
   # Returns all children of this category plus itself
   #
-  # @return [ActiveRecord::Relation] Self and all child categories
+  #: () -> Category::ActiveRecord_Relation
   def children
     Category.where(parent_category_id: id).or(Category.where(id: id))
   end
 
   # Returns the category name
   #
-  # @return [String] Category name
+  #: () -> String
   def to_s
     name
   end
 
-  # @return [Boolean]
+  #: () -> bool
   def transfer? = name == TRANSFER_NAME
 
   # Returns displayable full name including parent if this is a child category
@@ -92,7 +91,7 @@ class Category < ApplicationRecord
   # For child categories, returns "Parent Name - Child Name"
   # For parent categories, returns just the name
   #
-  # @return [String] Full hierarchical category name
+  #: () -> String
   def full_name
     if parent_category.present?
       "#{parent_category.name} - #{name}"

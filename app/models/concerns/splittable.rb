@@ -13,27 +13,27 @@ module Splittable
 
   # Explicit user-defined splits, excluding the synthetic remainder row.
   #
-  # @return [ActiveRecord::Relation]
+  #: () -> TransactionSplit::ActiveRecord_Relation
   def explicit_transaction_splits = transaction_splits.where(remainder: false)
 
   # Whether this transaction has any splits
   #
-  # @return [Boolean]
+  #: () -> bool
   def split? = explicit_transaction_splits.any?
 
-  # Remaining amount not yet allocated to explicit splits
+  # Remaining amount not yet allocated to explicit splits, in cents
   #
-  # @return [Integer] cents
+  #: () -> Integer
   def split_balance = amount.to_i - explicit_transaction_splits.sum(:amount)
 
   # Whether the full transaction amount is allocated to splits
   #
-  # @return [Boolean]
+  #: () -> bool
   def fully_split? = split? && (amount.to_i - transaction_splits.sum(:amount)).zero?
 
-  # The portion of the transaction that still has no category assigned.
+  # The portion of the transaction that still has no category assigned, in cents.
   #
-  # @return [Integer] cents
+  #: () -> Integer
   def uncategorized_amount
     uncategorized_splits_amount + untracked_uncategorized_amount
   end
@@ -44,7 +44,7 @@ module Splittable
   # always sum to the transaction amount. Uses the transaction's original
   # category for the remainder.
   #
-  # @return [void]
+  #: () -> void
   def ensure_remainder_split
     explicit_splits = transaction_splits.where(remainder: false)
     return transaction_splits.where(remainder: true).destroy_all if explicit_splits.empty?
@@ -64,10 +64,9 @@ module Splittable
   # Returns the amount relevant to a category page.
   #
   # Falls back to the full transaction amount when the transaction is matched
-  # directly through its primary category.
+  # directly through its primary category. The amount is in cents.
   #
-  # @param category [Category]
-  # @return [Integer] cents
+  #: (category: Category?) -> Integer
   def amount_for(category:) = split? ? matching_transaction_splits_for(category).sum(:amount) : amount
 
   # Returns the category label relevant to a category page.
@@ -75,8 +74,7 @@ module Splittable
   # Falls back to the primary category when the transaction is not matched
   # through splits.
   #
-  # @param category [Category]
-  # @return [String, nil]
+  #: (category: Category?) -> String?
   def category_name_for(category:)
     return self.category&.to_s unless split?
 

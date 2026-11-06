@@ -11,20 +11,22 @@ class Group < ApplicationRecord
   after_save :apply_selected_people
 
   # The selected member ids submitted with this group.
-  # @return [Array<Integer>]
+  #
+  #: () -> Array[Integer]
   def person_ids
     @selected_person_ids || people.ids
   end
 
   # Defers member replacement until group validation succeeds.
-  # @param ids [Array<String, Integer>]
-  # @return [void]
+  #
+  #: (Array[String | Integer] ids) -> void
   def person_ids=(ids)
     @selected_person_ids = Array(ids).reject(&:blank?).map(&:to_i).uniq
   end
 
   # Whether at least one member belongs to the household.
-  # @return [Boolean]
+  #
+  #: () -> bool
   def household?
     return people.any?(&:household?) if people.loaded?
 
@@ -32,7 +34,8 @@ class Group < ApplicationRecord
   end
 
   # Accounts whose transactions depend on this group's household status.
-  # @return [ActiveRecord::Relation]
+  #
+  #: () -> Account::ActiveRecord_Relation
   def accounts_with_transactions
     accounts.joins("INNER JOIN transactions ON transactions.debitor_account_id = accounts.id " \
       "OR transactions.creditor_account_id = accounts.id")

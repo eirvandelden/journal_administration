@@ -10,7 +10,9 @@ module Importing
       AMOUNT = /\A-?\d+\.\d{2}\z/
       FIELDS_PER_ENTRY = 3
 
-      # @param entries [Array<String>] the lines between the "Bonusvoordeel" heading and "Totaal voordeel"
+      # The entries are the lines between the "Bonusvoordeel" heading and "Totaal voordeel"
+      #
+      #: (Array[String] entries) -> void
       def initialize(entries)
         @entries = entries
       end

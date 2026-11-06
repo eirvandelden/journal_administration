@@ -9,7 +9,7 @@ module Categorizable
 
   # Assigns a category based on the transaction type and related accounts
   #
-  # @return [void]
+  #: () -> void
   def assign_category_from_type
     self.category = case type
     when "Transfer"

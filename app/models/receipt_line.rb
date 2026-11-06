@@ -16,10 +16,13 @@ class ReceiptLine < ApplicationRecord
   validates :paid_amount, comparison: { greater_than_or_equal_to: 0 }
   validate :paid_amount_follows_from_the_bonus
 
+  #: () -> bool
   def on_bonus? = discount_amount.positive?
 
   # The accounting category this line books to, or nothing while its product
   # still needs classifying
+  #
+  #: () -> Category?
   def category = product.product_type&.category
 
   private

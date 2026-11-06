@@ -11,7 +11,8 @@ class Person < ApplicationRecord
   before_validation :normalize_name_key
 
   # Whether this person belongs to the household.
-  # @return [Boolean]
+  #
+  #: () -> bool
   def household?
     household
   end

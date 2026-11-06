@@ -4,6 +4,7 @@ module PdfAttachmentValidatable
   PDF_CONTENT_TYPE = "application/pdf".freeze
 
   class_methods do
+    #: (*Symbol names) -> void
     def validates_pdf_attachment_of(*names)
       names.each do |name|
         validate do

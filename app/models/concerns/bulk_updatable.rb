@@ -14,8 +14,9 @@ module BulkUpdatable
   # Transfer transactions are explicitly excluded because they involve two family
   # accounts and would require ambiguous categorization logic.
   #
-  # @return [Integer] Number of transactions updated
   # @raise [MissingCategoryError] If the account has no default category
+  #
+  #: () -> Integer
   def update_uncategorized_transactions!
     raise MissingCategoryError, "Account must have a category" if category.blank?
 

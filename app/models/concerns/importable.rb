@@ -12,10 +12,7 @@ module Importable
     # determines transaction type automatically, and assigns category based on type.
     # Also updates the counterparty account name if not already set.
     #
-    # @param row [Object] CSV row object with date, amount, description, note, etc.
-    # @param our_account [Account] The household account involved in the transaction
-    # @param their_account [Account] The external account or counterparty
-    # @return [Transaction] A new (unsaved) transaction instance
+    #: (Importing::ING::Row row, our_account: Account, their_account: Account) -> Transaction
     def build_from_import(row, our_account:, their_account:)
       transaction = new(
         amount: row.amount,

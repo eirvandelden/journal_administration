@@ -11,9 +11,7 @@ module Searchable
     # Columns of an association are searched through a subquery, so a record matches once
     # however many of its associated rows match: `searchable_on :name, account_numbers: :number`.
     #
-    # @param columns [Array<Symbol>] Column names to include in search
-    # @param associations [Hash{Symbol => Symbol}] Has-many association name => column on that table
-    # @return [void]
+    #: (*Symbol columns, **Symbol associations) -> void
     def searchable_on(*columns, **associations)
       @searchable_columns = columns
 
@@ -27,7 +25,7 @@ module Searchable
 
     # Returns the declared searchable column names
     #
-    # @return [Array<Symbol>]
+    #: () -> Array[Symbol]
     def searchable_columns
       @searchable_columns || []
     end
@@ -36,16 +34,13 @@ module Searchable
     #
     # The query is normalized the way the association's model normalizes the column.
     #
-    # @param query [String]
-    # @param columns [Array<Symbol>]
-    # @param associations [Hash{Symbol => Symbol}]
-    # @return [Array<Array(String, String)>]
+    #: (String query, Array[Symbol] columns, Hash[Symbol, Symbol] associations) -> Array[[String, String]]
     def searchable_terms(query, columns, associations)
       own = columns.map { |column| [ "#{table_name}.#{column} LIKE ?", like_pattern(query) ] }
       own + associations.map { |name, column| searchable_association_term(query, name, column) }
     end
 
-    # @return [Array(String, String)]
+    #: (String query, Symbol name, Symbol column) -> [String, String]
     def searchable_association_term(query, name, column)
       reflection = reflect_on_association(name)
       sql = "#{table_name}.#{primary_key} IN " \
@@ -53,7 +48,7 @@ module Searchable
       [ sql, like_pattern(reflection.klass.normalize_value_for(column, query)) ]
     end
 
-    # @return [String]
+    #: (String text) -> String
     def like_pattern(text)
       "%#{sanitize_sql_like(text)}%"
     end

@@ -15,7 +15,10 @@ module Importing
       SHELF_HEADINGS = [ "Boodschappen totaal", "Totaal boodschappen" ].freeze
       TABLE_HEADING = [ "Aantal", "Prijs", "Totaal" ].freeze
 
-      attr_reader :order_number, :delivered_on, :total_amount, :lines
+      attr_reader :order_number #: String
+      attr_reader :delivered_on #: Date
+      attr_reader :total_amount #: Integer
+      attr_reader :lines #: Array[PackingSlip::Line]
 
       # Reads an order confirmation mail, or nothing when the mail is not one
       #
@@ -26,12 +29,14 @@ module Importing
         confirmation if confirmation&.reconciles?
       end
 
+      #: (Array[String] tokens) -> bool
       def self.readable?(tokens)
         tokens.grep(GREETING).any? && tokens.grep(ORDER_NUMBER).any? &&
           tokens.grep(DELIVERY_LINE).any? && (tokens & SHELF_HEADINGS).any? && tokens.include?("Totaal")
       end
       private_class_method :readable?
 
+      #: (Array[String] tokens) -> void
       def initialize(tokens)
         @tokens = tokens
         @shelf_heading = (tokens & SHELF_HEADINGS).first
