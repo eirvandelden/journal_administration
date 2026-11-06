@@ -5,6 +5,7 @@ class ProductTypesController < ApplicationController
   # Lists the product types with the category each is booked to
   #
   # @return [void]
+  #: () -> void
   def index
     @product_types = ProductType.includes(:category).order(:name)
   end
@@ -12,6 +13,7 @@ class ProductTypesController < ApplicationController
   # Compares the products of this type and totals what we spend on them
   #
   # @return [void]
+  #: () -> void
   def show
     @latest_purchases = @product_type.latest_purchase_per_product
     @monthly_totals = @product_type.monthly_totals
@@ -20,6 +22,7 @@ class ProductTypesController < ApplicationController
   # Renders the form for a new product type
   #
   # @return [void]
+  #: () -> void
   def new
     @product_type = ProductType.new
     @categories = Category.order(:name)
@@ -28,6 +31,7 @@ class ProductTypesController < ApplicationController
   # Renders the form for an existing product type
   #
   # @return [void]
+  #: () -> void
   def edit
     @categories = Category.order(:name)
   end
@@ -35,6 +39,7 @@ class ProductTypesController < ApplicationController
   # Creates a product type
   #
   # @return [void]
+  #: () -> void
   def create
     @product_type = ProductType.new(product_type_params)
 
@@ -47,6 +52,7 @@ class ProductTypesController < ApplicationController
   # Updates a product type
   #
   # @return [void]
+  #: () -> void
   def update
     return redirect_to product_types_path, notice: t(".success") if @product_type.update(product_type_params)
 

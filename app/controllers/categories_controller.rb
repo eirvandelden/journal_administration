@@ -5,6 +5,7 @@ class CategoriesController < ApplicationController
   # Lists all categories grouped by parent category.
   #
   # @return [void]
+  #: () -> void
   def index
     @category_groups = Category.includes(:parent_category)
                                 .reorder(Arel.sql("parent_category_id ASC NULLS FIRST, name ASC"))
@@ -14,11 +15,13 @@ class CategoriesController < ApplicationController
   # Displays a single category
   #
   # @return [void]
+  #: () -> void
   def show; end
 
   # Renders form for creating a new category
   #
   # @return [void]
+  #: () -> void
   def new
     @category = Category.new
   end
@@ -26,11 +29,13 @@ class CategoriesController < ApplicationController
   # Renders form for editing a category
   #
   # @return [void]
+  #: () -> void
   def edit; end
 
   # Creates a new category
   #
   # @return [void]
+  #: () -> void
   def create
     @category = Category.new(category_params)
 
@@ -48,6 +53,7 @@ class CategoriesController < ApplicationController
   # Updates a category
   #
   # @return [void]
+  #: () -> void
   def update
     respond_to do |format|
       if @category.update(category_params)
@@ -63,6 +69,7 @@ class CategoriesController < ApplicationController
   # Deletes a category
   #
   # @return [void]
+  #: () -> void
   def destroy
     @category.destroy
     respond_to do |format|

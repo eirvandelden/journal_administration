@@ -7,6 +7,7 @@ class Transactions::ImportsController < ApplicationController
   # @action GET
   # @route /transactions/imports/new
   # @return [void]
+  #: () -> void
   def new; end
 
   # Creates a new transaction import from a CSV file
@@ -14,6 +15,7 @@ class Transactions::ImportsController < ApplicationController
   # @action POST
   # @route /transactions/imports
   # @return [void]
+  #: () -> void
   def create
     csv = imports_params[:csv]
 

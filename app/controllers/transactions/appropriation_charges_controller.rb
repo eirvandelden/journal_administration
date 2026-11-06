@@ -8,6 +8,7 @@ module Transactions
     # @action PATCH
     # @route /transactions/:transaction_id/appropriation_charge
     # @return [void]
+    #: () -> void
     def update
       charge_to Appropriation.find(charge_params[:appropriation_id]), notice: t(".success")
     end
@@ -17,6 +18,7 @@ module Transactions
     # @action DELETE
     # @route /transactions/:transaction_id/appropriation_charge
     # @return [void]
+    #: () -> void
     def destroy
       charge_to nil, notice: t(".success")
     end

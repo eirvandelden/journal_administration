@@ -1,17 +1,21 @@
 class Admin::UsersController < Admin::BaseController
   before_action :set_user, only: [ :show, :edit, :update, :destroy ]
 
+  #: () -> void
   def index
     @users = set_page_and_extract_portion_from User.order(created_at: :desc), per_page: [ 20 ]
   end
 
+  #: () -> void
   def show
   end
 
+  #: () -> void
   def new
     @user = User.new
   end
 
+  #: () -> void
   def create
     @user = User.new(create_user_params)
 
@@ -22,9 +26,11 @@ class Admin::UsersController < Admin::BaseController
     end
   end
 
+  #: () -> void
   def edit
   end
 
+  #: () -> void
   def update
     if @user.update(update_user_params)
       redirect_to admin_user_path(@user), notice: t(".success")
@@ -33,6 +39,7 @@ class Admin::UsersController < Admin::BaseController
     end
   end
 
+  #: () -> void
   def destroy
     if @user == Current.user
       redirect_to admin_users_path, alert: t(".cannot_delete_self")
