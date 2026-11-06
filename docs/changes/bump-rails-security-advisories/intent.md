@@ -19,7 +19,7 @@ Every branch of this repository, through the pre-push hook. Production gets patc
 - Patch bumps only, inside the current minor versions. Never skip a major version.
 - Update only the gems named by the advisories, with `bundle update <gem>`, never a full `bundle update`.
 - Fix the rubocop offenses in the code with RBS inline annotations. Never edit `.rubocop.yml`, add a disable comment or pin the gem back (playbook rule 2).
-- Annotations are comments only: no behaviour change.
+- Annotations are comments only, except three `Struct.new` blocks whose methods move unchanged into a reopened nested class. No behaviour change.
 - No gem is added or removed. No `Gemfile` constraint changes unless an advisory fix needs one.
 
 ## In scope
@@ -45,6 +45,8 @@ Every branch of this repository, through the pre-push hook. Production gets patc
 - Bump Rails now, on its own branch — "bump rails now", chosen so the account-page branch stays free of lockfile changes (playbook rule 25).
 
 - Fix the rubocop offenses on this branch, by annotating — "fix here"; the 410 offenses block every push, same as the audit.
+
+- Move the three `Struct.new` block methods unchanged into a reopened class — chosen over `Data.define` or leaving them; "Move the methods unchanged", so rubocop goes clean without a refactor.
 
 ## Open questions
 
