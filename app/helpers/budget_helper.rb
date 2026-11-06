@@ -12,10 +12,7 @@ module BudgetHelper
   #   - :orange when 50% <= actual < 100% of target
   #   - :red when actual < 50% of target
   #
-  # @param category [Category] the category
-  # @param actual [Numeric] actual amount
-  # @param budgeted [Numeric, nil] budget amount
-  # @return [Symbol, nil] :green, :orange, :red, or nil
+  #: (category: Category, actual: Numeric, budgeted: Numeric?) -> (:green | :orange | :red)?
   def budget_status(category:, actual:, budgeted:)
     return nil if budgeted.nil? || budgeted.to_f.zero?
 
@@ -29,9 +26,7 @@ module BudgetHelper
 
   # Formats a percentage badge label, e.g. "73%".
   #
-  # @param actual [Numeric] actual amount
-  # @param budgeted [Numeric, nil] budget amount
-  # @return [String] formatted percentage or empty string
+  #: (actual: Numeric, budgeted: Numeric?) -> String
   def budget_pct_label(actual:, budgeted:)
     return "" if budgeted.nil? || budgeted.to_f.zero?
 
