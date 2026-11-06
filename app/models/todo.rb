@@ -13,7 +13,7 @@ class Todo
   # The date is the sort date for the item.
   Item = Struct.new(
     :kind,   #: (:transaction | :account | :product)
-    :date,   #: ActiveSupport::TimeWithZone
+    :date,   #: ActiveSupport::TimeWithZone?
     :record  #: (Transaction | Account | Product)
   )
 
