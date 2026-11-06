@@ -1,4 +1,5 @@
 class SetTransactionsFromEtienneOrMichelleToSamenAsTransfer < ActiveRecord::Migration[6.0]
+  #: () -> void
   def up
     our_account_ids = Account.where.not(owner: nil).ids
     category_id     = Category.find_by(name: "Transfer").id
@@ -9,6 +10,7 @@ class SetTransactionsFromEtienneOrMichelleToSamenAsTransfer < ActiveRecord::Migr
 type: "Transfer", category_id: category_id)
   end
 
+  #: () -> void
   def down
     raise ActiveRecord::IrreversibleMigration
   end

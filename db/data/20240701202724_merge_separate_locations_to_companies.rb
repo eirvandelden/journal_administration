@@ -1,4 +1,5 @@
 class MergeSeparateLocationsToCompanies < ActiveRecord::Migration[7.1]
+  #: () -> void
   def up
     # AH
     albert_heijns = Account.all.select { |account|
@@ -35,6 +36,7 @@ class MergeSeparateLocationsToCompanies < ActiveRecord::Migration[7.1]
     kruidvat.map(&:destroy)
   end
 
+  #: () -> void
   def down
     # raise ActiveRecord::IrreversibleMigration
   end
