@@ -83,16 +83,16 @@ The Samen Oranje Spaarrekening holds ten potjes, all active. The potje names are
 | Cadeautjes | gifts budget | gifts for adults and the family; gifts for the children go to Kinderen | active |
 | Huis | home maintenance and furnishing budget | home maintenance and furnishing; the children's rooms go to Kinderen; receives the 13e maand | active |
 | Vakantie | holiday savings goal | holidays; receives the vakantiegeld | active |
-| Projecten | projects savings goal | projects; receives tax refunds, the monthly Onvoorzien leftover and Buffer's share above its target | active |
+| Projecten | projects savings goal | projects; receives tax refunds, the monthly Onvoorzien leftover and the windfall rests once Buffer is at its target | active |
 | Buffer | emergency fund | emergencies only, never a known cost | active |
 
 ## Salary routine
 
-The salary arrives in the Samen Betaalrekening. After it arrives, monthly transfers from the Betaalrekening fill five potjes: Boodschappen en huishouden, Auto en vervoer, Reserveringen, Vrije tijd en hobby and Cadeautjes. They also pay each partner's personal allowance. Onvoorzien stays behind on the Betaalrekening. The salary does not fill Kinderen, Huis, Vakantie, Projecten or Buffer. Kinderen is filled from the child benefits. The KGB arrives monthly on the Betaalrekening, around the 20th. It pays the children's own savings accounts, and the rest moves to Kinderen with the monthly transfers after the salary. The kinderbijslag arrives quarterly on the Betaalrekening and moves to Kinderen soon after it arrives. Huis and Vakantie are filled only from the windfalls. Buffer gets only the windfall leftovers. Projecten gets tax refunds, the monthly leftover on the 21st and Buffer's share above its target.
+The salary arrives in the Samen Betaalrekening. After it arrives, monthly transfers from the Betaalrekening fill five potjes: Boodschappen en huishouden, Auto en vervoer, Reserveringen, Vrije tijd en hobby and Cadeautjes. They also pay each partner's personal allowance. Onvoorzien stays behind on the Betaalrekening. The salary does not fill Kinderen, Huis, Vakantie, Projecten or Buffer. Kinderen is filled from the child benefits. The KGB arrives monthly on the Betaalrekening, around the 20th. It pays the children's own savings accounts, and the rest moves to Kinderen with the monthly transfers after the salary. The kinderbijslag arrives quarterly on the Betaalrekening and moves to Kinderen soon after it arrives. Huis and Vakantie are filled only from the windfalls. Buffer gets only the windfall leftovers. Projecten gets tax refunds, the monthly leftover on the 21st and the windfall rests once Buffer is at its target.
 
 ## Windfalls
 
-The 13e maand pays Huis, and the rest goes to Buffer. The vakantiegeld pays Vakantie, and the rest goes to Buffer. Tax refunds go to Projecten. Gifts are extra and go to Projecten or to the children. Once Buffer is above its target, its share of the 13e maand and the vakantiegeld goes to Projecten.
+The 13e maand pays Huis, and the rest goes to Buffer. The vakantiegeld pays Vakantie, and the rest goes to Buffer. Tax refunds go to Projecten. Gifts are extra and go to Projecten or to the children. Once Buffer is at its target, the rest of the 13e maand and the vakantiegeld goes to Projecten, not to Buffer.
 
 ## Onvoorzien
 
@@ -112,7 +112,7 @@ A purchase is pulled from its potje shortly before or after it is paid. This kee
 
 ## Buffer and Reserveringen
 
-Reserveringen holds money saved ahead for recurring costs. Examples are the animal insurance, the trimsalon (pet grooming salon), the dentist and the yearly energy peak in April. Buffer is for emergencies only, never for a known cost. Its target is about three months of essential costs. It is filled from the leftovers of the 13e maand and the vakantiegeld. Above the target, its share of those windfalls goes to Projecten.
+Reserveringen holds money saved ahead for recurring costs. Examples are the animal insurance, the trimsalon (pet grooming salon), the dentist and the yearly energy peak in April. Buffer is for emergencies only, never for a known cost. Its target is about three months of essential costs. It is filled from the leftovers of the 13e maand and the vakantiegeld. At the target, the rest of those windfalls goes to Projecten, not to Buffer.
 
 ## Appropriations
 
