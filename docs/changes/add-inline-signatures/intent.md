@@ -21,7 +21,7 @@ Ten of those offenses sit in run-once scripts: `db/data` (8), `db/cable_migrate`
 ## Constraints
 
 - No linter disable comments, no `# rbs_inline: disabled` to dodge the cops, and no edit to this repo's `.rubocop.yml` to pass (playbook rule 2, §7a).
-- No new dependency. Approved permissions: `bundle update rubocop-eirvandelden` once the gem change is merged, and `bundle update sqlite3`. No other gem, system tool, dropping migration or deploy file is approved.
+- No new dependency. Approved permissions: `bundle update rubocop-eirvandelden` once the gem change is merged, `bundle update sqlite3`, and `bundle update --patch --conservative rails rack nokogiri loofah addressable rails-html-sanitizer`. No other gem, system tool, dropping migration or deploy file is approved.
 - The gem change must be merged before this change can bump the gem. Only Etienne merges it. When delivery reaches the bump and the gem pull request is not merged, stop and ask Etienne.
 - Pushes wait until every lefthook pre-push check passes. Never bypass lefthook (`LEFTHOOK=0`, `--no-verify`). Run `npm install` in the worktree first.
 - Signatures use real types (`String`, `Integer`, `Account`, `ActiveRecord::Relation`, `bool`, `void`). `untyped` only where the value truly varies.
@@ -36,6 +36,7 @@ Ten of those offenses sit in run-once scripts: `db/data` (8), `db/cable_migrate`
 - `script/admin/prepare-backup`: a signature on `Backup.create`.
 - In `rubocop-eirvandelden` (`~/Developer/rubocop-eirvandelden`), in its own worktree: extend the `db/migrate` exclusion of `Style/RbsInline/MissingTypeAnnotation` in `config/rails.yml` to `db/*_migrate` and `db/data`, with tests in `test/shared_configuration_test.rb` and a `CHANGELOG.md` line, and open a draft pull request there.
 - Bump `sqlite3` to 2.10.2 or newer (GHSA-4fqr-96q8-xrfx), as its own commit.
+- Bump Rails to 8.1.4.1 and `rack`, `nokogiri`, `loofah`, `addressable` and `rails-html-sanitizer` to their patched versions, as its own commit, so `bundler-audit` passes.
 - Bump `rubocop-eirvandelden` to the merged gem change, as the last commit.
 
 ## Out of scope
@@ -44,7 +45,7 @@ Ten of those offenses sit in run-once scripts: `db/data` (8), `db/cable_migrate`
 - Signatures on private methods (the gem asks only for public ones).
 - Tests: `test/` is excluded by the gem.
 - Merging the gem pull request: Etienne merges it.
-- Other gem updates than `sqlite3` and `rubocop-eirvandelden`.
+- Other gem updates than `sqlite3`, `rubocop-eirvandelden` and the six security bumps.
 - A type checker (Steep, `rbs validate`) in CI, and generated `sig/` files.
 - Converting Structs to `Data.define`.
 
@@ -74,6 +75,8 @@ Ten of those offenses sit in run-once scripts: `db/data` (8), `db/cable_migrate`
 - Bump `sqlite3` in this change — no reason given. (Plan stage escalation, 2026-11-06.)
 - Change the gem from this delivery, not as a separate intent — it keeps the agreed design, exclusion in the gem. (Plan stage escalation, 2026-11-06.)
 - Keep `**String` on `Importing::ING::Row#initialize` and `**untyped` on `Assistant::ChargeToAppropriation.call`, each with a one-line reason comment — the full keyword form exceeds 120 characters and `#|` continuation fails `InvalidTypes`. (Implement stage escalation, 2026-11-06.)
+- Etienne merges the gem branch `exclude-run-once-scripts` himself, without a pull request — the consent guard lets only `deliver` open one. (Implement stage escalation, 2026-11-06.)
+- Bump Rails, `rack`, `nokogiri`, `loofah`, `addressable` and `rails-html-sanitizer` in this change — no reason given. (Implement stage escalation, 2026-11-06.)
 
 ## Open questions
 
