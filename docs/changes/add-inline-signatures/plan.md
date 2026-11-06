@@ -315,3 +315,5 @@ Domain skills applied: rails-architecture, ruby-style, rails-testing, software-d
 ## Amendment (2026-11-06, coordinator)
 
 Etienne settled the plan stage's three `Decision needed:` lines (recorded in `intent.md` Decisions): hold pushes until every pre-push check passes; bump `sqlite3` in this change (step 12); make the `rubocop-eirvandelden` exclusion change from this delivery (step 12a), with Etienne merging its pull request before step 12b.
+
+Second amendment (2026-11-06, coordinator): two signatures exceed 120 characters with every keyword named, and `#|` continuation fails `InvalidTypes`. Etienne keeps the shortcuts: `**String` on `Importing::ING::Row#initialize` (its nine other keywords are all `String`) and `**untyped` on `Assistant::ChargeToAppropriation.call` (it absorbs `server_context`). Each gets a one-line reason comment above the signature, as the `untyped` rule in Signatures requires.
