@@ -63,7 +63,7 @@ The household uses Dutch terms. The standard financial term stands next to each 
 
 ## Income
 
-Household income is the salary only, from one earner. Etienne's partner has no income. Child benefits are not household income. The KGB arrives monthly, around the 20th. The kinderbijslag arrives quarterly. All child benefits go to Kinderen and pay only for the children: clothing, furniture, hobbies, gifts, toys and parties, care and school, and their savings. Kinderen holds about one quarter's worth of kinderbijslag in reserve, because it arrives only four times a year.
+Household income is the salary only, from one earner. Etienne's partner has no income. Child benefits are not household income. The KGB arrives monthly, around the 20th. The kinderbijslag arrives quarterly. Child benefits pay only for the children: clothing, furniture, hobbies, gifts, toys and parties, care and school, and their savings. The KGB first pays the children's own savings accounts, and the rest goes to Kinderen. The kinderbijslag goes to Kinderen. Kinderen holds about one quarter's worth of kinderbijslag in reserve, because it arrives only four times a year.
 
 ## Bank accounts and potjes
 
@@ -75,7 +75,7 @@ The Samen Oranje Spaarrekening holds ten potjes, all active. The potje names are
 
 | Potje | Standard term | Purpose | Status |
 | --- | --- | --- | --- |
-| Kinderen | children's budget | everything for the children: clothing, furniture and their rooms, hobbies, gifts, toys and parties, care and school, and their savings; receives all child benefits | active |
+| Kinderen | children's budget | everything for the children: clothing, furniture and their rooms, hobbies, gifts, toys and parties, care and school, and their savings; receives the child benefits: the KGB minus the children's own savings accounts, and the kinderbijslag | active |
 | Boodschappen en huishouden | groceries and household budget | groceries and household; purpose taken from the potje's name | active |
 | Auto en vervoer | car and transport budget | car and transport; purpose taken from the potje's name | active |
 | Reserveringen | sinking fund | saving ahead for recurring costs | active |

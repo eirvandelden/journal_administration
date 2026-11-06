@@ -3,7 +3,7 @@
 - **Buffer** — the potje for emergencies only, filled from the leftovers of the 13e maand and the vakantiegeld up to a target of about three months of essential costs, above which its share goes to Projecten; it never pays a known cost. The standard term is emergency fund.
 - **Delivery** — a receipt that carries an Albert Heijn order number; one order is one delivery. Avoid: order, bestelling.
 - **Door-card payment** — the card payment made at the door when a grocery delivery arrives, the bank note carries a pasvolgnr and no order number. Avoid: pin payment, terminal payment.
-- **Kinderen** — the potje that receives all child benefits, the KGB and the kinderbijslag, and pays only for the children.
+- **Kinderen** — the potje that receives the child benefits, the KGB minus the children's own savings and the kinderbijslag, and pays only for the children.
 - **Onvoorzien** — the small amount that stays on the Samen Betaalrekening after the monthly transfers, for unplanned costs; it is not a potje.
 - **Oranje Spaarrekening** — the ING savings account that holds the potjes.
 - **Order confirmation** — the mail Albert Heijn sends when an order is placed, "Bedankt voor jouw bestelling"; it lists what was ordered, not what was packed.
