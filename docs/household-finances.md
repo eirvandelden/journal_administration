@@ -1,20 +1,32 @@
 # Household finances
 
-This document describes how the household runs its money. It holds the method only, with no amounts. Current values live in the app. Agents use it as the baseline when they categorize transactions, suggest budgets or analyse spending. Etienne described the method. Where a term is marked "agent-supplied", an agent chose the standard financial term, and Etienne may correct it. The ING page URLs below date from 2026-10-21.
+This document describes how the household runs its money. It holds the method only, with no amounts. Current values live in the app. Agents use it as the baseline when they categorize transactions, suggest budgets or analyse spending. Etienne described the method. The method holds from 2026-10-22, the date Etienne accepted it. Where a term is marked "agent-supplied", an agent chose the standard financial term, and Etienne may correct it. The ING page URLs below date from 2026-10-21.
 
 ```mermaid
 flowchart LR
-  Salary["Salary (each earner)"] --> Samen["Samen Betaalrekening"]
+  Salary["Salary (one earner)"] --> Samen["Samen Betaalrekening"]
+  Benefits["Child benefits: KGB monthly, kinderbijslag quarterly"] -->|all of it| Kinderen
   subgraph Potjes["Samen potjes (Oranje Spaarrekening)"]
-    Others["Nine other potjes"]
+    Kinderen["Kinderen"]
+    Others["Five other potjes"]
+    Huis["Huis"]
+    Vakantie["Vakantie"]
+    Projecten["Projecten"]
     Buffer["Buffer"]
   end
-  Samen -->|fill each potje| Others
-  Samen -->|leftover| Buffer
-  Samen -->|equal agreed amount| Personal["Personal Betaalrekening (each partner)"]
+  Samen -->|fill each potje on salary day| Others
+  Samen -->|equal amount| Personal["Personal Betaalrekening (each partner)"]
   Samen -->|direct debit| Fixed["Vaste lasten, Verzekeringen, Abonnementen, Heffingen"]
-  Others -->|pulled before or after a purchase| Samen
-  Buffer -->|pulled when no potje fits| Samen
+  Samen -->|Onvoorzien leftover on the 21st| Projecten
+  Thirteenth["13e maand"] --> Huis
+  Thirteenth -->|rest| Buffer
+  Holiday["Vakantiegeld"] --> Vakantie
+  Holiday -->|rest| Buffer
+  Refund["Tax refund"] --> Projecten
+  Gifts["Gifts"] --> Projecten
+  Gifts --> Kinderen
+  Buffer -->|share above target| Projecten
+  Buffer -->|emergencies only| Samen
 ```
 
 ## Words we use
@@ -30,14 +42,25 @@ The household uses Dutch terms. The standard financial term stands next to each 
 | Spaardoelen | savings goals, ING's other name for the sub-accounts | <https://www.ing.nl/particulier/sparen/spaardoelen> |
 | Creditcard (not confirmed as an ING card) | credit card | <https://www.ing.nl/particulier/betalen/creditcards/afschrijfdatum-creditcard> |
 | Samen | joint household account | household name |
-| Buffer | emergency fund and surplus | `GLOSSARY.md` |
+| Buffer | emergency fund | `GLOSSARY.md` |
 | Reserveringen | sinking fund | `GLOSSARY.md` |
 | Vaste lasten (Vaste Lasten) | fixed expenses | `GLOSSARY.md` |
 | Verzekeringen | insurance premiums | Dutch word |
 | Abonnementen | subscriptions | Dutch word |
 | Heffingen | levies, meaning local taxes and charges | Dutch word |
 | Trimsalon | pet grooming salon | Dutch word |
+| Onvoorzien | contingency for unplanned costs | `GLOSSARY.md` |
+| Kinderen | children's budget | `GLOSSARY.md` |
+| Huis | home maintenance and furnishing budget | household name |
+| Kindgebonden budget (KGB) | child-related budget, a government child allowance | Dutch word |
+| Kinderbijslag | child benefit | Dutch word |
+| 13e maand | thirteenth-month pay | Dutch word |
+| Vakantiegeld | holiday allowance | Dutch word |
 | Appropriation | earmarked funds | `GLOSSARY.md` |
+
+## Income
+
+Household income is the salary only, from one earner. Etienne's partner has no income. Child benefits are not household income. The KGB arrives monthly, around the 20th. The kinderbijslag arrives quarterly. All child benefits go to Kinderen and pay only for the children: clothing, furniture, hobbies, gifts, toys and parties, care and school, and their savings. Kinderen keeps about one quarter of the kinderbijslag, because it arrives per quarter.
 
 ## Bank accounts and potjes
 
@@ -45,44 +68,66 @@ The bank is ING. The household has three debit accounts: the Samen Betaalrekenin
 
 ## The Samen potjes
 
-The Samen Oranje Spaarrekening holds ten potjes. The potje names are the household's own labels, kept in Dutch. The standard term column is agent-supplied. A purpose marked "purpose taken from the potje's name" is not confirmed by Etienne.
+The Samen Oranje Spaarrekening holds ten potjes, all active. The potje names are the household's own labels, kept in Dutch. The standard term column is agent-supplied. A purpose marked "purpose taken from the potje's name" is not confirmed by Etienne.
 
 | Potje | Standard term | Purpose | Status |
 | --- | --- | --- | --- |
-| Boodschappen, huishoudelijk en persoonlijke zorg | groceries, household and personal care budget | groceries, household and personal care; purpose taken from the potje's name | active |
-| Vrije tijd en hobby | leisure and hobbies budget | leisure and hobbies; purpose taken from the potje's name | active |
+| Kinderen | children's budget | everything for the children: clothing, furniture and their rooms, hobbies, gifts, toys and parties, care and school, and their savings; receives all child benefits | active |
+| Boodschappen en huishouden | groceries and household budget | groceries and household; purpose taken from the potje's name | active |
 | Auto en vervoer | car and transport budget | car and transport; purpose taken from the potje's name | active |
-| Kinderen kleding | children's clothing budget | children's clothing; also pays Christmas and Sinterklaas | active |
-| Cadeautjes en speelgoed | gifts and toys budget | gifts and toys; most appropriations are saved for here | active |
-| Projecten | projects savings goal | saving for projects; purpose taken from the potje's name | active |
 | Reserveringen | sinking fund | saving ahead for recurring costs | active |
-| Vakantie | holiday savings goal | saving for holidays; purpose taken from the potje's name | active |
-| Cosimo | not applicable | none | unused |
-| Buffer | emergency fund and surplus | the salary leftover and anything no potje can pay | active |
+| Vrije tijd en hobby | leisure and hobbies budget | leisure and hobbies; purpose taken from the potje's name | active |
+| Cadeautjes | gifts budget | gifts for adults and the family; gifts for the children go to Kinderen | active |
+| Huis | home maintenance and furnishing budget | home maintenance and furnishing; the children's rooms go to Kinderen; receives the 13e maand | active |
+| Vakantie | holiday savings goal | holidays; receives the vakantiegeld | active |
+| Projecten | projects savings goal | projects; receives tax refunds, the monthly Onvoorzien leftover and Buffer's share above its target | active |
+| Buffer | emergency fund | emergencies only, never a known cost | active |
 
 ## Salary routine
 
-Each salary arrives in the Samen Betaalrekening. Then each Samen potje is filled. The leftover moves to Buffer.
+The salary arrives in the Samen Betaalrekening. Then each Samen potje is filled, and each partner gets the personal allowance. Onvoorzien stays behind on the Betaalrekening.
+
+## Windfalls
+
+The 13e maand pays Huis, and the rest goes to Buffer. The vakantiegeld pays Vakantie, and the rest goes to Buffer. Tax refunds go to Projecten. Gifts are extra and go to Projecten or to the children. Once Buffer is above its target, its share of the 13e maand and the vakantiegeld goes to Projecten.
+
+## Onvoorzien
+
+Onvoorzien is not a potje. It is a small amount that stays on the Samen Betaalrekening after the monthly transfers. An unplanned cost is paid from it. When a potje runs empty, the Betaalrekening pays the rest, and that potje pays it back after the next salary-day transfers. For example, when Boodschappen en huishouden is empty, pay the groceries from the Betaalrekening. After the next salary-day transfers, move the amount back from Boodschappen en huishouden. On the 21st, just before the salary, the leftover minus the KGB that arrived on the 20th moves to Projecten.
 
 ## Personal accounts
 
-Each month an equal, agreed amount moves from Samen to each personal Betaalrekening. The standard term is personal allowance. Etienne's active potjes are "Etienne's verzorging" (personal care budget), "Steam Deck" (savings goal) and "Etienne's Buffer" (emergency fund and surplus). His wife's potjes are not recorded here.
+Each month an equal amount moves from Samen to each personal Betaalrekening. The standard term is personal allowance. Personal purchases go on the personal accounts. Nobody pays them from Samen and pays back. Etienne's active potjes are "Etienne's verzorging" (personal care budget), "Steam Deck" (savings goal) and "Etienne's Buffer" (emergency fund and surplus). His wife's potjes are not recorded here.
 
 ## Fixed costs
 
-Most Vaste Lasten (fixed expenses), Verzekeringen (insurance premiums), Abonnementen (subscriptions) and Heffingen (levies) leave the Betaalrekening directly. Costs saved up ahead go through Reserveringen (sinking fund) instead. Some monthly subscriptions go through the credit card. The exceptions are not listed.
+Most Vaste Lasten (fixed expenses), Verzekeringen (insurance premiums), Abonnementen (subscriptions) and Heffingen (levies) leave the Betaalrekening directly. Costs saved up ahead go through Reserveringen (sinking fund) instead. Studieschuld is a Vaste lasten cost. The study loan ends around late 2031; from then on, savings can rise. Some monthly subscriptions go through the credit card. The credit card bill is booked as a transfer linked to its purchases, not as a cost. The exceptions are not listed.
 
 ## Spending routine
 
-A purchase is pulled from its potje shortly before or after it is paid. This keeps what is left in the potje visible.
+A purchase is pulled from its potje shortly before or after it is paid. This keeps what is left in the potje visible. When a potje is empty, follow Onvoorzien.
 
 ## Buffer and Reserveringen
 
-Reserveringen holds money saved ahead for recurring costs. Examples are the animal insurance, the trimsalon (pet grooming salon) and the dentist. Buffer holds the salary leftover and anything that no potje can pay. Buffer serves as both surplus and emergency fund. No target size is recorded.
+Reserveringen holds money saved ahead for recurring costs. Examples are the animal insurance, the trimsalon (pet grooming salon), the dentist and the yearly energy peak in April. Buffer is for emergencies only, never for a known cost. Its target is about three months of essential costs. It is filled from the leftovers of the 13e maand and the vakantiegeld. Above the target, its share of those windfalls goes to Projecten.
 
 ## Appropriations
 
-Most appropriations (earmarked funds) are saved for in "Cadeautjes en speelgoed" or in "Reserveringen". The app's Appropriation is the matching record. These two potjes are not funded enough, so Christmas and Sinterklaas are paid from "Kinderen kleding".
+Appropriations (earmarked funds) for the children are saved for in Kinderen. The other appropriations are saved for in Cadeautjes or in Reserveringen. The app's Appropriation is the matching record.
+
+## Methods
+
+The standard terms are agent-supplied.
+
+- Envelope budgeting: the household budgets with potjes. A potje is still called a potje.
+- Zero-based budgeting: on salary day every euro of the salary gets a destination: potjes, personal allowances, fixed costs and Onvoorzien.
+- Sinking fund: Reserveringen saves ahead for recurring costs.
+- Pay yourself first: the potjes and the savings are filled on salary day, before spending.
+- Emergency fund: Buffer.
+
+## App categories
+
+Names only, no ids. `Kinderen` is a parent category for the children's spending. `Vaste lasten - Studieschuld` holds the study loan. `Inkomsten - Kindgebonden budget` holds every KGB payment. An analysis does not count it as household income.
 
 ## How the app sees this
 
