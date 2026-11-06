@@ -4,16 +4,23 @@
 # makes them comparable. The category says how groceries of this type are booked.
 class ProductType < ApplicationRecord
   # What a month of buying this kind of thing came to
-  Totals = Struct.new(:spent, :count, :on_bonus_count)
+  Totals = Struct.new(
+    :spent,          #: Integer
+    :count,          #: Integer
+    :on_bonus_count  #: Integer
+  )
 
   belongs_to :category
   has_many :products
 
   validates :name, presence: true, uniqueness: { case_sensitive: false }
 
+  #: () -> String
   def to_s = name
 
   # Every purchase of anything of this type, most recent invoice first
+  #
+  #: () -> ReceiptLine::ActiveRecord_Relation
   def purchases
     ReceiptLine.joins(:receipt, :product)
                .where(products: { product_type_id: id })
@@ -22,11 +29,15 @@ class ProductType < ApplicationRecord
   end
 
   # The most recent purchase of each product of this type, so brands can be compared
+  #
+  #: () -> Hash[Product, ReceiptLine]
   def latest_purchase_per_product
     purchases.group_by(&:product).transform_values(&:first)
   end
 
   # What we spent, how much we bought, and how much of it was on bonus, per calendar month
+  #
+  #: () -> Hash[Date, Totals]
   def monthly_totals
     purchases.group_by { |purchase| purchase.receipt.issued_on.beginning_of_month }
              .transform_values { |month| totals_for(month) }

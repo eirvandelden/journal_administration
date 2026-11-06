@@ -5,16 +5,19 @@
 class Search
   # A navigation page that can be matched against a search query
   #
-  # @!attribute [r] label_key
-  #   @return [String] The i18n key for the page label
-  # @!attribute [r] path_helper
-  #   @return [Symbol] Rails URL helper method name
-  # @!attribute [r] model_class
-  #   @return [Class, nil] Optional model class used for %{model} interpolation
-  Page = Struct.new(:label_key, :path_helper, :model_class, keyword_init: true) do
+  # The model class is optional and fills the %{model} interpolation of the label.
+  Page = Struct.new(
+    :label_key,    #: String
+    :path_helper,  #: Symbol
+    :model_class,  #: Class?
+    keyword_init: true
+  )
+
+  # A navigation page that can be matched against a search query
+  class Page
     # Returns the translated navigation label for this page
     #
-    # @return [String]
+    #: () -> String
     def label
       if model_class
         I18n.t(label_key, model: model_class.model_name.human)
@@ -25,8 +28,7 @@ class Search
 
     # Returns true when the query matches the label (case-insensitive)
     #
-    # @param query [String]
-    # @return [Boolean]
+    #: (String query) -> bool
     def matches?(query)
       label.downcase.include?(query.downcase)
     end
@@ -41,22 +43,23 @@ class Search
     Page.new(label_key: "main_nav.todo",        path_helper: :todo_path,        model_class: Todo)
   ].freeze
 
-  attr_reader :query
+  attr_reader :query #: String
 
+  #: (query: String?) -> void
   def initialize(query:)
     @query = query.to_s.strip
   end
 
   # Returns grouped search results, omitting empty groups
   #
-  # @return [Hash{Symbol => Array}]
+  #: () -> Hash[Symbol, Array[Page | Account | Transaction | Chattel | Category]]
   def results
     @results ||= compute_results
   end
 
   # Returns true when there is at least one result group
   #
-  # @return [Boolean]
+  #: () -> bool
   def any_results?
     results.any?
   end

@@ -4,15 +4,27 @@
 class TodosController < ApplicationController
   PER_PAGE = 20
 
-  Page = Struct.new(:number, :total_pages) do
-    def last?      = number >= total_pages
+  Page = Struct.new(
+    :number,      #: Integer
+    :total_pages  #: Integer
+  )
+
+  # Where the todo list stands in its pages
+  class Page
+    #: () -> bool
+    def last? = number >= total_pages
+
+    #: () -> bool
     def before_last? = number < total_pages
+
+    #: () -> Integer
     def next_param = number + 1
   end
 
   # Renders the todo index page
   #
-  # @return [void]
+  #
+  #: () -> void
   def index
     todo = Todo.new
     @empty = todo.empty?
