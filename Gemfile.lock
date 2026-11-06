@@ -26,7 +26,7 @@ GIT
 
 GIT
   remote: https://github.com/eirvandelden/rubocop-eirvandelden.git
-  revision: 32d259fcdc1e7ae80c01fc95815768a534d77e2e
+  revision: d91402ef802a3aeaab726f369c9a39107c3790e8
   specs:
     rubocop-eirvandelden (1.0.0)
       rubocop
