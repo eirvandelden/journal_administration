@@ -4,6 +4,7 @@ module ApplicationCable
 
     identified_by :current_user
 
+    #: () -> void
     def connect
       session = find_session_by_cookie
       reject_unauthorized_connection unless session

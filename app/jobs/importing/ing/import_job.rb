@@ -13,9 +13,9 @@ module Importing
       # Handles account resolution (finding or creating accounts by number or name),
       # transaction construction with automatic type determination, and persistence.
       #
-      # @param csv_row [Array<String>] A row from the CSV file containing transaction data
-      # @return [void]
       # @raise [ActiveRecord::RecordInvalid] If the transaction fails validation or save
+      #
+      #: (Array[String?] csv_row) -> void
       def perform(csv_row)
         row = Row.parse(csv_row)
         return unless row
