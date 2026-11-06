@@ -73,6 +73,7 @@ Ten of those offenses sit in run-once scripts: `db/data` (8), `db/cable_migrate`
 - Hold pushes until every pre-push check passes — no lefthook bypass; nobody needs the branch earlier. (Plan stage escalation, 2026-11-06.)
 - Bump `sqlite3` in this change — no reason given. (Plan stage escalation, 2026-11-06.)
 - Change the gem from this delivery, not as a separate intent — it keeps the agreed design, exclusion in the gem. (Plan stage escalation, 2026-11-06.)
+- Keep `**String` on `Importing::ING::Row#initialize` and `**untyped` on `Assistant::ChargeToAppropriation.call`, each with a one-line reason comment — the full keyword form exceeds 120 characters and `#|` continuation fails `InvalidTypes`. (Implement stage escalation, 2026-11-06.)
 
 ## Open questions
 
