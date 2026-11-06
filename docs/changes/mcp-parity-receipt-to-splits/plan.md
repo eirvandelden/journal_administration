@@ -92,13 +92,23 @@ def replace_splits(parts)
 
 ```ruby
 # Products are found by name the way the importer finds them, so a name nobody has seen starts unclassified
-#: (shop: Account, issued_on: Date, total_amount: Integer, lines: Array[{ name: String, quantity: Numeric, full_amount: Integer, discount_amount: Integer }], ?order_number: String?) -> Receipt
+#: (shop: Account, issued_on: Date, total_amount: Integer, lines: Array[untyped], ?order_number: String?) -> Receipt
 def self.file(shop:, issued_on:, total_amount:, lines:, order_number: nil)
 ```
 
 - Builds each line with `product: Product.resolve_by_name(name)` and `paid_amount: full_amount - discount_amount`.
 - Saves with `save(context: :file)` inside `transaction`, raising `ActiveRecord::Rollback` on failure so products made on the way disappear.
 - New private validation `must_not_repeat_a_filed_receipt, on: :file` adds `errors.add(:base, :repeats_filed_receipt, receipt: existing.id)` when a receipt with the same shop, issue date and total exists, or when the given `order_number` is already taken (the database index on `order_number` is unique, so this turns a `RecordNotUnique` into a plain refusal). The import job never uses the `:file` context, so its re-import by order number keeps working.
+
+`Product` (`app/models/product.rb`): `Product#summary`, a public method that returns one line saying what the product is and whether it still needs classifying, so `ClassifyProduct` and `ShowProduct` no longer reach into `ListProducts`.
+
+```ruby
+# One line saying what the product is and whether it still needs classifying
+#: () -> String
+def summary
+```
+
+`Assistant::ReceiptDescription` (`app/tools/assistant/receipt_description.rb`): a module that `Assistant::Tool` extends, holding the private helpers that describe a receipt, its basket and the payments it could be linked to; `receipt_description(receipt)` is the entry point.
 
 `Assistant::Tool` (`app/tools/assistant/tool.rb`): two new private class helpers, shared by most new tools. `parts_list(transaction)` (added during implementation) prints one line per split with its id, amount, category, any charge and a remainder mark, so every split tool answers the same way. `FindTransactions` takes `start_date`/`end_date` like `BudgetStatus` does, because `until` is a Ruby keyword.
 
@@ -208,6 +218,9 @@ No conflict with `intent.md`'s `## Decisions`.
 - `app/models/receipt.rb` — add `Receipt.file` and the `on: :file` duplicate validation.
 - `config/locales/en.yml`, `nl.yml`, `it.yml` — `activerecord.errors.models.transaction.attributes.transaction_splits.charged` and `activerecord.errors.models.receipt.attributes.base.repeats_filed_receipt` (with `%{receipt}`).
 - `app/tools/assistant/tool.rb` — add the private `refusal(record)` and `parts_list(transaction)` helpers.
+- `app/models/product.rb` — add `Product#summary`.
+- `app/tools/assistant/receipt_description.rb` — the `ReceiptDescription` module that `Tool` extends.
+- `test/integration/assistant_query_counts_test.rb` — the query count tests for the list and show tools.
 - `test/test_helpers/assistant_tool_calls.rb` — `said`, `refused_response?`, `unsplit_debit`, `line` for the tool unit tests.
 - `app/tools/assistant/*.rb` — the 20 new tool classes in the table above.
 - `app/controllers/assistant_controller.rb` — list the 20 new tools beside main's.
