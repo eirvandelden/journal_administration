@@ -14,8 +14,6 @@ module Receipt::PaymentMatching
 
   included do
     # Deliveries no payment is linked to yet, for a person to confirm
-    #
-    #: () -> ActiveRecord::Relation
     scope :unlinked_deliveries, -> { where.not(order_number: nil).where(payment_id: nil) }
   end
 
