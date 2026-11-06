@@ -13,7 +13,7 @@ class Todo
   # @!attribute [r] kind
   #   @return [Symbol] :transaction or :account
   # @!attribute [r] date
-  #   @return [Time] Sort date for the item
+  #   @return [ActiveSupport::TimeWithZone, nil] Sort date for the item
   # @!attribute [r] record
   #   @return [Transaction, Account] The underlying AR record
   Item = Struct.new(
