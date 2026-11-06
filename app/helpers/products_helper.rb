@@ -4,6 +4,7 @@ module ProductsHelper
 
   # Turns prices into the points of an SVG polyline, scaled from zero so a
   # bonus reads as a dip rather than a loss
+  #: (Array[Numeric] prices, Numeric highest) -> String
   def price_chart_points(prices, highest)
     return "" if prices.size < 2 || highest.to_d.zero?
 
