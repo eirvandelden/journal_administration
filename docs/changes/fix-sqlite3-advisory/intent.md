@@ -47,6 +47,7 @@ Every environment that uses the SQLite database: development, test, CI and produ
 - Push with only the pre-push audit hook skipped — chosen so this change can merge first. (Correction found in planning: CI does run Bundler Audit, through the appkit reusable workflow.)
 - Push now and accept the pre-existing red `ci / lint` and `ci / scan_ruby` jobs; skip the rubocop pre-push hook too; the rubocop criterion becomes "no new offense" — Etienne chose this so the merge-first order holds; both reds have their own changes.
 - Dependabot PR #401 makes the same bump; this change goes ahead and #401 closes when it merges — Etienne: "i dont care about dependabot opened prs".
+- Push with all hooks off (`LEFTHOOK=0`) after every check ran green by hand on the same tree — Etienne chose this because Bundler fails inside `git push` (git sets `GIT_DIR`), so the Brakeman and test hooks cannot run; that hook bug gets its own change.
 - Deliver autonomously, no Codex review — chosen because a one-gem patch bump needs no second reviewer; same mode as the sibling advisory changes.
 
 ## Open questions
