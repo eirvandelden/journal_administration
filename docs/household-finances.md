@@ -16,19 +16,19 @@ flowchart LR
   end
   Samen -->|monthly transfers after the salary| Others
   Samen -->|child benefits, minus the children's own savings accounts| Kinderen
-  Others -->|pulled before or after a purchase| Samen
-  Kinderen -->|pulled before or after a purchase| Samen
+  Others & Kinderen & Huis & Vakantie & Projecten -->|pulled before or after a purchase| Samen
   Samen -->|equal amount| Personal["Personal Betaalrekening (each partner)"]
   Samen -->|direct debit| Fixed["Vaste lasten, Verzekeringen, Abonnementen, Heffingen"]
   Samen -->|Onvoorzien leftover on the 21st| Projecten
   Thirteenth["13e maand"] --> Huis
   Thirteenth -->|rest| Buffer
+  Thirteenth -->|rest, once Buffer is at target| Projecten
   Holiday["Vakantiegeld"] --> Vakantie
   Holiday -->|rest| Buffer
+  Holiday -->|rest, once Buffer is at target| Projecten
   Refund["Tax refund"] --> Projecten
   Gifts["Gifts"] --> Projecten
   Gifts --> Kinderen
-  Buffer -->|share above target| Projecten
   Buffer -->|emergencies only| Samen
 ```
 
