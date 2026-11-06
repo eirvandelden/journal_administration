@@ -5,6 +5,7 @@ module User::Role
     enum :role, %i[ member administrator ], default: :member
   end
 
+  #: () -> bool
   def can_administer?
     administrator?
   end

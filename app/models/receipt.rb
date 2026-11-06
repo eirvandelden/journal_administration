@@ -22,9 +22,11 @@ class Receipt < ApplicationRecord
   validates :total_amount, presence: true
   validates_pdf_attachment_of :invoice
 
+  #: () -> Integer
   def basket_total = lines.sum(:paid_amount)
 
   # Whether this payment is big enough to have paid for the basket
+  #: (Transaction? payment) -> bool
   def basket_fits?(payment) = payment.present? && basket_total <= payment.amount
 
   # Splits the payment the way the basket divides over the accounting categories
@@ -35,6 +37,7 @@ class Receipt < ApplicationRecord
   # Wiping the payment's splits on the strength of that would throw away work
   # this receipt never did. A payment charged to an appropriation, whole or in
   # parts, is refused too: rewriting its splits would drop those charges.
+  #: () -> bool
   def rewrite_payment_splits
     return false unless basket_fits?(payment)
     return false if payment.charged?
@@ -57,6 +60,7 @@ class Receipt < ApplicationRecord
   #
   # Deliberately not narrowed by amount: empty crates, bottles and cans are
   # settled at the door, so what the bank takes rarely equals the mail's total.
+  #: () -> ActiveRecord::Relation
   def fitting_payments
     Credit.where(debitor: Account.where(name: shop.name))
           .where(booked_at: (issued_on - BOOKING_WINDOW).beginning_of_day..(issued_on + BOOKING_WINDOW).end_of_day)

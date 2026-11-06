@@ -22,10 +22,12 @@ class User < ApplicationRecord
 
   enum :locale, { nl: 0, en: 1, it: 2 }
 
+  #: () -> bool
   def current?
     self == Current.user
   end
 
+  #: () -> bool
   def deactivate
     transaction do
       sessions.delete_all

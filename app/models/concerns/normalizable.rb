@@ -11,6 +11,7 @@ module Normalizable
     #
     # @param name [String] Raw merchant name from CSV export
     # @return [Account] Matched existing account, or newly created account with that name
+    #: (String name) -> Account
     def find_or_create_with_normalized_name(name)
       find_by_alias(name) || find_or_create_by(name: name)
     end
@@ -19,6 +20,7 @@ module Normalizable
     #
     # @param name [String] Raw merchant name
     # @return [Account, nil] Matching account, or nil if no alias matches
+    #: (String name) -> Account?
     def find_by_alias(name)
       joins(:account_aliases)
         .where("LOWER(?) LIKE '%' || LOWER(account_aliases.pattern) || '%'", name)

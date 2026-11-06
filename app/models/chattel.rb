@@ -24,18 +24,22 @@ class Chattel < ApplicationRecord
   # The brands already recorded, so the same brand is not typed two ways
   #
   # @return [Array<String>]
+  #: () -> Array[String]
   def self.brands_in_use
     where.not(brand: [ nil, "" ]).distinct.order(:brand).pluck(:brand)
   end
 
+  #: () -> ActiveSupport::TimeWithZone?
   def purchased_at
     self[:purchased_at] || purchase_transaction&.booked_at
   end
 
+  #: () -> bool
   def under_warranty?
     warranty_expires_at.present? && warranty_expires_at.future?
   end
 
+  #: () -> bool
   def active?
     left_possession_at.nil?
   end
@@ -44,6 +48,7 @@ class Chattel < ApplicationRecord
   # Prefers the chattel's own warranty_document; falls back to the purchase transaction's proof_of_purchase.
   #
   # @return [ActiveStorage::Attached::One, nil]
+  #: () -> ActiveStorage::Attached::One?
   def warranty_proof
     if warranty_document.attached?
       warranty_document
@@ -55,6 +60,7 @@ class Chattel < ApplicationRecord
   # Returns true when any proof-of-purchase or warranty document is available.
   #
   # @return [Boolean]
+  #: () -> bool
   def proof_of_purchase?
     warranty_proof.present?
   end

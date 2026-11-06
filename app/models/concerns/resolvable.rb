@@ -18,6 +18,7 @@ module Resolvable
     # @param description [String] The transaction description that may contain an account number
     # @param name [String] The merchant/counterparty name
     # @return [Account] An existing or newly created account
+    #: (account_number: String?, description: String, name: String) -> Account
     def resolve_for_import(account_number:, description:, name:)
       if account_number.present?
         return find_or_create_by_number(account_number).counterparty_for(description)
@@ -37,6 +38,7 @@ module Resolvable
     #
     # @param number [String] An account number
     # @return [Account]
+    #: (String number) -> Account
     def find_or_create_by_number(number)
       number = AccountNumber.normalize_value_for(:number, number)
 
@@ -52,18 +54,21 @@ module Resolvable
     #
     # @param description [String] The transaction description
     # @return [Account, nil] The matched household account, or nil if no match
+    #: (String description) -> Account?
     def resolve_from_description(description)
       resolve_by_account_number(description) || resolve_by_account_name(description)
     end
 
     # Finds a household account by any of its numbers embedded in a description.
     # @return [Account, nil]
+    #: (String description) -> Account?
     def resolve_by_account_number(description)
       AccountNumber.household_owner_in(description)
     end
 
     # Finds a household account by its name embedded in a description.
     # @return [Account, nil]
+    #: (String description) -> Account?
     def resolve_by_account_name(description)
       candidates = own.where.not(name: nil).pluck(:name).reject(&:blank?).sort_by { |name| -name.length }
       match = candidates.find { |name| description.include?(name) }

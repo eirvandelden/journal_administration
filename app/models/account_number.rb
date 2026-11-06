@@ -12,18 +12,21 @@ class AccountNumber < ApplicationRecord
 
   # @param number [String] A normalized account number
   # @return [Account, nil] The account that holds the number
+  #: (String number) -> Account?
   def self.owner_of(number)
     find_by(number:)&.account
   end
 
   # @param description [String] Free text that may contain a number
   # @return [Account, nil] The household account whose number appears in the text
+  #: (String description) -> Account?
   def self.household_owner_in(description)
     matched = where(account: Account.own).pluck(:number).find { |number| description.include?(number) }
     owner_of(matched) if matched.present?
   end
 
   # @return [String]
+  #: () -> String
   def to_s
     number
   end

@@ -13,6 +13,7 @@ module Sortable
     #
     # @param records_hash [Hash{Object => Float}] Hash with records as keys and amounts as values
     # @return [Hash{Object => Float}] The same hash sorted by hierarchy
+    #: (Hash[Category?, Numeric] records_hash) -> Hash[Category?, Numeric]
     def sort_by_hierarchy(records_hash)
       records_hash.sort_by { |record, _amount|
         hierarchy_sort_key(record)

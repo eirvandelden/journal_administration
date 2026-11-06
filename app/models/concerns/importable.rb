@@ -16,6 +16,7 @@ module Importable
     # @param our_account [Account] The household account involved in the transaction
     # @param their_account [Account] The external account or counterparty
     # @return [Transaction] A new (unsaved) transaction instance
+    #: (untyped row, our_account: Account, their_account: Account) -> Transaction
     def build_from_import(row, our_account:, their_account:)
       transaction = new(
         amount: row.amount,
