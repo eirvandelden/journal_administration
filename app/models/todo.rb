@@ -18,7 +18,7 @@ class Todo
   #   @return [Transaction, Account] The underlying AR record
   Item = Struct.new(
     :kind,   #: Symbol
-    :date,   #: ActiveSupport::TimeWithZone
+    :date,   #: ActiveSupport::TimeWithZone?
     :record  #: Transaction | Account | Product
   )
 
