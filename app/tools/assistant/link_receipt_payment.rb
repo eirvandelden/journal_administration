@@ -65,20 +65,42 @@ module Assistant
       end
       return answer("Linked receipt ##{receipt.id} to payment ##{payment.id}. #{unsplit_reason(receipt)}") unless split
 
-      answer("Linked receipt ##{receipt.id} to payment ##{payment.id}. Splits:\n#{parts_list(payment)}")
+      answer("Linked receipt ##{receipt.id} to payment ##{payment.id}. Splits:\n#{parts_list(payment)}" \
+        "#{remainder_reason(receipt)}")
     end
     private_class_method :link
 
     #: (Receipt receipt) -> String
     def self.unsplit_reason(receipt)
-      lines = receipt.lines.includes(product: { product_type: :category })
-      unclassified = lines.filter_map { |line| line.product if line.category.nil? }.uniq
-      return nothing_to_split if unclassified.empty?
+      return nothing_to_split if unclassified_products(receipt).empty?
 
-      "The payment is not split: classify these products first with classify_product: " \
-        "#{unclassified.map { |product| "##{product.id} #{product.name}" }.join(', ')}."
+      "The payment is not split: #{classify_first(receipt)}"
     end
     private_class_method :unsplit_reason
+
+    #: (Receipt receipt) -> String
+    def self.remainder_reason(receipt)
+      return "" if unclassified_products(receipt).empty?
+
+      "\nThe remainder split holds the share of the unclassified products; #{classify_first(receipt)} " \
+        "Then link again to split it further."
+    end
+    private_class_method :remainder_reason
+
+    #: (Receipt receipt) -> String
+    def self.classify_first(receipt)
+      "classify these products with classify_product: " \
+        "#{unclassified_products(receipt).map { |product| "##{product.id} #{product.name}" }.join(', ')}."
+    end
+    private_class_method :classify_first
+
+    #: (Receipt receipt) -> Array[Product]
+    def self.unclassified_products(receipt)
+      receipt.lines.includes(product: { product_type: :category }).filter_map do |line|
+        line.product if line.category.nil?
+      end.uniq
+    end
+    private_class_method :unclassified_products
 
     #: () -> String
     def self.nothing_to_split

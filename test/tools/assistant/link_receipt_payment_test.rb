@@ -43,6 +43,16 @@ class Assistant::LinkReceiptPaymentTest < ActiveSupport::TestCase
     assert_equal transactions(:credit_grocery), receipts(:albert_heijn_friday).reload.payment
   end
 
+  test "splits by the classified lines and names the unclassified products behind the remainder" do
+    products(:ah_ribbelchips).update_columns(product_type_id: nil)
+
+    text = said(link)
+
+    assert_includes text, "Splits:"
+    assert_includes text, "classify_product: ##{products(:ah_ribbelchips).id} AH Naturel Ribbelchips"
+    assert_not_includes text, "Dreft"
+  end
+
   test "links without splitting and says an empty basket has nothing to split" do
     receipts(:albert_heijn_friday).lines.destroy_all
 
