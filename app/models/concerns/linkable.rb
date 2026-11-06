@@ -19,6 +19,7 @@ module Linkable
   # Matches on same amount within a ±5 day window, excluding already-linked ones.
   #
   # @return [ActiveRecord::Relation<Transaction>]
+  #: () -> ActiveRecord::Relation
   def suggested_transfers
     return Transaction.none if type == "Transfer"
 
@@ -39,6 +40,7 @@ module Linkable
   # @param query [String, nil] Matches note, creditor name, or debitor name
   # @param amount [String, nil] Exact amount match, in euros as typed ("12,50")
   # @return [ActiveRecord::Relation<Transaction>]
+  #: (?query: String?, ?amount: String?) -> ActiveRecord::Relation
   def searchable_transfers(query: nil, amount: nil)
     return Transaction.none if query.blank? && amount.blank?
 
@@ -70,6 +72,7 @@ module Linkable
   # Remaining amount not yet covered by linked transfers
   #
   # @return [Integer] cents, 0 when fully covered, positive when underpull
+  #: () -> Integer
   def link_balance
     amount.to_i - covered_amount
   end
@@ -77,6 +80,7 @@ module Linkable
   # Whether linked transfers fully cover this transaction's amount
   #
   # @return [Boolean]
+  #: () -> bool
   def fully_covered?
     link_balance.zero?
   end
@@ -84,6 +88,7 @@ module Linkable
   # Whether this transaction has any links
   #
   # @return [Boolean]
+  #: () -> bool
   def linked?
     transaction_links.exists? || reverse_transaction_links.exists?
   end

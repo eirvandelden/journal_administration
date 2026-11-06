@@ -69,16 +69,19 @@ class Transaction < ApplicationRecord
   # Returns true when some portion of the transaction remains uncategorized.
   #
   # @return [Boolean]
+  #: () -> bool
   def consolidatable? = uncategorized_amount.positive?
 
   # Whether the transaction, or any of its parts, counts against an appropriation
   #
   # @return [Boolean]
+  #: () -> bool
   def charged? = appropriation_id.present? || charged_parts.exists?
 
   # Returns an emoji representation of the transaction type
   #
   # @return [String] emoji icon (e.g., "⬇️ 🟥" for Credit)
+  #: () -> String?
   def type_icon
     case self.type
     when "Credit"

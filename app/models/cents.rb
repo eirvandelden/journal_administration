@@ -15,6 +15,7 @@ module Cents
   #
   # @param text [String, nil]
   # @return [Integer, nil] cents, or nil when the text is not an amount
+  #: (String? text) -> Integer?
   def self.parse(text)
     match = AMOUNT.match(text.to_s.strip) or return
     whole, cents = split_decimals(match[:digits])
@@ -29,6 +30,7 @@ module Cents
   # @param euros [Numeric]
   # @return [Integer] cents
   # @raise [ArgumentError] when the amount has a fraction of a cent
+  #: (Numeric euros) -> Integer
   def self.from_euros(euros)
     cents = BigDecimal(euros.to_s) * 100
     raise ArgumentError, "#{euros} has a fraction of a cent" unless cents.frac.zero?
@@ -38,6 +40,8 @@ module Cents
 
   # @param cents [Integer, nil]
   # @return [BigDecimal, nil] euros
+  #: (Integer cents) -> BigDecimal
+  #: (nil cents) -> nil
   def self.to_euros(cents)
     return if cents.nil?
 
@@ -45,6 +49,7 @@ module Cents
   end
 
   # @return [Array(String, Integer), nil] whole euros as digits and the cents
+  #: (String digits) -> [String, Integer]?
   def self.split_decimals(digits)
     match = SEPARATOR_WITH_CENTS.match(digits)
     return whole_euros(digits) unless match
@@ -56,6 +61,7 @@ module Cents
   end
 
   # @return [Array(String, Integer), nil]
+  #: (String digits) -> [String, Integer]?
   def self.whole_euros(digits)
     return [ digits, 0 ] if digits.match?(/\A\d+\z/)
     return [ digits.delete(".,"), 0 ] if grouped?(digits) && digits.count(".,") > 1
@@ -63,6 +69,7 @@ module Cents
     nil
   end
 
+  #: (String text) -> bool
   def self.grouped?(text)
     text.match?(GROUPED) && text.delete("0-9").chars.uniq.one?
   end

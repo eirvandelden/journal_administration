@@ -20,6 +20,7 @@ class Product < ApplicationRecord
   #
   # Matching is on the name the database folded for us, since its own LOWER
   # folds only A to Z and Albert Heijn prints accented capitals.
+  #: (String name) -> Product?
   def self.resolve_by_name(name)
     wanted = name.strip
 
@@ -31,10 +32,12 @@ class Product < ApplicationRecord
   scope :unclassified, -> { where(product_type_id: nil).or(where("TRIM(COALESCE(brand, '')) = ''")) }
 
   # The brands we already buy from, so a new one is typed only once
+  #: () -> Array[String]
   def self.brands_in_use
     where.not(brand: [ nil, "" ]).distinct.order(:brand).pluck(:brand)
   end
 
+  #: () -> bool
   def unclassified? = brand.blank? || product_type.blank?
 
   # Fills in what an assistant read, keeping every brand and product type already present
@@ -50,9 +53,11 @@ class Product < ApplicationRecord
   end
 
   # Every time we bought this product, most recent invoice first
+  #: () -> ActiveRecord::Relation
   def purchases
     receipt_lines.joins(:receipt).includes(:receipt).order("receipts.issued_on DESC")
   end
 
+  #: () -> String
   def to_s = name
 end

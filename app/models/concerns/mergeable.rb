@@ -13,6 +13,7 @@ module Mergeable
   #
   # @param duplicates [Array<Account>] Accounts to fold into this one
   # @return [Boolean] true when merged; false with errors on :base when refused, nothing changed
+  #: (Array[Account] duplicates) -> bool
   def merge(duplicates)
     duplicates = Array(duplicates)
     return false unless mergeable_with?(duplicates)
@@ -29,6 +30,7 @@ module Mergeable
     #
     # @param ids [Array<Integer>] Account ids
     # @return [Hash{Integer => Integer}] Transactions on either side, by account id
+    #: (Array[Integer] ids) -> Hash[Integer, Integer]
     def transactions_count_by_account(ids)
       return {} if ids.empty?
 
@@ -39,6 +41,7 @@ module Mergeable
 
     # @param ids [Array<Integer>] Account ids
     # @return [Hash{Integer => Integer}] Receipts bought at each account, by account id
+    #: (Array[Integer] ids) -> Hash[Integer, Integer]
     def receipts_count_by_account(ids)
       Receipt.where(shop_id: ids).group(:shop_id).count
     end
