@@ -13,6 +13,7 @@ module Assistant
       required: [ "product_id" ]
     )
 
+    #: (product_id: Integer, server_context: untyped, ?brand: String?, ?product_type_id: Integer?) -> MCP::Tool::Response
     def self.call(product_id:, server_context:, brand: nil, product_type_id: nil)
       product = Product.find_by(id: product_id)
       return problem("No product ##{product_id} exists.") if product.nil?
@@ -23,6 +24,7 @@ module Assistant
       fill_in(product, brand, type)
     end
 
+    #: (Product product, String? brand, ProductType? type) -> MCP::Tool::Response
     def self.fill_in(product, brand, type)
       kept = kept_from(product, brand, type)
       return problem(product.errors.full_messages.to_sentence) unless product.fill_in(brand: brand, product_type: type)
@@ -31,24 +33,29 @@ module Assistant
     end
     private_class_method :fill_in
 
+    #: (Product product) -> String
     def self.describe(product)
       "Product ##{product.id} #{product.name}: #{product.brand.presence || 'no brand'}, " \
         "#{product.product_type&.name || 'no type'}."
     end
     private_class_method :describe
 
+    #: (Array[String] kept) -> String
     def self.sentence_about(kept) = "Kept #{kept.to_sentence}, as already set."
     private_class_method :sentence_about
 
+    #: (Product product, String? brand, ProductType? type) -> Array[String]
     def self.kept_from(product, brand, type)
       [ ("the brand #{product.brand}" if kept_brand?(product, brand)),
         ("the type #{product.product_type.name}" if kept_type?(product, type)) ].compact
     end
     private_class_method :kept_from
 
+    #: (Product product, String? brand) -> bool
     def self.kept_brand?(product, brand) = brand.present? && product.brand.present? && product.brand != brand.strip
     private_class_method :kept_brand?
 
+    #: (Product product, ProductType? type) -> bool?
     def self.kept_type?(product, type) = type && product.product_type && product.product_type != type
     private_class_method :kept_type?
   end

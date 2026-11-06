@@ -16,6 +16,7 @@ module Assistant
     )
 
     # @return [MCP::Tool::Response]
+    #: (appropriation_id: Integer, transaction_id: Integer, ?transaction_split_id: Integer?, **untyped) -> MCP::Tool::Response
     def self.call(appropriation_id:, transaction_id:, server_context:, transaction_split_id: nil)
       appropriation = Appropriation.find_by(id: appropriation_id)
       return problem("No appropriation ##{appropriation_id} exists.") if appropriation.nil?
@@ -30,6 +31,7 @@ module Assistant
     end
 
     # The payment itself, or the named part of it; a refusal when neither can be charged as asked
+    #: (Transaction, Integer?) -> (MCP::Tool::Response | Transaction | TransactionSplit)
     def self.chargeable_in(transaction, transaction_split_id)
       return part_of(transaction, transaction_split_id) if transaction_split_id
       return problem(name_a_part(transaction)) if transaction.split?
@@ -39,6 +41,7 @@ module Assistant
     private_class_method :chargeable_in
 
     # The named part, only among the payment's own parts
+    #: (Transaction transaction, Integer transaction_split_id) -> (MCP::Tool::Response | TransactionSplit)
     def self.part_of(transaction, transaction_split_id)
       transaction.transaction_splits.find_by(id: transaction_split_id) ||
         problem("Transaction ##{transaction.id} has no part ##{transaction_split_id}.")
@@ -46,6 +49,7 @@ module Assistant
     private_class_method :part_of
 
     # Lists the explicit parts, so the assistant can charge each one
+    #: (Transaction transaction) -> String
     def self.name_a_part(transaction)
       parts = transaction.explicit_transaction_splits.map do |part|
         "#{part.id}: #{euros(part.amount)} #{part.category&.name} #{part.note}".strip
@@ -56,6 +60,7 @@ module Assistant
     private_class_method :name_a_part
 
     # Saves the charge, or passes on why the books refuse it
+    #: ((Transaction | TransactionSplit) chargeable, Appropriation appropriation) -> MCP::Tool::Response
     def self.charge(chargeable, appropriation)
       return problem(chargeable.errors.full_messages.to_sentence) unless chargeable.update(appropriation:)
 
