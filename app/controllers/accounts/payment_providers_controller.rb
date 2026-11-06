@@ -6,6 +6,7 @@ class Accounts::PaymentProvidersController < ApplicationController
   #
   # @action POST
   # @route /accounts/:account_id/payment_provider
+  #: () -> void
   def create
     update_and_redirect(payment_provider: true)
   end
@@ -14,6 +15,7 @@ class Accounts::PaymentProvidersController < ApplicationController
   #
   # @action DELETE
   # @route /accounts/:account_id/payment_provider
+  #: () -> void
   def destroy
     update_and_redirect(payment_provider: false)
   end

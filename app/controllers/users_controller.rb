@@ -10,6 +10,7 @@ class UsersController < ApplicationController
   # Admin-only action. Shows members and administrators.
   #
   # @return [void]
+  #: () -> void
   def index
     @users = User.active
   end
@@ -17,6 +18,7 @@ class UsersController < ApplicationController
   # Updates a user's role (admin-only)
   #
   # @return [void]
+  #: () -> void
   def update
     @user.update(role_params)
     redirect_to users_url
@@ -25,6 +27,7 @@ class UsersController < ApplicationController
   # Deactivates a user (admin-only)
   #
   # @return [void]
+  #: () -> void
   def destroy
     @user.deactivate
     redirect_to users_url
