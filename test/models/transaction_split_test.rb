@@ -129,4 +129,11 @@ I18n.t("activerecord.errors.models.transaction_split.attributes.amount.exceeds_t
       assert_includes split.errors.attribute_names, :financial_transaction
     end
   end
+
+  test "#whole_payment is the payment it splits" do
+    payment = transactions(:webshop_sinterklaas)
+    split = payment.transaction_splits.create!(amount: 2000, category: categories(:gifts))
+
+    assert_equal payment, split.whole_payment
+  end
 end

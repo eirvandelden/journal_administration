@@ -192,6 +192,44 @@ class AppropriationsTest < ActionDispatch::IntegrationTest
     assert_select "tr", text: /-.*Birthday present/m
   end
 
+  test "a whole payment charged to an appropriation links its amount to that payment" do
+    appropriation = appropriations(:birthday_etienne)
+    transactions(:gift_payment).update!(appropriation:)
+
+    get appropriation_path(appropriation)
+
+    assert_select "tbody tr td:nth-child(3) a[href=?]", transaction_path(transactions(:gift_payment)),
+      text: currency(4000)
+  end
+
+  test "a split part charged to an appropriation links its amount to the payment it splits" do
+    appropriation = appropriations(:sinterklaas_chiara)
+    charge_split_part(appropriation, 6000)
+
+    get appropriation_path(appropriation)
+
+    assert_select "tbody tr td:nth-child(3) a[href=?]", transaction_path(transactions(:webshop_sinterklaas)),
+      text: currency(6000)
+  end
+
+  test "an appropriation with no charges says so and links no payment" do
+    get appropriation_path(appropriations(:christmas_etienne))
+
+    assert_select "article p", text: "Nothing is charged to this appropriation yet."
+    assert_select "article a[href^='/transactions/']", count: 0
+  end
+
+  test "the show page runs as many queries for three charged split parts as for one" do
+    appropriation = appropriations(:sinterklaas_chiara)
+    charge_split_part(appropriation, 2000)
+    one_part = queries_run { get appropriation_path(appropriation) }
+
+    2.times { charge_split_part(appropriation, 2000) }
+    three_parts = queries_run { get appropriation_path(appropriation) }
+
+    assert_equal one_part, three_parts
+  end
+
   test "the new-appropriation form lists every managed person using their current name" do
     people(:etienne).update!(name: "E. van Delden")
     get new_appropriation_path
@@ -279,6 +317,20 @@ class AppropriationsTest < ActionDispatch::IntegrationTest
     counter = ->(*, payload) { reads += 1 if payload[:sql].include?("transaction_splits") }
     ActiveSupport::Notifications.subscribed(counter, "sql.active_record", &)
     reads
+  end
+
+  def charge_split_part(appropriation, amount)
+    transactions(:webshop_sinterklaas).transaction_splits.create!(amount:, category: categories(:gifts)).tap do |part|
+      part.update!(appropriation:)
+    end
+  end
+
+  # How many queries, schema lookups apart, run while the block runs
+  def queries_run(&)
+    queries = 0
+    counter = ->(*, payload) { queries += 1 unless payload[:name] == "SCHEMA" }
+    ActiveSupport::Notifications.subscribed(counter, "sql.active_record", &)
+    queries
   end
 
   def new_appropriation(purpose: "Birthday", recipient: "Etienne", budget_year: 2026, amount: 150)

@@ -76,6 +76,10 @@ class Transaction < ApplicationRecord
   # @return [Boolean]
   def charged? = appropriation_id.present? || charged_parts.exists?
 
+  # The payment a charge belongs to; a payment charged as a whole is its own
+  #: () -> Transaction
+  def whole_payment = self
+
   # Returns an emoji representation of the transaction type
   #
   # @return [String] emoji icon (e.g., "⬇️ 🟥" for Credit)

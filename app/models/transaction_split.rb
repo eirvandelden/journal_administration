@@ -20,6 +20,10 @@ class TransactionSplit < ApplicationRecord
   validate :financial_transaction_must_not_be_charged_as_a_whole
   validate :remainder_must_not_be_charged
 
+  # The payment this part splits
+  #: () -> Transaction
+  def whole_payment = financial_transaction
+
   private
 
   def amount_does_not_exceed_balance
