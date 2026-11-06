@@ -562,6 +562,12 @@ class TransactionChargingTest < ActiveSupport::TestCase
     assert_predicate charged_part, :charged?
   end
 
+  test "#whole_payment is the payment itself" do
+    payment = transactions(:gift_payment)
+
+    assert_equal payment, payment.whole_payment
+  end
+
   private
 
   # Booked as a Debit although both accounts are ours, so only the charge can stop it becoming a Transfer.
