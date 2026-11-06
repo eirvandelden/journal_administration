@@ -11,10 +11,18 @@ class Search
   #   @return [Symbol] Rails URL helper method name
   # @!attribute [r] model_class
   #   @return [Class, nil] Optional model class used for %{model} interpolation
-  Page = Struct.new(:label_key, :path_helper, :model_class, keyword_init: true) do
+  Page = Struct.new(
+    :label_key,    #: String
+    :path_helper,  #: Symbol
+    :model_class,  #: Class?
+    keyword_init: true
+  )
+
+  class Page
     # Returns the translated navigation label for this page
     #
     # @return [String]
+    #: () -> String
     def label
       if model_class
         I18n.t(label_key, model: model_class.model_name.human)
@@ -27,6 +35,7 @@ class Search
     #
     # @param query [String]
     # @return [Boolean]
+    #: (String query) -> bool
     def matches?(query)
       label.downcase.include?(query.downcase)
     end
@@ -41,8 +50,9 @@ class Search
     Page.new(label_key: "main_nav.todo",        path_helper: :todo_path,        model_class: Todo)
   ].freeze
 
-  attr_reader :query
+  attr_reader :query #: String
 
+  #: (query: String?) -> void
   def initialize(query:)
     @query = query.to_s.strip
   end
@@ -50,6 +60,7 @@ class Search
   # Returns grouped search results, omitting empty groups
   #
   # @return [Hash{Symbol => Array}]
+  #: () -> Hash[Symbol, Array[Search::Page | Account | Transaction | Chattel | Category]]
   def results
     @results ||= compute_results
   end
@@ -57,6 +68,7 @@ class Search
   # Returns true when there is at least one result group
   #
   # @return [Boolean]
+  #: () -> bool
   def any_results?
     results.any?
   end
