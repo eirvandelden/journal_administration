@@ -1,6 +1,6 @@
 - **Appropriation** — a sum set aside for one purpose and one person in one budget year, saved for in a potje.
 - **Betaalrekening** — the ING current account where salary arrives and most fixed costs leave. Avoid: main account.
-- **Buffer** — the potje for emergencies only, filled from the leftovers of the 13e maand and the vakantiegeld; it never pays a known cost. The standard term is emergency fund.
+- **Buffer** — the potje for emergencies only, filled from the leftovers of the 13e maand and the vakantiegeld up to a target of about three months of essential costs, above which its share goes to Projecten; it never pays a known cost. The standard term is emergency fund.
 - **Delivery** — a receipt that carries an Albert Heijn order number; one order is one delivery. Avoid: order, bestelling.
 - **Door-card payment** — the card payment made at the door when a grocery delivery arrives, the bank note carries a pasvolgnr and no order number. Avoid: pin payment, terminal payment.
 - **Kinderen** — the potje that receives all child benefits, the KGB and the kinderbijslag, and pays only for the children.
