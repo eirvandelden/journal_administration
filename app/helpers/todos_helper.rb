@@ -5,6 +5,7 @@ module TodosHelper
   #
   # @param item [Todo::Item] the todo item
   # @return [String] the description
+  #: (Todo::Item item) -> String
   def todo_description(item)
     return item.record.to_s unless item.kind == :transaction
 

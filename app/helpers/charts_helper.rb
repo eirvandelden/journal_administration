@@ -22,6 +22,7 @@ module ChartsHelper
   # @param data [Array<Numeric>] values per slice
   # @param colors [Array<String>, nil] CSS color values; defaults to DONUT_COLORS
   # @return [String] HTML-safe SVG markup
+  #: (labels: Array[String], data: Array[Numeric], ?colors: Array[String]?) -> ActiveSupport::SafeBuffer
   def svg_donut_chart(labels:, data:, colors: nil)
     colors ||= DONUT_COLORS
     total = data.sum.to_f
@@ -53,6 +54,7 @@ module ChartsHelper
   # @param budget_amounts [Hash{Category => Numeric}] budgeted amount per category
   # @param budget_actuals [Hash{Category => Numeric}] net debit-minus-credit amount per category
   # @return [String] HTML-safe SVG markup
+  #: (budget_amounts: Hash[Category, Numeric], budget_actuals: Hash[Category, Numeric]) -> ActiveSupport::SafeBuffer
   def svg_budget_chart(budget_amounts:, budget_actuals:)
     credit_rows = build_budget_rows(budget_amounts, budget_actuals, :credit)
     debit_rows  = build_budget_rows(budget_amounts, budget_actuals, :debit)
@@ -83,6 +85,7 @@ module ChartsHelper
   # @param reference [Array<Numeric>, nil] reference values for a comparison polyline
   # @param y_label [String, nil] accessible aria-label for the chart
   # @return [String] HTML-safe SVG markup
+  #: (labels: Array[String], data: Array[Numeric], ?reference: Array[Numeric]?, ?y_label: String?) -> ActiveSupport::SafeBuffer
   def svg_bar_chart(labels:, data:, reference: nil, y_label: nil)
     return content_tag(:p, "") if labels.empty?
 
