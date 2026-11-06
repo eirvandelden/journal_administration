@@ -10,6 +10,7 @@ module Assistant
       required: [ "query" ]
     )
 
+    #: (query: String, server_context: untyped) -> MCP::Tool::Response
     def self.call(query:, server_context:)
       accounts = Account.search(query).includes(:person, group: :people)
 
@@ -18,6 +19,7 @@ module Assistant
       answer([ *accounts.map { |account| describe(account) }, held_back(accounts) ].compact.join("\n"))
     end
 
+    #: (Account account) -> String
     def self.describe(account)
       status = account.external? ? "a shop or other outsider" : "ours"
       owner = "#{account.owner_name}; " if account.owner_name.present?
@@ -27,6 +29,7 @@ module Assistant
 
     # The search keeps its own ceiling, so an assistant reading the list must be told when the
     # answer is only part of it — silence reads as "these are all of them".
+    #: (ActiveRecord::Relation accounts) -> String?
     def self.held_back(accounts)
       matches = accounts.limit(nil).count
 

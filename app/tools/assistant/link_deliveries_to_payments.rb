@@ -7,12 +7,14 @@ module Assistant
       "it links. Answers the deliveries it linked, then every delivery left for a person to confirm."
     annotations destructive_hint: true
 
+    #: (server_context: untyped) -> MCP::Tool::Response
     def self.call(server_context:)
       linked = Receipt.link_payments
 
       answer([ *linked.map { |delivery| describe(delivery) }, "", leftovers ].join("\n").strip)
     end
 
+    #: (Receipt delivery) -> String
     def self.describe(delivery)
       payment = delivery.payment
 
@@ -21,6 +23,7 @@ module Assistant
     end
     private_class_method :describe
 
+    #: () -> String
     def self.leftovers
       "Not linked: #{ListUnlinkedDeliveries.describe(Receipt.unlinked_deliveries.order(:issued_on, :id))}"
     end

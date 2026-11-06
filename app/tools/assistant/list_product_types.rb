@@ -5,6 +5,7 @@ module Assistant
       "groceries book to, then the brands already in use."
     annotations read_only_hint: true
 
+    #: (server_context: untyped) -> MCP::Tool::Response
     def self.call(server_context:)
       types = ProductType.includes(category: :parent_category).order(:name)
 

@@ -13,6 +13,7 @@ module Assistant
       required: [ "starts_on" ]
     )
 
+    #: (starts_on: String, server_context: untyped, ?ends_on: String?) -> MCP::Tool::Response
     def self.call(starts_on:, server_context:, ends_on: nil)
       first_day = day(starts_on)
       return problem(unreadable(starts_on)) if first_day.nil?
@@ -33,6 +34,7 @@ module Assistant
     # A budget running until further notice cannot overlap one that starts later, and the model
     # says so in words written for a person filling in a form: "End date must have an end date".
     # An assistant reading that has no way to know it must name a last day, so it is told here.
+    #: (Budget blocked_by) -> String
     def self.needs_a_last_day(blocked_by)
       "Budget ##{blocked_by.id} starts on #{blocked_by.starts_at.to_date}, so this one needs a " \
         "last day before then. Give ends_on."
@@ -42,17 +44,20 @@ module Assistant
     # Starting a budget on a day gone by closes whatever was running then, and a budget that has
     # already finished is closed with its validations skipped. A person correcting the record on
     # the budgets page means to do that; an assistant asked for next month's budget does not.
+    #: (Date first_day) -> String
     def self.already_gone(first_day)
       "A budget can only start today or later, and #{first_day} has passed. " \
         "Change a budget that has already run on the budgets page instead."
     end
     private_class_method :already_gone
 
+    #: (String text) -> String
     def self.unreadable(text)
       "Could not read #{text} as a day. Write days as 2026-09-01."
     end
     private_class_method :unreadable
 
+    #: (Date first_day, Date? last_day) -> MCP::Tool::Response
     def self.start(first_day, last_day)
       budget = Budget.new(starts_at: first_day, ends_at: last_day)
 
@@ -62,6 +67,7 @@ module Assistant
     end
     private_class_method :start
 
+    #: (Budget budget) -> String
     def self.describe(budget)
       running = budget.ends_at.nil? ? "runs until further notice" : "runs to #{budget.ends_at.to_date}"
 
@@ -71,6 +77,7 @@ module Assistant
 
     # Starting a budget closes the one that was running, which is easy to do by accident and
     # impossible to notice unless the answer says so.
+    #: (Budget budget) -> String?
     def self.closing(budget)
       closed = budget.closed_predecessor
 
