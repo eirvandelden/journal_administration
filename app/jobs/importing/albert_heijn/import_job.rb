@@ -13,6 +13,7 @@ module Importing
 
       # @param mail [String] the basket mail as text
       # @return [void]
+      #: (String mail) -> void
       def perform(mail)
         basket = BasketMail.parse(mail)
         return if basket.blank?

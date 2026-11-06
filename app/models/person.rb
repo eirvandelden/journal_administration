@@ -12,6 +12,7 @@ class Person < ApplicationRecord
 
   # Whether this person belongs to the household.
   # @return [Boolean]
+  #: () -> bool
   def household?
     household
   end

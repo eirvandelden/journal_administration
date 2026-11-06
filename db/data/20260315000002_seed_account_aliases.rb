@@ -1,10 +1,12 @@
 class SeedAccountAliases < ActiveRecord::Migration[8.0]
+  #: () -> void
   def up
     seed_aliases("Albert Heijn B.V.", [ "AH to go", "AH ", "Albert Heijn" ])
     seed_aliases("Jumbo B.V.", [ "Jumbo " ])
     seed_aliases("Kruidvat B.V.", [ "Kruidvat" ])
   end
 
+  #: () -> void
   def down
     raise ActiveRecord::IrreversibleMigration
   end

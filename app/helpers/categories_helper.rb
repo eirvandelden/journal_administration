@@ -4,6 +4,7 @@ module CategoriesHelper
   # - Then, for each parent (alphabetically), an optgroup labeled with the parent's name
   #   containing only that parent's children (alphabetically) with labels as the child name
   # Returns an HTML-safe string suitable for use in f.select grouped options.
+  #: (?selected: untyped) -> ActiveSupport::SafeBuffer
   def grouped_category_options(selected: nil)
     parents = Category.groups.includes(:secondaries).order(Arel.sql("LOWER(name) ASC"))
 

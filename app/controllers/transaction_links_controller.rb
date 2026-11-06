@@ -6,6 +6,7 @@ class TransactionLinksController < ApplicationController
   #
   # @action GET
   # @route /transactions/:transaction_id/transaction_links
+  #: () -> void
   def index
     @searched = params[:query].present? || params[:amount].present?
     @transfers = @transaction.searchable_transfers(query: params[:query], amount: params[:amount])
@@ -15,6 +16,7 @@ class TransactionLinksController < ApplicationController
   #
   # @action POST
   # @route /transactions/:transaction_id/transaction_links
+  #: () -> void
   def create
     @transaction_link = @transaction.transaction_links.build(transfer_id: params[:transfer_id])
 
@@ -33,6 +35,7 @@ class TransactionLinksController < ApplicationController
   #
   # @action DELETE
   # @route /transactions/:transaction_id/transaction_links/:id
+  #: () -> void
   def destroy
     @transaction_link = @transaction.transaction_links.find(params[:id])
     @transaction_link.destroy

@@ -5,13 +5,14 @@
 # requiring a specific account.
 class Dashboard
   # @return [DateRange] The date range for the dashboard
-  attr_reader :date_range
+  attr_reader :date_range #: DateRange
 
   # Initializes a new dashboard
   #
   # @param filter [String, nil] Date range filter (e.g., "last_month", "year_to_date")
   # @param start_date [String, Date, nil] Custom start date (overrides filter)
   # @param end_date [String, Date, nil] Custom end date (overrides filter)
+  #: (?filter: String?, ?start_date: (String | Date)?, ?end_date: (String | Date)?) -> void
   def initialize(filter: nil, start_date: nil, end_date: nil)
     @date_range = custom_date_range(start_date, end_date) || DateRange.from_filter(filter)
   end
@@ -19,6 +20,7 @@ class Dashboard
   # Returns debit transactions grouped by category with totals
   #
   # @return [Hash{Category => Integer}] Categories mapped to debit cents
+  #: () -> Hash[Category?, Integer]
   def debit_transactions
     @debit_transactions ||= grouped_transactions_for(Debit)
   end
@@ -26,6 +28,7 @@ class Dashboard
   # Returns credit transactions grouped by category with totals
   #
   # @return [Hash{Category => Integer}] Categories mapped to credit cents
+  #: () -> Hash[Category?, Integer]
   def credit_transactions
     @credit_transactions ||= grouped_transactions_for(Credit)
   end
@@ -33,6 +36,7 @@ class Dashboard
   # Calculates total debit amount
   #
   # @return [Integer] Sum of all debit transactions, in cents
+  #: () -> Integer
   def debit_total
     debit_transactions.values.sum
   end
@@ -40,6 +44,7 @@ class Dashboard
   # Calculates total credit amount (excluding transfers)
   #
   # @return [Integer] Sum of all credit transactions, in cents
+  #: () -> Integer
   def credit_sub_total
     credit_transactions.values.sum
   end
@@ -47,6 +52,7 @@ class Dashboard
   # Returns ordered category name labels derived from credit_transactions
   #
   # @return [Array<String>] Category names; nil category maps to the uncategorized label
+  #: () -> Array[String]
   def chart_labels
     credit_transactions.keys.map { |category| category&.name || I18n.t("common.uncategorized") }
   end
@@ -58,6 +64,7 @@ class Dashboard
   # rounded once to whole cents.
   #
   # @return [Array<Integer>] Scaled averages in cents, in the same order as chart_labels
+  #: () -> Array[Integer]
   def historical_averages
     lookback = lookback_date_range
     totals = grouped_transactions_for(Credit, range: lookback)
@@ -70,6 +77,7 @@ class Dashboard
   # Calculates profit or loss (debit - credit)
   #
   # @return [Integer] Profit if positive, loss if negative, in cents
+  #: () -> Integer
   def profit_or_loss
     debit_total - credit_sub_total
   end
@@ -77,6 +85,7 @@ class Dashboard
   # Returns the budget covering the selected date range, if any.
   #
   # @return [Budget, nil]
+  #: () -> Budget?
   def active_budget
     @active_budget ||= Budget
       .where("starts_at <= ?", date_range.start_date)
@@ -89,6 +98,7 @@ class Dashboard
   # budget's stored monthly amount to the number of months in the selected date range.
   #
   # @return [Hash{Category => Integer}] cents
+  #: () -> Hash[Category, Integer]
   def budget_amounts
     return {} unless active_budget
 
@@ -104,6 +114,7 @@ class Dashboard
   # Calculates total credit including profit/loss adjustment
   #
   # @return [Integer] Credit subtotal plus profit/loss, in cents
+  #: () -> Integer
   def credit_total
     credit_sub_total + profit_or_loss
   end
@@ -112,6 +123,7 @@ class Dashboard
   # its credit total, so a refund offsets the spending it was refunding.
   #
   # @return [Hash{Category => Integer}] cents
+  #: () -> Hash[Category, Integer]
   def budget_actuals
     @budget_actuals ||= (debit_transactions.keys | credit_transactions.keys).compact.index_with do |category|
       debit_transactions[category].to_i - credit_transactions[category].to_i

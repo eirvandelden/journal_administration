@@ -5,6 +5,7 @@ class AccountsController < ApplicationController
   # Lists all accounts with pagination
   #
   # @return [void]
+  #: () -> void
   def index
     own_accounts = Account.own.includes(:account_numbers, :person, group: :people).order(:id)
     external_accounts = Account.external.includes(:account_numbers, :person, group: :people).order(:id)
@@ -23,6 +24,7 @@ class AccountsController < ApplicationController
   # Displays a single account
   #
   # @return [void]
+  #: () -> void
   def show
     @transactions_page =
       GearedPagination::Recordset.new(@account.recent_transactions(limit: nil), per_page: [ 20 ])
@@ -33,6 +35,7 @@ class AccountsController < ApplicationController
   # Renders form for creating a new account
   #
   # @return [void]
+  #: () -> void
   def new
     @account = Account.new
     @account.account_numbers.build
@@ -41,6 +44,7 @@ class AccountsController < ApplicationController
   # Renders form for editing an account
   #
   # @return [void]
+  #: () -> void
   def edit
     @account.account_numbers.build
   end
@@ -48,6 +52,7 @@ class AccountsController < ApplicationController
   # Creates a new account
   #
   # @return [void]
+  #: () -> void
   def create
     @account = Account.new(account_params)
 
@@ -65,6 +70,7 @@ class AccountsController < ApplicationController
   # Updates an account
   #
   # @return [void]
+  #: () -> void
   def update
     respond_to do |format|
       if @account.update(account_params)
@@ -82,6 +88,7 @@ class AccountsController < ApplicationController
   # @action DELETE
   # @route /accounts/:id
   # @return [void]
+  #: () -> void
   def destroy
     if @account.destroy
       respond_to do |format|

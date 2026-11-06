@@ -29,6 +29,7 @@ class Appropriation < ApplicationRecord
   # @param recipient [String]
   # @param budget_year [Integer]
   # @return [ActiveRecord::Relation]
+  #: (purpose: String, recipient: String, budget_year: Integer) -> ActiveRecord::Relation
   def self.named(purpose:, recipient:, budget_year:)
     person = person_named(recipient)
     return none unless person
@@ -38,6 +39,7 @@ class Appropriation < ApplicationRecord
 
   # Names to suggest: household members and people with appropriations.
   # @return [Array<String>]
+  #: () -> Array[String]
   def self.recipient_suggestions
     Person.where(household: true).or(Person.where(id: select(:person_id))).pluck(:name).sort_by(&:downcase)
   end
@@ -45,6 +47,7 @@ class Appropriation < ApplicationRecord
   # The people marked as household members.
   #
   # @return [Array<String>]
+  #: () -> Array[String]
   def self.household_members
     Person.where(household: true).order(:name).pluck(:name)
   end
@@ -52,6 +55,7 @@ class Appropriation < ApplicationRecord
   # Finds one person by name without regard to letter case.
   # @param name [String]
   # @return [Person, nil]
+  #: (String name) -> Person?
   def self.person_named(name)
     Person.find_by(name_key: name.downcase)
   end
@@ -72,6 +76,7 @@ class Appropriation < ApplicationRecord
   # The name a person recognises it by, e.g. "Birthday Etienne 2026"
   #
   # @return [String]
+  #: () -> String
   def to_s
     "#{purpose} #{recipient_name} #{budget_year}"
   end
@@ -82,6 +87,7 @@ class Appropriation < ApplicationRecord
 
   # The current managed recipient name.
   # @return [String]
+  #: () -> String
   def recipient_name
     person&.name || recipient
   end
@@ -89,21 +95,25 @@ class Appropriation < ApplicationRecord
   # Charged credits and credit parts, minus charged debits
   #
   # @return [Integer] cents
+  #: () -> Integer
   def charged = @charged ||= charged_on("Credit") - charged_on("Debit")
 
   # What is left of the amount appropriated; negative when overspent
   #
   # @return [Integer] cents
+  #: () -> Integer
   def balance = amount - charged
 
   # Whether more was charged than appropriated
   #
   # @return [Boolean]
+  #: () -> bool
   def overspent? = balance.negative?
 
   # The payments and split parts charged to it, earliest payment first and undated ones last
   #
   # @return [Array<Transaction, TransactionSplit>]
+  #: () -> Array[Transaction | TransactionSplit]
   def charges
     dated, undated = (transactions.unscope(:order).to_a +
       transaction_splits.includes(:financial_transaction).to_a).partition(&:booked_at)

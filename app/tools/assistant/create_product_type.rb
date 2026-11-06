@@ -12,6 +12,7 @@ module Assistant
       required: [ "name", "category_id" ]
     )
 
+    #: (name: String, category_id: Integer, server_context: untyped) -> MCP::Tool::Response
     def self.call(name:, category_id:, server_context:)
       category = Category.find_by(id: category_id)
       return problem("No category ##{category_id} exists.") if category.nil?
@@ -24,6 +25,7 @@ module Assistant
       create(name.strip, category)
     end
 
+    #: (String name, Category category) -> MCP::Tool::Response
     def self.create(name, category)
       type = ProductType.new(name: name, category: category)
       return problem(type.errors.full_messages.to_sentence) unless type.save

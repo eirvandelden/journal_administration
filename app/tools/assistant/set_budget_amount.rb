@@ -13,6 +13,7 @@ module Assistant
       required: [ "budget_id", "category_id", "amount" ]
     )
 
+    #: (budget_id: Integer, category_id: Integer, amount: Numeric, server_context: untyped) -> MCP::Tool::Response
     def self.call(budget_id:, category_id:, amount:, server_context:)
       budget = Budget.find_by(id: budget_id)
       return problem("No budget ##{budget_id} exists.") if budget.nil?
@@ -33,6 +34,7 @@ module Assistant
       plan(budget, category, cents)
     end
 
+    #: (Budget budget, Category category, Integer cents) -> MCP::Tool::Response
     def self.plan(budget, category, cents)
       planned = budget.plan(category: category, amount: cents)
 

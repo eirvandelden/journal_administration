@@ -10,6 +10,7 @@ module Assistant
       required: [ "name" ]
     )
 
+    #: (name: String, server_context: untyped) -> MCP::Tool::Response
     def self.call(name:, server_context:)
       return problem("A category needs a name.") if name.blank?
 

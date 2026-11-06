@@ -14,8 +14,9 @@ module PaymentProvider
 
   # Raised when one transaction cannot move; names that transaction so it can be found and fixed
   class MoveFailed < StandardError
-    attr_reader :payment
+    attr_reader :payment #: untyped
 
+    #: (untyped payment, String reason) -> void
     def initialize(payment, reason)
       @payment = payment
       super("#{payment.model_name.human} ##{payment.id}: #{reason}")
@@ -34,6 +35,7 @@ module PaymentProvider
   #
   # @param description [String, nil] The ING description of the payment
   # @return [Account] The merchant's account, or this account
+  #: (String? description) -> Account
   def counterparty_for(description)
     return self unless payment_provider?
 
@@ -50,6 +52,7 @@ module PaymentProvider
   #
   # @return [Integer] Number of transactions moved
   # @raise [MoveFailed] If one transaction cannot move; nothing has moved then
+  #: () -> Integer
   def move_transactions_to_merchants
     return 0 unless payment_provider?
 

@@ -9,6 +9,7 @@ class TransactionsController < ApplicationController
   # @action GET
   # @route /transactions
   # @return [void]
+  #: () -> void
   def index
     transactions = Transaction
       .includes(:transaction_splits)
@@ -24,11 +25,13 @@ class TransactionsController < ApplicationController
   # Displays a single transaction
   #
   # @return [void]
+  #: () -> void
   def show; end
 
   # Renders form for creating a new transaction
   #
   # @return [void]
+  #: () -> void
   def new
     @transaction = Transaction.new
   end
@@ -36,11 +39,13 @@ class TransactionsController < ApplicationController
   # Renders form for editing a transaction
   #
   # @return [void]
+  #: () -> void
   def edit; end
 
   # Creates a new transaction
   #
   # @return [void]
+  #: () -> void
   def create
     @transaction = Transaction.new(transaction_params)
 
@@ -58,6 +63,7 @@ class TransactionsController < ApplicationController
   # Updates a transaction
   #
   # @return [void]
+  #: () -> void
   def update
     respond_to do |format|
       if @transaction.update(transaction_params)
@@ -73,6 +79,7 @@ class TransactionsController < ApplicationController
   # Deletes a transaction
   #
   # @return [void]
+  #: () -> void
   def destroy
     @transaction.destroy
     respond_to do |format|

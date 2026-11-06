@@ -8,6 +8,7 @@ module Budgets
     # @action POST
     # @route /budgets/:budget_id/suggestion
     # @return [void]
+    #: () -> void
     def create
       render_suggestions
     end
@@ -17,6 +18,7 @@ module Budgets
     # @action PATCH
     # @route /budgets/:budget_id/suggestion
     # @return [void]
+    #: () -> void
     def update
       render_suggestions
     end

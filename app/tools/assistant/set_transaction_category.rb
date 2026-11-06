@@ -11,6 +11,7 @@ module Assistant
       required: [ "transaction_id", "category_id" ]
     )
 
+    #: (transaction_id: Integer, category_id: Integer, server_context: untyped) -> MCP::Tool::Response
     def self.call(transaction_id:, category_id:, server_context:)
       transaction = Transaction.find_by(id: transaction_id)
       return problem("No transaction ##{transaction_id} exists.") if transaction.nil?

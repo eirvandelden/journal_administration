@@ -16,7 +16,11 @@ class Todo
   #   @return [Time] Sort date for the item
   # @!attribute [r] record
   #   @return [Transaction, Account] The underlying AR record
-  Item = Struct.new(:kind, :date, :record)
+  Item = Struct.new(
+    :kind,   #: Symbol
+    :date,   #: ActiveSupport::TimeWithZone?
+    :record  #: Transaction | Account | Product
+  )
 
   # Returns whether a CSV upload form should be shown
   #
@@ -24,6 +28,7 @@ class Todo
   # transaction is older than UPLOAD_PROMPT_THRESHOLD days.
   #
   # @return [Boolean]
+  #: () -> bool
   def show_upload_form?
     @show_upload_form ||= begin
       latest = Transaction.maximum(:booked_at)
@@ -41,6 +46,7 @@ class Todo
   # Items are sorted newest-first by their respective dates.
   #
   # @return [Array<Todo::Item>]
+  #: () -> Array[Item]
   def items
     @items ||= (transaction_items + account_items + product_items).sort_by { |item| -item.date.to_i }
   end
@@ -48,6 +54,7 @@ class Todo
   # Returns whether the combined list is empty
   #
   # @return [Boolean]
+  #: () -> bool
   def empty?
     items.empty?
   end

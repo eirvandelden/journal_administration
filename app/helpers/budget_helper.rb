@@ -16,6 +16,7 @@ module BudgetHelper
   # @param actual [Numeric] actual amount
   # @param budgeted [Numeric, nil] budget amount
   # @return [Symbol, nil] :green, :orange, :red, or nil
+  #: (category: Category, actual: Numeric, budgeted: Numeric?) -> Symbol?
   def budget_status(category:, actual:, budgeted:)
     return nil if budgeted.nil? || budgeted.to_f.zero?
 
@@ -32,6 +33,7 @@ module BudgetHelper
   # @param actual [Numeric] actual amount
   # @param budgeted [Numeric, nil] budget amount
   # @return [String] formatted percentage or empty string
+  #: (actual: Numeric, budgeted: Numeric?) -> String
   def budget_pct_label(actual:, budgeted:)
     return "" if budgeted.nil? || budgeted.to_f.zero?
 

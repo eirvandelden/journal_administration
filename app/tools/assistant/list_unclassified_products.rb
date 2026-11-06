@@ -7,12 +7,14 @@ module Assistant
       "identifies each. At most #{HIGHEST_COUNT} are listed."
     annotations read_only_hint: true
 
+    #: (server_context: untyped) -> MCP::Tool::Response
     def self.call(server_context:)
       products = Product.unclassified.includes(:product_type).order(:name).limit(HIGHEST_COUNT).to_a
 
       answer([ *products.map { |product| describe(product) }, held_back(products) ].compact.join("\n"))
     end
 
+    #: (Product product) -> String
     def self.describe(product)
       "#{product.id}: #{product.name} (#{product.brand.presence || 'no brand'}, " \
         "#{product.product_type&.name || 'no type'})"
@@ -20,6 +22,7 @@ module Assistant
     private_class_method :describe
 
     # A list believed to be complete is classified as if nothing were left, so a shortened one says so.
+    #: (Array[Product] products) -> String?
     def self.held_back(products)
       return nil if products.length < HIGHEST_COUNT
 

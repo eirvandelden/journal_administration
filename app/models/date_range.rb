@@ -6,16 +6,17 @@ class DateRange
   FILTERS = %w[last_month three_months year_to_date last_year current_month month_to_date].freeze
 
   # @return [Time] The start date of the range (inclusive)
-  attr_reader :start_date
+  attr_reader :start_date #: untyped
 
   # @return [Time] The end date of the range (inclusive)
-  attr_reader :end_date
+  attr_reader :end_date #: untyped
 
   # Creates a DateRange from custom start and end dates
   #
   # @param start_date [String, Date] The start date (inclusive)
   # @param end_date [String, Date] The end date (inclusive)
   # @return [DateRange, nil] A new DateRange instance with the specified dates
+  #: (String | Date start_date, String | Date end_date) -> DateRange?
   def self.from_dates(start_date, end_date)
     parsed_start_date = Date.parse(start_date.to_s)
     parsed_end_date = Date.parse(end_date.to_s)
@@ -30,6 +31,7 @@ class DateRange
   # @param filter [String, nil] The filter name (last_month, three_months, year_to_date, last_year, current_month)
   #                             Defaults to current_month if not recognized
   # @return [DateRange] A new DateRange instance with appropriate start and end dates
+  #: (String? filter) -> DateRange
   def self.from_filter(filter)
     case filter
     when "last_month"
@@ -57,6 +59,7 @@ class DateRange
   #
   # @param start_date [Time] The start date (inclusive)
   # @param end_date [Time] The end date (inclusive)
+  #: (untyped start_date, untyped end_date) -> void
   def initialize(start_date, end_date)
     @start_date = start_date
     @end_date = end_date
@@ -65,6 +68,7 @@ class DateRange
   # Returns the range as a Ruby Range object suitable for database queries
   #
   # @return [Range<Time>] The date range
+  #: () -> Range[untyped]
   def to_range
     start_date..end_date
   end

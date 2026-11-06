@@ -9,7 +9,15 @@ module Importing
       include Reading
 
       # One product on the slip, and the bonus taken off it
-      Line = Struct.new(:name, :quantity, :full_amount, :discount_amount) do
+      Line = Struct.new(
+        :name,            #: String
+        :quantity,        #: Integer
+        :full_amount,     #: Integer
+        :discount_amount  #: Integer
+      )
+
+      class Line
+        #: () -> Integer
         def paid_amount = full_amount - discount_amount
       end
 
@@ -18,7 +26,7 @@ module Importing
       HEADINGS = [ "Aantal", "Boodschappen totaal", "Totaal" ].freeze
       TABLE_HEADING = [ "Aantal", "Prijs", "Totaal" ].freeze
 
-      attr_reader :order_number, :delivered_on, :total_amount, :lines
+      attr_reader :order_number, :delivered_on, :total_amount, :lines #: untyped
 
       #: () -> bool
       def packed? = true
@@ -27,6 +35,7 @@ module Importing
       #
       # @param mail [String] the mail as text
       # @return [PackingSlip, nil]
+      #: (String mail) -> PackingSlip?
       def self.parse(mail)
         blocks = mail.split("\n\n").map(&:strip).reject(&:empty?)
         return nil unless readable?(blocks)
@@ -35,6 +44,7 @@ module Importing
         slip if slip.reconciles?
       end
 
+      #: (Array[String] blocks) -> bool
       def self.readable?(blocks)
         blocks.grep(ORDER_NUMBER).any? &&
           blocks.grep(/Bedankt voor je bestelling/).none? &&
@@ -43,6 +53,7 @@ module Importing
       end
       private_class_method :readable?
 
+      #: (Array[String] blocks) -> void
       def initialize(blocks)
         @tokens = blocks
         @order_number = blocks.grep(ORDER_NUMBER).first[ORDER_NUMBER, 1]

@@ -5,6 +5,7 @@ module MoneyHelper
   # @param cents [Integer, nil]
   # @param options [Hash] passed to number_to_currency
   # @return [String, nil]
+  #: (Integer? cents, **untyped options) -> String?
   def cents_to_currency(cents, **options)
     number_to_currency(Cents.to_euros(cents), **options)
   end
@@ -18,6 +19,7 @@ module MoneyHelper
   # @param attribute [Symbol]
   # @param separator [String] decimal separator of the field: the locale's for text fields, "." for number fields
   # @return [String, nil]
+  #: (ActiveRecord::Base record, Symbol attribute, separator: String) -> String?
   def cents_field_value(record, attribute, separator:)
     cents = record.public_send(attribute)
     typed = record.public_send(:"#{attribute}_before_type_cast")

@@ -4,6 +4,7 @@ class SearchesController < ApplicationController
   #
   # @action GET
   # @route /searches
+  #: () -> void
   def index
     @search = Search.new(query: params[:q])
   end

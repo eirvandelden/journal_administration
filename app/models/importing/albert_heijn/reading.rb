@@ -14,6 +14,7 @@ module Importing
 
       # @param mail [String] the mail as text
       # @return [Array<String>] every line of the mail with something on it, without its padding
+      #: (String mail) -> Array[String]
       def self.tokens(mail)
         mail.lines.map(&:strip).reject(&:empty?)
       end

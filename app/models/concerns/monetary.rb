@@ -10,6 +10,7 @@ module Monetary
   class_methods do
     # @param names [Array<Symbol>] attributes that hold cents
     # @return [void]
+    #: (*Symbol names) -> void
     def monetary(*names)
       names.each do |name|
         attribute name, Cents::Type.new

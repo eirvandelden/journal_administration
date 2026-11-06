@@ -16,6 +16,7 @@ module Assistant
       }
     )
 
+    #: (server_context: untyped, ?limit: Integer) -> MCP::Tool::Response
     def self.call(server_context:, limit: DEFAULT_LIMIT)
       transactions = Transaction.uncategorized
                                 .includes(:debitor, :creditor)
@@ -26,6 +27,7 @@ module Assistant
       answer(transactions.map { |transaction| describe(transaction) }.join("\n"))
     end
 
+    #: (Transaction transaction) -> String
     def self.describe(transaction)
       "#{transaction.id}: #{transaction.booked_at.to_date} #{Cents.to_euros(transaction.amount)} " \
         "from #{transaction.debitor&.name} to #{transaction.creditor&.name} - #{transaction.note}"

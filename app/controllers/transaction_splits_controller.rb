@@ -6,6 +6,7 @@ class TransactionSplitsController < ApplicationController
   #
   # @action POST
   # @route /transactions/:transaction_id/transaction_splits
+  #: () -> void
   def create
     @transaction_split = @transaction.transaction_splits.build(split_params)
 
@@ -25,6 +26,7 @@ class TransactionSplitsController < ApplicationController
   #
   # @action PATCH
   # @route /transactions/:transaction_id/transaction_splits/:id
+  #: () -> void
   def update
     @transaction_split = @transaction.transaction_splits.find(params[:id])
 
@@ -44,6 +46,7 @@ class TransactionSplitsController < ApplicationController
   #
   # @action DELETE
   # @route /transactions/:transaction_id/transaction_splits/:id
+  #: () -> void
   def destroy
     @transaction_split = @transaction.transaction_splits.find(params[:id])
     @transaction_split.destroy

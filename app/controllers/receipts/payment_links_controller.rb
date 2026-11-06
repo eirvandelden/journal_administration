@@ -6,6 +6,7 @@ module Receipts
     # Links the chosen payment to the receipt and splits it by the basket
     #
     # @return [void]
+    #: () -> void
     def create
       payment = chosen_payment
       return redirect_to @receipt, alert: t(".basket_exceeds_payment") unless @receipt.basket_fits?(payment)
@@ -25,6 +26,7 @@ module Receipts
     # stay as they are: what the payment carried before is not recoverable.
     #
     # @return [void]
+    #: () -> void
     def destroy
       @receipt.update!(payment: nil)
 

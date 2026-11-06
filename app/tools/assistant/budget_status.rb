@@ -11,6 +11,7 @@ module Assistant
       }
     )
 
+    #: (server_context: untyped, ?start_date: String?, ?end_date: String?) -> MCP::Tool::Response
     def self.call(server_context:, start_date: nil, end_date: nil)
       return problem(half_a_period) if [ start_date, end_date ].select(&:present?).one?
       return report(Dashboard.new) if start_date.blank? && end_date.blank?
@@ -26,16 +27,19 @@ module Assistant
       report(Dashboard.new(start_date: first_day, end_date: last_day))
     end
 
+    #: () -> String
     def self.half_a_period
       "Give both days of the period, or neither for the current month. Write days as 2026-08-01."
     end
     private_class_method :half_a_period
 
+    #: (String? start_date, String? end_date) -> String
     def self.unreadable(start_date, end_date)
       "Could not read #{start_date} to #{end_date} as a period. Write days as 2026-08-01."
     end
     private_class_method :unreadable
 
+    #: (Dashboard dashboard) -> MCP::Tool::Response
     def self.report(dashboard)
       return answer("No budget covers #{covering(dashboard)}.") if dashboard.active_budget.nil?
 
@@ -47,6 +51,7 @@ module Assistant
     end
     private_class_method :report
 
+    #: (Dashboard dashboard) -> String
     def self.covering(dashboard)
       "#{dashboard.date_range.start_date.to_date} to #{dashboard.date_range.end_date.to_date}"
     end
@@ -54,6 +59,7 @@ module Assistant
 
     # Spending and earning are the same subtraction read from opposite sides, and an assistant
     # told that four thousand euro of salary was "spent" will pass that confusion on.
+    #: (Category category, Integer planned, Dashboard dashboard) -> String
     def self.describe(category, planned, dashboard)
       net = dashboard.budget_actuals[category].to_i
 
@@ -63,6 +69,7 @@ module Assistant
     end
     private_class_method :describe
 
+    #: (Category category, Integer planned, Integer spent) -> String
     def self.spending(category, planned, spent)
       remainder = planned - spent
       standing = remainder.negative? ? "#{money(-remainder)} over" : "#{money(remainder)} left"
@@ -71,6 +78,7 @@ module Assistant
     end
     private_class_method :spending
 
+    #: (Category category, Integer expected, Integer received) -> String
     def self.earning(category, expected, received)
       shortfall = expected - received
       standing = shortfall.positive? ? "#{money(shortfall)} still to come" : "#{money(-shortfall)} more than expected"
@@ -79,6 +87,7 @@ module Assistant
     end
     private_class_method :earning
 
+    #: (Integer cents) -> String
     def self.money(cents) = euros(cents)
     private_class_method :money
   end

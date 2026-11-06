@@ -18,6 +18,7 @@ class AppropriationsController < ApplicationController
   # @action GET
   # @route /appropriations/:id
   # @return [void]
+  #: () -> void
   def show; end
 
   # Renders the form for setting a new appropriation.
@@ -25,6 +26,7 @@ class AppropriationsController < ApplicationController
   # @action GET
   # @route /appropriations/new
   # @return [void]
+  #: () -> void
   def new
     @appropriation = Appropriation.new(budget_year: Date.current.year)
   end
@@ -34,6 +36,7 @@ class AppropriationsController < ApplicationController
   # @action GET
   # @route /appropriations/:id/edit
   # @return [void]
+  #: () -> void
   def edit; end
 
   # Sets a new appropriation.
@@ -41,6 +44,7 @@ class AppropriationsController < ApplicationController
   # @action POST
   # @route /appropriations
   # @return [void]
+  #: () -> void
   def create
     @appropriation = Appropriation.new(appropriation_params)
 
@@ -56,6 +60,7 @@ class AppropriationsController < ApplicationController
   # @action PATCH
   # @route /appropriations/:id
   # @return [void]
+  #: () -> void
   def update
     if @appropriation.update(appropriation_params)
       redirect_to appropriations_path(year: @appropriation.budget_year), notice: t(".success")
@@ -69,6 +74,7 @@ class AppropriationsController < ApplicationController
   # @action DELETE
   # @route /appropriations/:id
   # @return [void]
+  #: () -> void
   def destroy
     if @appropriation.destroy
       redirect_to appropriations_path(year: @appropriation.budget_year), notice: t(".success")

@@ -28,6 +28,7 @@ class MigratePeopleGroupsAndLegacyOwners < ActiveRecord::Migration[8.1]
     5 => "Chiara"
   }.freeze
 
+  #: () -> void
   def up
     samen = household_group
     AccountRecord.where(owner: 0).update_all(group_id: samen.id)
@@ -39,6 +40,7 @@ class MigratePeopleGroupsAndLegacyOwners < ActiveRecord::Migration[8.1]
     link_appropriations
   end
 
+  #: () -> void
   def down
     raise ActiveRecord::IrreversibleMigration
   end

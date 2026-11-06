@@ -16,6 +16,7 @@ module Assistant
     )
 
     # @return [MCP::Tool::Response]
+    #: (purpose: String, recipient: String, budget_year: Integer, amount: Numeric, server_context: untyped) -> MCP::Tool::Response
     def self.call(purpose:, recipient:, budget_year:, amount:, server_context:)
       person = Appropriation.person_named(recipient)
       return problem("No person named #{recipient}.") unless person
