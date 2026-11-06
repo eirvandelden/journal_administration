@@ -15,14 +15,15 @@ Ten of those offenses sit in run-once scripts: `db/data` (8), `db/cable_migrate`
 ## Affected users and systems
 
 - Developers and agents working in this repository, and the CI lint job.
-- `rubocop-eirvandelden`, through a separate change (see Out of scope).
+- `rubocop-eirvandelden`: this delivery also changes the gem, in its own worktree and draft pull request in that repository.
 - The app's runtime behaviour does not change.
 
 ## Constraints
 
 - No linter disable comments, no `# rbs_inline: disabled` to dodge the cops, and no edit to this repo's `.rubocop.yml` to pass (playbook rule 2, §7a).
-- No new dependency. Approved permission: `bundle update rubocop-eirvandelden`, once the gem change is merged. No other gem, system tool, dropping migration or deploy file is approved.
-- The gem change must be merged before this change can bump the gem. If it is not merged when delivery reaches the bump, stop and ask Etienne.
+- No new dependency. Approved permissions: `bundle update rubocop-eirvandelden` once the gem change is merged, and `bundle update sqlite3`. No other gem, system tool, dropping migration or deploy file is approved.
+- The gem change must be merged before this change can bump the gem. Only Etienne merges it. When delivery reaches the bump and the gem pull request is not merged, stop and ask Etienne.
+- Pushes wait until every lefthook pre-push check passes. Never bypass lefthook (`LEFTHOOK=0`, `--no-verify`). Run `npm install` in the worktree first.
 - Signatures use real types (`String`, `Integer`, `Account`, `ActiveRecord::Relation`, `bool`, `void`). `untyped` only where the value truly varies.
 - The three `Struct.new` rewrites keep behaviour. Existing tests cover them; a moved method without a covering test gets one.
 
@@ -33,14 +34,17 @@ Ten of those offenses sit in run-once scripts: `db/data` (8), `db/cable_migrate`
 - Rewrite `Struct.new ... do` in `TodosController::Page`, `Importing::AlbertHeijn::PackingSlip::Line` and `Search` as the cop says: keep the `Struct.new` call, move the block's methods into a class body written after it.
 - The one comment spacing offense.
 - `script/admin/prepare-backup`: a signature on `Backup.create`.
-- Bump `rubocop-eirvandelden` to the release that excludes the run-once folders, as the last commit.
+- In `rubocop-eirvandelden` (`~/Developer/rubocop-eirvandelden`), in its own worktree: extend the `db/migrate` exclusion of `Style/RbsInline/MissingTypeAnnotation` in `config/rails.yml` to `db/*_migrate` and `db/data`, with tests in `test/shared_configuration_test.rb` and a `CHANGELOG.md` line, and open a draft pull request there.
+- Bump `sqlite3` to 2.10.2 or newer (GHSA-4fqr-96q8-xrfx), as its own commit.
+- Bump `rubocop-eirvandelden` to the merged gem change, as the last commit.
 
 ## Out of scope
 
-- The `rubocop-eirvandelden` change itself: extend the `db/migrate` exclusion of `Style/RbsInline/MissingTypeAnnotation` to `db/*_migrate` and `db/data`. It is its own intent in that repository.
 - Signatures on the run-once scripts in `db/data`, `db/cable_migrate` and `db/queue_migrate`.
 - Signatures on private methods (the gem asks only for public ones).
 - Tests: `test/` is excluded by the gem.
+- Merging the gem pull request: Etienne merges it.
+- Other gem updates than `sqlite3` and `rubocop-eirvandelden`.
 - A type checker (Steep, `rbs validate`) in CI, and generated `sig/` files.
 - Converting Structs to `Data.define`.
 
@@ -52,6 +56,8 @@ Ten of those offenses sit in run-once scripts: `db/data` (8), `db/cable_migrate`
 - `TodosController#index` reads `#: () -> void`.
 - `Search` still returns the same results for the same query; `TodosController` still paginates the same; a packing slip still reads the same lines, amounts and discounts. The full test suite stays green.
 - `db/data/20260315000002_seed_account_aliases.rb` gains no signature and raises no offense.
+- In the gem, a Rails project gets no `MissingTypeAnnotation` offense for a public method in `db/data/x.rb`, `db/cable_migrate/x.rb` or `db/queue_migrate/x.rb`, and still gets one in `app/models/x.rb`.
+- `bundle exec bundler-audit check` reports no vulnerabilities, and `ci / scan_ruby` on the pull request is green.
 
 ## Decisions
 
@@ -64,6 +70,9 @@ Ten of those offenses sit in run-once scripts: `db/data` (8), `db/cable_migrate`
 - Deliver autonomously — no reason given.
 - Approve `bundle update rubocop-eirvandelden` up front — it is the step that turns lint green.
 - Review with Claude only — the change is comments plus three small Struct moves.
+- Hold pushes until every pre-push check passes — no lefthook bypass; nobody needs the branch earlier. (Plan stage escalation, 2026-11-06.)
+- Bump `sqlite3` in this change — no reason given. (Plan stage escalation, 2026-11-06.)
+- Change the gem from this delivery, not as a separate intent — it keeps the agreed design, exclusion in the gem. (Plan stage escalation, 2026-11-06.)
 
 ## Open questions
 

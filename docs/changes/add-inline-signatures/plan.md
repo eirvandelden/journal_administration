@@ -223,10 +223,11 @@ No step contradicts `intent.md`'s `## Decisions`.
 
 ## Integration points
 
-- `rubocop-eirvandelden` (GitHub gem, `Gemfile` line 64, locked at `32d259fcdc1e`): the bump picks up the release that excludes `db/*_migrate` and `db/data` from `Style/RbsInline/MissingTypeAnnotation`. That change is a separate intent in that repository; on 2026-11-06 it has no pull request yet.
+- `rubocop-eirvandelden` (GitHub gem, `Gemfile` line 64, locked at `32d259fcdc1e`): the bump picks up the release that excludes `db/*_migrate` and `db/data` from `Style/RbsInline/MissingTypeAnnotation`. This delivery makes that change itself (amendment below), in a worktree of `~/Developer/rubocop-eirvandelden`, and opens a draft pull request there. Etienne merges it.
+- `sqlite3` (Gemfile.lock 2.10.1): bundler-audit flags GHSA-4fqr-96q8-xrfx, fixed in 2.10.2. `bundle update sqlite3` is approved in `intent.md`.
 - `rubocop-rbs_inline` 2.0.0 (dependency of the gem): its cops decide placement. No version change.
 - `ci / lint` GitHub Actions job: no workflow edit; it turns green when rubocop does.
-- lefthook pre-push: runs rubocop, herb, brakeman, bundler-audit and tests. From a worktree, push with the worktree's `bin/` first on `PATH` and after `npm install` (see `AGENTS.md` Gotchas).
+- lefthook pre-push: runs rubocop, herb, brakeman, bundler-audit and tests. From a worktree, push with the worktree's `bin/` first on `PATH` and after `npm install` (see `AGENTS.md` Gotchas). No push until every check passes; never `LEFTHOOK=0` or `--no-verify`.
 
 ## Files that change
 
@@ -240,7 +241,8 @@ No step contradicts `intent.md`'s `## Decisions`.
 - `app/models/importing/albert_heijn/older_packing_slip.rb`, `order_confirmation.rb`, `app/models/importing/ing/row.rb`: split `attr_reader`, signatures.
 - Signatures only, in every other file rubocop flags: 33 files in `app/controllers` (116), 9 in `app/helpers` (13), 2 in `app/jobs` (2), 1 in `app/channels` (1), the remaining files in `app/models` (184 in total with the above) and 24 in `app/tools/assistant` (74).
 - `script/admin/prepare-backup`: one signature on `Backup.create`.
-- `Gemfile.lock`: `rubocop-eirvandelden` revision bump. `Gemfile` does not change.
+- `Gemfile.lock`: `sqlite3` bump, then `rubocop-eirvandelden` revision bump, in two commits. `Gemfile` does not change.
+- In `~/Developer/rubocop-eirvandelden` (own worktree and branch `exclude-run-once-scripts`): `config/rails.yml`, `test/shared_configuration_test.rb`, `CHANGELOG.md`.
 
 Nothing in `db/`, `test/` (other than the two tests), `.rubocop.yml`, `config/` or `.github/` changes.
 
@@ -257,7 +259,9 @@ Nothing in `db/`, `test/` (other than the two tests), `.rubocop.yml`, `config/` 
 9. Same for `app/tools`. Commit.
 10. Add the signature to `script/admin/prepare-backup`. Commit.
 11. Run `bundle exec rubocop app script` (expect `no offenses`), `git diff main --stat -- db` (expect empty), the untyped and disable-comment greps from Invariants, and the full `bin/rails test` plus `bin/rails test:system`.
-12. Check that the `rubocop-eirvandelden` change that excludes `db/*_migrate` and `db/data` is merged on its `main`. If not, stop and ask Etienne (intent constraint). If merged, run `bundle update rubocop-eirvandelden`, confirm `Gemfile.lock` changes only that gem's revision (and its dependencies only if the gem itself changed them), run `bundle exec rubocop` (expect `0 offenses`). Commit `chore: bump rubocop-eirvandelden to exclude run-once scripts`.
+12. Bump `sqlite3`: `bundle update sqlite3`. Confirm `Gemfile.lock` changes only `sqlite3` (version and checksums). Run `bundle exec bundler-audit check` (expect no vulnerabilities) and the full `bin/rails test`. Commit `chore: bump sqlite3 for GHSA-4fqr-96q8-xrfx`.
+12a. Gem change. In `~/Developer/rubocop-eirvandelden`, create a worktree with `worktree-create exclude-run-once-scripts` (never `git worktree add`; the main checkout has an uncommitted `Gemfile.lock` that stays untouched). In `config/rails.yml`, add `'**/db/*_migrate/**/*'` and `'**/db/data/**/*'` to the `Style/RbsInline/MissingTypeAnnotation` `Exclude`, and widen its comment to run-once scripts: migrations and data migrations. In `test/shared_configuration_test.rb`, add tests next to `test_a_rails_project_does_not_demand_a_signature_on_a_migration`: no offense in a Rails project for `db/data/...rb`, `db/cable_migrate/...rb` and `db/queue_migrate/...rb`, and still an offense for `app/models/...rb`. Add a `CHANGELOG.md` line. Run that repository's tests and rubocop (its `AGENTS.md` names the commands). Commit, push the branch to `origin` (eirvandelden), and open a draft pull request with the repository's PR template, if it has one. Then send `Decision needed: merge rubocop-eirvandelden PR <url>` to the coordinator and stop. Never merge it.
+12b. Check that the `rubocop-eirvandelden` change that excludes `db/*_migrate` and `db/data` is merged on its `main`. If not, stop and ask Etienne (intent constraint). If merged, run `bundle update rubocop-eirvandelden`, confirm `Gemfile.lock` changes only that gem's revision (and its dependencies only if the gem itself changed them), run `bundle exec rubocop` (expect `0 offenses`). Commit `chore: bump rubocop-eirvandelden to exclude run-once scripts`.
 13. Run the full suite and all linters once more (`bundle exec rubocop`, `npx @herb-tools/linter app/views/`, `bundle exec brakeman --no-pager -q`, `bundle exec bundler-audit check`).
 14. Hand the branch to the autonomous delivery chain, which the coordinator drives (playbook §7a): the Claude `reviewer` agent reviews the diff (no Codex diff review: `intent.md` says `Codex review: no`); every finding closes as fixed or dismissed with a reason; `deliver` opens the draft pull request; then `gh pr checks <pr> --watch` proves `ci / lint` green. Nobody merges; Etienne's `/finish` is the merge approval.
 
@@ -267,6 +271,7 @@ Nothing in `db/`, `test/` (other than the two tests), `.rubocop.yml`, `config/` 
 - **Struct alignment columns.** Hand-counted columns break `StructClassCommentAlignment`. Mitigation: the targeted autocorrect named in Signatures.
 - **Line length.** Long tool signatures can exceed 120 characters. Mitigation: drop parameter names first; never a `#|` continuation unless that still does not fit.
 - **The reopened class hides a constant.** A moved method that used a constant of the enclosing class would resolve differently. Checked: the moved bodies use only Struct members and `I18n`.
+- **The `sqlite3` bump pulls other gems.** Mitigation: step 12 confirms the lock diff names `sqlite3` only.
 - **The gem change is not merged in time.** Lint stays red on `db/` offenses. The intent's rule applies: stop at step 12 and ask Etienne. Steps 1 to 11 still land and cut lint from 410 to 19 offenses.
 - **The gem bump pulls in other cop changes.** A newer gem revision may enable more cops. Mitigation: step 12 runs full rubocop after the bump; a new offense outside the intent becomes a question to Etienne, not a disable comment.
 - **Rejected:** `Cents::t` aliases and rbs_rails relation names (alternative 2), restructuring private helpers (alternative 3), YARD removal (separate change), `Data.define` (out of scope).
@@ -281,6 +286,8 @@ Nothing in `db/`, `test/` (other than the two tests), `.rubocop.yml`, `config/` 
 - `TodosController` paginates the same → `test/integration/pagination_navigation_test.rb` `todo pagination is clamped and hides next on the last page`, and `test/controllers/todos_controller_page_test.rb` (below).
 - A packing slip reads the same lines, amounts and discounts → `test/models/importing/albert_heijn/packing_slip_test.rb` (all tests) and `test/models/receipt/recordable_test.rb`.
 - The full test suite stays green → check: `bin/rails test` and `bin/rails test:system`.
+- In the gem, a Rails project gets no `MissingTypeAnnotation` offense in `db/data`, `db/cable_migrate` or `db/queue_migrate`, and still gets one in `app/models` → the new tests in `test/shared_configuration_test.rb` (step 12a).
+- `bundler-audit` reports no vulnerabilities and `ci / scan_ruby` is green → check: `bundle exec bundler-audit check` after step 12; `gh pr checks <pr> --watch`.
 - `db/data/20260315000002_seed_account_aliases.rb` gains no signature and raises no offense → check: `git diff main -- db/data/20260315000002_seed_account_aliases.rb` is empty and `bundle exec rubocop db/data/20260315000002_seed_account_aliases.rb` reports no offenses after step 12.
 - Query count: unchanged on every request, since only comments and Struct shapes change → check: no query-count test needed; the full suite runs.
 - Invariant: no disable comment, `@rbs skip` or `.rubocop.yml` edit, enforced by review → check: `git diff main -- .rubocop.yml` empty and `git diff main | grep -E 'rubocop:disable|rbs_inline: disabled|@rbs skip'` empty.
@@ -304,3 +311,7 @@ Domain skills applied: rails-architecture, ruby-style, rails-testing, software-d
 - The inline `Struct.new(:a #: T, :b #: T)` forms are invalid Ruby, because text after `#:` is a comment and the commas would be lost → fixed (Signatures now shows the exact multi-line Struct shapes for all five Structs, comma before each `#:`, closing parenthesis on its own line)
 - The `untyped` invariant and Proof check are already false: `app/models/receipt/recordable.rb` has two existing `#: (untyped basket) -> Receipt` signatures for a duck-typed basket → fixed (the rule now covers new `untyped` only, names the two existing ones as kept, and the check greps added lines with `git diff main -U0`)
 - Order of work stops before review, `deliver` and CI, yet a Proof line is checked after delivery → fixed (step 14 hands over to the coordinator's chain: Claude reviewer only, finding closure, `deliver`, `gh pr checks --watch`; no Codex diff review)
+
+## Amendment (2026-11-06, coordinator)
+
+Etienne settled the plan stage's three `Decision needed:` lines (recorded in `intent.md` Decisions): hold pushes until every pre-push check passes; bump `sqlite3` in this change (step 12); make the `rubocop-eirvandelden` exclusion change from this delivery (step 12a), with Etienne merging its pull request before step 12b.
