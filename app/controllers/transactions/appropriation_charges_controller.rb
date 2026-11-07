@@ -33,9 +33,10 @@ module Transactions
     # Saves the charge and returns to editing the payment, naming why when it is refused
     def charge_to(appropriation, notice:)
       if @transaction.update(appropriation:)
-        redirect_to edit_transaction_path(@transaction), notice:
+        redirect_to menu.carry(edit_transaction_path(@transaction)), notice:
       else
-        redirect_to edit_transaction_path(@transaction), alert: @transaction.errors.full_messages.to_sentence
+        alert = @transaction.errors.full_messages.to_sentence
+        redirect_to menu.carry(edit_transaction_path(@transaction)), alert:
       end
     end
 

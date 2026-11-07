@@ -25,6 +25,7 @@
             <%= button_to t("common.remove"),
                   transaction_transaction_split_path(transaction, split),
                   method: :delete,
+                  params: menu.origin_params,
                   class: "button-danger" %>
           </td>
         </tr>
@@ -52,6 +53,7 @@
   </table>
 
   <%= form_with scope: :transaction_split, url: transaction_transaction_splits_path(transaction), method: :post do |f| %>
+    <%= hidden_field_tag :from, menu.origin_key if menu.origin_key %>
     <fieldset>
       <% if transaction_split.errors[:financial_transaction].any? %>
         <p><%= transaction_split.errors.full_messages_for(:financial_transaction).to_sentence %></p>

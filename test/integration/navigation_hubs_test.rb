@@ -189,6 +189,22 @@ class NavigationHubsTest < ActionDispatch::IntegrationTest
     assert_equal one, ten
   end
 
+  test "only the overzicht title bar holds the avatar" do
+    get dashboard_index_url
+
+    assert_select "main > header nav details summary[aria-label=?]", @member.name, text: "👤"
+
+    get hub_url(:processing)
+
+    assert_select "main > header nav details", 0
+  end
+
+  test "every title bar holds a search button" do
+    get hub_url(:processing)
+
+    assert_select "main > header nav button[data-action='click->search-dialog#open']"
+  end
+
   private
     def create_uncategorized_transactions(count)
       count.times do |index|

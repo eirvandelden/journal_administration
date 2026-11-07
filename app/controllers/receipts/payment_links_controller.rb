@@ -9,17 +9,19 @@ module Receipts
     #: () -> void
     def create
       payment = chosen_payment
-      return redirect_to @receipt, alert: t(".basket_exceeds_payment") unless @receipt.basket_fits?(payment)
-      return redirect_to @receipt, alert: t(".payment_is_charged") if payment.charged?
+      unless @receipt.basket_fits?(payment)
+        return redirect_to carried_path(@receipt), alert: t(".basket_exceeds_payment")
+      end
+      return redirect_to carried_path(@receipt), alert: t(".payment_is_charged") if payment.charged?
 
       settled = Receipt.transaction do
         @receipt.update!(payment: payment)
         @receipt.rewrite_payment_splits
       end
 
-      return redirect_to @receipt, notice: t(".success") if settled
+      return redirect_to carried_path(@receipt), notice: t(".success") if settled
 
-      redirect_to @receipt, notice: t(".nothing_to_split")
+      redirect_to carried_path(@receipt), notice: t(".nothing_to_split")
     end
 
     # Lets a person undo settling the wrong payment. The splits already written
@@ -30,7 +32,7 @@ module Receipts
     def destroy
       @receipt.update!(payment: nil)
 
-      redirect_to @receipt, notice: t(".success")
+      redirect_to carried_path(@receipt), notice: t(".success")
     end
 
     private

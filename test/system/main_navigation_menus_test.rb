@@ -7,40 +7,27 @@ class MainNavigationMenusTest < ApplicationSystemTestCase
     sign_in_as(@user)
   end
 
-  test "todo menu links reach the expected pages" do
-    assert_todo_link(I18n.t("main_nav.todo_all", locale: locale), todo_path)
-    assert_todo_link(I18n.t("main_nav.todo_consolidatable_transactions", locale: locale),
-                     transactions_path(filter: :no_category))
-    assert_todo_link(I18n.t("main_nav.todo_consolidatable_accounts", locale: locale),
-                     accounts_path(filter: :untouched))
-    assert_todo_link(I18n.t("main_nav.todo_upload", locale: locale), new_transactions_import_path)
-  end
-
-  test "navigation does not show a separate filters menu" do
+  test "the rail links reach each hub landing page" do
     visit root_url
 
-    assert_no_selector "header nav summary", text: "Filters"
+    click_link I18n.t("menu.hubs.processing.label", locale: locale)
+
+    assert_current_path hub_path(:processing)
   end
 
-  test "navigation links to budgets" do
-    visit root_url
+  test "the verwerken import action reaches the import page" do
+    visit hub_url(:processing)
 
-    click_link I18n.t("main_nav.budgets", model: Budget.model_name.human, locale: locale)
+    click_link I18n.t("menu.hubs.processing.import", locale: locale)
 
-    assert_current_path budgets_path
+    assert_current_path new_transactions_import_path
   end
 
-  private
-    def assert_todo_link(label, path)
-      visit root_url
-      open_nav_section(I18n.t("main_nav.todo", model: Todo.model_name.human, locale: locale))
+  test "a hub column link reaches budgets" do
+    visit hub_url(:planning)
 
-      click_link label
+    click_link I18n.t("menu.pages.budgets.label", locale: locale), match: :first
 
-      assert_current_path path, ignore_query: false
-    end
-
-    def open_nav_section(label)
-      find("header nav summary", text: label).click
-    end
+    assert_current_path budgets_path, ignore_query: true
+  end
 end

@@ -33,7 +33,7 @@ class ProductsController < ApplicationController
   # @return [void]
   #: () -> void
   def update
-    return redirect_to products_path, notice: t(".success") if @product.update(product_params)
+    return redirect_to menu.carry(products_path), notice: t(".success") if @product.update(product_params)
 
     load_form_choices
     render :edit, status: :unprocessable_entity

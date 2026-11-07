@@ -51,7 +51,7 @@ class AppropriationsController < ApplicationController
     @appropriation = Appropriation.new(appropriation_params)
 
     if @appropriation.save
-      redirect_to appropriations_path(year: @appropriation.budget_year), notice: t(".success")
+      redirect_to menu.carry(appropriations_path(year: @appropriation.budget_year)), notice: t(".success")
     else
       render :new, status: :unprocessable_entity
     end
@@ -65,7 +65,7 @@ class AppropriationsController < ApplicationController
   #: () -> void
   def update
     if @appropriation.update(appropriation_params)
-      redirect_to appropriations_path(year: @appropriation.budget_year), notice: t(".success")
+      redirect_to menu.carry(appropriations_path(year: @appropriation.budget_year)), notice: t(".success")
     else
       render :edit, status: :unprocessable_entity
     end
@@ -79,9 +79,10 @@ class AppropriationsController < ApplicationController
   #: () -> void
   def destroy
     if @appropriation.destroy
-      redirect_to appropriations_path(year: @appropriation.budget_year), notice: t(".success")
+      redirect_to menu.exit_path(appropriations_path(year: @appropriation.budget_year)), notice: t(".success")
     else
-      redirect_to edit_appropriation_path(@appropriation), alert: @appropriation.errors.full_messages.to_sentence
+      alert = @appropriation.errors.full_messages.to_sentence
+      redirect_to menu.carry(edit_appropriation_path(@appropriation)), alert:
     end
   end
 

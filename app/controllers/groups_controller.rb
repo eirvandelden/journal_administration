@@ -41,7 +41,7 @@ class GroupsController < ApplicationController
   #: () -> void
   def create
     @group = Group.new(group_params)
-    return redirect_to @group, notice: t("groups.create.success") if @group.save
+    return redirect_to carried_path(@group), notice: t("groups.create.success") if @group.save
 
     render :new, status: :unprocessable_entity
   end
@@ -52,11 +52,11 @@ class GroupsController < ApplicationController
   # @return [void]
   #: () -> void
   def update
-    return redirect_to @group, notice: t("groups.update.success") if @group.update(group_params)
+    return redirect_to carried_path(@group), notice: t("groups.update.success") if @group.update(group_params)
 
     return render :edit, status: :unprocessable_entity if @group.errors.key?(:name)
 
-    redirect_to @group, alert: @group.errors.full_messages.to_sentence
+    redirect_to carried_path(@group), alert: @group.errors.full_messages.to_sentence
   end
 
   # Deletes a group that owns no account.
@@ -65,9 +65,9 @@ class GroupsController < ApplicationController
   # @return [void]
   #: () -> void
   def destroy
-    return redirect_to groups_path, notice: t("groups.destroy.success") if @group.destroy
+    return redirect_to menu.exit_path(groups_path), notice: t("groups.destroy.success") if @group.destroy
 
-    redirect_to edit_group_path(@group), alert: @group.errors.full_messages.to_sentence
+    redirect_to menu.carry(edit_group_path(@group)), alert: @group.errors.full_messages.to_sentence
   end
 
   private

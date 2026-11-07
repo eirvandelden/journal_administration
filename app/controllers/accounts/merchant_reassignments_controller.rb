@@ -9,9 +9,10 @@ class Accounts::MerchantReassignmentsController < ApplicationController
   #: () -> void
   def create
     count = @account.move_transactions_to_merchants
-    redirect_to @account, notice: t("merchant_reassignments.create.success", count: count)
+    redirect_to carried_path(@account), notice: t("merchant_reassignments.create.success", count: count)
   rescue PaymentProvider::MoveFailed => error
-    redirect_to @account, alert: t("merchant_reassignments.create.failure", message: error.message)
+    alert = t("merchant_reassignments.create.failure", message: error.message)
+    redirect_to carried_path(@account), alert:
   end
 
   private

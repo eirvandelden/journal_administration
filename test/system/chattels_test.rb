@@ -32,7 +32,7 @@ class ChattelsTest < ApplicationSystemTestCase
     click_on I18n.t("common.save", locale: locale)
 
     assert_text "Chattel was successfully updated"
-    click_on I18n.t("common.back", locale: locale)
+    click_on "‹ #{I18n.t("menu.pages.chattels.label", locale: locale)}"
   end
 
   test "index does not show destroy button" do

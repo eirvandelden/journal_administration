@@ -9,7 +9,7 @@ class Accounts::TransactionAbsorptionsController < ApplicationController
   #: () -> void
   def create
     count = @account.absorb_transactions_from_aliases
-    redirect_to @account, notice: t("transaction_absorptions.create.success", count: count)
+    redirect_to carried_path(@account), notice: t("transaction_absorptions.create.success", count: count)
   end
 
   private

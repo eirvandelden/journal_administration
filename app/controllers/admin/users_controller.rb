@@ -20,7 +20,7 @@ class Admin::UsersController < Admin::BaseController
     @user = User.new(create_user_params)
 
     if @user.save
-      redirect_to admin_user_path(@user), notice: t(".success")
+      redirect_to menu.carry(admin_user_path(@user)), notice: t(".success")
     else
       render :new, status: :unprocessable_entity
     end
@@ -33,7 +33,7 @@ class Admin::UsersController < Admin::BaseController
   #: () -> void
   def update
     if @user.update(update_user_params)
-      redirect_to admin_user_path(@user), notice: t(".success")
+      redirect_to menu.carry(admin_user_path(@user)), notice: t(".success")
     else
       render :edit, status: :unprocessable_entity
     end
@@ -42,10 +42,10 @@ class Admin::UsersController < Admin::BaseController
   #: () -> void
   def destroy
     if @user == Current.user
-      redirect_to admin_users_path, alert: t(".cannot_delete_self")
+      redirect_to menu.exit_path(admin_users_path), alert: t(".cannot_delete_self")
     else
       @user.destroy
-      redirect_to admin_users_path, notice: t(".success")
+      redirect_to menu.exit_path(admin_users_path), notice: t(".success")
     end
   end
 

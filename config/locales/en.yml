@@ -670,7 +670,7 @@ en:
       setup:
         label: Manage
       shopping:
-        label: Groceries
+        label: Shopping
     pages:
       accounts:
         label: Accounts

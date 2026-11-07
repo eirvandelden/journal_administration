@@ -1,4 +1,6 @@
-<%= render "shared/title_bar", title: t("home") %>
+<%= render layout: "shared/title_bar", locals: { title: t("home") } do %>
+  <%= render "appkit/shared/account_menu", menu: menu, user_name: Current.user.name, avatar: true %>
+<% end %>
 
 <article>
   <%= form_with url: dashboard_index_path, method: :get, data: { controller: "date-filter" } do |f| %>

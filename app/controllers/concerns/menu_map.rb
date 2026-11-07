@@ -31,6 +31,12 @@ module MenuMap
     count.nil? ? page.summary : t("menu.pages.#{key}.tile", count: count)
   end
 
+  # The record's own page, keeping the origin when there is one.
+  #: (ActiveRecord::Base) -> String
+  def carried_path(record)
+    menu.carry(polymorphic_path(record))
+  end
+
   private
     #: () -> Array[Appkit::Menu::Hub]
     def menu_hubs
