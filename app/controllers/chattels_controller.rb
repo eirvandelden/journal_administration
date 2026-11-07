@@ -14,6 +14,7 @@ class ChattelsController < ApplicationController
   #: () -> void
   def index
     scope = Chattel.includes(:warranty_document_attachment, purchase_transaction: :proof_of_purchase_attachment)
+    scope = scope.warranty_ending if params[:filter] == "warranty_ending"
     @warrantied = scope.active.warrantied
     @out_of_warranty = scope.active.out_of_warranty
     @unknown_warranty = scope.unknown_warranty

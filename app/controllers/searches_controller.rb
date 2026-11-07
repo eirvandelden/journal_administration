@@ -6,6 +6,6 @@ class SearchesController < ApplicationController
   # @route /searches
   #: () -> void
   def index
-    @search = Search.new(query: params[:q])
+    @search = Search.new(query: params[:q], pages: menu.links)
   end
 end

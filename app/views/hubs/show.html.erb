@@ -1,0 +1,17 @@
+<% content_for(:title) { @hub.label } %>
+<%= render layout: "shared/title_bar", locals: { title: @hub.label } do %>
+  <% action = @hub.action %>
+  <%= link_to action.label, action.path if action %>
+<% end %>
+
+<ul class="tiles">
+  <% @hub.pages.each do |page| %>
+    <li>
+      <%= link_to menu.tile_path(page) do %>
+        <strong><%= page.label %></strong>
+        <% text = tile_text(page) %>
+        <% if text %><span><%= text %></span><% end %>
+      <% end %>
+    </li>
+  <% end %>
+</ul>

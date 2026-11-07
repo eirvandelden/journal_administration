@@ -11,8 +11,8 @@ class AccountsController < ApplicationController
     external_accounts = Account.external.includes(:account_numbers, :person, group: :people).order(:id)
 
     if params[:filter] == "untouched"
-      own_accounts = own_accounts.where("updated_at = created_at")
-      external_accounts = external_accounts.where("updated_at = created_at")
+      own_accounts = own_accounts.untouched
+      external_accounts = external_accounts.untouched
     end
 
     @own_page = GearedPagination::Recordset.new(own_accounts, per_page: [ 50 ]).page(params[:own_page])

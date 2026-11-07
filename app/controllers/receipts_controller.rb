@@ -25,6 +25,7 @@ class ReceiptsController < ApplicationController
   end
 
   def receipts
-    Receipt.includes(:shop, :payment).order(issued_on: :desc)
+    receipts = Receipt.includes(:shop, :payment).order(issued_on: :desc)
+    params[:filter] == "without_payment" ? receipts.without_payment : receipts
   end
 end

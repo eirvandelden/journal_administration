@@ -62,7 +62,8 @@ class ResponsiveTablesTest < ApplicationSystemTestCase
   def pages
     [
       dashboard_index_url, transactions_url, accounts_url, people_url, groups_url, categories_url, chattels_url,
-      budgets_url, appropriations_url, receipts_url, products_url, product_types_url, todo_url,
+      budgets_url, appropriations_url, receipts_url, products_url, product_types_url,
+      hub_url(:processing), hub_url(:planning), hub_url(:records), hub_url(:shopping), hub_url(:setup),
       account_url(accounts(:checking)), category_url(categories(:supermarket)), budget_url(budgets(:active_budget)),
       appropriation_url(appropriations(:christmas_serena)), receipt_url(receipts(:albert_heijn_friday)),
       product_url(products(:ah_ribbelchips)), product_type_url(product_types(:naturel_chips))

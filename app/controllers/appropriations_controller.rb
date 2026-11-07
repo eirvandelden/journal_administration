@@ -9,7 +9,9 @@ class AppropriationsController < ApplicationController
   #: () -> void
   def index
     @year = chosen_year
-    @appropriations_per_person = Appropriation.of_year(@year).per_person
+    appropriations = Appropriation.of_year(@year)
+    appropriations = appropriations.with_money_left if params[:filter] == "money_left"
+    @appropriations_per_person = appropriations.per_person
     @appropriations = @appropriations_per_person.values.flatten
   end
 

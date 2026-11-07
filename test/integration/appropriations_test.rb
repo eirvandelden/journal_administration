@@ -159,7 +159,9 @@ class AppropriationsTest < ActionDispatch::IntegrationTest
   test "the year page works out what is charged once per appropriation" do
     reads = split_part_reads { get appropriations_path(year: 2026) }
 
-    assert_operator reads, :<=, 2 * Appropriation.of_year(2026).count
+    money_left_count = 1 # the Plannen hub column counts the appropriations with money left, in one query
+
+    assert_operator reads, :<=, 2 * Appropriation.of_year(2026).count + money_left_count
   end
 
   test "a year written with a leading zero is read as that year" do

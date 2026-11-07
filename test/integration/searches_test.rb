@@ -65,10 +65,10 @@ class SearchesTest < ActionDispatch::IntegrationTest
   end
 
   test "GET /searches with query shows matching page" do
-    get searches_url, params: { q: I18n.t("journal") }
+    get searches_url, params: { q: I18n.t("menu.pages.journal.label") }
 
     assert_response :success
-    assert_select "a[href='#{transactions_path}']", text: /#{I18n.t("journal")}/
+    assert_select "a[href='#{transactions_path}']", text: /#{I18n.t("menu.pages.journal.label")}/
   end
 
   test "GET /searches with unmatched query shows no results message" do

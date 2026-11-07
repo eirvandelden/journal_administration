@@ -21,7 +21,7 @@ class CategoriesIndexTest < ActionDispatch::IntegrationTest
 
     assert_response :success
 
-    headings = Nokogiri::HTML5(response.body).css("h2").map(&:text)
+    headings = Nokogiri::HTML5(response.body).css("main h2").map(&:text)
 
     assert_equal [
       I18n.t("categories.index.root_categories"),

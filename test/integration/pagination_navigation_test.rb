@@ -60,22 +60,6 @@ class PaginationNavigationTest < ActionDispatch::IntegrationTest
     assert_select "nav.pagination a[rel='next']", 0
   end
 
-  test "todo pagination is clamped and hides next on the last page" do
-    create_uncategorized_transactions(21)
-
-    get todo_path
-
-    assert_response :success
-    assert_select "nav.pagination a[rel='next'][href*='page=2']", 2
-    assert_select "nav.pagination a[rel='prev']", 0
-
-    get todo_path, params: { page: 999 }
-
-    assert_response :success
-    assert_select "nav.pagination a[rel='prev'][href*='page=1']", 2
-    assert_select "nav.pagination a[rel='next']", 0
-  end
-
   private
     def create_accounts(count)
       count.times do |index|

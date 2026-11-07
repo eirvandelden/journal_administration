@@ -7,7 +7,9 @@ class ProductsController < ApplicationController
   # @return [void]
   #: () -> void
   def index
-    @products = set_page_and_extract_portion_from Product.includes(:product_type).order(:name), per_page: [ 20 ]
+    products = Product.includes(:product_type).order(:name)
+    products = products.unclassified if params[:filter] == "unclassified"
+    @products = set_page_and_extract_portion_from products, per_page: [ 20 ]
   end
 
   # Displays one product with every purchase of it

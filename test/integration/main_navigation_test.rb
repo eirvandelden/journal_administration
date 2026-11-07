@@ -6,26 +6,13 @@ class MainNavigationTest < ActionDispatch::IntegrationTest
     @admin = users(:admin)
   end
 
-  test "primary nav keeps home and journal as direct links" do
+  test "search button is the first rail item" do
     sign_in_as(@member)
 
     get dashboard_index_url
 
     assert_response :success
-    assert_select "header nav > ul > li > a[href='#{dashboard_index_path}']", text: I18n.t("home")
-    assert_select "header nav > ul > li > a[href='#{transactions_path}']", text: I18n.t("journal")
-    assert_select "header nav summary", text: "Filters", count: 0
-    assert_select "header nav summary", text: I18n.t("main_nav.todo", model: Todo.model_name.human), count: 1
-    assert_select "header nav summary a", count: 0
-  end
-
-  test "search button is the first navigation item" do
-    sign_in_as(@member)
-
-    get dashboard_index_url
-
-    assert_response :success
-    assert_select "header nav > ul > li:first-child button[data-action='click->search-dialog#open']",
+    assert_select "nav.rail > ul:first-of-type > li:first-child button[data-action='click->search-dialog#open']",
                   text: I18n.t("search.open")
   end
 
@@ -35,35 +22,35 @@ class MainNavigationTest < ActionDispatch::IntegrationTest
     get new_transaction_url
 
     assert_response :success
-    assert_select "header nav a[href='#{transactions_path}']", text: I18n.t("common.back")
+    assert_select "main > header nav a[href='#{transactions_path}']", text: I18n.t("common.back")
   end
 
-  test "member sees profile link but not admin link" do
+  test "member sees the profile link in the account menu but no admin link" do
     sign_in_as(@member)
 
     get dashboard_index_url
 
     assert_response :success
-    assert_select "header nav a[href='#{edit_user_profile_path(@member)}']", count: 1
-    assert_select "header nav a[href='#{admin_root_path}']", count: 0
+    assert_select "nav.rail details a[href='#{edit_user_profile_path(@member)}']", count: 1
+    assert_select "nav.rail details a[href='#{hub_path(:setup)}']", count: 1
+    assert_select "nav.rail a[href='#{admin_root_path}']", count: 0
   end
 
-  test "administrator sees profile and admin links" do
+  test "administrator reaches the admin pages through Beheer" do
     sign_in_as(@admin)
 
-    get dashboard_index_url
+    get hub_url(:setup)
 
     assert_response :success
-    assert_select "header nav a[href='#{edit_user_profile_path(@admin)}']", count: 1
-    assert_select "header nav a[href='#{admin_root_path}']", count: 1
+    assert_select "nav.hub-column a[href='#{admin_root_path}']", count: 1
+    assert_select "nav.hub-column a[href='#{admin_users_path}']", count: 1
   end
 
-  test "primary nav links to people and groups" do
+  test "the account menu ends with the sign out button" do
     sign_in_as(@member)
 
     get dashboard_index_url
 
-    assert_select "header nav a[href='#{people_path}']", text: I18n.t("main_nav.people")
-    assert_select "header nav a[href='#{groups_path}']", text: I18n.t("main_nav.groups")
+    assert_select "nav.rail details form[action='#{session_path}'] button"
   end
 end

@@ -307,10 +307,6 @@ it:
         summary: Riepilogo
         title: Dashboard
         total_users: Utenti totali
-    nav:
-      back_to_site: "🌐 Torna al sito"
-      dashboard: "📊 Dashboard"
-      users: "👥 Utenti"
     users:
       create:
         success: "✅ Utente creato con successo"
@@ -652,34 +648,85 @@ it:
       submit: Invia %{model}
       update: Aggiorna %{model}
   home: "🏠 Home"
-  journal: "📔 Registro"
   language_names:
     en: English
     it: Italiano
     nl: Nederlands
-  layouts:
-    admin:
-      title: Amministrazione - %{app}
   left: "📤 Usciti"
-  main_nav:
-    accounts: "🏦 %{model}"
-    admin: "🥷 Amministrazione"
-    appropriations: "🎁 %{model}"
-    budgets: "💰 %{model}"
-    categories: "🏷️ %{model}"
-    chattels: "📦 %{model}"
-    groups: "👥 Gruppi"
-    people: "👤 Persone"
-    preferences: "🎨 Preferenze"
-    product_types: "🥫 %{model}"
-    products: "🛒 %{model}"
-    profile: "👤 Profilo"
-    receipts: "🧾 %{model}"
-    todo: "✅ %{model}"
-    todo_all: Tutti
-    todo_consolidatable_accounts: Conti da consolidare
-    todo_consolidatable_transactions: Transazioni da consolidare
-    todo_upload: Carica nuove transazioni
+  menu:
+    account:
+      preferences: "🎨 Preferenze"
+      profile: "👤 Profilo"
+    hubs:
+      overview:
+        label: Panoramica
+      planning:
+        label: Pianificare
+      processing:
+        import: Importa
+        label: Da elaborare
+      records:
+        label: Contabilità
+      setup:
+        label: Gestione
+      shopping:
+        label: Spesa
+    pages:
+      accounts:
+        label: Conti
+      admin_dashboard:
+        label: Dashboard amministratore
+      appropriations:
+        label: Stanziamenti
+        tile:
+          one: "%{count} stanziamento con denaro residuo"
+          other: "%{count} stanziamenti con denaro residuo"
+      budgets:
+        label: Budget
+        no_active_budget: Nessun budget attivo
+        summary: Speso %{spent} su %{planned}, restano %{left}
+      categories:
+        label: Categorie
+      categorize:
+        label: Categorizza
+        tile:
+          one: "%{count} transazione senza categoria"
+          other: "%{count} transazioni senza categoria"
+      chattels:
+        label: Beni
+        tile:
+          one: "%{count} bene con garanzia in scadenza entro 90 giorni"
+          other: "%{count} beni con garanzia in scadenza entro 90 giorni"
+      classify_accounts:
+        label: Classifica i conti
+        tile:
+          one: "%{count} conto non ancora classificato"
+          other: "%{count} conti non ancora classificati"
+      classify_products:
+        label: Classifica i prodotti
+        tile:
+          one: "%{count} prodotto non ancora classificato"
+          other: "%{count} prodotti non ancora classificati"
+      groups:
+        label: Gruppi
+      journal:
+        label: Giornale
+      people:
+        label: Familiari
+      product_types:
+        label: Tipi di prodotto
+      products:
+        label: Prodotti
+        tile:
+          one: "%{count} prodotto non ancora classificato"
+          other: "%{count} prodotti non ancora classificati"
+      receipts:
+        label: Fatture
+        tile:
+          one: "%{count} fattura senza pagamento"
+          other: "%{count} fatture senza pagamento"
+      users:
+        label: Utenti
   merchant_reassignments:
     create:
       failure: 'Spostamento delle transazioni non riuscito: %{message}'
@@ -871,16 +918,6 @@ it:
       long: "%d %B %Y %H:%M"
       short: "%d %b %H:%M"
     pm: pm
-  todos:
-    index:
-      account: Conto
-      date: Data
-      description: Descrizione
-      empty: "🎉 Nulla da fare. Tutte le transazioni sono categorizzate e tutti i conti sono aggiornati."
-      kind: Tipo
-      product: Prodotto
-      title: Da fare
-      transaction: Transazione
   transaction_absorptions:
     create:
       success: "%{count} transazioni assorbite dai conti duplicati."

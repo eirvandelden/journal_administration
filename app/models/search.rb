@@ -1,60 +1,14 @@
-# Aggregates search results across models and navigation pages
+# Aggregates search results across models and the menu map's pages
 #
 # Presentation PORO — not persisted. Used by SearchesController to collect
 # and expose grouped results for the global search dialog.
 class Search
-  # A navigation page that can be matched against a search query
-  #
-  # @!attribute [r] label_key
-  #   @return [String] The i18n key for the page label
-  # @!attribute [r] path_helper
-  #   @return [Symbol] Rails URL helper method name
-  # @!attribute [r] model_class
-  #   @return [Class, nil] Optional model class used for %{model} interpolation
-  Page = Struct.new(
-    :label_key,    #: String
-    :path_helper,  #: Symbol
-    :model_class,  #: Class?
-    keyword_init: true
-  )
-
-  class Page
-    # Returns the translated navigation label for this page
-    #
-    # @return [String]
-    #: () -> String
-    def label
-      if model_class
-        I18n.t(label_key, model: model_class.model_name.human)
-      else
-        I18n.t(label_key)
-      end
-    end
-
-    # Returns true when the query matches the label (case-insensitive)
-    #
-    # @param query [String]
-    # @return [Boolean]
-    #: (String query) -> bool
-    def matches?(query)
-      label.downcase.include?(query.downcase)
-    end
-  end
-
-  PAGES = [
-    Page.new(label_key: "home",                 path_helper: :dashboard_index_path),
-    Page.new(label_key: "journal",              path_helper: :transactions_path),
-    Page.new(label_key: "main_nav.accounts",    path_helper: :accounts_path,    model_class: Account),
-    Page.new(label_key: "main_nav.categories",  path_helper: :categories_path,  model_class: Category),
-    Page.new(label_key: "main_nav.chattels",    path_helper: :chattels_path,    model_class: Chattel),
-    Page.new(label_key: "main_nav.todo",        path_helper: :todo_path,        model_class: Todo)
-  ].freeze
-
   attr_reader :query #: String
 
-  #: (query: String) -> void
-  def initialize(query:)
+  #: (query: String?, ?pages: Array[Appkit::Menu::Link]) -> void
+  def initialize(query:, pages: [])
     @query = query.to_s.strip
+    @pages = pages
   end
 
   # Returns grouped search results, omitting empty groups
@@ -90,6 +44,6 @@ class Search
   def matching_pages
     return [] if query.blank?
 
-    PAGES.select { |page| page.matches?(query) }
+    @pages.select { |page| page.label.downcase.include?(query.downcase) }
   end
 end

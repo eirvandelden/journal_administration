@@ -200,7 +200,7 @@ class AccountsShowTest < ActionDispatch::IntegrationTest
     get account_path(accounts(:checking))
 
     assert_select "button.button-danger", count: 0
-    assert_select "form[method=post] input[name=_method][value=delete]", count: 0
+    assert_select "main form[method=post] input[name=_method][value=delete]", count: 0
   end
 
   test "show page lists the fields as a description list" do

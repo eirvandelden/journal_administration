@@ -307,10 +307,6 @@ en:
         summary: Summary
         title: Dashboard
         total_users: Total Users
-    nav:
-      back_to_site: "🌐 Back to Site"
-      dashboard: "📊 Dashboard"
-      users: "👥 Users"
     users:
       create:
         success: "✅ User created successfully"
@@ -652,34 +648,85 @@ en:
       submit: Save %{model}
       update: Update %{model}
   home: "🏠 Home"
-  journal: "📔 Journal"
   language_names:
     en: English
     it: Italiano
     nl: Nederlands
-  layouts:
-    admin:
-      title: Admin - %{app}
   left: "📤 Left"
-  main_nav:
-    accounts: "🏦 %{model}"
-    admin: "🥷 Admin"
-    appropriations: "🎁 %{model}"
-    budgets: "💰 %{model}"
-    categories: "🏷️ %{model}"
-    chattels: "📦 %{model}"
-    groups: "👥 Groups"
-    people: "👤 People"
-    preferences: "🎨 Preferences"
-    product_types: "🥫 %{model}"
-    products: "🛒 %{model}"
-    profile: "👤 Profile"
-    receipts: "🧾 %{model}"
-    todo: "✅ %{model}"
-    todo_all: All
-    todo_consolidatable_accounts: Consolidatable accounts
-    todo_consolidatable_transactions: Consolidatable transactions
-    todo_upload: Upload new transactions
+  menu:
+    account:
+      preferences: "🎨 Preferences"
+      profile: "👤 Profile"
+    hubs:
+      overview:
+        label: Overview
+      planning:
+        label: Plan
+      processing:
+        import: Import
+        label: Process
+      records:
+        label: Records
+      setup:
+        label: Manage
+      shopping:
+        label: Groceries
+    pages:
+      accounts:
+        label: Accounts
+      admin_dashboard:
+        label: Admin dashboard
+      appropriations:
+        label: Appropriations
+        tile:
+          one: "%{count} appropriation with money left"
+          other: "%{count} appropriations with money left"
+      budgets:
+        label: Budgets
+        no_active_budget: No active budget
+        summary: Spent %{spent} of %{planned}, %{left} left
+      categories:
+        label: Categories
+      categorize:
+        label: Categorise
+        tile:
+          one: "%{count} transaction without a category"
+          other: "%{count} transactions without a category"
+      chattels:
+        label: Possessions
+        tile:
+          one: "%{count} possession whose warranty ends within 90 days"
+          other: "%{count} possessions whose warranty ends within 90 days"
+      classify_accounts:
+        label: Classify accounts
+        tile:
+          one: "%{count} account not yet classified"
+          other: "%{count} accounts not yet classified"
+      classify_products:
+        label: Classify products
+        tile:
+          one: "%{count} product not yet classified"
+          other: "%{count} products not yet classified"
+      groups:
+        label: Groups
+      journal:
+        label: Journal
+      people:
+        label: Family members
+      product_types:
+        label: Product types
+      products:
+        label: Products
+        tile:
+          one: "%{count} product not yet classified"
+          other: "%{count} products not yet classified"
+      receipts:
+        label: Invoices
+        tile:
+          one: "%{count} invoice without a payment"
+          other: "%{count} invoices without a payment"
+      users:
+        label: Users
   merchant_reassignments:
     create:
       failure: 'Moving transactions failed: %{message}'
@@ -871,16 +918,6 @@ en:
       long: "%B %d, %Y %H:%M"
       short: "%d %b %H:%M"
     pm: pm
-  todos:
-    index:
-      account: Account
-      date: Date
-      description: Description
-      empty: "🎉 Nothing to do. All transactions are categorized and all accounts are up to date."
-      kind: Kind
-      product: Product
-      title: To do
-      transaction: Transaction
   transaction_absorptions:
     create:
       success: "%{count} transactions absorbed from duplicate accounts."

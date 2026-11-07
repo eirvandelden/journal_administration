@@ -102,7 +102,7 @@ class CategoriesShowTest < ActionDispatch::IntegrationTest
     get category_path(categories(:supermarket))
 
     assert_select "button.button-danger", count: 0
-    assert_select "input[name=_method][value=delete]", count: 0
+    assert_select "main input[name=_method][value=delete]", count: 0
     assert_select "main form", count: 0
   end
 
