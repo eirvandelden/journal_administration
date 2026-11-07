@@ -72,25 +72,27 @@ module Assistant
 
     #: (Receipt receipt) -> String
     def self.unsplit_reason(receipt)
-      return nothing_to_split if unclassified_products(receipt).empty?
+      products = unclassified_products(receipt)
+      return nothing_to_split if products.empty?
 
-      "The payment is not split: #{classify_first(receipt)}"
+      "The payment is not split: #{classify_first(products)}"
     end
     private_class_method :unsplit_reason
 
     #: (Receipt receipt) -> String
     def self.remainder_reason(receipt)
-      return "" if unclassified_products(receipt).empty?
+      products = unclassified_products(receipt)
+      return "" if products.empty?
 
-      "\nThe remainder split holds the share of the unclassified products; #{classify_first(receipt)} " \
+      "\nThe remainder split holds the share of the unclassified products; #{classify_first(products)} " \
         "Then link again to split it further."
     end
     private_class_method :remainder_reason
 
-    #: (Receipt receipt) -> String
-    def self.classify_first(receipt)
+    #: (Array[Product] products) -> String
+    def self.classify_first(products)
       "classify these products with classify_product: " \
-        "#{unclassified_products(receipt).map { |product| "##{product.id} #{product.name}" }.join(', ')}."
+        "#{products.map { |product| "##{product.id} #{product.name}" }.join(', ')}."
     end
     private_class_method :classify_first
 
