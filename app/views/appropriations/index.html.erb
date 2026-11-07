@@ -8,7 +8,7 @@
 <% labels = {
   purpose: Appropriation.human_attribute_name(:purpose),
   amount: Appropriation.human_attribute_name(:amount),
-  charged: t(".charged"),
+  used: t(".used"),
   balance: t(".balance")
 } %>
 <article>
@@ -32,18 +32,20 @@
             <tr role="row">
               <td role="cell" data-label="<%= labels[:purpose] %>"><%= link_to appropriation.purpose, appropriation_path(appropriation) %></td>
               <td role="cell" data-label="<%= labels[:amount] %>"><data value="<%= appropriation.amount %>"><%= cents_to_currency(appropriation.amount) %></data></td>
-              <td role="cell" data-label="<%= labels[:charged] %>"><data value="<%= appropriation.charged %>"><%= cents_to_currency(appropriation.charged) %></data></td>
+              <td role="cell" data-label="<%= labels[:used] %>"><%= render "appropriations/progress", amount: appropriation.amount, charged: appropriation.charged, overspent: appropriation.overspent? %></td>
               <td role="cell" data-label="<%= labels[:balance] %>"><%= render "appropriations/balance", appropriation: appropriation %></td>
             </tr>
           <% end %>
         </tbody>
       <% end %>
+      <% total_amount = @appropriations.sum(&:amount) %>
+      <% total_charged = @appropriations.sum(&:charged) %>
       <tfoot role="rowgroup">
         <tr role="row">
           <th role="cell" data-label="<%= labels[:purpose] %>"><%= t(".total") %></th>
-          <td role="cell" data-label="<%= labels[:amount] %>"><%= cents_to_currency(@appropriations.sum(&:amount)) %></td>
-          <td role="cell" data-label="<%= labels[:charged] %>"><%= cents_to_currency(@appropriations.sum(&:charged)) %></td>
-          <td role="cell" data-label="<%= labels[:balance] %>"><%= cents_to_currency(@appropriations.sum(&:balance)) %></td>
+          <td role="cell" data-label="<%= labels[:amount] %>"><%= cents_to_currency(total_amount) %></td>
+          <td role="cell" data-label="<%= labels[:used] %>"><%= render "appropriations/progress", amount: total_amount, charged: total_charged, overspent: total_charged > total_amount %></td>
+          <td role="cell" data-label="<%= labels[:balance] %>"><%= cents_to_currency(total_amount - total_charged) %></td>
         </tr>
       </tfoot>
     </table>

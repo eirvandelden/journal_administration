@@ -1,0 +1,17 @@
+td progress {
+  min-inline-size: 8rem;
+}
+
+mark:has(> progress) {
+  display: block;
+  padding: 0;
+  background: none;
+}
+
+mark > progress::-webkit-progress-value {
+  background-color: var(--color-red);
+}
+
+mark > progress::-moz-progress-bar {
+  background-color: var(--color-red);
+}

@@ -353,14 +353,16 @@ it:
       title: Modifica stanziamento
     index:
       balance: Residuo
-      charged: Imputato
       empty: Nessuno stanziamento per il %{year}.
       heading: Stanziamenti %{year}
       next_year: "%{year} →"
       previous_year: "← %{year}"
       total: Totale
+      used: Utilizzato
     new:
       title: "➕ Nuovo stanziamento"
+    progress:
+      charged: "%{charged} di %{amount} imputato"
     show:
       amount: Importo
       balance: Residuo
