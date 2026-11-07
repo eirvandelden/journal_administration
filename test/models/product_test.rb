@@ -15,6 +15,16 @@ class ProductTest < ActiveSupport::TestCase
     assert_predicate products(:ah_ribbelchips), :unclassified?
   end
 
+  test "a product summarises its brand and type, and flags when it is unclassified" do
+    classified = products(:ah_ribbelchips)
+    unclassified = products(:andrelon_shampoo)
+
+    assert_equal "#{classified.id}: #{classified.name}, brand #{classified.brand}, " \
+      "type #{classified.product_type.name}", classified.summary
+    assert_match(/\(unclassified\)\z/, unclassified.summary)
+    assert_includes unclassified.summary, "type none"
+  end
+
   test "a product needs a name" do
     product = Product.new
 

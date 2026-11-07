@@ -157,6 +157,7 @@ en:
         original_note: Original note
         original_tag: Original tag
         proof_of_purchase: Proof of purchase
+        transaction_splits: Transaction splits
         type: Type
       transaction_split:
         appropriation: Appropriation
@@ -230,6 +231,10 @@ en:
           attributes:
             household:
               cannot_change_with_transactions: cannot change because an account classification uses it
+        receipt:
+          attributes:
+            base:
+              repeats_filed_receipt: 'This receipt has already been filed as receipt #%{receipt}.'
         receipt_line:
           attributes:
             paid_amount:
@@ -241,6 +246,8 @@ en:
             appropriation:
               charge_parts_instead: cannot take a split payment as a whole; charge its parts instead
               must_not_be_transfer: cannot be charged on a Transfer transaction
+            transaction_splits:
+              charged: cannot be replaced while a part is charged to an appropriation; remove that charge first
             type:
               credit_needs_household_creditor: must be Credit only if creditor has a household owner
               debit_needs_household_debitor: must be Debit only if debitor has a household owner

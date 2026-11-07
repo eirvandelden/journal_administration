@@ -58,6 +58,14 @@ class Product < ApplicationRecord
     receipt_lines.joins(:receipt).includes(:receipt).order("receipts.issued_on DESC")
   end
 
+  # One line saying what the product is and whether it still needs classifying
+  #
+  #: () -> String
+  def summary
+    "#{id}: #{name}, brand #{brand.presence || 'none'}, type #{product_type&.name || 'none'}" \
+      "#{' (unclassified)' if unclassified?}"
+  end
+
   #: () -> String
   def to_s = name
 end
