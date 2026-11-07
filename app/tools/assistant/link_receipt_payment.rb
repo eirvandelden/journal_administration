@@ -97,7 +97,7 @@ module Assistant
     #: (Receipt receipt) -> Array[Product]
     def self.unclassified_products(receipt)
       receipt.lines.includes(product: { product_type: :category }).filter_map do |line|
-        line.product if line.category.nil?
+        line.product if line.category.nil? && line.paid_amount.positive?
       end.uniq
     end
     private_class_method :unclassified_products

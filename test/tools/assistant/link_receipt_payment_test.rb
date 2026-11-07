@@ -53,6 +53,17 @@ class Assistant::LinkReceiptPaymentTest < ActiveSupport::TestCase
     assert_not_includes text, "Dreft"
   end
 
+  test "does not name a remainder when the unclassified line is free" do
+    products(:ah_ribbelchips).update_columns(product_type_id: nil)
+    receipt_lines(:ah_chips).update_columns(discount_amount: 149, paid_amount: 0)
+    transactions(:credit_grocery).update!(amount: receipts(:albert_heijn_friday).basket_total)
+
+    text = said(link)
+
+    assert_includes text, "Splits:"
+    assert_not_includes text, "remainder"
+  end
+
   test "links without splitting and says an empty basket has nothing to split" do
     receipts(:albert_heijn_friday).lines.destroy_all
 
