@@ -44,5 +44,6 @@
 <% end %>
 
 <article>
-  <%= render "shared/recent_transactions", transactions: @transactions, page: @transactions_page %>
+  <h2><%= t("transactions.recent.heading") %></h2>
+  <%= render "transactions/table", transactions: @transactions, page: @page %>
 </article>

@@ -27,8 +27,8 @@ class AccountMergesTest < ActionDispatch::IntegrationTest
       post account_merge_path(@target), params: { duplicate_ids: [ @duplicate.id ] }
       get account_path(@target)
 
-      assert_includes response.body, transaction_path(transactions(:debit_from_ah_duplicate))
-      assert_includes response.body, transaction_path(transactions(:credit_from_ah_duplicate))
+      assert_includes response.body, polymorphic_path(transactions(:debit_from_ah_duplicate))
+      assert_includes response.body, polymorphic_path(transactions(:credit_from_ah_duplicate))
       assert_includes response.body, "NL00ABNA9999999002"
     end
 

@@ -8,6 +8,38 @@ class TransactionLinksTest < ActionDispatch::IntegrationTest
     sign_in_as(@member)
   end
 
+  # -- amount links -----------------------------------------------------------
+
+  test "edit page links a linked transfer's amount to that transfer" do
+    get edit_transaction_url(@debit)
+
+    selector = "turbo-frame#transaction_links table a[href='#{transfer_path(@transfer)}'][data-turbo-frame='_top']"
+
+    assert_select selector
+    get css_select(selector).first["href"]
+
+    assert_response :success
+  end
+
+  test "edit page links the source transaction's amount in the balance table" do
+    get edit_transaction_url(@debit)
+
+    assert_select "turbo-frame#transaction_links table a[href='#{debit_path(@debit)}'][data-turbo-frame='_top']"
+  end
+
+  test "edit page links a suggested transfer's amount to that transfer" do
+    @debit.transaction_links.destroy_all
+
+    get edit_transaction_url(@debit)
+
+    selector = "turbo-frame#transaction_links details a[href='#{transfer_path(@transfer)}'][data-turbo-frame='_top']"
+
+    assert_select selector
+    get css_select(selector).first["href"]
+
+    assert_response :success
+  end
+
   # -- create -----------------------------------------------------------------
 
   test "create links a transfer to a source transaction" do
