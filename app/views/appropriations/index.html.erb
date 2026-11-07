@@ -11,6 +11,8 @@
   used: t(".used"),
   balance: t(".balance")
 } %>
+<% total_amount = @appropriations.sum(&:amount) %>
+<% total_charged = @appropriations.sum(&:charged) %>
 <article>
   <% if @appropriations.empty? %>
     <p><%= t(".empty", year: @year) %></p>
@@ -38,8 +40,6 @@
           <% end %>
         </tbody>
       <% end %>
-      <% total_amount = @appropriations.sum(&:amount) %>
-      <% total_charged = @appropriations.sum(&:charged) %>
       <tfoot role="rowgroup">
         <tr role="row">
           <th role="cell" data-label="<%= labels[:purpose] %>"><%= t(".total") %></th>
