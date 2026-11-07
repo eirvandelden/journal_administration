@@ -353,14 +353,16 @@ nl:
       title: Begrotingspost wijzigen
     index:
       balance: Resterend
-      charged: Geboekt
       empty: Nog geen begrotingsposten voor %{year}.
       heading: Begrotingsposten %{year}
       next_year: "%{year} →"
       previous_year: "← %{year}"
       total: Totaal
+      used: Gebruikt
     new:
       title: "➕ Nieuwe begrotingspost"
+    progress:
+      charged: "%{charged} van %{amount} geboekt"
     show:
       amount: Bedrag
       balance: Resterend

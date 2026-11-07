@@ -353,14 +353,16 @@ en:
       title: Change appropriation
     index:
       balance: Left
-      charged: Charged
       empty: No appropriations for %{year} yet.
       heading: Appropriations %{year}
       next_year: "%{year} →"
       previous_year: "← %{year}"
       total: Total
+      used: Used
     new:
       title: "➕ New appropriation"
+    progress:
+      charged: "%{charged} of %{amount} charged"
     show:
       amount: Amount
       balance: Left

@@ -5,6 +5,7 @@
 <% end %>
 
 <article>
+  <%= render "appropriations/progress", amount: @appropriation.amount, charged: @appropriation.charged, overspent: @appropriation.overspent? %>
   <dl>
     <dt><%= Appropriation.human_attribute_name(:amount) %></dt>
     <dd><%= cents_to_currency(@appropriation.amount) %></dd>
