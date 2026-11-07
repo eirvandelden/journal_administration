@@ -301,4 +301,52 @@ class DashboardTest < ActiveSupport::TestCase
       assert_equal 4000, dashboard.budget_actuals[categories(:gifts)]
     end
   end
+
+  class BudgetSummaryTest < ActiveSupport::TestCase
+    test "budget_summary adds up this month's planned and actual debit amounts" do
+      summary = Dashboard.new.budget_summary
+      dashboard = Dashboard.new
+      debit_budgets = dashboard.budget_amounts.select { |category, _| category.debit? }
+      debit_actuals = dashboard.budget_actuals.select { |category, _| category.debit? }
+
+      assert_equal debit_budgets.values.sum, summary.planned
+      assert_equal debit_actuals.values.sum, summary.spent
+    end
+
+    test "left is planned minus spent" do
+      summary = Dashboard::BudgetSummary.new(planned: 20_000, spent: 7_500)
+
+      assert_equal 12_500, summary.left
+    end
+
+    test "budget_summary is nil without an active budget" do
+      BudgetCategory.delete_all
+      Budget.delete_all
+
+      assert_nil Dashboard.new.budget_summary
+    end
+
+    test "a refund counts against its spending" do
+      before = Dashboard.new.budget_summary
+      refund = Credit.create!(
+        creditor: accounts(:checking), debitor: accounts(:albert_heijn), category: categories(:groceries),
+        amount: 1_000, booked_at: Time.current, interest_at: Time.current
+      )
+      after = Dashboard.new.budget_summary
+
+      assert_equal before.spent - refund.amount, after.spent
+    end
+
+    test "a split part counts in its own category" do
+      before = Dashboard.new.budget_summary
+      payment = Debit.create!(
+        creditor: accounts(:albert_heijn), debitor: accounts(:checking), category: categories(:groceries),
+        amount: 3_000, booked_at: Time.current, interest_at: Time.current
+      )
+      payment.transaction_splits.create!(category: categories(:household), amount: 3_000)
+      after = Dashboard.new.budget_summary
+
+      assert_equal before.spent + 3_000, after.spent
+    end
+  end
 end

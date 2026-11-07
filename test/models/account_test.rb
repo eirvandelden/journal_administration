@@ -383,4 +383,14 @@ class AccountTest < ActiveSupport::TestCase
     assert_not account.valid?
     assert_not account.save
   end
+
+  test "Account.untouched holds never-edited accounts only" do
+    edited = Account.create!(name: "Edited")
+    edited.update_columns(updated_at: edited.created_at + 1.day)
+    untouched = Account.create!(name: "Untouched")
+    untouched.update_columns(updated_at: untouched.created_at)
+
+    assert_includes Account.untouched, untouched
+    assert_not_includes Account.untouched, edited
+  end
 end

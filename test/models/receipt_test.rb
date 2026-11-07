@@ -202,6 +202,18 @@ class ReceiptTest < ActiveSupport::TestCase
     end
   end
 
+  class WithoutPayment < ActiveSupport::TestCase
+    test "Receipt.without_payment excludes linked receipts" do
+      linked = receipts(:albert_heijn_friday)
+      linked.update!(payment: transactions(:debit_grocery))
+      unlinked = receipts(:albert_heijn_duplicate_monday)
+      unlinked.update!(payment: nil)
+
+      assert_includes Receipt.without_payment, unlinked
+      assert_not_includes Receipt.without_payment, linked
+    end
+  end
+
   test "Receipt.file saves the receipt with its lines" do
     receipt = file_receipt
 

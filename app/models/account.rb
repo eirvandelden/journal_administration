@@ -34,6 +34,8 @@ class Account < ApplicationRecord
     )
   }
   scope :external, -> { where.not(id: own.select(:id)) }
+  # Never edited since import: updated_at = created_at
+  scope :untouched, -> { where("accounts.updated_at = accounts.created_at") }
 
   has_many :account_aliases, dependent: :destroy
   has_many :account_numbers, dependent: :destroy, inverse_of: :account

@@ -193,4 +193,30 @@ class ChattelTest < ActiveSupport::TestCase
       assert_predicate chattel, :proof_of_purchase?
     end
   end
+
+  class WarrantyEnding < ActiveSupport::TestCase
+    test "includes a warranty ending in 60 days" do
+      chattel = Chattel.create!(name: "Washer", warranty_expires_at: 60.days.from_now)
+
+      assert_includes Chattel.warranty_ending, chattel
+    end
+
+    test "excludes a warranty ending in 120 days" do
+      chattel = Chattel.create!(name: "Fridge", warranty_expires_at: 120.days.from_now)
+
+      assert_not_includes Chattel.warranty_ending, chattel
+    end
+
+    test "excludes expired warranties" do
+      chattel = Chattel.create!(name: "Toaster", warranty_expires_at: 1.day.ago)
+
+      assert_not_includes Chattel.warranty_ending, chattel
+    end
+
+    test "excludes chattels that left possession" do
+      chattel = Chattel.create!(name: "Bike", warranty_expires_at: 30.days.from_now, left_possession_at: 1.day.ago)
+
+      assert_not_includes Chattel.warranty_ending, chattel
+    end
+  end
 end

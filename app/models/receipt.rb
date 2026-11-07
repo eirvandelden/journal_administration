@@ -18,6 +18,8 @@ class Receipt < ApplicationRecord
   has_many :lines, class_name: "ReceiptLine", dependent: :destroy
   has_one_attached :invoice
 
+  scope :without_payment, -> { where(payment_id: nil) }
+
   validates :issued_on, presence: true
   validates :total_amount, presence: true
   validates_pdf_attachment_of :invoice

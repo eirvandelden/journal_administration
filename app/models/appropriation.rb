@@ -24,6 +24,24 @@ class Appropriation < ApplicationRecord
 
   scope :of_year, ->(year) { where(budget_year: year) }
 
+  # Charged credits and credit parts, minus charged debits, in SQL; holds what balance.positive? holds
+  #
+  # Two scalar subqueries, never one multi-join, so a payment with several split parts is not counted twice.
+  CHARGED_SIGN = "CASE transactions.type WHEN 'Credit' THEN %<column>s WHEN 'Debit' THEN -%<column>s ELSE 0 END"
+  CHARGED_ON_PAYMENTS = <<~SQL.squish
+    (SELECT COALESCE(SUM(#{format(CHARGED_SIGN, column: "transactions.amount")}), 0)
+     FROM transactions WHERE transactions.appropriation_id = appropriations.id)
+  SQL
+  CHARGED_ON_SPLITS = <<~SQL.squish
+    (SELECT COALESCE(SUM(#{format(CHARGED_SIGN, column: "transaction_splits.amount")}), 0)
+     FROM transaction_splits
+     INNER JOIN transactions ON transactions.id = transaction_splits.transaction_id
+     WHERE transaction_splits.appropriation_id = appropriations.id)
+  SQL
+  private_constant :CHARGED_SIGN, :CHARGED_ON_PAYMENTS, :CHARGED_ON_SPLITS
+
+  scope :with_money_left, -> { where("appropriations.amount > #{CHARGED_ON_PAYMENTS} + #{CHARGED_ON_SPLITS}") }
+
   # Finds an appropriation by purpose, year, and the recipient's managed person.
   # @param purpose [String]
   # @param recipient [String]
