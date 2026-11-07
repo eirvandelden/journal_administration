@@ -457,6 +457,19 @@ Per changed file, the unit tests expected:
 
 Test setup: fixtures as today; tests create the 12 uncategorized transactions, the 60- and 120-day chattels, an unpaid receipt and charged appropriations inline. Query counts use Rails 8.1's `assert_queries_count` and `assert_queries_match`. Phase A uses appkit's dummy app. System tests run after the mvpa.css bump, with headless Edge locally and Chrome on CI.
 
+## Implementation notes
+
+Phase B was built on appkit `d106f6b` (PR #24). Where the build departs from the text above:
+
+- The title bar renders its `<nav>` always: it holds the back link, the controls and the phone search button, so a page with no controls still has the button.
+- `MenuMap` names its helpers `menu_hub`, `menu_page` and `menu_link`, because `page` collides with geared_pagination. It adds `carried_path(record)` and the helper method `tile_text(page)`.
+- `Appropriation.with_money_left` is one static SQL constant, so Brakeman sees no interpolation in the `where`.
+- The English label of the Shopping hub is "Shopping", because "Groceries" is also a category name and the locale-pages system test treats it as untranslated text.
+- Pages without a count (Journaal, Budgetten, Beheer pages) use `Page#summary` or no tile text; `tile_text` writes a count, also 0, for the rest.
+- The `Todo` removal also dropped `main_nav.*`, `todos.*`, `layouts.admin.*` and `admin.nav.*` keys.
+- View specs for the shared partials include `test/test_helpers/view_menu.rb`, since a view test has no controller to provide `menu`.
+- Not built yet: everything under phase C, `test/system/navigation_hubs_test.rb` (phone width, narrow window), the `transaction_amounts_test.rb` amount-link change, and `users` / profile views (left to `ui-review-bug-fixes`).
+
 ---
 Domain skills applied: software-design, glossary, diagrams, rails-architecture, object-oriented-design, rails-ui (interaction-design reference), rails-testing, dependencies.
 
