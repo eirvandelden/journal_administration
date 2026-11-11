@@ -40,6 +40,7 @@ class NavigationHubsTest < ActionDispatch::IntegrationTest
 
     assert_select "main > nav a[href=?]", accounts_path(filter: :untouched, from: :processing),
       text: /0 rekeningen nog niet ingedeeld/
+    assert_select "nav.rail + nav a[href=?]", accounts_path(filter: :untouched), count: 1
     assert_select "nav.rail + nav a[href=?] data", accounts_path(filter: :untouched), count: 0
   end
 
