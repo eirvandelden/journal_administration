@@ -1,4 +1,4 @@
-<%# locals: (transactions:, page:, show_uncategorized_amount: false) %>
+<%# locals: (transactions:, page:, show_uncategorized_amount: false, carry_origin: true) %>
 <% labels = {
   type: t('.type'),
   creditor: t('.creditor'),
@@ -30,7 +30,8 @@
         <% debitor = transaction.debitor %>
         <td role="cell" data-label="<%= labels[:debitor] %>"><%= debitor ? link_to(debitor.to_s, account_path(debitor)) : "" %></td>
         <td role="cell" data-label="<%= labels[:amount] %>">
-          <%= link_to menu.carry(polymorphic_path(transaction)) do %>
+          <% record_path = polymorphic_path(transaction) %>
+          <%= link_to carry_origin ? menu.carry(record_path) : record_path do %>
             <data value="<%= display_amount %>"><%= cents_to_currency display_amount %></data>
           <% end %>
         </td>

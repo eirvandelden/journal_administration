@@ -47,5 +47,5 @@
 
 <article>
   <h2><%= t("transactions.recent.heading") %></h2>
-  <%= render "transactions/table", transactions: @transactions, page: @page %>
+  <%= render "transactions/table", transactions: @transactions, page: @page, carry_origin: false %>
 </article>

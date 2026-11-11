@@ -86,6 +86,13 @@ class OriginBackLinkTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "an account does not pass its origin on to its transactions" do
+    get account_url(accounts(:checking), from: :processing)
+
+    assert_select "tbody a[href=?]", polymorphic_path(@transaction)
+    assert_select "tbody a[href*='from=']", count: 0
+  end
+
   test "a record without an origin keeps its own index as the back link" do
     get chattel_url(chattels(:one))
 
