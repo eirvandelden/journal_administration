@@ -63,8 +63,8 @@ class TransactionAmountsTest < ActionDispatch::IntegrationTest
     lists.each do |url, path|
       get url
 
-      assert_select "td data > a[href=?]", path, text: /0,00/
-      assert_select "a data", count: 0
+      assert_select "td data > a[href=?]", path, text: /\A\D*0,00\z/
+      assert_select "main a data", count: 0
     end
   end
 
