@@ -84,9 +84,9 @@ class AssistantParityTest < ActionDispatch::IntegrationTest
     "appkit/sessions#create" => APP_ONLY, "appkit/sessions#destroy" => APP_ONLY,
     "assistant#create" => "this is the MCP endpoint itself",
     "dashboard#index" => "a page of totals; budget_status and find_transactions answer the same questions",
-    "searches#index" => "a page of search results; find_accounts and find_transactions search",
-    "todos#index" => "a page of open jobs; find_transactions with uncategorized and " \
-      "list_unclassified_products answer the same questions"
+    "hubs#show" => "a landing page of counts that link to lists; find_uncategorized_transactions, " \
+      "list_unclassified_products, list_receipts and budget_status answer the same questions",
+    "searches#index" => "a page of search results; find_accounts and find_transactions search"
   }.freeze
 
   setup do
