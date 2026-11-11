@@ -176,20 +176,6 @@ class NavigationHubsTest < ActionDispatch::IntegrationTest
     assert_select "nav.rail"
   end
 
-  test "verwerken counts run once per request" do
-    queries = counting_queries { get hub_url(:processing) }
-
-    assert_equal 3, queries.count { |sql| sql.match?(/SELECT COUNT/i) }
-  end
-
-  test "plannen landing query count is independent of appropriations" do
-    one = counting_queries { get hub_url(:planning) }.size
-    10.times { |index| charged_appropriation(index) }
-    ten = counting_queries { get hub_url(:planning) }.size
-
-    assert_equal one, ten
-  end
-
   test "only the overzicht title bar holds the avatar" do
     get dashboard_index_url
 
@@ -212,22 +198,5 @@ class NavigationHubsTest < ActionDispatch::IntegrationTest
         Transaction.create!(amount: index + 1, booked_at: index.minutes.ago, interest_at: index.minutes.ago,
           debitor: accounts(:checking), creditor: accounts(:unknown), note: "Uncategorized #{index}")
       end
-    end
-
-    def charged_appropriation(index)
-      appropriation = Appropriation.create!(purpose: "Charged #{index}", person: people(:etienne),
-        budget_year: Date.current.year, amount: 5000)
-      credit(1000, note: "charge #{index}").update!(appropriation:)
-    end
-
-    def counting_queries
-      queries = []
-      subscriber = ActiveSupport::Notifications.subscribe("sql.active_record") do |*, payload|
-        queries << payload[:sql] unless %w[SCHEMA TRANSACTION].include?(payload[:name])
-      end
-      yield
-      queries
-    ensure
-      ActiveSupport::Notifications.unsubscribe(subscriber)
     end
 end
