@@ -478,7 +478,11 @@ Phase B was built on appkit `d106f6b` (PR #24). Where the build departs from the
 - Phase C follows the rail slice's accepted plan (mvpa.css `rail-hub-column-tiles`), which changed the markup contract above: both search buttons sit in a `<search>` element (the rail's first child; a direct child of the title bar's `<nav>`), and the landing page renders its tiles as `main > nav > ul` (labelled with the hub name) without `class="tiles"`. appkit still emits `class="hub-column"`; the rail slice selects `nav.rail + nav`, so the class is harmless.
 - The phone and narrow-window system tests live in `test/system/navigation_hubs_layout_test.rb` (`NavigationHubsLayoutTest`), since `NavigationHubsTest` is the integration test's class. Narrow width is 900px: the rail slice hides the hub column below 1024px and shows the tab bar from 768px down.
 - The amount-link test sits in the existing `transaction_amounts_test.rb` and checks the journal and the account edit page's recent transactions; the dashboard renders no transaction amounts.
-- Phase C built against the rail branch's CSS (smoke run with its packaged `mvpa.css`); the mvpa-css bump, the `title_bar.css` removal and the dark-theme check wait for the rail slice to merge.
+- Phase C built against the rail branch's CSS, then bumped mvpa-css to `6e4fc63` (#54 merged) and deleted `title_bar.css`. The other Upgrading steps from #45 to #54 needed no change: the markup already matched, `lang` was set, and the app had no own rail, tile, header or week-navigation CSS. appkit still emits `class="hub-column"` (#54 step 1); removing it is an appkit change, left for a follow-up.
+- mvpa.css lays a tile link out as a flex row, so the tile wraps its label and text in one `<span>`, with a `<br>` that puts the label above the text. The README's tiles show one text; this app keeps the label, as the intent asks.
+- Main's `todos_controller_page_test.rb` (#413) went with the `TodosController` removal.
+- Dark themes, checked by screenshot at 1400px: `tr.unconsolidated` reads as a tinted row on the darker table surface. `form_errors.css` is unchanged and uses only `--color-danger`; its error state was not captured by screenshot.
+- Seen in the browser, also before this change, and left to mvpa.css: table headers break mid-word (`th { overflow-wrap: anywhere }`), and on a phone the title bar's `<nav>` gets the tab bar's background (`header nav` in the mobile rules).
 - Not built: `users` / profile views (left to `ui-review-bug-fixes`).
 
 ---
