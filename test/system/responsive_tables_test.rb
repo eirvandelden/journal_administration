@@ -2,6 +2,7 @@ require "application_system_test_case"
 
 class ResponsiveTablesTest < ApplicationSystemTestCase
   LAPTOP = [ 1280, 800 ].freeze
+  NARROW = [ 900, 800 ].freeze
   PHONE = [ 390, 844 ].freeze
 
   setup do
@@ -37,13 +38,15 @@ class ResponsiveTablesTest < ApplicationSystemTestCase
     assert_equal "columnheader", first("table.transactions th", visible: :all)["role"]
   end
 
-  test "no index page, show page or the dashboard scrolls sideways at phone width" do
-    current_window.resize_to(*PHONE)
+  test "no page scrolls sideways at laptop narrow or phone width" do
+    [ LAPTOP, NARROW, PHONE ].each do |size|
+      current_window.resize_to(*size)
 
-    pages.each do |url|
-      visit url
+      pages.each do |url|
+        visit url
 
-      assert_no_sideways_scroll url
+        assert_no_sideways_scroll "#{url} at #{size.first}px"
+      end
     end
   end
 
