@@ -1,82 +1,55 @@
-# Intent: Add inline RBS signatures
+# Intent: Add inline RBS signatures (rescoped after PR #406)
 
-Author: Etienne van Delden de la Haije. Status: accepted (2026-11-06). Type: chore. Delivery: autonomous. Codex review: no.
+Author: Etienne van Delden de la Haije. Status: accepted (2026-11-11). Type: chore. Delivery: autonomous. Codex review: no.
 
 ## Problem
 
-Since `92596a5e Updates` (2026-10-26) bumped `rubocop-eirvandelden`, the `ci / lint` job on `main` fails. The shared config now demands an inline RBS `#:` signature on every public method and `attr_*`, and a type on every Struct and Data attribute. Rubocop reports 410 offenses in 120 files: 391 missing method signatures, 15 untyped Struct attributes, 3 `Struct.new` calls with a block, and 1 comment spacing offense. Every branch inherits the red lint job.
+This branch was meant to turn `ci / lint` green by adding inline RBS signatures. PR #406 (`6ce87142`) did that on `main`: it annotated 410 offenses, reopened the three `Struct.new ... do` classes, added `#: () -> void` to the run-once scripts, and bumped Rails, `rack`, `nokogiri`, `loofah`, `rails-html-sanitizer`, `addressable` and `sqlite3`. `bundle exec rubocop` reports `0 offenses` on `main` with the old `rubocop-eirvandelden` revision.
 
-Ten of those offenses sit in run-once scripts: `db/data` (8), `db/cable_migrate` (1) and `db/queue_migrate` (1). The gem already excludes `db/migrate` for that reason ("run once and never called from code"), but not these folders.
+After rebasing onto `origin/main`, 11 of this branch's commits were dropped as already upstream. What remains is small and not about lint.
+
+## What is still unique to this branch
+
+- Two characterisation tests: `TodosController::Page` (`last?`, `before_last?`, `next_param`) and `PackingSlip::Line#paid_amount`. #406 moved these methods out of Struct blocks without a covering test. Needed: the playbook says every code change has tests.
+- A reason comment above `**untyped` on `Assistant::ChargeToAppropriation.call` (already on the branch). Needed: the `untyped` rule asks for a reason. The same gap exists on `Importing::ING::Row#initialize` (`**untyped`) and `Assistant::ImportAlbertHeijnMail.describe` (`untyped basket`) on `main`.
+- A correction to the `Todo::Item` YARD block: `date` is `ActiveSupport::TimeWithZone, nil` (already on the branch), and `record` omits `Product`. Needed: the block contradicts the attribute types in the code.
+- The `rubocop-eirvandelden` bump to `d91402e`, which exempts `db/data`, `db/cable_migrate` and `db/queue_migrate` from the signature cop. Not needed: lint is green without it. It only spares future run-once scripts a `#: () -> void` line.
 
 ## Proposed outcome
 
-`bundle exec rubocop` reports no offenses, and `ci / lint` on `main` is green again once this change merges. Each public method, `attr_*` and Struct attribute in the app carries an inline signature that states its real types, so a reader learns what goes in and what comes out.
-
-## Affected users and systems
-
-- Developers and agents working in this repository, and the CI lint job.
-- `rubocop-eirvandelden`: this delivery also changes the gem, in its own worktree and draft pull request in that repository.
-- The app's runtime behaviour does not change.
+The two characterisation tests exist and pass. The three `untyped` places carry a one-line reason. The `Todo::Item` YARD block matches its attribute types. `bundle exec rubocop` stays at `0 offenses`.
 
 ## Constraints
 
-- No linter disable comments, no `# rbs_inline: disabled` to dodge the cops, and no edit to this repo's `.rubocop.yml` to pass (playbook rule 2, §7a).
-- No new dependency. Approved permissions: `bundle update rubocop-eirvandelden` once the gem change is merged, `bundle update sqlite3`, and `bundle update --patch --conservative rails rack nokogiri loofah addressable rails-html-sanitizer`. No other gem, system tool, dropping migration or deploy file is approved.
-- The gem change must be merged before this change can bump the gem. Only Etienne merges it. When delivery reaches the bump and the gem pull request is not merged, stop and ask Etienne.
-- Pushes wait until every lefthook pre-push check passes. Never bypass lefthook (`LEFTHOOK=0`, `--no-verify`). Run `npm install` in the worktree first.
-- Signatures use real types (`String`, `Integer`, `Account`, `ActiveRecord::Relation`, `bool`, `void`). `untyped` only where the value truly varies.
-- The three `Struct.new` rewrites keep behaviour. Existing tests cover them; a moved method without a covering test gets one.
+- No linter disable comments, no `.rubocop.yml` edit, no new dependency, no `Gemfile.lock` change.
+- Runtime behaviour does not change.
+- The pull request carries only these changes. No signature work: `main` has it.
 
 ## In scope
 
-- `#:` signatures on every public method and `attr_*` that rubocop flags in `app/` (controllers, helpers, jobs, models, tools, channels).
-- `#:` types on the 15 flagged Struct attributes.
-- Rewrite `Struct.new ... do` in `TodosController::Page`, `Importing::AlbertHeijn::PackingSlip::Line` and `Search` as the cop says: keep the `Struct.new` call, move the block's methods into a class body written after it.
-- The one comment spacing offense.
-- `script/admin/prepare-backup`: a signature on `Backup.create`.
-- In `rubocop-eirvandelden` (`~/Developer/rubocop-eirvandelden`), in its own worktree: extend the `db/migrate` exclusion of `Style/RbsInline/MissingTypeAnnotation` in `config/rails.yml` to `db/*_migrate` and `db/data`, with tests in `test/shared_configuration_test.rb` and a `CHANGELOG.md` line, and open a draft pull request there.
-- Bump `sqlite3` to 2.10.2 or newer (GHSA-4fqr-96q8-xrfx), as its own commit.
-- Bump Rails to 8.1.4.1 and `rack`, `nokogiri`, `loofah`, `addressable` and `rails-html-sanitizer` to their patched versions, as its own commit, so `bundler-audit` passes.
-- Bump `rubocop-eirvandelden` to the merged gem change, as the last commit.
+- `test/controllers/todos_controller_page_test.rb` and one test in `test/models/importing/albert_heijn/packing_slip_test.rb` (both already on the branch).
+- Reason comments on the three `untyped` signatures named above.
+- The `Todo::Item` YARD correction.
+- Dropping the `rubocop-eirvandelden` bump commit (`26a1ac70`) from the branch.
 
 ## Out of scope
 
-- Signatures on the run-once scripts in `db/data`, `db/cable_migrate` and `db/queue_migrate`.
-- Signatures on private methods (the gem asks only for public ones).
-- Tests: `test/` is excluded by the gem.
-- Merging the gem pull request: Etienne merges it.
-- Other gem updates than `sqlite3`, `rubocop-eirvandelden` and the six security bumps.
-- A type checker (Steep, `rbs validate`) in CI, and generated `sig/` files.
-- Converting Structs to `Data.define`.
+- The gem bump. The gem change is on its `main` (`d91402e`); bump it in a later change when a new run-once script needs it.
+- Everything #406 already did.
 
 ## Acceptance criteria
 
-- On this branch, after the gem bump, `bundle exec rubocop` reports `0 offenses`.
-- `ci / lint` on the pull request is green.
-- New signatures read like the existing `Category.add_household_expense`, `#: (String name) -> Category`: the types name the domain class, not `untyped`.
-- `TodosController#index` reads `#: () -> void`.
-- `Search` still returns the same results for the same query; `TodosController` still paginates the same; a packing slip still reads the same lines, amounts and discounts. The full test suite stays green.
-- `db/data/20260315000002_seed_account_aliases.rb` gains no signature and raises no offense.
-- In the gem, a Rails project gets no `MissingTypeAnnotation` offense for a public method in `db/data/x.rb`, `db/cable_migrate/x.rb` or `db/queue_migrate/x.rb`, and still gets one in `app/models/x.rb`.
-- `bundle exec bundler-audit check` reports no vulnerabilities, and `ci / scan_ruby` on the pull request is green.
+- `bin/rails test test/controllers/todos_controller_page_test.rb test/models/importing/albert_heijn/packing_slip_test.rb` is green.
+- `bundle exec rubocop` reports `0 offenses`; `git diff origin/main -- Gemfile.lock` is empty.
+- Each of the three `untyped` signatures has a reason comment directly above it.
+- `bundle exec bundler-audit check`, Brakeman and `bin/rails test` stay green.
 
 ## Decisions
 
-- Treat it as a chore — the cause is clear: a gem bump turned lint red.
-- Exclude the run-once scripts in the gem, not here — same reason as `db/migrate`, one rule for all run-once scripts.
-- Use real types, `untyped` rarely — a signature full of `untyped` tells a reader nothing.
-- Follow the cop's fix for `Struct.new` with a block — smallest change, same behaviour; the cop names this exact fix.
-- Annotate `script/admin/prepare-backup` here — it runs again and again, like app code, so it is not run-once.
-- Bump the gem in this change — lint stays red on every branch until both land, so one green PR here is the clearest finish.
-- Deliver autonomously — no reason given.
-- Approve `bundle update rubocop-eirvandelden` up front — it is the step that turns lint green.
-- Review with Claude only — the change is comments plus three small Struct moves.
-- Hold pushes until every pre-push check passes — no lefthook bypass; nobody needs the branch earlier. (Plan stage escalation, 2026-11-06.)
-- Bump `sqlite3` in this change — no reason given. (Plan stage escalation, 2026-11-06.)
-- Change the gem from this delivery, not as a separate intent — it keeps the agreed design, exclusion in the gem. (Plan stage escalation, 2026-11-06.)
-- Keep `**String` on `Importing::ING::Row#initialize` and `**untyped` on `Assistant::ChargeToAppropriation.call`, each with a one-line reason comment — the full keyword form exceeds 120 characters and `#|` continuation fails `InvalidTypes`. (Implement stage escalation, 2026-11-06.)
-- Etienne merges the gem branch `exclude-run-once-scripts` himself, without a pull request — the consent guard lets only `deliver` open one. (Implement stage escalation, 2026-11-06.)
-- Bump Rails, `rack`, `nokogiri`, `loofah`, `addressable` and `rails-html-sanitizer` in this change — no reason given. (Implement stage escalation, 2026-11-06.)
+- Rescope instead of closing the branch: the tests and reason comments still have value, and they are small. (Coordinator, 2026-11-07.)
+- Drop the gem bump: lint is green without it, and it needs an approved `bundle update`. Recommended; Etienne may keep it instead.
+- Keep `untyped` with reason comments, not real types — the real types fail `Layout/LineLength` (140 to 257 characters) and `#|` continuation fails `Style/RbsInline/InvalidTypes`, so they need a lint exemption. (Etienne, 2026-11-11.)
+- The `Todo::Item` YARD fix also corrects `kind`: `todo.rb` builds `:product` items too. (Coordinator, 2026-11-11.)
 
 ## Open questions
 
