@@ -475,7 +475,11 @@ Phase B was built on appkit `d106f6b` (PR #24). Where the build departs from the
 - After the rebase onto main's MCP parity rule, `hubs#show` is an exclusion in `test/integration/assistant_parity_test.rb` in place of `todos#index`: a landing page only counts and links, and `find_uncategorized_transactions`, `list_unclassified_products`, `list_receipts` and `budget_status` answer the same questions. The intent keeps the MCP endpoint out of scope.
 - `transactions/_table` takes `carry_origin:` (default true); `accounts/show` passes false, so an account's transaction links never carry the origin.
 - Saving a product returns to `menu.back(products_path)`: the origin's tile list, else the products list as before.
-- Not built yet: everything under phase C, `test/system/navigation_hubs_test.rb` (phone width, narrow window), the `transaction_amounts_test.rb` amount-link change, and `users` / profile views (left to `ui-review-bug-fixes`).
+- Phase C follows the rail slice's accepted plan (mvpa.css `rail-hub-column-tiles`), which changed the markup contract above: both search buttons sit in a `<search>` element (the rail's first child; a direct child of the title bar's `<nav>`), and the landing page renders its tiles as `main > nav > ul` (labelled with the hub name) without `class="tiles"`. appkit still emits `class="hub-column"`; the rail slice selects `nav.rail + nav`, so the class is harmless.
+- The phone and narrow-window system tests live in `test/system/navigation_hubs_layout_test.rb` (`NavigationHubsLayoutTest`), since `NavigationHubsTest` is the integration test's class. Narrow width is 900px: the rail slice hides the hub column below 1024px and shows the tab bar from 768px down.
+- The amount-link test sits in the existing `transaction_amounts_test.rb` and checks the journal and the account edit page's recent transactions; the dashboard renders no transaction amounts.
+- Phase C built against the rail branch's CSS (smoke run with its packaged `mvpa.css`); the mvpa-css bump, the `title_bar.css` removal and the dark-theme check wait for the rail slice to merge.
+- Not built: `users` / profile views (left to `ui-review-bug-fixes`).
 
 ---
 Domain skills applied: software-design, glossary, diagrams, rails-architecture, object-oriented-design, rails-ui (interaction-design reference), rails-testing, dependencies.
