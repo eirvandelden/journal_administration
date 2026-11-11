@@ -204,6 +204,16 @@ class AppropriationsTest < ActionDispatch::IntegrationTest
       text: currency(4000)
   end
 
+  test "a charge amount link sits inside its data element" do
+    appropriation = appropriations(:birthday_etienne)
+    transactions(:gift_payment).update!(appropriation:)
+
+    get appropriation_path(appropriation)
+
+    assert_select "tbody tr td:nth-child(3) data > a[href=?]", transaction_path(transactions(:gift_payment))
+    assert_select "main a data", count: 0
+  end
+
   test "a split part charged to an appropriation links its amount to the payment it splits" do
     appropriation = appropriations(:sinterklaas_chiara)
     charge_split_part(appropriation, 6000)

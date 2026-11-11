@@ -34,9 +34,7 @@
             <td><%= charge.booked_at ? l(charge.booked_at.to_date) : "-" %></td>
             <td><%= charge.note %></td>
             <td>
-              <%= link_to transaction_path(charge.whole_payment) do %>
-                <data value="<%= charge.amount %>"><%= cents_to_currency charge.amount %></data>
-              <% end %>
+              <data value="<%= charge.amount %>"><%= link_to cents_to_currency(charge.amount), transaction_path(charge.whole_payment) %></data>
             </td>
           </tr>
         <% end %>
