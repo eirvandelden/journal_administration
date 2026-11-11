@@ -168,9 +168,13 @@ App:
 
 ```ruby
 # Draws this household's menu map for the current request.
-module MenuMap  # controller concern, included in ApplicationController; helper_method :menu
+module MenuMap  # controller concern, included in ApplicationController; helper_method :menu, :tile_text
   #: () -> Appkit::Menu
   def menu
+  #: (Appkit::Menu::Page) -> String?   a tile's text: its count written out, also 0, or its summary
+  def tile_text(page)
+  #: (ActiveRecord::Base) -> String     the record's own page, keeping the origin when there is one
+  def carried_path(record)
 end
 
 # Shows a hub's landing page: one tile per page.
@@ -468,6 +472,9 @@ Phase B was built on appkit `d106f6b` (PR #24). Where the build departs from the
 - Pages without a count (Journaal, Budgetten, Beheer pages) use `Page#summary` or no tile text; `tile_text` writes a count, also 0, for the rest.
 - The `Todo` removal also dropped `main_nav.*`, `todos.*`, `layouts.admin.*` and `admin.nav.*` keys.
 - View specs for the shared partials include `test/test_helpers/view_menu.rb`, since a view test has no controller to provide `menu`.
+- After the rebase onto main's MCP parity rule, `hubs#show` is an exclusion in `test/integration/assistant_parity_test.rb` in place of `todos#index`: a landing page only counts and links, and `find_uncategorized_transactions`, `list_unclassified_products`, `list_receipts` and `budget_status` answer the same questions. The intent keeps the MCP endpoint out of scope.
+- `transactions/_table` takes `carry_origin:` (default true); `accounts/show` passes false, so an account's transaction links never carry the origin.
+- Saving a product returns to `menu.back(products_path)`: the origin's tile list, else the products list as before.
 - Not built yet: everything under phase C, `test/system/navigation_hubs_test.rb` (phone width, narrow window), the `transaction_amounts_test.rb` amount-link change, and `users` / profile views (left to `ui-review-bug-fixes`).
 
 ---
