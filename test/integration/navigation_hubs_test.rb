@@ -14,7 +14,8 @@ class NavigationHubsTest < ActionDispatch::IntegrationTest
     get dashboard_index_url
 
     assert_select "nav.rail > ul > li", 6
-    assert_select "nav.rail > search:first-child > button[data-action='click->search-dialog#open']", text: I18n.t("search.open", locale: :nl)
+    assert_select "nav.rail > search:first-child > button[data-action='click->search-dialog#open']",
+      text: I18n.t("search.open", locale: :nl)
     assert_equal [ "🏠 Overzicht", "📥 Verwerken", "🗓️ Plannen", "🗄️ Administratie", "🛒 Boodschappen" ],
       css_select("nav.rail > ul > li > a").map { |link| link.text.squish }
     assert_select "nav.rail > ul > li > details > summary", text: @member.name
