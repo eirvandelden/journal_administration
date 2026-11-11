@@ -31,9 +31,7 @@
         <td role="cell" data-label="<%= labels[:debitor] %>"><%= debitor ? link_to(debitor.to_s, account_path(debitor)) : "" %></td>
         <td role="cell" data-label="<%= labels[:amount] %>">
           <% record_path = polymorphic_path(transaction) %>
-          <%= link_to carry_origin ? menu.carry(record_path) : record_path do %>
-            <data value="<%= display_amount %>"><%= cents_to_currency display_amount %></data>
-          <% end %>
+          <data value="<%= display_amount %>"><%= link_to cents_to_currency(display_amount), carry_origin ? menu.carry(record_path) : record_path %></data>
         </td>
         <td role="cell" data-label="<%= labels[:booked_at] %>">
           <% if transaction.booked_at %>

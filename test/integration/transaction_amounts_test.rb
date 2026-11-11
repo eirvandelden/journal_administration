@@ -52,6 +52,22 @@ class TransactionAmountsTest < ActionDispatch::IntegrationTest
     assert_equal 1250, @transaction.reload.amount
   end
 
+  test "an amount link sits inside its data element" do
+    @transaction.update_columns(amount: 0)
+
+    lists = {
+      transactions_url => polymorphic_path(@transaction),
+      edit_account_url(@transaction.creditor) => transaction_path(@transaction)
+    }
+
+    lists.each do |url, path|
+      get url
+
+      assert_select "td data > a[href=?]", path, text: /0,00/
+      assert_select "a data", count: 0
+    end
+  end
+
   test "a JSON amount with a fraction of a cent answers 422" do
     patch transaction_url(@transaction, format: :json),
       params: { transaction: { amount: 12.345 } }, as: :json
