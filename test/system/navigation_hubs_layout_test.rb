@@ -41,7 +41,30 @@ class NavigationHubsLayoutTest < ApplicationSystemTestCase
     assert_selector "main > nav a", text: "Categoriseren"
   end
 
+  test "a tile shows its label above its text at every width" do
+    [ SCREEN_SIZE, PHONE ].each do |size|
+      current_window.resize_to(*size)
+      visit hub_url(:processing)
+
+      assert_equal [ true ] * 3, text_below_label, "at #{size.join('x')}"
+    end
+  end
+
   private
+    # For each landing tile: the text after the label starts below the label
+    def text_below_label
+      page.evaluate_script(<<~JS)
+        Array.from(document.querySelectorAll("main > nav a")).map((tile) => {
+          const label = tile.querySelector("strong")
+          const range = document.createRange()
+          range.setStartAfter(label)
+          range.setEnd(tile, tile.childNodes.length)
+          const tops = Array.from(range.getClientRects()).filter((rect) => rect.width > 0).map((rect) => rect.top)
+          return Math.min(...tops) >= label.getBoundingClientRect().bottom - 1
+        })
+      JS
+    end
+
     def rail_bottom
       page.evaluate_script("document.querySelector('nav.rail').getBoundingClientRect().bottom")
     end

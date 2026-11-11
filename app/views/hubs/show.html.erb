@@ -9,9 +9,11 @@
     <% @hub.pages.each do |page| %>
       <li>
         <%= link_to menu.tile_path(page) do %>
-          <strong><%= page.label %></strong>
-          <% text = tile_text(page) %>
-          <% if text %><span><%= text %></span><% end %>
+          <span>
+            <strong><%= page.label %></strong>
+            <% text = tile_text(page) %>
+            <% if text %><br><%= text %><% end %>
+          </span>
         <% end %>
       </li>
     <% end %>
