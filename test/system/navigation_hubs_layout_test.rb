@@ -18,7 +18,7 @@ class NavigationHubsLayoutTest < ApplicationSystemTestCase
     visit dashboard_index_url
 
     assert_equal HUBS, all("nav.rail > ul > li").map { |item| item.text.split.last }
-    assert_no_selector "nav.rail > search"
+    assert_selector "nav.rail > search", visible: :hidden
     assert_operator rail_bottom, :>=, viewport_height - 1, "the tab bar sits at the bottom"
     assert_selector "main > header nav > details > summary[aria-label='#{users(:member).name}']"
 
@@ -26,14 +26,14 @@ class NavigationHubsLayoutTest < ApplicationSystemTestCase
 
     assert_no_selector "main > header nav details", visible: :all
     assert_selector "main > header nav > search > button"
-    assert_no_selector "body > header > nav.rail + nav"
+    assert_selector "body > header > nav.rail + nav", visible: :hidden
   end
 
   test "narrow window hides hub column and keeps landing page" do
     current_window.resize_to(*NARROW)
     visit transactions_url
 
-    assert_no_selector "body > header > nav.rail + nav"
+    assert_selector "body > header > nav.rail + nav", visible: :hidden
 
     within("nav.rail") { click_link "Verwerken" }
 
