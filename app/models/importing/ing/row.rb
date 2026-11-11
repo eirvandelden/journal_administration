@@ -40,6 +40,7 @@ module Importing
       end
       private_class_method :parse_amount
 
+      # The splat stands for the nine other CSV columns; naming them runs past 120 characters.
       #: (date: DateTime, amount: Integer, **untyped) -> void
       def initialize(date:, initiator_name:, our_account_number:, their_account_number:,
                      code:, direction:, amount:, mutation_kind:, description:,
