@@ -29,7 +29,7 @@ class NavigationHubsTest < ActionDispatch::IntegrationTest
 
     assert_select "main > nav a[href=?]", transactions_path(filter: :no_category, from: :processing),
       text: /#{expected} transacties zonder categorie/
-    assert_select "nav.hub-column a[href=?] data[value=?]", transactions_path(filter: :no_category), expected.to_s,
+    assert_select "nav.rail + nav a[href=?] data[value=?]", transactions_path(filter: :no_category), expected.to_s,
       text: expected.to_s
   end
 
@@ -40,7 +40,7 @@ class NavigationHubsTest < ActionDispatch::IntegrationTest
 
     assert_select "main > nav a[href=?]", accounts_path(filter: :untouched, from: :processing),
       text: /0 rekeningen nog niet ingedeeld/
-    assert_select "nav.hub-column a[href=?] data", accounts_path(filter: :untouched), count: 0
+    assert_select "nav.rail + nav a[href=?] data", accounts_path(filter: :untouched), count: 0
   end
 
   test "transaction edit highlights administratie and journaal" do
@@ -48,14 +48,14 @@ class NavigationHubsTest < ActionDispatch::IntegrationTest
 
     assert_select "nav.rail a[aria-current='true']", text: /Administratie/
     assert_select "nav.rail a[aria-current='true']", 1
-    assert_select "nav.hub-column a[aria-current='page']", text: /Journaal/
+    assert_select "nav.rail + nav a[aria-current='page']", text: /Journaal/
   end
 
   test "budget show highlights plannen and budgetten" do
     get budget_url(budgets(:active_budget))
 
     assert_select "nav.rail a[aria-current='true']", text: /Plannen/
-    assert_select "nav.hub-column a[aria-current='page']", text: /Budgetten/
+    assert_select "nav.rail + nav a[aria-current='page']", text: /Budgetten/
   end
 
   test "bezittingen tile counts warranties ending within 90 days" do
@@ -112,7 +112,7 @@ class NavigationHubsTest < ActionDispatch::IntegrationTest
     get dashboard_index_url
 
     assert_select "nav.rail a[aria-current='true']", text: /Overzicht/
-    assert_select "nav.hub-column", 0
+    assert_select "nav.rail + nav", 0
   end
 
   test "todo redirects to verwerken" do
@@ -167,7 +167,7 @@ class NavigationHubsTest < ActionDispatch::IntegrationTest
     get admin_root_url
 
     assert_select "nav.rail"
-    assert_select "nav.hub-column a[aria-current='page']", text: /Beheerdashboard/
+    assert_select "nav.rail + nav a[aria-current='page']", text: /Beheerdashboard/
   end
 
   test "preferences page renders the rail" do

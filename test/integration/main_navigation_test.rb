@@ -42,8 +42,8 @@ class MainNavigationTest < ActionDispatch::IntegrationTest
     get hub_url(:setup)
 
     assert_response :success
-    assert_select "nav.hub-column a[href='#{admin_root_path}']", count: 1
-    assert_select "nav.hub-column a[href='#{admin_users_path}']", count: 1
+    assert_select "nav.rail + nav a[href='#{admin_root_path}']", count: 1
+    assert_select "nav.rail + nav a[href='#{admin_users_path}']", count: 1
   end
 
   test "the account menu ends with the sign out button" do
