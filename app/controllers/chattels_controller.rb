@@ -85,8 +85,9 @@ class ChattelsController < ApplicationController
     @chattel.destroy!
 
     respond_to do |format|
-      format.html {
- redirect_to menu.exit_path(chattels_path), status: :see_other, notice: t("chattels.destroy.success") }
+      format.html do
+        redirect_to menu.exit_path(chattels_path), status: :see_other, notice: t("chattels.destroy.success")
+      end
       format.json { head :no_content }
     end
   end

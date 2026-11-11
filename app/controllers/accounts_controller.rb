@@ -94,8 +94,9 @@ class AccountsController < ApplicationController
       end
     else
       respond_to do |format|
-        format.html {
- redirect_to menu.carry(edit_account_path(@account)), alert: @account.errors.full_messages.to_sentence }
+        format.html do
+          redirect_to menu.carry(edit_account_path(@account)), alert: @account.errors.full_messages.to_sentence
+        end
         format.json { render json: @account.errors, status: :unprocessable_entity }
       end
     end
