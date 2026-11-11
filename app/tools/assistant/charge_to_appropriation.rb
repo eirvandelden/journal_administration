@@ -16,6 +16,7 @@ module Assistant
     )
 
     # @return [MCP::Tool::Response]
+    # The splat stands for server_context, which the mcp gem builds; naming it runs past 120 characters.
     #: (appropriation_id: Integer, transaction_id: Integer, ?transaction_split_id: Integer?, **untyped) -> MCP::Tool::Response
     def self.call(appropriation_id:, transaction_id:, server_context:, transaction_split_id: nil)
       appropriation = Appropriation.find_by(id: appropriation_id)

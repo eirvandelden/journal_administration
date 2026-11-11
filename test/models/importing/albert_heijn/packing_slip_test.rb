@@ -29,6 +29,12 @@ class Importing::AlbertHeijn::PackingSlipTest < ActiveSupport::TestCase
     assert_equal 2384, milk.paid_amount
   end
 
+  test "a line's paid amount is its full amount less its bonus" do
+    line = Importing::AlbertHeijn::PackingSlip::Line.new("Melk", 2, 300, 50)
+
+    assert_equal 250, line.paid_amount
+  end
+
   test "a bonus is folded into the line of the product it discounted" do
     vivera = @slip.lines.find { |line| line.name == "Vivera Plantaardige kipstukjes" }
 

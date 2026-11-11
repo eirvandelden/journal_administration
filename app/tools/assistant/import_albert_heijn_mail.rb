@@ -24,6 +24,7 @@ module Assistant
       describe(Receipt.record_basket(basket), basket)
     end
 
+    # The basket is any reader `BasketMail.parse` returns; their union runs past 120 characters.
     #: (Receipt receipt, untyped basket) -> MCP::Tool::Response
     def self.describe(receipt, basket)
       kept = receipt.packed? && !basket.packed?

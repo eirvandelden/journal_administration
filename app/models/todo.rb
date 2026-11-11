@@ -11,11 +11,11 @@ class Todo
   # Lightweight container for a combined todo list item
   #
   # @!attribute [r] kind
-  #   @return [Symbol] :transaction or :account
+  #   @return [Symbol] :transaction, :account or :product
   # @!attribute [r] date
-  #   @return [Time] Sort date for the item
+  #   @return [ActiveSupport::TimeWithZone, nil] Sort date for the item
   # @!attribute [r] record
-  #   @return [Transaction, Account] The underlying AR record
+  #   @return [Transaction, Account, Product] The underlying AR record
   Item = Struct.new(
     :kind,   #: Symbol
     :date,   #: ActiveSupport::TimeWithZone?
