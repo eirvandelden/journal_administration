@@ -6,6 +6,8 @@
   <nav>
     <%= link_to "‹ #{back_link.label}", back_link.path if back_link %>
     <%= controls %>
-    <button type="button" data-action="click->search-dialog#open" aria-label="<%= t("search.open") %>">🔍</button>
+    <search>
+      <button type="button" data-action="click->search-dialog#open" aria-label="<%= t("search.open") %>">🔍</button>
+    </search>
   </nav>
 </header>

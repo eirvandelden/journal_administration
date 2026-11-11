@@ -12,7 +12,7 @@ class MainNavigationTest < ActionDispatch::IntegrationTest
     get dashboard_index_url
 
     assert_response :success
-    assert_select "nav.rail > ul:first-of-type > li:first-child button[data-action='click->search-dialog#open']",
+    assert_select "nav.rail > search:first-child > button[data-action='click->search-dialog#open']",
                   text: I18n.t("search.open")
   end
 

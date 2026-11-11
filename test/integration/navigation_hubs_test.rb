@@ -13,8 +13,8 @@ class NavigationHubsTest < ActionDispatch::IntegrationTest
   test "rail shows search, five hubs and the user name only" do
     get dashboard_index_url
 
-    assert_select "nav.rail > ul > li", 7
-    assert_select "nav.rail button[data-action='click->search-dialog#open']", text: I18n.t("search.open", locale: :nl)
+    assert_select "nav.rail > ul > li", 6
+    assert_select "nav.rail > search:first-child > button[data-action='click->search-dialog#open']", text: I18n.t("search.open", locale: :nl)
     assert_equal [ "🏠 Overzicht", "📥 Verwerken", "🗓️ Plannen", "🗄️ Administratie", "🛒 Boodschappen" ],
       css_select("nav.rail > ul > li > a").map { |link| link.text.squish }
     assert_select "nav.rail > ul > li > details > summary", text: @member.name
@@ -26,7 +26,7 @@ class NavigationHubsTest < ActionDispatch::IntegrationTest
 
     get hub_url(:processing)
 
-    assert_select "ul.tiles a[href=?]", transactions_path(filter: :no_category, from: :processing),
+    assert_select "main > nav a[href=?]", transactions_path(filter: :no_category, from: :processing),
       text: /#{expected} transacties zonder categorie/
     assert_select "nav.hub-column a[href=?] data[value=?]", transactions_path(filter: :no_category), expected.to_s,
       text: expected.to_s
@@ -37,7 +37,7 @@ class NavigationHubsTest < ActionDispatch::IntegrationTest
 
     get hub_url(:processing)
 
-    assert_select "ul.tiles a[href=?]", accounts_path(filter: :untouched, from: :processing),
+    assert_select "main > nav a[href=?]", accounts_path(filter: :untouched, from: :processing),
       text: /0 rekeningen nog niet ingedeeld/
     assert_select "nav.hub-column a[href=?] data", accounts_path(filter: :untouched), count: 0
   end
@@ -64,7 +64,7 @@ class NavigationHubsTest < ActionDispatch::IntegrationTest
 
     get hub_url(:records)
 
-    assert_select "ul.tiles a[href=?]", chattels_path(filter: :warranty_ending, from: :records),
+    assert_select "main > nav a[href=?]", chattels_path(filter: :warranty_ending, from: :records),
       text: /#{before + 1} bezitting(?:en)? waarvan de garantie binnen 90 dagen afloopt/
   end
 
@@ -75,7 +75,7 @@ class NavigationHubsTest < ActionDispatch::IntegrationTest
 
     expected = Receipt.without_payment.count
 
-    assert_select "ul.tiles a[href=?]", receipts_path(filter: :without_payment, from: :shopping),
+    assert_select "main > nav a[href=?]", receipts_path(filter: :without_payment, from: :shopping),
       text: /#{expected} factu(?:ur|ren) zonder betaling/
 
     get receipts_url(filter: :without_payment)
@@ -89,7 +89,7 @@ class NavigationHubsTest < ActionDispatch::IntegrationTest
 
     get hub_url(:planning)
 
-    assert_select "ul.tiles a[href=?]", budgets_path(from: :planning), text: /Geen actief budget/
+    assert_select "main > nav a[href=?]", budgets_path(from: :planning), text: /Geen actief budget/
   end
 
   test "begrotingsposten tile counts and opens appropriations with money left" do
@@ -102,7 +102,7 @@ class NavigationHubsTest < ActionDispatch::IntegrationTest
 
     get hub_url(:planning)
 
-    assert_select "ul.tiles a[href=?]", appropriations_path(filter: :money_left, from: :planning),
+    assert_select "main > nav a[href=?]", appropriations_path(filter: :money_left, from: :planning),
       text: /#{before + 1} begrotingspo(?:st|sten) met geld over/
     assert_includes Appropriation.with_money_left, open_one
   end
@@ -123,11 +123,11 @@ class NavigationHubsTest < ActionDispatch::IntegrationTest
   test "member sees beheer without gebruikers" do
     get hub_url(:setup)
 
-    assert_select "ul.tiles a[href=?]", categories_path(from: :setup)
-    assert_select "ul.tiles a[href=?]", product_types_path(from: :setup)
-    assert_select "ul.tiles a[href=?]", people_path(from: :setup)
-    assert_select "ul.tiles a[href=?]", groups_path(from: :setup)
-    assert_select "ul.tiles a[href=?]", admin_users_path(from: :setup), count: 0
+    assert_select "main > nav a[href=?]", categories_path(from: :setup)
+    assert_select "main > nav a[href=?]", product_types_path(from: :setup)
+    assert_select "main > nav a[href=?]", people_path(from: :setup)
+    assert_select "main > nav a[href=?]", groups_path(from: :setup)
+    assert_select "main > nav a[href=?]", admin_users_path(from: :setup), count: 0
     assert_select "nav.rail details a[href=?]", hub_path(:setup)
   end
 
@@ -137,15 +137,15 @@ class NavigationHubsTest < ActionDispatch::IntegrationTest
 
     get hub_url(:setup)
 
-    assert_select "ul.tiles a[href=?]", admin_users_path(from: :setup)
-    assert_select "ul.tiles a[href=?]", admin_root_path(from: :setup)
+    assert_select "main > nav a[href=?]", admin_users_path(from: :setup)
+    assert_select "main > nav a[href=?]", admin_root_path(from: :setup)
     assert_select "nav.rail details a[href=?]", hub_path(:setup)
   end
 
   test "show renders the tiles of a hub" do
     get hub_url(:records)
 
-    assert_select "ul.tiles li", 3
+    assert_select "main > nav > ul > li", 3
   end
 
   test "show returns 404 for an unknown hub" do
@@ -202,7 +202,7 @@ class NavigationHubsTest < ActionDispatch::IntegrationTest
   test "every title bar holds a search button" do
     get hub_url(:processing)
 
-    assert_select "main > header nav button[data-action='click->search-dialog#open']"
+    assert_select "main > header nav > search > button[data-action='click->search-dialog#open']"
   end
 
   private

@@ -9,7 +9,7 @@ class OriginBackLinkTest < ActionDispatch::IntegrationTest
 
   test "categoriseren tile opens the filtered journal with a verwerken back link" do
     get hub_url(:processing)
-    tile = css_select("ul.tiles a").map { |link| link["href"] }.find { |href| href.start_with?("/transactions") }
+    tile = css_select("main > nav a").map { |link| link["href"] }.find { |href| href.start_with?("/transactions") }
 
     get tile
 

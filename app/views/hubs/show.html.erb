@@ -4,14 +4,16 @@
   <%= link_to action.label, action.path if action %>
 <% end %>
 
-<ul class="tiles">
-  <% @hub.pages.each do |page| %>
-    <li>
-      <%= link_to menu.tile_path(page) do %>
-        <strong><%= page.label %></strong>
-        <% text = tile_text(page) %>
-        <% if text %><span><%= text %></span><% end %>
-      <% end %>
-    </li>
-  <% end %>
-</ul>
+<nav aria-label="<%= @hub.label %>">
+  <ul>
+    <% @hub.pages.each do |page| %>
+      <li>
+        <%= link_to menu.tile_path(page) do %>
+          <strong><%= page.label %></strong>
+          <% text = tile_text(page) %>
+          <% if text %><span><%= text %></span><% end %>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+</nav>
