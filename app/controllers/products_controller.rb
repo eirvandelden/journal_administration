@@ -33,7 +33,7 @@ class ProductsController < ApplicationController
   # @return [void]
   #: () -> void
   def update
-    return redirect_to menu.carry(products_path), notice: t(".success") if @product.update(product_params)
+    return redirect_to list_path, notice: t(".success") if @product.update(product_params)
 
     load_form_choices
     render :edit, status: :unprocessable_entity
@@ -52,5 +52,10 @@ class ProductsController < ApplicationController
 
   def product_params
     params.expect(product: %i[name brand product_type_id])
+  end
+
+  # The list the product was opened from, filter and origin included; else the products list
+  def list_path
+    menu.back(products_path)&.path || products_path
   end
 end

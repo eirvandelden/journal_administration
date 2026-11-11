@@ -93,6 +93,18 @@ class OriginBackLinkTest < ActionDispatch::IntegrationTest
     assert_select "tbody a[href*='from=']", count: 0
   end
 
+  test "saving a product opened from a tile returns to that tile's list" do
+    patch product_url(products(:ah_ribbelchips)), params: { from: "processing", product: { brand: "AH" } }
+
+    assert_redirected_to products_path(filter: :unclassified, from: :processing)
+  end
+
+  test "saving a product without an origin returns to the products list" do
+    patch product_url(products(:ah_ribbelchips)), params: { product: { brand: "AH" } }
+
+    assert_redirected_to products_path
+  end
+
   test "a record without an origin keeps its own index as the back link" do
     get chattel_url(chattels(:one))
 
