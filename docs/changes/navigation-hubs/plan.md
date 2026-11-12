@@ -754,6 +754,9 @@ Phase B was built on appkit `d106f6b` (PR #24). Where the build departs from the
 - Dark themes, checked by screenshot at 1400px: `tr.unconsolidated` reads as a tinted row on the darker table surface. `form_errors.css` is unchanged: on the transaction edit form, with Rails' `field_with_errors` wrappers around the amount label and input, the red label and border read in solunized-dark, solunized-black and solunized-light. Its disabled inputs take the page colour, so in the dark themes they sit lighter than the darker surface and enabled inputs, with dimmed text, and still read as disabled.
 - Seen in the browser, also before this change, and left to mvpa.css: table headers break mid-word (`th { overflow-wrap: anywhere }`), and on a phone the title bar's `<nav>` gets the tab bar's background (`header nav` in the mobile rules).
 - Not built: `users` / profile views (left to `ui-review-bug-fixes`).
+- Phase E1 (built 2026-11-12, before appkit phase D): Alles record links use `menu.carry`, so a record opened from the Alles tile carries `from=processing` and returns to the page that owns its controller. `todos_index_test.rb` `test_rows_opened_from_the_alles_tile_carry_the_verwerken_origin` asserts that. E2 switches the links to `menu.carry_list`, that assertion to `from=processing.all`, and adds `test_record_opened_from_alles_returns_to_alles`.
+- Importeren owns `transactions/imports`, which the Journaal page owned before, so the upload page marks Importeren in Verwerken.
+- The Alles query count is pinned at 49 for one page of 20 open transactions (two split sums per shown transaction). The test books its transactions an hour ahead, because `Todo#items` sorts on whole seconds and fixture accounts created in the same second would otherwise share the first page.
 
 ---
 Domain skills applied: software-design, glossary, diagrams, rails-architecture, object-oriented-design, rails-ui (interaction-design reference), rails-testing, dependencies.
