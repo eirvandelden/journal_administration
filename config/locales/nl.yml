@@ -709,6 +709,8 @@ nl:
           other: "%{count} transacties te consolideren"
       groups:
         label: Groepen
+      import:
+        label: Importeren
       journal:
         label: Journaal
       people:

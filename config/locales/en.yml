@@ -709,6 +709,8 @@ en:
           other: "%{count} transactions to consolidate"
       groups:
         label: Groups
+      import:
+        label: Import
       journal:
         label: Journal
       people:

@@ -65,7 +65,8 @@ module MenuMap
       menu_hub(:processing, "📥", hub_path(:processing), hub_landing(:processing),
         action: menu_link(t("menu.hubs.processing.import"), new_transactions_import_path),
         pages: [
-          *open_pages
+          *open_pages,
+          menu_page(:import, new_transactions_import_path, %w[transactions/imports])
         ])
     end
 
@@ -96,7 +97,7 @@ module MenuMap
     def records_hub
       menu_hub(:records, "🗄️", hub_path(:records), hub_landing(:records), pages: [
         menu_page(:journal, transactions_path, %w[transactions transaction_links transaction_splits
-          transactions/appropriation_charges transaction_splits/appropriation_charges transactions/imports]),
+          transactions/appropriation_charges transaction_splits/appropriation_charges]),
         menu_page(:accounts, accounts_path, %w[accounts accounts/transactions_bulks accounts/transaction_absorptions
           accounts/payment_providers accounts/merchant_reassignments accounts/merges accounts/account_aliases]),
         menu_page(:chattels, chattels_path, %w[chattels],

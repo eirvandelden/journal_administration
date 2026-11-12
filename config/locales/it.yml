@@ -709,6 +709,8 @@ it:
           other: "%{count} transazioni da consolidare"
       groups:
         label: Gruppi
+      import:
+        label: Importa
       journal:
         label: Giornale
       people:

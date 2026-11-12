@@ -48,6 +48,19 @@ class NavigationHubsTest < ActionDispatch::IntegrationTest
     assert_select "tbody", text: /Half split/
   end
 
+  test "importeren tile item and title bar action" do
+    get hub_url(:processing)
+
+    assert_select "main > nav a[href=?]", new_transactions_import_path(from: :processing), text: /Importeren/
+    assert_select "nav.rail + nav a[href=?]", new_transactions_import_path, text: /Importeren/
+    assert_select "main > header nav a[href=?]", new_transactions_import_path, text: "Importeren"
+
+    get new_transactions_import_url
+
+    assert_select "nav.rail a[aria-current='true']", text: /Verwerken/
+    assert_select "nav.rail + nav a[aria-current='page']", text: /Importeren/
+  end
+
   test "rekeningen indelen shows zero and no badge" do
     Account.update_all("updated_at = datetime(created_at, '+1 day')")
 
