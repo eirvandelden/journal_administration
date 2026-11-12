@@ -1,6 +1,6 @@
 # Plan: Navigate by task hubs
 
-From `intent.md` (2026-10-25). Status: accepted.
+From `intent.md` (2026-10-25, amended and accepted again 2026-11-11). Status: accepted.
 
 ## Design
 
@@ -461,6 +461,276 @@ Per changed file, the unit tests expected:
 
 Test setup: fixtures as today; tests create the 12 uncategorized transactions, the 60- and 120-day chattels, an unpaid receipt and charged appropriations inline. Query counts use Rails 8.1's `assert_queries_count` and `assert_queries_match`. Phase A uses appkit's dummy app. System tests run after the mvpa.css bump, with headless Edge locally and Chrome on CI.
 
+## Amendment of 2026-11-11: phases D and E
+
+Context: Etienne used the built branch (phases A–C, delivered for review at `05ba5570`) and changed the intent on 2026-11-11 (`intent.md`, accepted 2026-11-11). The account pop-up gives way to a 👤 Profiel hub, the phone bar gets six tabs, no title bar holds an avatar, and Verwerken gains Consolideren (renamed Categoriseren), Importeren and Alles. The intent's reachability audit lists what the old menu reached. Everything above this section stays as built unless this section says otherwise; where they disagree (the avatar, Categoriseren, the account menu, `rail: false`, the `/todo` redirect), this section wins.
+
+### Design
+
+#### Domain terms
+
+- **Profiel hub**, **Beheer**, **Hub**, **Rail**, **Menu map**: as in `GLOSSARY.md` (updated 2026-11-11).
+- **Parent hub** (new, appkit) — the rail hub that the rail marks while a hub without a rail item of its own is current. Beheer's parent hub is Profiel.
+- **Submit page** (new, appkit) — a page whose tile and hub-column entry is a link that Turbo sends as a non-GET request (`data-turbo-method`), such as Uitloggen. It owns no controller, has no count or filter, and search leaves it out.
+- **List origin** (new, appkit) — an origin that also names the page whose list started the flow, written `from=<hub>.<page>`, such as `processing.all`; a record opened from Alles returns to Alles.
+- **Alles** — the Verwerken page that lists every open item of Consolideren, Rekeningen indelen and Producten classificeren in one list, newest first.
+
+#### Diagrams
+
+Before (appkit `d106f6b`): `Menu(hubs:, account: [Link])`; `Hub(rail: bool)`; `_nav` ends the rail with `_account_menu` (a `<details>` pop-up with the account links and a sign-out `button_to`); the host renders `_account_menu avatar: true` in the Overzicht title bar.
+
+After:
+
+```mermaid
+classDiagram
+  class Menu {
+    +hubs Array~Hub~
+    +current_hub() Hub?
+    +current?(Hub or Page) bool
+    +links() Array~Link~
+    +tile_path(Page) String
+  }
+  class Hub {
+    +key Symbol
+    +parent Symbol?
+    +rail?() bool
+    +pages Array~Page~
+  }
+  class Page {
+    +verb Symbol
+    +submit?() bool
+    +count() Integer?
+  }
+  class MenuHelper {
+    +menu_entry_to(path, page, html) String
+  }
+  class MenuMap {
+    profile_hub()
+    setup_hub() parent profile
+    processing_hub() consolidate, accounts, products, import, all
+  }
+  class Todo {
+    +items() Array~Item~
+    +empty?() bool
+  }
+  Menu "1" --> "*" Hub : places request in
+  Hub "1" --> "*" Page : lists
+  Hub ..> Hub : parent, by key
+  MenuHelper ..> Page : link or button
+  MenuMap --> Menu : builds
+  TodosController --> Todo : lists
+```
+
+#### Signatures
+
+appkit (phase D, its own change in the appkit repository):
+
+```ruby
+# Places one request in the menu map. The account: keyword and #account are removed.
+class Appkit::Menu
+  # Raises ArgumentError when a hub's parent names no hub in the map, or names a hub that has a parent itself.
+  #: (hubs: Array[Hub], controller_path: String, params: Hash[String, untyped]) -> void
+  def initialize(hubs:, controller_path:, params:)
+  # A page: true for the current page. A hub: true for the current hub, or for the current hub's parent hub.
+  #: (Hub | Page) -> bool
+  def current?(entry)
+  # Every hub and every page that is not a submit page, once per path, for search.
+  #: () -> Array[Link]
+  def links
+  # A submit page's own path, with no origin; otherwise as before.
+  #: (Page) -> String
+  def tile_path(page)
+  # Carries the origin and names the current page as the list to return to: from=<origin hub>.<current page>. Without an origin, or when the current page is not in the origin hub, the same as carry.
+  #: (String) -> String
+  def carry_list(path)
+  # origin, origin_key and carry read the hub part of a list origin; back(fallback) on a record returns to the named page's list when the origin names one, else to the origin hub's page for the controller, as before.
+end
+
+# A hub. parent: replaces rail: false.
+class Appkit::Menu::Hub
+  #: (key: Symbol, label: String, emoji: String, path: String, landing: Hash[String, String], ?pages: Array[Page], ?controllers: Array[String], ?action: Link?, ?parent: Symbol?) -> void
+  def initialize(key:, label:, emoji:, path:, landing:, pages: [], controllers: [], action: nil, parent: nil)
+  #: () -> Symbol?
+  attr_reader :parent
+  # True when the hub has no parent hub, so the rail lists it.
+  #: () -> bool
+  def rail?
+end
+
+# One page of a hub: it opens a list, or it sends one request.
+class Appkit::Menu::Page
+  # verb defaults to :get. Raises ArgumentError for a verb outside get, post, patch, put and delete, and for a submit page with controllers, a count, a summary or a filter.
+  #: (key: Symbol, label: String, path: String, controllers: Array[String], ?filter: Hash[String, String], ?tile_path: String?, ?count: (^() -> Integer)?, ?summary: (^() -> String)?, ?verb: Symbol) -> void
+  def initialize(key:, label:, path:, controllers:, filter: {}, tile_path: nil, count: nil, summary: nil, verb: :get)
+  #: () -> Symbol
+  attr_reader :verb
+  # True when the page sends a request other than GET.
+  #: () -> bool
+  def submit?
+end
+
+# Renders a menu entry for a page as a link; a submit page's link carries data-turbo-method with its verb, so tiles and hub-column items keep the li > a markup mvpa.css styles.
+module Appkit::MenuHelper
+  #: (String, Appkit::Menu::Page, **untyped) { () -> untyped } -> ActiveSupport::SafeBuffer
+  def menu_entry_to(path, page, **html_options, &block)
+end
+```
+
+`_nav.html.erb` drops the `user_name` local and the account `<li>`, and renders hub-column entries through `menu_entry_to`, with no badge on a submit page. A submit entry stays an `<a>`, so mvpa.css styles it like the other tiles and items with no CSS change. `_account_menu.html.erb` and its `avatar:` option go. The `appkit.navigation.logout` key stays, for hosts to use as a label. The CHANGELOG `### Upgrading` entry: (1) remove `account:` from `Appkit::Menu.new`; (2) replace `rail: false` with `parent: <rail hub key>`; (3) turn the account links into pages of a rail hub, with a sign-out submit page last (`path: session_path, controllers: [], verb: :delete`); (4) render landing tiles with `menu_entry_to`; (5) drop `user_name:` from the `_nav` locals and every `render "appkit/shared/account_menu"`.
+
+This app (phase E):
+
+```ruby
+module MenuMap
+  # unchanged public helpers: menu, tile_text(page), carried_path(record)
+  private
+    # Overzicht, Verwerken, Plannen, Administratie, Boodschappen, Profiel, Beheer
+    #: () -> Array[Appkit::Menu::Hub]
+    def menu_hubs
+    # Consolideren, Rekeningen indelen, Producten classificeren, Importeren, Alles; Alles counts the sum of the first three
+    #: () -> Appkit::Menu::Hub
+    def processing_hub
+    # Gegevens, Voorkeuren, Beheer, Uitloggen (submit page, DELETE session_path); no counts
+    #: () -> Appkit::Menu::Hub
+    def profile_hub
+    # parent: :profile instead of rail: false
+    #: () -> Appkit::Menu::Hub
+    def setup_hub
+end
+
+# The open items of Verwerken in one list, newest first. Restored from origin/main, with Account.untouched.
+class Todo
+  #: () -> Array[Item]
+  def items
+  #: () -> bool
+  def empty?
+end
+
+# Lists Verwerken's open items, 20 per page. Restored from origin/main.
+class TodosController < ApplicationController
+  #: () -> void
+  def index
+end
+```
+
+`menu_account_links` goes. `hubs/show.html.erb` renders each tile with `menu_entry_to(menu.tile_path(page), page)`. `dashboard/index.html.erb` no longer renders the avatar. Routes: `get "todo", to: "todos#index", as: :todo` replaces the redirect.
+
+Checked by: steep check
+
+#### Complexity
+
+- Verwerken landing and hub column: still three `SELECT COUNT` queries per request. Alles sums the memoized counts of the other three pages, so it adds none. Importeren has no count.
+- Profiel pages have no counts; the Profiel landing adds no query.
+- `Menu#current?` for a hub reads the memoized placement and one parent lookup: O(hubs), no query. `Menu#initialize` checks parents once: O(hubs²) with seven hubs.
+- Alles (`/todo`): loading the list takes three queries, as on `origin/main`; the records load in full and are paged in Ruby (see Risks). Rendering one page adds queries per shown transaction (`todo_description` reads `uncategorized_amount`), bounded by the page size of 20, plus the navigation counts. The request's query count therefore does not grow with the number of open items beyond one page; a test pins it.
+
+#### Invariants
+
+- A hub's parent names a hub in the map that has no parent itself. Enforced by `Menu#initialize`. Test: appkit `menu_test.rb`.
+- The rail marks exactly one hub: the current hub, or its parent hub. Enforced by `Menu#current?`. Test: on Categorieën the rail marks Profiel only.
+- A submit page owns no controller and has no count, summary or filter, so it is never the current page and never shows a badge. Enforced by `Page#initialize`. Test: appkit `page_test.rb`.
+- Search never offers a submit page, and offers each path once. Enforced by `Menu#links`. Test: appkit `menu_test.rb`; host search test.
+- The Alles tile shows as many items as the Alles page lists. Enforced by `Todo` reading the same three scopes as the three counted pages (`Transaction.uncategorized`, `Account.untouched`, `Product.unclassified`). Test: `navigation_hubs_test.rb`.
+- A record opened from Alles returns to Alles, and after Verwijderen… to the Verwerken landing page. Enforced by `Menu#carry_list` and `Menu#back`. Test: `origin_back_link_test.rb`.
+- No title bar holds an account menu. Enforced by the removal of `_account_menu`. Test: `navigation_hubs_test.rb`.
+
+#### Alternatives
+
+1. Chosen: explicit `parent:` on Hub, `verb:` on Page, a shared `menu_entry_to` helper that renders a Turbo-method link.
+   A `button_to` entry was rejected: it renders `li > form > button`, which mvpa.css #54 styles neither as a tile nor as a hub-column item, so it would need an mvpa.css change first. The host keeps label, emoji and order, and a wrong parent fails at boot.
+2. Rejected: the rail marks a parent hub found by an equal path (a rail hub page whose path equals the off-rail hub's path). It adds no keyword, but a typo or an extra query parameter silently drops the highlight, and the map does not show the link.
+3. Rejected: appkit builds the account hub itself from `account:` links plus a built-in sign-out. Every host gets a sign-out for free, but appkit then fixes the hub's label, emoji and order, which Etienne chose per app (👤 Profiel, Gegevens first, Uitloggen last).
+
+### Design decisions
+
+- The amendment needs an appkit change. It is a follow-up with its own intent, plan and pull request in the appkit repository (phase D). This app bumps appkit with the approved `bundle update appkit` after it merges, as for phase B.
+- The Categoriseren page key becomes `consolidate` along with its label, so the map, the locale keys and the tests use the agreed word. Its filter parameter stays `no_category`, so existing links keep working.
+- Alles restores `Todo`, `TodosController`, `TodosHelper`, `todos/index` and their tests from `origin/main`, changed only where this plan says: `Account.untouched` replaces the inline condition, record links use `menu.carry_list`, the title is "Alles", and the upload prompt (`show_upload_form?`) goes, since Importeren is now a page. The restored tests change with it: the `show_upload_form?` tests go, and the record-link assertions expect `from=processing.all` when the page was opened from the Alles tile. `todos#index` returns to the parity map's exclusions with a reason.
+- mvpa.css needs no change for this app: without `<details>` in the rail, the phone bar shows the Profiel tab. Removing the account pop-up CSS and the title-bar copy rule from #54 is a separate mvpa.css change with its own intent; this app does not wait for it.
+- Uitloggen is a Turbo-method link, not a `button_to`, so its tile and hub-column item use the markup mvpa.css already styles. Signing out needs JavaScript, as every Turbo page in this app does.
+
+### Integration points
+
+- appkit: phase D changes `Appkit::Menu` (parent, submit pages, list origin), `Menu::Hub`, `Menu::Page`, `_nav`, adds `Appkit::MenuHelper`, removes `_account_menu`, and adds an `### Upgrading` entry. The dummy app and `test/types/host_probe.rb` move from `rail: false` to `parent:`.
+- mvpa.css: no change needed now; cleanup follow-up as above.
+- MCP parity map: `todos#index` excluded again ("one list of what find_uncategorized_transactions, find_accounts and list_unclassified_products return").
+
+### Files that change
+
+Phase D (appkit repository, branch from its own intent):
+
+- `app/models/appkit/menu.rb`, `menu/hub.rb`, `menu/page.rb` — as in Signatures.
+- `app/helpers/appkit/menu_helper.rb` — new.
+- `app/views/appkit/shared/_nav.html.erb` — no account `<li>`, entries through `menu_entry_to`.
+- `app/views/appkit/shared/_account_menu.html.erb` — deleted.
+- `test/models/appkit/menu_test.rb`, `menu/hub_test.rb`, `menu/page_test.rb`, a helper test, the nav view test, `test/dummy/app/controllers/application_controller.rb`, `test/types/host_probe.rb`.
+- `CHANGELOG.md` — `### Upgrading` entry.
+
+Phase E (this app):
+
+- `app/controllers/concerns/menu_map.rb` — `processing_hub` with five pages, `profile_hub`, `setup_hub` with `parent: :profile`, no `menu_account_links`, `Menu.new` without `account:`.
+- `app/views/hubs/show.html.erb` — tiles through `menu_entry_to`.
+- `app/views/layouts/application.html.erb` — `_nav` without `user_name:`.
+- `app/views/dashboard/index.html.erb` — no avatar.
+- `config/routes.rb` — `/todo` routes to `todos#index`.
+- `app/models/todo.rb`, `app/controllers/todos_controller.rb`, `app/helpers/todos_helper.rb`, `app/views/todos/index.html.erb` — restored, changed as in Design decisions.
+- `config/locales/{nl,en,it}.yml` — `menu.pages.consolidate`, `import`, `all`, `profile_details`, `preferences`, `setup`, `sign_out`, `menu.hubs.profile`; `todos.index.*` restored for the kept keys; `menu.account.*` and `menu.pages.categorize` removed; `bundle exec i18n-tasks normalize`.
+- `test/integration/assistant_parity_test.rb` — `todos#index` exclusion.
+- `Gemfile.lock` — appkit bump after phase D merges.
+- Tests: `test/integration/navigation_hubs_test.rb`, `test/integration/main_navigation_test.rb`, `test/integration/origin_back_link_test.rb`, `test/integration/searches_test.rb`, `test/system/navigation_hubs_layout_test.rb`, `test/system/responsive_tables_test.rb` (adds the Profiel landing page and `/todo` to its three-width matrix), `test/integration/hub_queries_test.rb`, restored `test/models/todo_test.rb`, `test/integration/todos_index_test.rb`, `test/helpers/todos_helper_test.rb`, `test/controllers/todos_controller_page_test.rb`.
+
+### Order of work
+
+Phase D runs first, in the appkit repository, from its own accepted intent. Phase E1 needs no appkit change; phase E2 needs the phase D merge.
+
+1. E1: write the Consolideren acceptance test (the split transaction counts and lists), run it, watch it fail on the label; rename the page and its locale keys; green.
+2. E1: Importeren page: tile, hub-column item, highlight on the upload page; title-bar action stays.
+3. E1: restore the `Todo` files and tests from `origin/main`; route `/todo` to `todos#index`; add the Alles page with the summed count; apply the changes in Design decisions; parity exclusion.
+4. E1: query-count test: the Verwerken landing still runs three `SELECT COUNT` queries.
+5. Phase D merges. E2: `bundle update appkit`; follow appkit's `### Upgrading` steps.
+6. E2: Profiel hub, Beheer `parent: :profile`, tiles through `menu_entry_to`, no avatar, `_nav` without `user_name:`; update the account and avatar tests to the new criteria.
+7. E2: phone system test with six tabs; Uitloggen system tests from the tile and from the hub column; the Profiel landing page and `/todo` in the responsive matrix; look at the Uitloggen tile and item in the browser at the three widths and in the dark and e-ink themes.
+8. Full suite, system tests, RuboCop, herb-lint, Brakeman, bundler-audit, i18n-tasks; review; deliver.
+
+### Risks
+
+- Phase D changes appkit's public API again (`account:` and `rail:` go). Only this app uses the hub API today; the Upgrading entry covers any other host.
+- Alles loads every open record and pages in Ruby, as `origin/main` did; with 8558 open transactions on the development data, the page is slow. Accepted for now, since the intent restores the old list; paging in SQL is a separate change.
+- Uitloggen depends on Turbo to send DELETE; with JavaScript off it would GET `session_path`. The app already requires Turbo; the system tests run with JavaScript.
+- The rename touches translated strings in three locales; i18n-tasks catches missing and unused keys.
+
+### Proof
+
+- The rail shows 🔍, Overzicht, Verwerken, Plannen, Administratie, Boodschappen and 👤 Profiel, and nothing else; no rail item opens a pop-up → `test/integration/main_navigation_test.rb` `test_rail_shows_search_five_hubs_and_profiel`
+- With 12 transactions that need consolidation, the Consolideren tile and badge show 12 → `test/integration/navigation_hubs_test.rb` `test_consolideren_tile_and_badge_count_transactions_to_consolidate`
+- A € 100 transaction split into € 60 Boodschappen and € 40 without a category counts on Consolideren and shows in its list → `test/integration/navigation_hubs_test.rb` `test_partly_split_transaction_counts_on_consolideren`
+- Clicking the Consolideren tile opens the filtered journal with "‹ Verwerken" → `test/integration/origin_back_link_test.rb` `test_consolideren_tile_opens_the_filtered_journal_with_a_verwerken_back_link`
+- The Verwerken hub column lists Consolideren, Rekeningen indelen, Producten classificeren, Importeren and Alles, in that order → `test/integration/navigation_hubs_test.rb` `test_verwerken_hub_column_order`
+- The Importeren tile and item open the upload; the title bar keeps Importeren → `test/integration/navigation_hubs_test.rb` `test_importeren_tile_item_and_title_bar_action`
+- 2 transactions, 1 account and 1 product open: the Alles tile shows 4 and the page lists those 4, newest first → `test/integration/navigation_hubs_test.rb` `test_alles_tile_counts_and_lists_every_open_item`
+- `/todo` shows Alles, with the rail on Verwerken and the hub column on Alles → `test/integration/navigation_hubs_test.rb` `test_todo_shows_alles_in_verwerken`
+- 👤 Profiel shows the tiles Gegevens, Voorkeuren, Beheer and Uitloggen, and the same four in the hub column → `test/integration/navigation_hubs_test.rb` `test_profiel_landing_and_hub_column`
+- Uitloggen, as a tile or in the hub column, signs out and shows the sign-in page → `test/system/navigation_hubs_layout_test.rb` `test_uitloggen_tile_signs_out` and `test_uitloggen_hub_column_item_signs_out`
+- On Voorkeuren, the Beheer landing page and Categorieën, the rail marks Profiel → `test/integration/navigation_hubs_test.rb` `test_rail_marks_profiel_on_voorkeuren_and_beheer`
+- At phone width the bar shows exactly six tabs and no title bar holds an avatar → `test/system/navigation_hubs_layout_test.rb` `test_phone_tab_bar_has_six_tabs_and_no_avatar`; `test/integration/navigation_hubs_test.rb` `test_no_title_bar_holds_an_avatar`
+- Query count: the Verwerken landing runs three `SELECT COUNT` queries with Alles and Importeren added → `test/integration/hub_queries_test.rb` `test_verwerken_counts_run_once_per_request`
+- Query count: the Profiel landing runs a pinned number of queries, with no count query → `test/integration/hub_queries_test.rb` `test_profiel_landing_runs_no_count_query`
+- Query count: `/todo` runs the same number of queries with 25 and with 40 open transactions → `test/integration/hub_queries_test.rb` `test_alles_query_count_is_bounded_by_the_page`
+- Invariant: a record opened from Alles returns to Alles; after Verwijderen… the user lands on Verwerken → `test/integration/origin_back_link_test.rb` `test_record_opened_from_alles_returns_to_alles`
+- No page scrolls sideways, the Profiel landing page and Alles included → `test/system/responsive_tables_test.rb` `test_no_page_scrolls_sideways_at_laptop_narrow_or_phone_width`
+- Invariant: search offers no submit page and each path once, enforced by `Menu#links` → appkit `test/models/appkit/menu_test.rb`; `test/integration/searches_test.rb` `test_search_does_not_offer_uitloggen`
+- Invariant: a hub's parent is a rail hub, enforced by `Menu#initialize` → appkit `test/models/appkit/menu_test.rb`
+
+Per changed file, the unit tests expected:
+
+- appkit `menu.rb`: `current? marks the parent hub of an off-rail hub`, `links skips submit pages`, `links lists a path once`, `tile_path leaves a submit page without origin`, `carry_list names the current page`, `back on a record returns to a named list page`, `origin reads the hub of a list origin`, `refuses a parent that names no hub`, `refuses a parent that has a parent`.
+- appkit `menu/hub.rb`: `rail? is false for a hub with a parent`, `parent is nil by default`.
+- appkit `menu/page.rb`: `verb defaults to get`, `submit? for delete`, `refuses an unknown verb`, `refuses a submit page with controllers`, `with a count`, `with a summary`, `with a filter`.
+- appkit `menu_helper.rb`: `menu_entry_to renders a plain link for a get page`, `renders a link with data-turbo-method for a submit page`.
+- `app/models/todo.rb`: the restored `todo_test.rb`, plus `items uses Account.untouched`.
+
+Test setup: fixtures as today; tests create the split transaction, the open items and the signed-in session inline. Phase E2 runs against appkit after phase D merges.
+
 ## Implementation notes
 
 Phase B was built on appkit `d106f6b` (PR #24). Where the build departs from the text above:
@@ -502,3 +772,13 @@ Domain skills applied: software-design, glossary, diagrams, rails-architecture, 
 - `with_money_left` needed a precise SQL design to avoid multiplied rows → fixed (two correlated scalar subqueries, specified in Signatures; the parity test uses several whole and split credits and debits)
 - The Budgetten summary added new spending semantics instead of reusing `Dashboard` → fixed (`Dashboard#budget_summary` built from `budget_amounts` and `budget_actuals`; tests for refunds and splits; the query count is measured and pinned)
 - The engine-layout risk named pages that use appkit's login layout → fixed (narrowed to Voorkeuren in Integration points and Risks)
+
+### Round 2 (codex exec -m gpt-6.1-sol)
+
+- A record opened from Alles would return to Consolideren, Rekeningen indelen or Producten classificeren, since `from=processing` names only the hub → fixed (list origin `from=<hub>.<page>` through `Menu#carry_list`, read by `Menu#back`; a round-trip test from Alles, and deletion still lands on Verwerken)
+- A `button_to` submit entry renders `li > form > button`, which mvpa.css styles neither as a tile nor as a hub-column item → fixed (`menu_entry_to` renders a link with `data-turbo-method`, so the markup stays `li > a`; no mvpa.css change; browser check in Order of work)
+- The three-query claim for Alles covered only list loading, while rendering reads `uncategorized_amount` per shown transaction → fixed (Complexity separates list loading from rendering, bounded by the page size; a query test compares 25 and 40 open transactions)
+- A test that finds a sign-out button does not prove signing out → fixed (two system tests click Uitloggen, as a tile and in the hub column, and land on the sign-in page)
+- The responsive matrix left out the Profiel landing page and `/todo` → fixed (both join `responsive_tables_test.rb`, listed in Files that change and Proof)
+- The restored Todo tests cover the removed `show_upload_form?` and expect links without an origin → fixed (Design decisions name the removed tests and the `from=processing.all` record-link assertions)
+- Proof lacked the Profiel query count, the Alles query bound and the submit-page summary and filter refusals → fixed (Proof lines and unit tests added)
