@@ -687,11 +687,6 @@ nl:
         summary: Uitgegeven %{spent} van %{planned}, nog %{left} over
       categories:
         label: Categorieën
-      categorize:
-        label: Categoriseren
-        tile:
-          one: "%{count} transactie zonder categorie"
-          other: "%{count} transacties zonder categorie"
       chattels:
         label: Bezittingen
         tile:
@@ -707,6 +702,11 @@ nl:
         tile:
           one: "%{count} product nog niet geclassificeerd"
           other: "%{count} producten nog niet geclassificeerd"
+      consolidate:
+        label: Consolideren
+        tile:
+          one: "%{count} transactie te consolideren"
+          other: "%{count} transacties te consolideren"
       groups:
         label: Groepen
       journal:

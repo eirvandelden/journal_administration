@@ -687,11 +687,6 @@ it:
         summary: Speso %{spent} su %{planned}, restano %{left}
       categories:
         label: Categorie
-      categorize:
-        label: Categorizza
-        tile:
-          one: "%{count} transazione senza categoria"
-          other: "%{count} transazioni senza categoria"
       chattels:
         label: Beni
         tile:
@@ -707,6 +702,11 @@ it:
         tile:
           one: "%{count} prodotto non ancora classificato"
           other: "%{count} prodotti non ancora classificati"
+      consolidate:
+        label: Consolida
+        tile:
+          one: "%{count} transazione da consolidare"
+          other: "%{count} transazioni da consolidare"
       groups:
         label: Gruppi
       journal:

@@ -17,10 +17,10 @@ module MenuMap
   end
 
   # i18n-tasks-use t("menu.pages.appropriations.tile")
-  # i18n-tasks-use t("menu.pages.categorize.tile")
   # i18n-tasks-use t("menu.pages.chattels.tile")
   # i18n-tasks-use t("menu.pages.classify_accounts.tile")
   # i18n-tasks-use t("menu.pages.classify_products.tile")
+  # i18n-tasks-use t("menu.pages.consolidate.tile")
   # i18n-tasks-use t("menu.pages.products.tile")
   # i18n-tasks-use t("menu.pages.receipts.tile")
   # What a page's tile says: its count written out, also when 0, or its summary.
@@ -61,16 +61,25 @@ module MenuMap
 
     #: () -> Appkit::Menu::Hub
     def processing_hub
+      open_pages = processing_open_pages
       menu_hub(:processing, "📥", hub_path(:processing), hub_landing(:processing),
         action: menu_link(t("menu.hubs.processing.import"), new_transactions_import_path),
         pages: [
-          menu_page(:categorize, transactions_path(filter: :no_category), %w[transactions],
-            filter: { "filter" => "no_category" }, count: -> { Transaction.uncategorized.count }),
-          menu_page(:classify_accounts, accounts_path(filter: :untouched), %w[accounts],
-            filter: { "filter" => "untouched" }, count: -> { Account.untouched.count }),
-          menu_page(:classify_products, products_path(filter: :unclassified), %w[products],
-            filter: { "filter" => "unclassified" }, count: -> { Product.unclassified.count })
+          *open_pages
         ])
+    end
+
+    # The three lists of open items; Alles adds up their counts.
+    #: () -> Array[Appkit::Menu::Page]
+    def processing_open_pages
+      [
+        menu_page(:consolidate, transactions_path(filter: :no_category), %w[transactions],
+          filter: { "filter" => "no_category" }, count: -> { Transaction.uncategorized.count }),
+        menu_page(:classify_accounts, accounts_path(filter: :untouched), %w[accounts],
+          filter: { "filter" => "untouched" }, count: -> { Account.untouched.count }),
+        menu_page(:classify_products, products_path(filter: :unclassified), %w[products],
+          filter: { "filter" => "unclassified" }, count: -> { Product.unclassified.count })
+      ]
     end
 
     #: () -> Appkit::Menu::Hub

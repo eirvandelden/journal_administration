@@ -21,16 +21,31 @@ class NavigationHubsTest < ActionDispatch::IntegrationTest
     assert_select "nav.rail > ul > li > details > summary", text: @member.name
   end
 
-  test "categoriseren tile and badge count uncategorized transactions" do
+  test "consolideren tile and badge count transactions to consolidate" do
     create_uncategorized_transactions(12)
     expected = Transaction.uncategorized.count
 
     get hub_url(:processing)
 
     assert_select "main > nav a[href=?]", transactions_path(filter: :no_category, from: :processing),
-      text: /#{expected} transacties zonder categorie/
+      text: /Consolideren.*#{expected} transacties te consolideren/m
     assert_select "nav.rail + nav a[href=?] data[value=?]", transactions_path(filter: :no_category), expected.to_s,
       text: expected.to_s
+  end
+
+  test "partly split transaction counts on consolideren" do
+    before = Transaction.uncategorized.count
+    transaction = open_transaction("Half split", Time.current, amount: 10_000)
+    transaction.transaction_splits.create!(amount: 6000, category: categories(:groceries))
+
+    get hub_url(:processing)
+
+    assert_select "nav.rail + nav a[href=?] data[value=?]", transactions_path(filter: :no_category),
+      (before + 1).to_s
+
+    get transactions_url(filter: :no_category)
+
+    assert_select "tbody", text: /Half split/
   end
 
   test "rekeningen indelen shows zero and no badge" do
@@ -199,5 +214,11 @@ class NavigationHubsTest < ActionDispatch::IntegrationTest
         Transaction.create!(amount: index + 1, booked_at: index.minutes.ago, interest_at: index.minutes.ago,
           debitor: accounts(:checking), creditor: accounts(:unknown), note: "Uncategorized #{index}")
       end
+    end
+
+    def open_transaction(note, booked_at, amount: 500)
+      transaction = Transaction.create!(amount: amount, booked_at: booked_at, interest_at: booked_at,
+        debitor: accounts(:checking), creditor: accounts(:unknown), note: note)
+      Transaction.find(transaction.id)
     end
 end

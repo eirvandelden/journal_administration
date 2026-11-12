@@ -687,11 +687,6 @@ en:
         summary: Spent %{spent} of %{planned}, %{left} left
       categories:
         label: Categories
-      categorize:
-        label: Categorise
-        tile:
-          one: "%{count} transaction without a category"
-          other: "%{count} transactions without a category"
       chattels:
         label: Possessions
         tile:
@@ -707,6 +702,11 @@ en:
         tile:
           one: "%{count} product not yet classified"
           other: "%{count} products not yet classified"
+      consolidate:
+        label: Consolidate
+        tile:
+          one: "%{count} transaction to consolidate"
+          other: "%{count} transactions to consolidate"
       groups:
         label: Groups
       journal:

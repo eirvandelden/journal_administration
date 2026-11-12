@@ -7,7 +7,7 @@ class OriginBackLinkTest < ActionDispatch::IntegrationTest
     @transaction = transactions(:uncategorized)
   end
 
-  test "categoriseren tile opens the filtered journal with a verwerken back link" do
+  test "consolideren tile opens the filtered journal with a verwerken back link" do
     get hub_url(:processing)
     tile = css_select("main > nav a").map { |link| link["href"] }.find { |href| href.start_with?("/transactions") }
 
@@ -23,7 +23,7 @@ class OriginBackLinkTest < ActionDispatch::IntegrationTest
 
     get transaction_url(@transaction, from: :processing)
 
-    assert_select "main > header nav a[href=?]", list, text: "‹ Categoriseren"
+    assert_select "main > header nav a[href=?]", list, text: "‹ Consolideren"
     assert_select "main > header nav a[href=?]", edit_transaction_path(@transaction, from: :processing)
 
     get edit_transaction_url(@transaction, from: :processing)
@@ -37,7 +37,7 @@ class OriginBackLinkTest < ActionDispatch::IntegrationTest
     assert_redirected_to "#{polymorphic_path(@transaction)}?from=processing"
     follow_redirect!
 
-    assert_select "main > header nav a[href=?]", list, text: "‹ Categoriseren"
+    assert_select "main > header nav a[href=?]", list, text: "‹ Consolideren"
   end
 
   test "delete from a verwerken flow lands on verwerken" do
