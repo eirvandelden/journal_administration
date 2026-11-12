@@ -86,7 +86,9 @@ class AssistantParityTest < ActionDispatch::IntegrationTest
     "dashboard#index" => "a page of totals; budget_status and find_transactions answer the same questions",
     "hubs#show" => "a landing page of counts that link to lists; find_uncategorized_transactions, " \
       "list_unclassified_products, list_receipts and budget_status answer the same questions",
-    "searches#index" => "a page of search results; find_accounts and find_transactions search"
+    "searches#index" => "a page of search results; find_accounts and find_transactions search",
+    "todos#index" => "one list of what find_uncategorized_transactions, find_accounts and " \
+      "list_unclassified_products return"
   }.freeze
 
   setup do

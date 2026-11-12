@@ -55,7 +55,7 @@ Rails.application.routes.draw do
   resources :categories
   resources :searches, only: [ :index ]
   get "dashboard/index"
-  get "todo", to: redirect("/hubs/processing"), as: :todo
+  get "todo", to: "todos#index", as: :todo
 
   match "mcp" => "assistant#create", via: %i[ post get delete ], as: :assistant
 

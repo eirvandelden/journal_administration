@@ -676,6 +676,11 @@ en:
         label: Accounts
       admin_dashboard:
         label: Admin dashboard
+      all:
+        label: All
+        tile:
+          one: "%{count} open item"
+          other: "%{count} open items"
       appropriations:
         label: Appropriations
         tile:
@@ -920,6 +925,16 @@ en:
       long: "%B %d, %Y %H:%M"
       short: "%d %b %H:%M"
     pm: pm
+  todos:
+    index:
+      account: Account
+      date: Date
+      description: Description
+      empty: "🎉 Nothing to do. All transactions are consolidated and all accounts and products are classified."
+      kind: Kind
+      product: Product
+      title: All
+      transaction: Transaction
   transaction_absorptions:
     create:
       success: "%{count} transactions absorbed from duplicate accounts."

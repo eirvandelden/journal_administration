@@ -17,6 +17,7 @@ module MenuMap
   end
 
   # i18n-tasks-use t("menu.pages.appropriations.tile")
+  # i18n-tasks-use t("menu.pages.all.tile")
   # i18n-tasks-use t("menu.pages.chattels.tile")
   # i18n-tasks-use t("menu.pages.classify_accounts.tile")
   # i18n-tasks-use t("menu.pages.classify_products.tile")
@@ -66,7 +67,8 @@ module MenuMap
         action: menu_link(t("menu.hubs.processing.import"), new_transactions_import_path),
         pages: [
           *open_pages,
-          menu_page(:import, new_transactions_import_path, %w[transactions/imports])
+          menu_page(:import, new_transactions_import_path, %w[transactions/imports]),
+          menu_page(:all, todo_path, %w[todos], count: -> { open_pages.sum { |page| page.count.to_i } })
         ])
     end
 

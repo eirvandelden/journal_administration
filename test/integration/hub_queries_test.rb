@@ -6,6 +6,8 @@ class HubQueriesTest < ActionDispatch::IntegrationTest
 
   # Measured on 2026-11-11, the session lookup included
   PLANNEN_LANDING_QUERIES = 18
+  # Measured on 2026-11-12 with one page of 20 open transactions, the session lookup included
+  ALLES_QUERIES = 49
 
   setup { sign_in_as(users(:member)) }
 
@@ -23,10 +25,29 @@ class HubQueriesTest < ActionDispatch::IntegrationTest
     assert_queries_count(PLANNEN_LANDING_QUERIES) { get hub_url(:planning) }
   end
 
+  test "alles query count is bounded by the page" do
+    open_transactions(25)
+
+    assert_queries_count(ALLES_QUERIES) { get todo_url }
+
+    open_transactions(15)
+
+    assert_queries_count(ALLES_QUERIES) { get todo_url }
+  end
+
   private
     def charged_appropriation(index)
       appropriation = Appropriation.create!(purpose: "Charged #{index}", person: people(:etienne),
         budget_year: Date.current.year, amount: 5000)
       credit(1000, note: "charge #{index}").update!(appropriation:)
+    end
+
+    # Booked in the future, so the open transactions fill the first page of Alles.
+    def open_transactions(count)
+      booked_at = 1.hour.from_now
+      count.times do |index|
+        Transaction.create!(amount: index + 1, booked_at: booked_at, interest_at: booked_at,
+          debitor: accounts(:checking), creditor: accounts(:unknown), note: "Open #{index}")
+      end
     end
 end

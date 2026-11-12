@@ -48,6 +48,13 @@ class NavigationHubsTest < ActionDispatch::IntegrationTest
     assert_select "tbody", text: /Half split/
   end
 
+  test "verwerken hub column order" do
+    get hub_url(:processing)
+
+    assert_equal [ "Consolideren", "Rekeningen indelen", "Producten classificeren", "Importeren", "Alles" ],
+      css_select("nav.rail + nav > ul > li > a").map { |link| link.children.first.text.squish }
+  end
+
   test "importeren tile item and title bar action" do
     get hub_url(:processing)
 
@@ -59,6 +66,27 @@ class NavigationHubsTest < ActionDispatch::IntegrationTest
 
     assert_select "nav.rail a[aria-current='true']", text: /Verwerken/
     assert_select "nav.rail + nav a[aria-current='page']", text: /Importeren/
+  end
+
+  test "alles tile counts and lists every open item" do
+    leave_nothing_to_do
+    older = open_transaction("Older open", 3.days.ago)
+    newer = open_transaction("Newer open", 1.day.ago)
+    account = Account.create!(name: "New shop")
+    product = Product.create!(name: "New crisps", normalized_name: "new crisps")
+    account_created_at = 2.days.ago
+    account.update_columns(created_at: account_created_at, updated_at: account_created_at)
+    product.update_columns(created_at: 4.days.ago)
+
+    get hub_url(:processing)
+
+    assert_select "main > nav a[href=?]", todo_path(from: :processing), text: /Alles.*4 openstaande items/m
+    assert_select "nav.rail + nav a[href=?] data[value=?]", todo_path, "4"
+
+    get todo_url
+
+    assert_equal [ newer, account, older, product ].map { |record| polymorphic_path(record) },
+      css_select("tbody td a").map { |link| URI(link["href"]).path }
   end
 
   test "rekeningen indelen shows zero and no badge" do
@@ -144,10 +172,13 @@ class NavigationHubsTest < ActionDispatch::IntegrationTest
     assert_select "nav.rail + nav", 0
   end
 
-  test "todo redirects to verwerken" do
+  test "todo shows alles in verwerken" do
     get todo_url
 
-    assert_redirected_to hub_path(:processing)
+    assert_response :success
+    assert_select "main > header h1", "Alles"
+    assert_select "nav.rail a[aria-current='true']", text: /Verwerken/
+    assert_select "nav.rail + nav a[aria-current='page']", text: /Alles/
   end
 
   test "member sees beheer without gebruikers" do
@@ -227,6 +258,13 @@ class NavigationHubsTest < ActionDispatch::IntegrationTest
         Transaction.create!(amount: index + 1, booked_at: index.minutes.ago, interest_at: index.minutes.ago,
           debitor: accounts(:checking), creditor: accounts(:unknown), note: "Uncategorized #{index}")
       end
+    end
+
+    def leave_nothing_to_do
+      TransactionSplit.delete_all
+      Transaction.uncategorized.update_all(category_id: categories(:groceries).id)
+      Account.update_all("updated_at = datetime(created_at, '+1 day')")
+      Product.unclassified.update_all(brand: "AH", product_type_id: product_types(:naturel_chips).id)
     end
 
     def open_transaction(note, booked_at, amount: 500)

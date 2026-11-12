@@ -676,6 +676,11 @@ it:
         label: Conti
       admin_dashboard:
         label: Dashboard amministratore
+      all:
+        label: Tutto
+        tile:
+          one: "%{count} elemento aperto"
+          other: "%{count} elementi aperti"
       appropriations:
         label: Stanziamenti
         tile:
@@ -920,6 +925,16 @@ it:
       long: "%d %B %Y %H:%M"
       short: "%d %b %H:%M"
     pm: pm
+  todos:
+    index:
+      account: Conto
+      date: Data
+      description: Descrizione
+      empty: "🎉 Nulla da fare. Tutte le transazioni sono consolidate e tutti i conti e prodotti sono classificati."
+      kind: Tipo
+      product: Prodotto
+      title: Tutto
+      transaction: Transazione
   transaction_absorptions:
     create:
       success: "%{count} transazioni assorbite dai conti duplicati."

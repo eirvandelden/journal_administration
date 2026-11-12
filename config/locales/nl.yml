@@ -676,6 +676,11 @@ nl:
         label: Rekeningen
       admin_dashboard:
         label: Beheerdashboard
+      all:
+        label: Alles
+        tile:
+          one: "%{count} openstaand item"
+          other: "%{count} openstaande items"
       appropriations:
         label: Begrotingsposten
         tile:
@@ -920,6 +925,16 @@ nl:
       long: "%d %B %Y %H:%M"
       short: "%d %b %H:%M"
     pm: "'s middags"
+  todos:
+    index:
+      account: Rekening
+      date: Datum
+      description: Omschrijving
+      empty: "🎉 Niets te doen. Alle transacties zijn geconsolideerd en alle rekeningen en producten zijn ingedeeld."
+      kind: Soort
+      product: Product
+      title: Alles
+      transaction: Transactie
   transaction_absorptions:
     create:
       success: "%{count} transacties overgenomen van dubbele rekeningen."
