@@ -38,7 +38,7 @@ class NavigationHubsLayoutTest < ApplicationSystemTestCase
     within("nav.rail") { click_link "Verwerken" }
 
     assert_current_path hub_path(:processing)
-    assert_selector "main > nav a", text: "Categoriseren"
+    assert_selector "main > nav a", text: "Consolideren"
   end
 
   test "a tile shows its label above its text at every width" do
@@ -46,7 +46,7 @@ class NavigationHubsLayoutTest < ApplicationSystemTestCase
       current_window.resize_to(*size)
       visit hub_url(:processing)
 
-      assert_equal [ true ] * 3, text_below_label, "at #{size.join('x')}"
+      assert_equal [ true ] * 5, text_below_label, "at #{size.join('x')}"
     end
   end
 
