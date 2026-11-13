@@ -701,7 +701,7 @@ Phase D runs first, in the appkit repository, from its own accepted intent. Phas
 
 ### Proof
 
-- The rail shows 🔍, Overzicht, Verwerken, Plannen, Administratie, Boodschappen and 👤 Profiel, and nothing else; no rail item opens a pop-up → `test/integration/main_navigation_test.rb` `test_rail_shows_search_five_hubs_and_profiel`
+- The rail shows 🔍, Overzicht, Verwerken, Plannen, Administratie, Boodschappen and 👤 Profiel, and nothing else; no rail item opens a pop-up → `test/integration/navigation_hubs_test.rb` `test_rail_shows_search_five_hubs_and_profiel`
 - With 12 transactions that need consolidation, the Consolideren tile and badge show 12 → `test/integration/navigation_hubs_test.rb` `test_consolideren_tile_and_badge_count_transactions_to_consolidate`
 - A € 100 transaction split into € 60 Boodschappen and € 40 without a category counts on Consolideren and shows in its list → `test/integration/navigation_hubs_test.rb` `test_partly_split_transaction_counts_on_consolideren`
 - Clicking the Consolideren tile opens the filtered journal with "‹ Verwerken" → `test/integration/origin_back_link_test.rb` `test_consolideren_tile_opens_the_filtered_journal_with_a_verwerken_back_link`
@@ -712,7 +712,7 @@ Phase D runs first, in the appkit repository, from its own accepted intent. Phas
 - 👤 Profiel shows the tiles Gegevens, Voorkeuren, Beheer and Uitloggen, and the same four in the hub column → `test/integration/navigation_hubs_test.rb` `test_profiel_landing_and_hub_column`
 - Uitloggen, as a tile or in the hub column, signs out and shows the sign-in page → `test/system/navigation_hubs_layout_test.rb` `test_uitloggen_tile_signs_out` and `test_uitloggen_hub_column_item_signs_out`
 - On Voorkeuren, the Beheer landing page and Categorieën, the rail marks Profiel → `test/integration/navigation_hubs_test.rb` `test_rail_marks_profiel_on_voorkeuren_and_beheer`
-- At phone width the bar shows exactly six tabs and no title bar holds an avatar → `test/system/navigation_hubs_layout_test.rb` `test_phone_tab_bar_has_six_tabs_and_no_avatar`; `test/integration/navigation_hubs_test.rb` `test_no_title_bar_holds_an_avatar`
+- At phone width the bar shows exactly six tabs and no title bar holds an avatar → `test/system/navigation_hubs_layout_test.rb` `test_phone_tab_bar_has_six_hubs_and_no_avatar`; `test/integration/navigation_hubs_test.rb` `test_no_title_bar_holds_an_avatar`
 - Query count: the Verwerken landing runs three `SELECT COUNT` queries with Alles and Importeren added → `test/integration/hub_queries_test.rb` `test_verwerken_counts_run_once_per_request`
 - Query count: the Profiel landing runs a pinned number of queries, with no count query → `test/integration/hub_queries_test.rb` `test_profiel_landing_runs_no_count_query`
 - Query count: `/todo` runs the same number of queries with 25 and with 40 open transactions → `test/integration/hub_queries_test.rb` `test_alles_query_count_is_bounded_by_the_page`
