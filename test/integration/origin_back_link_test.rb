@@ -40,6 +40,17 @@ class OriginBackLinkTest < ActionDispatch::IntegrationTest
     assert_select "main > header nav a[href=?]", list, text: "‹ Consolideren"
   end
 
+  test "saving gegevens opened from the profiel tile keeps the profiel back link" do
+    user = users(:member)
+
+    patch user_profile_url(user), params: { from: "profile", user: { name: user.name } }
+
+    assert_redirected_to "#{user_profile_path(user)}?from=profile"
+    follow_redirect!
+
+    assert_select "main > header nav a[href=?]", hub_path(:profile), text: "‹ Profiel"
+  end
+
   test "record opened from alles returns to alles" do
     alles = "#{todo_path}?from=processing.all"
     record = "#{polymorphic_path(@transaction)}?from=processing.all"
