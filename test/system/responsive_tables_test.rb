@@ -2,6 +2,7 @@ require "application_system_test_case"
 
 class ResponsiveTablesTest < ApplicationSystemTestCase
   LAPTOP = [ 1280, 800 ].freeze
+  NARROW = [ 900, 800 ].freeze
   PHONE = [ 390, 844 ].freeze
 
   setup do
@@ -37,13 +38,15 @@ class ResponsiveTablesTest < ApplicationSystemTestCase
     assert_equal "columnheader", first("table.transactions th", visible: :all)["role"]
   end
 
-  test "no index page, show page or the dashboard scrolls sideways at phone width" do
-    current_window.resize_to(*PHONE)
+  test "no page scrolls sideways at laptop narrow or phone width" do
+    [ LAPTOP, NARROW, PHONE ].each do |size|
+      current_window.resize_to(*size)
 
-    pages.each do |url|
-      visit url
+      pages.each do |url|
+        visit url
 
-      assert_no_sideways_scroll url
+        assert_no_sideways_scroll "#{url} at #{size.first}px"
+      end
     end
   end
 
@@ -62,7 +65,9 @@ class ResponsiveTablesTest < ApplicationSystemTestCase
   def pages
     [
       dashboard_index_url, transactions_url, accounts_url, people_url, groups_url, categories_url, chattels_url,
-      budgets_url, appropriations_url, receipts_url, products_url, product_types_url, todo_url,
+      budgets_url, appropriations_url, receipts_url, products_url, product_types_url,
+      hub_url(:processing), hub_url(:planning), hub_url(:records), hub_url(:shopping), hub_url(:setup),
+      hub_url(:profile), todo_url,
       account_url(accounts(:checking)), category_url(categories(:supermarket)), budget_url(budgets(:active_budget)),
       appropriation_url(appropriations(:christmas_serena)), receipt_url(receipts(:albert_heijn_friday)),
       product_url(products(:ah_ribbelchips)), product_type_url(product_types(:naturel_chips))

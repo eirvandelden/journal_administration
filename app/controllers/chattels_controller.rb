@@ -14,6 +14,7 @@ class ChattelsController < ApplicationController
   #: () -> void
   def index
     scope = Chattel.includes(:warranty_document_attachment, purchase_transaction: :proof_of_purchase_attachment)
+    scope = scope.warranty_ending if params[:filter] == "warranty_ending"
     @warrantied = scope.active.warrantied
     @out_of_warranty = scope.active.out_of_warranty
     @unknown_warranty = scope.unknown_warranty
@@ -67,7 +68,7 @@ class ChattelsController < ApplicationController
   def update
     respond_to do |format|
       if @chattel.update(chattel_params)
-        format.html { redirect_to @chattel, notice: t("chattels.update.success") }
+        format.html { redirect_to carried_path(@chattel), notice: t("chattels.update.success") }
         format.json { render :show, status: :ok, location: @chattel }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -84,7 +85,9 @@ class ChattelsController < ApplicationController
     @chattel.destroy!
 
     respond_to do |format|
-      format.html { redirect_to chattels_path, status: :see_other, notice: t("chattels.destroy.success") }
+      format.html do
+        redirect_to menu.exit_path(chattels_path), status: :see_other, notice: t("chattels.destroy.success")
+      end
       format.json { head :no_content }
     end
   end

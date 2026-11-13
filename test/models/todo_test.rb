@@ -1,30 +1,6 @@
 require "test_helper"
 
 class TodoTest < ActiveSupport::TestCase
-  test "show_upload_form? returns true when no transactions exist" do
-    Chattel.update_all(purchase_transaction_id: nil)
-    TransactionLink.delete_all
-    TransactionSplit.delete_all
-    Transaction.delete_all
-    todo = Todo.new
-
-    assert_predicate todo, :show_upload_form?
-  end
-
-  test "show_upload_form? returns true when latest transaction is older than threshold" do
-    Transaction.update_all(booked_at: 14.days.ago)
-    todo = Todo.new
-
-    assert_predicate todo, :show_upload_form?
-  end
-
-  test "show_upload_form? returns false when latest transaction is recent" do
-    Transaction.update_all(booked_at: 1.day.ago)
-    todo = Todo.new
-
-    assert_not todo.show_upload_form?
-  end
-
   test "items includes uncategorized transactions" do
     todo = Todo.new
 
@@ -48,6 +24,16 @@ class TodoTest < ActiveSupport::TestCase
     kinds = todo.items.map(&:kind)
 
     assert_includes kinds, :account
+  end
+
+  test "items leaves out accounts changed since their import" do
+    account = accounts(:unknown)
+    account.update_columns(updated_at: account.created_at + 1.day)
+    todo = Todo.new
+
+    account_records = todo.items.select { |item| item.kind == :account }.map(&:record)
+
+    assert_not_includes account_records, account
   end
 
   test "items are sorted newest-first" do

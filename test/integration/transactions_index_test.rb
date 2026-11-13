@@ -105,7 +105,7 @@ class TransactionsIndexTest < ActionDispatch::IntegrationTest
     formatted_amount = Regexp.escape(ApplicationController.helpers.cents_to_currency(1000))
     formatted_note = Regexp.escape(transactions(:debit_grocery).note)
 
-    assert_match %r{>#{formatted_amount}</data>.*?<td[^>]*>#{formatted_note}</td>}m, response.body
+    assert_match %r{>#{formatted_amount}</a></data>.*?<td[^>]*>#{formatted_note}</td>}m, response.body
   end
 
   test "no_category filter keeps showing a nil-category remainder split as uncategorized" do
@@ -120,7 +120,7 @@ class TransactionsIndexTest < ActionDispatch::IntegrationTest
     formatted_amount = Regexp.escape(ApplicationController.helpers.cents_to_currency(1500))
     formatted_note = Regexp.escape(transaction.note)
 
-    assert_match %r{>#{formatted_amount}</data>.*?<td[^>]*>#{formatted_note}</td>}m, response.body
+    assert_match %r{>#{formatted_amount}</a></data>.*?<td[^>]*>#{formatted_note}</td>}m, response.body
   end
 
   class SplitSubRows < ActionDispatch::IntegrationTest

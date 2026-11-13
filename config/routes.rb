@@ -6,6 +6,7 @@ Rails.application.routes.draw do
     resources :users
   end
 
+  resources :hubs, only: :show
   resources :chattels
   resources :people
   resources :groups

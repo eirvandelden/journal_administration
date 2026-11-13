@@ -49,7 +49,7 @@ class BudgetsController < ApplicationController
     @budget = Budget.new(budget_params)
 
     if @budget.save
-      redirect_to @budget, notice: t("budgets.create.success")
+      redirect_to carried_path(@budget), notice: t("budgets.create.success")
     else
       render :new, status: :unprocessable_entity
     end
@@ -63,7 +63,7 @@ class BudgetsController < ApplicationController
   #: () -> void
   def update
     if @budget.update(budget_params)
-      redirect_to @budget, notice: t("budgets.update.success")
+      redirect_to carried_path(@budget), notice: t("budgets.update.success")
     else
       render :edit, status: :unprocessable_entity
     end
@@ -77,7 +77,7 @@ class BudgetsController < ApplicationController
   #: () -> void
   def destroy
     @budget.destroy
-    redirect_to budgets_url, notice: t("budgets.destroy.success")
+    redirect_to menu.exit_path(budgets_url), notice: t("budgets.destroy.success")
   end
 
   private

@@ -307,10 +307,6 @@ nl:
         summary: Overzicht
         title: Dashboard
         total_users: Totaal gebruikers
-    nav:
-      back_to_site: "🌐 Terug naar site"
-      dashboard: "📊 Dashboard"
-      users: "👥 Gebruikers"
     users:
       create:
         success: "✅ Gebruiker succesvol aangemaakt"
@@ -652,34 +648,99 @@ nl:
       submit: "%{model} opslaan"
       update: "%{model} bijwerken"
   home: "🏠 Thuis"
-  journal: "📔 Journaal"
   language_names:
     en: English
     it: Italiano
     nl: Nederlands
-  layouts:
-    admin:
-      title: Beheer - %{app}
   left: "📤 Verlaten"
-  main_nav:
-    accounts: "🏦 %{model}"
-    admin: "🥷 Beheer"
-    appropriations: "🎁 %{model}"
-    budgets: "💰 %{model}"
-    categories: "🏷️ %{model}"
-    chattels: "📦 %{model}"
-    groups: "👥 Groepen"
-    people: "👤 Personen"
-    preferences: "🎨 Voorkeuren"
-    product_types: "🥫 %{model}"
-    products: "🛒 %{model}"
-    profile: "👤 Profiel"
-    receipts: "🧾 %{model}"
-    todo: "✅ %{model}"
-    todo_all: Alle
-    todo_consolidatable_accounts: Te consolideren rekeningen
-    todo_consolidatable_transactions: Te consolideren transacties
-    todo_upload: Nieuwe transacties uploaden
+  menu:
+    hubs:
+      overview:
+        label: Overzicht
+      planning:
+        label: Plannen
+      processing:
+        import: Importeren
+        label: Verwerken
+      profile:
+        label: Profiel
+      records:
+        label: Administratie
+      setup:
+        label: Beheer
+      shopping:
+        label: Boodschappen
+    pages:
+      accounts:
+        label: Rekeningen
+      admin_dashboard:
+        label: Beheerdashboard
+      all:
+        label: Alles
+        tile:
+          one: "%{count} openstaand item"
+          other: "%{count} openstaande items"
+      appropriations:
+        label: Begrotingsposten
+        tile:
+          one: "%{count} begrotingspost met geld over"
+          other: "%{count} begrotingsposten met geld over"
+      budgets:
+        label: Budgetten
+        no_active_budget: Geen actief budget
+        summary: Uitgegeven %{spent} van %{planned}, nog %{left} over
+      categories:
+        label: Categorieën
+      chattels:
+        label: Bezittingen
+        tile:
+          one: "%{count} bezitting waarvan de garantie binnen 90 dagen afloopt"
+          other: "%{count} bezittingen waarvan de garantie binnen 90 dagen afloopt"
+      classify_accounts:
+        label: Rekeningen indelen
+        tile:
+          one: "%{count} rekening nog niet ingedeeld"
+          other: "%{count} rekeningen nog niet ingedeeld"
+      classify_products:
+        label: Producten classificeren
+        tile:
+          one: "%{count} product nog niet geclassificeerd"
+          other: "%{count} producten nog niet geclassificeerd"
+      consolidate:
+        label: Consolideren
+        tile:
+          one: "%{count} transactie te consolideren"
+          other: "%{count} transacties te consolideren"
+      groups:
+        label: Groepen
+      import:
+        label: Importeren
+      journal:
+        label: Journaal
+      people:
+        label: Gezinsleden
+      preferences:
+        label: Voorkeuren
+      product_types:
+        label: Productsoorten
+      products:
+        label: Producten
+        tile:
+          one: "%{count} product nog niet geclassificeerd"
+          other: "%{count} producten nog niet geclassificeerd"
+      profile_details:
+        label: Gegevens
+      receipts:
+        label: Facturen
+        tile:
+          one: "%{count} factuur zonder betaling"
+          other: "%{count} facturen zonder betaling"
+      setup:
+        label: Beheer
+      sign_out:
+        label: Uitloggen
+      users:
+        label: Gebruikers
   merchant_reassignments:
     create:
       failure: 'Verplaatsen van transacties mislukt: %{message}'
@@ -876,10 +937,10 @@ nl:
       account: Rekening
       date: Datum
       description: Omschrijving
-      empty: "🎉 Niets te doen. Alle transacties zijn gecategoriseerd en alle rekeningen zijn bijgewerkt."
+      empty: "🎉 Niets te doen. Alle transacties zijn geconsolideerd en alle rekeningen en producten zijn ingedeeld."
       kind: Soort
       product: Product
-      title: Te doen
+      title: Alles
       transaction: Transactie
   transaction_absorptions:
     create:

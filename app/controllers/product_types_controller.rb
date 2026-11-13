@@ -54,7 +54,8 @@ class ProductTypesController < ApplicationController
   # @return [void]
   #: () -> void
   def update
-    return redirect_to product_types_path, notice: t(".success") if @product_type.update(product_type_params)
+    updated = @product_type.update(product_type_params)
+    return redirect_to menu.carry(product_types_path), notice: t(".success") if updated
 
     @categories = Category.order(:name)
     render :edit, status: :unprocessable_entity

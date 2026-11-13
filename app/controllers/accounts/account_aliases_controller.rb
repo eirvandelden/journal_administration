@@ -11,9 +11,9 @@ class Accounts::AccountAliasesController < ApplicationController
     @account_alias = @account.account_aliases.build(account_alias_params)
 
     if @account_alias.save
-      redirect_to @account, notice: t("account_aliases.create.success")
+      redirect_to carried_path(@account), notice: t("account_aliases.create.success")
     else
-      redirect_to @account, alert: @account_alias.errors.full_messages.to_sentence
+      redirect_to carried_path(@account), alert: @account_alias.errors.full_messages.to_sentence
     end
   end
 
@@ -24,7 +24,7 @@ class Accounts::AccountAliasesController < ApplicationController
   #: () -> void
   def destroy
     @account.account_aliases.find(params[:id]).destroy
-    redirect_to @account, notice: t("account_aliases.destroy.success")
+    redirect_to carried_path(@account), notice: t("account_aliases.destroy.success")
   end
 
   private

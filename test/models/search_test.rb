@@ -88,11 +88,17 @@ class SearchTest < ActiveSupport::TestCase
 
   # -- page results -----------------------------------------------------------
 
-  test "results includes pages matching nav labels" do
-    # "Home" is the home label in the en locale
-    search = Search.new(query: "Home")
+  test "Search matches hub and page labels from the menu map" do
+    pages = [ Appkit::Menu::Link.new(label: "Journaal", path: "/transactions") ]
+    search = Search.new(query: "journ", pages: pages)
 
-    assert search.results.key?(:pages)
+    assert_equal pages, search.results[:pages]
+  end
+
+  test "results omit pages that do not match" do
+    pages = [ Appkit::Menu::Link.new(label: "Journaal", path: "/transactions") ]
+
+    assert_not Search.new(query: "Budget", pages: pages).results.key?(:pages)
   end
 
   # -- empty groups -----------------------------------------------------------

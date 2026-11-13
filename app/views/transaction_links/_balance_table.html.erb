@@ -21,7 +21,8 @@
         <td>
           <%= button_to t("transaction_links.unlink"),
                 transaction_transaction_link_path(transaction, link),
-                method: :delete %>
+                method: :delete,
+                params: menu.origin_params %>
         </td>
       </tr>
     <% end %>

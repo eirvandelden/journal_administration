@@ -11,8 +11,8 @@ class AccountsController < ApplicationController
     external_accounts = Account.external.includes(:account_numbers, :person, group: :people).order(:id)
 
     if params[:filter] == "untouched"
-      own_accounts = own_accounts.where("updated_at = created_at")
-      external_accounts = external_accounts.where("updated_at = created_at")
+      own_accounts = own_accounts.untouched
+      external_accounts = external_accounts.untouched
     end
 
     @own_page = GearedPagination::Recordset.new(own_accounts, per_page: [ 50 ]).page(params[:own_page])
@@ -55,7 +55,7 @@ class AccountsController < ApplicationController
 
     respond_to do |format|
       if @account.save
-        format.html { redirect_to @account, notice: t("accounts.create.success") }
+        format.html { redirect_to carried_path(@account), notice: t("accounts.create.success") }
         format.json { render :show, status: :created, location: @account }
       else
         format.html { render_with_blank_number :new }
@@ -71,7 +71,7 @@ class AccountsController < ApplicationController
   def update
     respond_to do |format|
       if @account.update(account_params)
-        format.html { redirect_to @account, notice: t("accounts.update.success") }
+        format.html { redirect_to carried_path(@account), notice: t("accounts.update.success") }
         format.json { render :show, status: :ok, location: @account }
       else
         format.html { render_with_blank_number :edit }
@@ -89,12 +89,14 @@ class AccountsController < ApplicationController
   def destroy
     if @account.destroy
       respond_to do |format|
-        format.html { redirect_to accounts_url, notice: t("accounts.destroy.success") }
+        format.html { redirect_to menu.exit_path(accounts_url), notice: t("accounts.destroy.success") }
         format.json { head :no_content }
       end
     else
       respond_to do |format|
-        format.html { redirect_to edit_account_path(@account), alert: @account.errors.full_messages.to_sentence }
+        format.html do
+          redirect_to menu.carry(edit_account_path(@account)), alert: @account.errors.full_messages.to_sentence
+        end
         format.json { render json: @account.errors, status: :unprocessable_entity }
       end
     end

@@ -41,7 +41,7 @@ class PeopleController < ApplicationController
   #: () -> void
   def create
     @person = Person.new(person_params)
-    return redirect_to @person, notice: t("people.create.success") if @person.save
+    return redirect_to carried_path(@person), notice: t("people.create.success") if @person.save
 
     render :new, status: :unprocessable_entity
   end
@@ -52,11 +52,11 @@ class PeopleController < ApplicationController
   # @return [void]
   #: () -> void
   def update
-    return redirect_to @person, notice: t("people.update.success") if @person.update(person_params)
+    return redirect_to carried_path(@person), notice: t("people.update.success") if @person.update(person_params)
 
     return render :edit, status: :unprocessable_entity if @person.errors.key?(:name)
 
-    redirect_to @person, alert: @person.errors.full_messages.to_sentence
+    redirect_to carried_path(@person), alert: @person.errors.full_messages.to_sentence
   end
 
   # Deletes an unused person.
@@ -65,9 +65,9 @@ class PeopleController < ApplicationController
   # @return [void]
   #: () -> void
   def destroy
-    return redirect_to people_path, notice: t("people.destroy.success") if @person.destroy
+    return redirect_to menu.exit_path(people_path), notice: t("people.destroy.success") if @person.destroy
 
-    redirect_to edit_person_path(@person), alert: @person.errors.full_messages.to_sentence
+    redirect_to menu.carry(edit_person_path(@person)), alert: @person.errors.full_messages.to_sentence
   end
 
   private

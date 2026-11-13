@@ -32,7 +32,7 @@
           </tr>
           <% appropriations.each do |appropriation| %>
             <tr role="row">
-              <td role="cell" data-label="<%= labels[:purpose] %>"><%= link_to appropriation.purpose, appropriation_path(appropriation) %></td>
+              <td role="cell" data-label="<%= labels[:purpose] %>"><%= link_to appropriation.purpose, menu.carry(appropriation_path(appropriation)) %></td>
               <td role="cell" data-label="<%= labels[:amount] %>"><data value="<%= appropriation.amount %>"><%= cents_to_currency(appropriation.amount) %></data></td>
               <td role="cell" data-label="<%= labels[:used] %>"><%= render "appropriations/progress", amount: appropriation.amount, charged: appropriation.charged, overspent: appropriation.overspent? %></td>
               <td role="cell" data-label="<%= labels[:balance] %>"><%= render "appropriations/balance", appropriation: appropriation %></td>

@@ -23,10 +23,10 @@ class TransactionLinksController < ApplicationController
     respond_to do |format|
       if @transaction_link.save
         format.turbo_stream
-        format.html { redirect_to edit_transaction_path(@transaction) }
+        format.html { redirect_to menu.carry(edit_transaction_path(@transaction)) }
       else
         format.turbo_stream { head :unprocessable_entity }
-        format.html { redirect_to edit_transaction_path(@transaction) }
+        format.html { redirect_to menu.carry(edit_transaction_path(@transaction)) }
       end
     end
   end
@@ -42,7 +42,7 @@ class TransactionLinksController < ApplicationController
 
     respond_to do |format|
       format.turbo_stream
-      format.html { redirect_to edit_transaction_path(@transaction) }
+      format.html { redirect_to menu.carry(edit_transaction_path(@transaction)) }
     end
   end
 

@@ -16,7 +16,7 @@ class IndexPagesTest < ActionDispatch::IntegrationTest
 
   ALL_INDEXES = %i[
     transactions_path accounts_path people_path groups_path categories_path chattels_path budgets_path
-    appropriations_path receipts_path products_path product_types_path todo_path admin_users_path
+    appropriations_path receipts_path products_path product_types_path admin_users_path
   ].freeze
 
   setup do

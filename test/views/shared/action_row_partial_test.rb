@@ -1,6 +1,9 @@
 require "test_helper"
+require_relative "../../test_helpers/view_menu"
 
 class SharedActionRowPartialTest < ActionView::TestCase
+  setup { view.extend(ViewMenu) }
+
   def render_row(**locals)
     form = ActionView::Helpers::FormBuilder.new(:account, accounts(:checking), self, {})
     render partial: "shared/action_row", locals: { form: form, cancel_path: "/accounts/1" }.merge(locals)

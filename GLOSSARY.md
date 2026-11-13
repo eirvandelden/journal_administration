@@ -1,17 +1,28 @@
 - **Appropriation** — a sum set aside for one purpose and one person in one budget year, saved for in a potje.
+- **Badge** — the count next to a page in the hub column; a count of 0 shows no badge.
+- **Beheer** — the set-up pages behind the Profiel hub: Categorieën, Productsoorten, Gezinsleden, Groepen, and Gebruikers for admins; a hub with no rail item of its own.
 - **Betaalrekening** — the ING current account where salary arrives and most fixed costs leave. Avoid: main account.
 - **Buffer** — the potje for emergencies only, filled from the leftovers of the 13e maand and the vakantiegeld up to a target of about three months of essential costs, above which the windfall rests go to Projecten; it never pays a known cost. The standard term is emergency fund.
 - **Delivery** — a receipt that carries an Albert Heijn order number; one order is one delivery. Avoid: order, bestelling.
 - **Door-card payment** — the card payment made at the door when a grocery delivery arrives, the bank note carries a pasvolgnr and no order number. Avoid: pin payment, terminal payment.
+- **Hub** — a task group in the rail: Overzicht, Verwerken, Plannen, Administratie, Boodschappen or Profiel. Avoid: section, tab.
+- **Hub column** — the list of the current hub's pages, next to the rail on a wide screen.
 - **Kinderen** — the potje that receives the kinderbijslag and the KGB minus the children's own savings, and pays only for the children.
+- **Landing page** — a hub's own page, with one tile per page and that page's count.
+- **Menu map** — the one description of the hubs and their pages; the rail, the hub column, the landing pages and search all draw from it.
 - **Onvoorzien** — the small amount that stays on the Samen Betaalrekening after the monthly transfers, for unplanned costs; it is not a potje.
 - **Oranje Spaarrekening** — the ING savings account that holds the potjes.
 - **Order confirmation** — the mail Albert Heijn sends when an order is placed, "Bedankt voor jouw bestelling"; it lists what was ordered, not what was packed.
+- **Origin** — the hub whose landing page started the current flow; it travels as the `from` query parameter.
 - **Packed basket** — the lines of a delivery as read from a packing slip, stored as `receipts.packed`; an order confirmation alone gives no packed basket.
 - **Packing slip** — the mail that lists what was actually packed for a delivery, called "pakbon" in the older mails; it is the source of a receipt's lines. Avoid: invoice, factuur.
+- **Page** — one entry of a hub: a label, the controllers it owns, an optional filter, its list path, its tile path and an optional count or summary.
 - **Potje** — a virtual account inside a Spaarrekening with its own account number; it holds the money budgeted for one purpose. Avoid: pot, jar, envelope.
 - **Product type** — a shopping word for what a product is, such as "Naturel chips", regardless of brand; it carries the category its groceries book to. Called productsoort in Dutch. Avoid: product category.
+- **Profiel hub** — the hub for the signed-in user: Gegevens, Voorkeuren, Beheer and Uitloggen.
 - **Projecten** — the potje for tax refunds, the monthly leftover of the Samen Betaalrekening, and the windfall rests once Buffer is at its target.
+- **Rail** — the narrow column that holds search and the hubs, with Profiel last; on a phone it becomes the tab bar.
 - **Reserveringen** — the potje for saving ahead for recurring costs, such as insurance, the trimsalon and the dentist; the standard term is sinking fund.
 - **Samen** — the shared household: Etienne and his wife, with their joint Betaalrekening and potjes.
+- **Tile** — a page's entry on a landing page, with the count written out, also when it is 0.
 - **Vaste lasten** — fixed monthly costs, mostly paid straight from the Betaalrekening.

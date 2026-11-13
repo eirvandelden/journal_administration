@@ -67,7 +67,7 @@ class TransactionsController < ApplicationController
   def update
     respond_to do |format|
       if @transaction.update(transaction_params)
-        format.html { redirect_to @transaction, notice: t("transactions.update.success") }
+        format.html { redirect_to carried_path(@transaction), notice: t("transactions.update.success") }
         format.json { render :show, status: :ok, location: @transaction }
       else
         format.html { render :edit }
@@ -83,7 +83,7 @@ class TransactionsController < ApplicationController
   def destroy
     @transaction.destroy
     respond_to do |format|
-      format.html { redirect_to transactions_url, notice: t("transactions.destroy.success") }
+      format.html { redirect_to menu.exit_path(transactions_url), notice: t("transactions.destroy.success") }
       format.json { head :no_content }
     end
   end

@@ -21,7 +21,7 @@
             <td>
               <%= button_to t("transaction_links.link"),
                     transaction_transaction_links_path(transaction),
-                    params: { transfer_id: transfer.id } %>
+                    params: { transfer_id: transfer.id, **menu.origin_params } %>
             </td>
           </tr>
         <% end %>

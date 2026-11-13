@@ -159,7 +159,9 @@ class AppropriationsTest < ActionDispatch::IntegrationTest
   test "the year page works out what is charged once per appropriation" do
     reads = split_part_reads { get appropriations_path(year: 2026) }
 
-    assert_operator reads, :<=, 2 * Appropriation.of_year(2026).count
+    money_left_count = 1 # the Plannen hub column counts the appropriations with money left, in one query
+
+    assert_operator reads, :<=, 2 * Appropriation.of_year(2026).count + money_left_count
   end
 
   test "a year written with a leading zero is read as that year" do
@@ -200,6 +202,16 @@ class AppropriationsTest < ActionDispatch::IntegrationTest
 
     assert_select "tbody tr td:nth-child(3) a[href=?]", transaction_path(transactions(:gift_payment)),
       text: currency(4000)
+  end
+
+  test "a charge amount link sits inside its data element" do
+    appropriation = appropriations(:birthday_etienne)
+    transactions(:gift_payment).update!(appropriation:)
+
+    get appropriation_path(appropriation)
+
+    assert_select "tbody tr td:nth-child(3) data > a[href=?]", transaction_path(transactions(:gift_payment))
+    assert_select "main a data", count: 0
   end
 
   test "a split part charged to an appropriation links its amount to the payment it splits" do

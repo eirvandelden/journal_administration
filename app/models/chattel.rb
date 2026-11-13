@@ -15,10 +15,14 @@ class Chattel < ApplicationRecord
   validates :purchase_price, comparison: { greater_than: 0 }, allow_nil: true
   validates_pdf_attachment_of :warranty_document
 
+  # How long before a warranty ends the household is told
+  WARRANTY_NOTICE = 90.days
+
   scope :active, -> { where(left_possession_at: nil) }
   scope :left, -> { where.not(left_possession_at: nil) }
   scope :warrantied, -> { where(warranty_expires_at: Time.current..) }
   scope :out_of_warranty, -> { where(warranty_expires_at: ..Time.current) }
+  scope :warranty_ending, -> { active.where(warranty_expires_at: Time.current..WARRANTY_NOTICE.from_now) }
   scope :unknown_warranty, -> { active.where(warranty_expires_at: nil) }
 
   # The brands already recorded, so the same brand is not typed two ways

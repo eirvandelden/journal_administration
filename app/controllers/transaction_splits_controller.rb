@@ -14,7 +14,7 @@ class TransactionSplitsController < ApplicationController
       if @transaction_split.save
         @transaction.ensure_remainder_split
         format.turbo_stream
-        format.html { redirect_to edit_transaction_path(@transaction) }
+        format.html { redirect_to menu.carry(edit_transaction_path(@transaction)) }
       else
         format.turbo_stream { render :create, status: :unprocessable_entity }
         format.html { render "transactions/edit", status: :unprocessable_entity }
@@ -34,7 +34,7 @@ class TransactionSplitsController < ApplicationController
       if @transaction_split.update(split_params)
         @transaction.ensure_remainder_split
         format.turbo_stream
-        format.html { redirect_to edit_transaction_path(@transaction) }
+        format.html { redirect_to menu.carry(edit_transaction_path(@transaction)) }
       else
         format.turbo_stream { render :update, status: :unprocessable_entity }
         format.html { render "transactions/edit", status: :unprocessable_entity }
@@ -54,7 +54,7 @@ class TransactionSplitsController < ApplicationController
 
     respond_to do |format|
       format.turbo_stream
-      format.html { redirect_to edit_transaction_path(@transaction) }
+      format.html { redirect_to menu.carry(edit_transaction_path(@transaction)) }
     end
   end
 

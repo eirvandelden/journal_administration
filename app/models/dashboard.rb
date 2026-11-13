@@ -4,6 +4,18 @@
 # profit/loss. Uses STI types (Debit/Credit) to identify family transactions without
 # requiring a specific account.
 class Dashboard
+  # Planned and spent debit cents of the active budget
+  BudgetSummary = Data.define(
+    :planned,  #: Integer
+    :spent     #: Integer
+  )
+
+  class BudgetSummary
+    # Cents still to spend; negative when overspent
+    #: () -> Integer
+    def left = planned - spent
+  end
+
   # @return [DateRange] The date range for the dashboard
   attr_reader :date_range #: DateRange
 
@@ -109,6 +121,20 @@ class Dashboard
 
         amounts[budget_category.category] = (budget_category.amount * months_in_range).round
       end
+  end
+
+  # What the active budget plans to spend and what the debit categories spent, for the date range
+  #
+  # Built from budget_amounts and budget_actuals, so refunds and splits count as they do on the dashboard.
+  #
+  # @return [BudgetSummary, nil] nil without an active budget
+  #: () -> BudgetSummary?
+  def budget_summary
+    return unless active_budget
+
+    planned = budget_amounts.select { |category, _| category.debit? }.values.sum
+    spent = budget_actuals.select { |category, _| category.debit? }.values.sum
+    BudgetSummary.new(planned:, spent:)
   end
 
   # Calculates total credit including profit/loss adjustment

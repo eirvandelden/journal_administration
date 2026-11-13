@@ -1,6 +1,9 @@
 require "test_helper"
+require_relative "../../test_helpers/view_menu"
 
 class SharedDeleteFormPartialTest < ActionView::TestCase
+  setup { view.extend(ViewMenu) }
+
   test "renders an empty DELETE form with the dom_id delete id" do
     account = accounts(:checking)
 

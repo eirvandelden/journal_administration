@@ -239,4 +239,45 @@ class AppropriationTest < ActiveSupport::TestCase
       [ first, second ]
     end
   end
+
+  class MoneyLeft < ActiveSupport::TestCase
+    include AppropriationPayments
+
+    test "with_money_left counts in one query" do
+      assert_queries_count(1) { Appropriation.with_money_left.count }
+    end
+
+    test "with_money_left matches positive balance" do
+      appropriation = appropriations(:christmas_etienne)
+      credit(4000, note: "whole credit").update!(appropriation:)
+      debit(1000, note: "refund").update!(appropriation:)
+
+      assert_includes Appropriation.with_money_left, appropriation
+    end
+
+    test "with_money_left excludes overspent and exactly spent appropriations" do
+      spent = appropriations(:christmas_etienne)
+      credit(spent.amount, note: "all of it").update!(appropriation: spent)
+      over = appropriations(:birthday_etienne)
+      credit(over.amount + 100, note: "too much").update!(appropriation: over)
+
+      assert_not_includes Appropriation.with_money_left, spent
+      assert_not_includes Appropriation.with_money_left, over
+    end
+
+    test "with_money_left matches positive balance for whole and split credits and debits" do
+      first = appropriations(:christmas_etienne)
+      second = appropriations(:birthday_etienne)
+      credit(3000, note: "a").update!(appropriation: first)
+      debit(500, note: "b").update!(appropriation: first)
+      split_payment = credit(9000, note: "c")
+      split_payment.transaction_splits.create!(category: categories(:gifts), amount: 9000, appropriation: second)
+      refund = debit(2000, note: "d")
+      refund.transaction_splits.create!(category: categories(:gifts), amount: 2000, appropriation: second)
+
+      expected = Appropriation.all.select { |appropriation| appropriation.balance.positive? }
+
+      assert_equal expected.sort_by(&:id), Appropriation.with_money_left.sort_by(&:id)
+    end
+  end
 end

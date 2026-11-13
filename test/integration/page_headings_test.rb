@@ -32,7 +32,7 @@ class PageHeadingsTest < ActionDispatch::IntegrationTest
       appropriation_path(appropriations(:christmas_serena)), edit_appropriation_path(appropriations(:christmas_serena)),
       products_path, product_path(products(:ah_ribbelchips)), edit_product_path(products(:ah_ribbelchips)),
       product_types_path, new_product_type_path, product_type_path(product_types(:naturel_chips)),
-      edit_product_type_path(product_types(:naturel_chips)), receipts_path, todo_path, users_path,
+      edit_product_type_path(product_types(:naturel_chips)), receipts_path, users_path,
       edit_user_profile_path(users(:admin)),
       user_profile_path(users(:member)), admin_root_path, admin_users_path, new_admin_user_path,
       admin_user_path(users(:member)), edit_admin_user_path(users(:member))

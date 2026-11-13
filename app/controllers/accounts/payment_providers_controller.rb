@@ -28,9 +28,9 @@ class Accounts::PaymentProvidersController < ApplicationController
 
   def update_and_redirect(attributes)
     if @account.update(attributes)
-      redirect_to @account, notice: t("payment_providers.#{action_name}.success")
+      redirect_to carried_path(@account), notice: t("payment_providers.#{action_name}.success")
     else
-      redirect_to @account, alert: @account.errors.full_messages.to_sentence
+      redirect_to carried_path(@account), alert: @account.errors.full_messages.to_sentence
     end
   end
 end

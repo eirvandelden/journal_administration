@@ -28,7 +28,7 @@ class Accounts::MergesController < ApplicationController
     receipts = Account.receipts_count_by_account(duplicates.map(&:id)).values.sum
 
     if @account.merge(duplicates)
-      redirect_to @account, notice: t(".success", transactions: t(".transactions", count: transactions),
+      redirect_to carried_path(@account), notice: t(".success", transactions: t(".transactions", count: transactions),
         receipts: t(".receipts", count: receipts), accounts: t(".accounts", count: duplicates.size))
     else
       redirect_to new_account_merge_path(@account, duplicate_ids:), alert: @account.errors.full_messages.to_sentence

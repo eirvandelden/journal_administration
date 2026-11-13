@@ -1,10 +1,4 @@
 /* Page layout customizations */
-@media (width >= 769px) {
-  body > header {
-    padding: 1rem;
-  }
-}
-
 body > main {
   padding-top: 0;
 }

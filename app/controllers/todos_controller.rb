@@ -1,6 +1,6 @@
-# Displays the consolidated todo list for outstanding data actions
+# Displays Alles: every open item of Verwerken in one list
 #
-# Shows uncategorized transactions and untouched accounts.
+# Shows transactions to consolidate, untouched accounts and unclassified products.
 class TodosController < ApplicationController
   PER_PAGE = 20
 
@@ -20,7 +20,7 @@ class TodosController < ApplicationController
     def next_param = number + 1
   end
 
-  # Renders the todo index page
+  # Renders the Alles page
   #
   # @return [void]
   #: () -> void

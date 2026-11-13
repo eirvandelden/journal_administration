@@ -1,0 +1,310 @@
+require "test_helper"
+require_relative "../test_helpers/appropriation_payments"
+
+class NavigationHubsTest < ActionDispatch::IntegrationTest
+  include AppropriationPayments
+
+  setup do
+    @member = users(:member)
+    @member.update!(locale: :nl)
+    sign_in_as(@member)
+  end
+
+  test "rail shows search five hubs and profiel" do
+    get dashboard_index_url
+
+    assert_select "nav.rail > ul > li", 6
+    assert_select "nav.rail > search:first-child > button[data-action='click->search-dialog#open']",
+      text: I18n.t("search.open", locale: :nl)
+    assert_equal [ "🏠 Overzicht", "📥 Verwerken", "🗓️ Plannen", "🗄️ Administratie", "🛒 Boodschappen", "👤 Profiel" ],
+      css_select("nav.rail > ul > li > a").map { |link| link.text.squish }
+    assert_select "nav.rail details", 0
+    assert_select "nav.rail", text: /#{Regexp.escape(@member.name)}/, count: 0
+  end
+
+  test "consolideren tile and badge count transactions to consolidate" do
+    create_uncategorized_transactions(12)
+    expected = Transaction.uncategorized.count
+
+    get hub_url(:processing)
+
+    assert_select "main > nav a[href=?]", transactions_path(filter: :no_category, from: :processing),
+      text: /Consolideren.*#{expected} transacties te consolideren/m
+    assert_select "nav.rail + nav a[href=?] data[value=?]", transactions_path(filter: :no_category), expected.to_s,
+      text: expected.to_s
+  end
+
+  test "partly split transaction counts on consolideren" do
+    before = Transaction.uncategorized.count
+    transaction = open_transaction("Half split", Time.current, amount: 10_000)
+    transaction.transaction_splits.create!(amount: 6000, category: categories(:groceries))
+
+    get hub_url(:processing)
+
+    assert_select "nav.rail + nav a[href=?] data[value=?]", transactions_path(filter: :no_category),
+      (before + 1).to_s
+
+    get transactions_url(filter: :no_category)
+
+    assert_select "tbody", text: /Half split/
+  end
+
+  test "verwerken hub column order" do
+    get hub_url(:processing)
+
+    assert_equal [ "Consolideren", "Rekeningen indelen", "Producten classificeren", "Importeren", "Alles" ],
+      css_select("nav.rail + nav > ul > li > a").map { |link| link.children.first.text.squish }
+  end
+
+  test "importeren tile item and title bar action" do
+    get hub_url(:processing)
+
+    assert_select "main > nav a[href=?]", new_transactions_import_path(from: :processing), text: /Importeren/
+    assert_select "nav.rail + nav a[href=?]", new_transactions_import_path, text: /Importeren/
+    assert_select "main > header nav a[href=?]", new_transactions_import_path, text: "Importeren"
+
+    get new_transactions_import_url
+
+    assert_select "nav.rail a[aria-current='true']", text: /Verwerken/
+    assert_select "nav.rail + nav a[aria-current='page']", text: /Importeren/
+  end
+
+  test "alles tile counts and lists every open item" do
+    leave_nothing_to_do
+    older = open_transaction("Older open", 3.days.ago)
+    newer = open_transaction("Newer open", 1.day.ago)
+    account = Account.create!(name: "New shop")
+    product = Product.create!(name: "New crisps", normalized_name: "new crisps")
+    account_created_at = 2.days.ago
+    account.update_columns(created_at: account_created_at, updated_at: account_created_at)
+    product.update_columns(created_at: 4.days.ago)
+
+    get hub_url(:processing)
+
+    assert_select "main > nav a[href=?]", todo_path(from: :processing), text: /Alles.*4 openstaande items/m
+    assert_select "nav.rail + nav a[href=?] data[value=?]", todo_path, "4"
+
+    get todo_url
+
+    assert_equal [ newer, account, older, product ].map { |record| polymorphic_path(record) },
+      css_select("tbody td a").map { |link| URI(link["href"]).path }
+  end
+
+  test "rekeningen indelen shows zero and no badge" do
+    Account.update_all("updated_at = datetime(created_at, '+1 day')")
+
+    get hub_url(:processing)
+
+    assert_select "main > nav a[href=?]", accounts_path(filter: :untouched, from: :processing),
+      text: /0 rekeningen nog niet ingedeeld/
+    assert_select "nav.rail + nav a[href=?]", accounts_path(filter: :untouched), count: 1
+    assert_select "nav.rail + nav a[href=?] data", accounts_path(filter: :untouched), count: 0
+  end
+
+  test "transaction edit highlights administratie and journaal" do
+    get edit_transaction_url(transactions(:debit_grocery))
+
+    assert_select "nav.rail a[aria-current='true']", text: /Administratie/
+    assert_select "nav.rail a[aria-current='true']", 1
+    assert_select "nav.rail + nav a[aria-current='page']", text: /Journaal/
+  end
+
+  test "budget show highlights plannen and budgetten" do
+    get budget_url(budgets(:active_budget))
+
+    assert_select "nav.rail a[aria-current='true']", text: /Plannen/
+    assert_select "nav.rail + nav a[aria-current='page']", text: /Budgetten/
+  end
+
+  test "bezittingen tile counts warranties ending within 90 days" do
+    before = Chattel.warranty_ending.count
+    Chattel.create!(name: "Washer", warranty_expires_at: 60.days.from_now)
+    Chattel.create!(name: "Fridge", warranty_expires_at: 120.days.from_now)
+
+    get hub_url(:records)
+
+    assert_select "main > nav a[href=?]", chattels_path(filter: :warranty_ending, from: :records),
+      text: /#{before + 1} bezitting(?:en)? waarvan de garantie binnen 90 dagen afloopt/
+  end
+
+  test "facturen tile counts and opens receipts without payment" do
+    receipts(:albert_heijn_duplicate_monday).update!(payment: nil)
+
+    get hub_url(:shopping)
+
+    expected = Receipt.without_payment.count
+
+    assert_select "main > nav a[href=?]", receipts_path(filter: :without_payment, from: :shopping),
+      text: /#{expected} factu(?:ur|ren) zonder betaling/
+
+    get receipts_url(filter: :without_payment)
+
+    assert_select "#receipts-table tbody tr", expected
+  end
+
+  test "budgetten tile without active budget" do
+    BudgetCategory.delete_all
+    Budget.delete_all
+
+    get hub_url(:planning)
+
+    assert_select "main > nav a[href=?]", budgets_path(from: :planning), text: /Geen actief budget/
+  end
+
+  test "begrotingsposten tile counts and opens appropriations with money left" do
+    before = Appropriation.of_year(Date.current.year).with_money_left.count
+    open_one = Appropriation.create!(purpose: "Open", person: people(:etienne), budget_year: Date.current.year,
+      amount: 5000)
+    spent = Appropriation.create!(purpose: "Spent", person: people(:etienne), budget_year: Date.current.year,
+      amount: 3000)
+    credit(3000, note: "all of it").update!(appropriation: spent)
+
+    get hub_url(:planning)
+
+    assert_select "main > nav a[href=?]", appropriations_path(filter: :money_left, from: :planning),
+      text: /#{before + 1} begrotingspo(?:st|sten) met geld over/
+    assert_includes Appropriation.with_money_left, open_one
+  end
+
+  test "overzicht is the dashboard without hub column" do
+    get dashboard_index_url
+
+    assert_select "nav.rail a[aria-current='true']", text: /Overzicht/
+    assert_select "nav.rail + nav", 0
+  end
+
+  test "todo shows alles in verwerken" do
+    get todo_url
+
+    assert_response :success
+    assert_select "main > header h1", "Alles"
+    assert_select "nav.rail a[aria-current='true']", text: /Verwerken/
+    assert_select "nav.rail + nav a[aria-current='page']", text: /Alles/
+  end
+
+  test "member sees beheer without gebruikers" do
+    get hub_url(:setup)
+
+    assert_select "main > nav a[href=?]", categories_path(from: :setup)
+    assert_select "main > nav a[href=?]", product_types_path(from: :setup)
+    assert_select "main > nav a[href=?]", people_path(from: :setup)
+    assert_select "main > nav a[href=?]", groups_path(from: :setup)
+    assert_select "main > nav a[href=?]", admin_users_path(from: :setup), count: 0
+    assert_select "nav.rail a[aria-current='true']", text: /Profiel/
+  end
+
+  test "admin sees gebruikers and admin dashboard in the shell" do
+    users(:admin).update!(locale: :nl)
+    sign_in_as(users(:admin))
+
+    get hub_url(:setup)
+
+    assert_select "main > nav a[href=?]", admin_users_path(from: :setup)
+    assert_select "main > nav a[href=?]", admin_root_path(from: :setup)
+    assert_select "nav.rail a[aria-current='true']", text: /Profiel/
+  end
+
+  test "show renders the tiles of a hub" do
+    get hub_url(:records)
+
+    assert_select "main > nav > ul > li", 3
+  end
+
+  test "show returns 404 for an unknown hub" do
+    get hub_url("nope")
+
+    assert_response :not_found
+  end
+
+  test "show returns 404 for the page-less overview hub" do
+    get hub_url(:overview)
+
+    assert_response :not_found
+  end
+
+  test "admin pages render the app shell" do
+    sign_in_as(users(:admin))
+
+    get admin_root_url
+
+    assert_select "nav.rail"
+    assert_select "nav.rail + nav a[aria-current='page']", text: /Beheerdashboard/
+  end
+
+  test "preferences page renders the rail" do
+    get edit_preferences_url
+
+    assert_select "nav.rail"
+  end
+
+  test "no title bar holds an avatar" do
+    [ dashboard_index_url, hub_url(:processing), hub_url(:profile) ].each do |url|
+      get url
+
+      assert_select "main > header nav details", 0
+      assert_select "main > header nav", text: /👤/, count: 0
+    end
+  end
+
+  test "profiel landing and hub column" do
+    labels = %w[Gegevens Voorkeuren Beheer Uitloggen]
+
+    get hub_url(:profile)
+
+    assert_response :success
+    assert_equal labels, css_select("main > nav > ul > li > a strong").map { |label| label.text.squish }
+    assert_equal labels, css_select("nav.rail + nav > ul > li > a").map { |link| link.text.squish }
+    assert_select "main > nav > ul > li:last-child > a[href=?][data-turbo-method=delete]", session_path
+    assert_select "nav.rail + nav > ul > li:last-child > a[href=?][data-turbo-method=delete]", session_path
+    assert_select "nav.rail + nav > ul > li:last-child data", 0
+    assert_select "main > nav a[href=?]", edit_user_profile_path(@member, from: :profile)
+    assert_select "main > nav a[href=?]", hub_path(:setup, from: :profile)
+  end
+
+  test "rail marks profiel on voorkeuren and beheer" do
+    [ edit_preferences_url, hub_url(:setup), categories_url ].each do |url|
+      get url
+
+      assert_select "nav.rail a[aria-current='true']", 1
+      assert_select "nav.rail a[aria-current='true']", text: /Profiel/
+    end
+  end
+
+  test "gegevens marks only the profile of the signed in user" do
+    get user_profile_url(@member)
+
+    assert_select "nav.rail + nav a[aria-current='page']", text: "Gegevens"
+
+    get user_profile_url(users(:admin))
+
+    assert_select "nav.rail a[aria-current='true']", text: /Profiel/
+    assert_select "nav.rail + nav a[aria-current='page']", 0
+  end
+
+  test "every title bar holds a search button" do
+    get hub_url(:processing)
+
+    assert_select "main > header nav > search > button[data-action='click->search-dialog#open']"
+  end
+
+  private
+    def create_uncategorized_transactions(count)
+      count.times do |index|
+        Transaction.create!(amount: index + 1, booked_at: index.minutes.ago, interest_at: index.minutes.ago,
+          debitor: accounts(:checking), creditor: accounts(:unknown), note: "Uncategorized #{index}")
+      end
+    end
+
+    def leave_nothing_to_do
+      TransactionSplit.delete_all
+      Transaction.uncategorized.update_all(category_id: categories(:groceries).id)
+      Account.update_all("updated_at = datetime(created_at, '+1 day')")
+      Product.unclassified.update_all(brand: "AH", product_type_id: product_types(:naturel_chips).id)
+    end
+
+    def open_transaction(note, booked_at, amount: 500)
+      transaction = Transaction.create!(amount: amount, booked_at: booked_at, interest_at: booked_at,
+        debitor: accounts(:checking), creditor: accounts(:unknown), note: note)
+      Transaction.find(transaction.id)
+    end
+end

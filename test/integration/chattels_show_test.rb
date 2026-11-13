@@ -41,7 +41,7 @@ class ChattelsShowTest < ActionDispatch::IntegrationTest
     get chattel_url(@chattel)
 
     assert_select "button.button-danger", count: 0
-    assert_select "input[name=_method][value=delete]", count: 0
+    assert_select "main input[name=_method][value=delete]", count: 0
   end
 
   test "edit page ends in an action row with Verwijderen…" do

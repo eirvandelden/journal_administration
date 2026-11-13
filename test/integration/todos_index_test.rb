@@ -35,15 +35,21 @@ class TodosIndexTest < ActionDispatch::IntegrationTest
     get todo_path
 
     assert_response :success
-    assert_select "a[href=?]", product_path(products(:andrelon_shampoo))
+    assert_select "a[href=?]", product_path(products(:andrelon_shampoo), from: "processing.all")
   end
 
   test "rows open the record's show page and carry no action column" do
     get todo_path
 
     assert_select "main > header > h1", count: 1
-    assert_select "tbody td a[href=?]", product_path(products(:andrelon_shampoo))
+    assert_select "tbody td a[href=?]", product_path(products(:andrelon_shampoo), from: "processing.all")
     assert_select "tbody button", count: 0
     assert_select "table[data-stack] tbody td:not([data-label])", count: 0
+  end
+
+  test "rows opened from the alles tile name alles as the list to return to" do
+    get todo_path(from: :processing)
+
+    assert_select "tbody td a[href=?]", product_path(products(:andrelon_shampoo), from: "processing.all")
   end
 end

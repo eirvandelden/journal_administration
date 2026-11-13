@@ -1,12 +1,9 @@
-# Provides data for the todo page
+# Provides data for the Alles page
 #
-# Aggregates uncategorized transactions and untouched accounts into a single
-# date-sorted list, and determines whether a CSV upload prompt is needed.
+# Aggregates the open items of Verwerken (transactions to consolidate,
+# untouched accounts and unclassified products) into a single date-sorted list.
 class Todo
   extend ActiveModel::Naming
-
-  # Number of days after which the CSV upload prompt is shown
-  UPLOAD_PROMPT_THRESHOLD = 13
 
   # Lightweight container for a combined todo list item
   #
@@ -22,28 +19,11 @@ class Todo
     :record  #: Transaction | Account | Product
   )
 
-  # Returns whether a CSV upload form should be shown
+  # Returns the combined, date-sorted list of transactions to consolidate,
+  # untouched accounts and unclassified products
   #
-  # True when no transactions exist yet, or when the most recently booked
-  # transaction is older than UPLOAD_PROMPT_THRESHOLD days.
-  #
-  # @return [Boolean]
-  #: () -> bool
-  def show_upload_form?
-    @show_upload_form ||= begin
-      latest = Transaction.maximum(:booked_at)
-      latest.nil? || latest < UPLOAD_PROMPT_THRESHOLD.days.ago
-    end
-  end
-
-  # Returns the combined, date-sorted list of uncategorized transactions and
-  # untouched accounts
-  #
-  # Uncategorized transactions are those with no category, an uncategorized
-  # split, or a remaining uncategorized split balance.
-  # Untouched accounts are those where updated_at equals created_at
-  # (never modified since their initial import).
-  # Items are sorted newest-first by their respective dates.
+  # The three scopes are the ones the Verwerken pages count, so the Alles tile
+  # shows as many items as this list holds. Items are sorted newest-first.
   #
   # @return [Array<Todo::Item>]
   #: () -> Array[Item]
@@ -67,7 +47,7 @@ class Todo
   end
 
   def account_items
-    Account.where("updated_at = created_at").order(created_at: :desc)
+    Account.untouched.order(created_at: :desc)
            .map { |a| Item.new(:account, a.created_at, a) }
   end
 
