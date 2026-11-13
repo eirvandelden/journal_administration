@@ -4,7 +4,7 @@ require "application_system_test_case"
 class NavigationHubsLayoutTest < ApplicationSystemTestCase
   PHONE = [ 390, 844 ].freeze
   NARROW = [ 900, 800 ].freeze
-  HUBS = %w[Overzicht Verwerken Plannen Administratie Boodschappen].freeze
+  HUBS = %w[Overzicht Verwerken Plannen Administratie Boodschappen Profiel].freeze
 
   setup do
     users(:member).update!(locale: :nl)
@@ -13,14 +13,14 @@ class NavigationHubsLayoutTest < ApplicationSystemTestCase
 
   teardown { current_window.resize_to(*SCREEN_SIZE) }
 
-  test "phone tab bar and avatar only on overzicht" do
+  test "phone tab bar has six tabs and no avatar" do
     current_window.resize_to(*PHONE)
     visit dashboard_index_url
 
     assert_equal HUBS, all("nav.rail > ul > li").map { |item| item.text.split.last }
     assert_selector "nav.rail > search", visible: :hidden
     assert_operator rail_bottom, :>=, viewport_height - 1, "the tab bar sits at the bottom"
-    assert_selector "main > header nav > details > summary[aria-label='#{users(:member).name}']"
+    assert_no_selector "main > header nav details", visible: :all
 
     visit hub_url(:processing)
 
@@ -48,6 +48,28 @@ class NavigationHubsLayoutTest < ApplicationSystemTestCase
 
       assert_equal [ true ] * 5, text_below_label, "at #{size.join('x')}"
     end
+  end
+
+  test "uitloggen tile signs out" do
+    visit hub_url(:profile)
+
+    within("main > nav") { click_link "Uitloggen" }
+
+    assert_current_path new_session_path
+    visit hub_url(:profile)
+
+    assert_current_path new_session_path
+  end
+
+  test "uitloggen hub column item signs out" do
+    visit hub_url(:profile)
+
+    within("nav.rail + nav") { click_link "Uitloggen" }
+
+    assert_current_path new_session_path
+    visit hub_url(:profile)
+
+    assert_current_path new_session_path
   end
 
   private

@@ -71,6 +71,19 @@ class SearchesTest < ActionDispatch::IntegrationTest
     assert_select "a[href='#{transactions_path}']", text: /#{I18n.t("menu.pages.journal.label")}/
   end
 
+  test "search does not offer uitloggen" do
+    @user.update!(locale: :nl)
+
+    get searches_url, params: { q: "Uitloggen" }
+
+    assert_response :success
+    assert_select "a[href='#{session_path}']", count: 0
+
+    get searches_url, params: { q: "Voorkeuren" }
+
+    assert_select "a[href='#{edit_preferences_path}']", count: 1
+  end
+
   test "GET /searches with unmatched query shows no results message" do
     get searches_url, params: { q: "xyzzy_nonexistent_42" }
 

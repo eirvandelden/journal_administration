@@ -654,9 +654,6 @@ nl:
     nl: Nederlands
   left: "📤 Verlaten"
   menu:
-    account:
-      preferences: "🎨 Voorkeuren"
-      profile: "👤 Profiel"
     hubs:
       overview:
         label: Overzicht
@@ -665,6 +662,8 @@ nl:
       processing:
         import: Importeren
         label: Verwerken
+      profile:
+        label: Profiel
       records:
         label: Administratie
       setup:
@@ -720,6 +719,8 @@ nl:
         label: Journaal
       people:
         label: Gezinsleden
+      preferences:
+        label: Voorkeuren
       product_types:
         label: Productsoorten
       products:
@@ -727,11 +728,17 @@ nl:
         tile:
           one: "%{count} product nog niet geclassificeerd"
           other: "%{count} producten nog niet geclassificeerd"
+      profile_details:
+        label: Gegevens
       receipts:
         label: Facturen
         tile:
           one: "%{count} factuur zonder betaling"
           other: "%{count} facturen zonder betaling"
+      setup:
+        label: Beheer
+      sign_out:
+        label: Uitloggen
       users:
         label: Gebruikers
   merchant_reassignments:

@@ -8,6 +8,8 @@ class HubQueriesTest < ActionDispatch::IntegrationTest
   PLANNEN_LANDING_QUERIES = 18
   # Measured on 2026-11-12 with one page of 20 open transactions, the session lookup included
   ALLES_QUERIES = 49
+  # Measured on 2026-11-13, the session lookup included
+  PROFIEL_LANDING_QUERIES = 2
 
   setup { sign_in_as(users(:member)) }
 
@@ -23,6 +25,11 @@ class HubQueriesTest < ActionDispatch::IntegrationTest
     9.times { |index| charged_appropriation(index + 1) }
 
     assert_queries_count(PLANNEN_LANDING_QUERIES) { get hub_url(:planning) }
+  end
+
+  test "profiel landing runs no count query" do
+    assert_queries_count(PROFIEL_LANDING_QUERIES) { get hub_url(:profile) }
+    assert_queries_match(/SELECT COUNT/i, count: 0) { get hub_url(:profile) }
   end
 
   test "alles query count is bounded by the page" do

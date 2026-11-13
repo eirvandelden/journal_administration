@@ -654,9 +654,6 @@ en:
     nl: Nederlands
   left: "📤 Left"
   menu:
-    account:
-      preferences: "🎨 Preferences"
-      profile: "👤 Profile"
     hubs:
       overview:
         label: Overview
@@ -665,6 +662,8 @@ en:
       processing:
         import: Import
         label: Process
+      profile:
+        label: Profile
       records:
         label: Records
       setup:
@@ -720,6 +719,8 @@ en:
         label: Journal
       people:
         label: Family members
+      preferences:
+        label: Preferences
       product_types:
         label: Product types
       products:
@@ -727,11 +728,17 @@ en:
         tile:
           one: "%{count} product not yet classified"
           other: "%{count} products not yet classified"
+      profile_details:
+        label: Details
       receipts:
         label: Invoices
         tile:
           one: "%{count} invoice without a payment"
           other: "%{count} invoices without a payment"
+      setup:
+        label: Manage
+      sign_out:
+        label: Sign out
       users:
         label: Users
   merchant_reassignments:

@@ -8,7 +8,7 @@
   <ul>
     <% @hub.pages.each do |page| %>
       <li>
-        <%= link_to menu.tile_path(page) do %>
+        <%= menu_entry_to menu.tile_path(page), page do %>
           <span>
             <strong><%= page.label %></strong>
             <% text = tile_text(page) %>

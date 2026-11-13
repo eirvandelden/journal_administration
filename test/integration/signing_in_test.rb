@@ -5,7 +5,7 @@ class SigningInTest < ActionDispatch::IntegrationTest
     sign_in_as users(:admin)
 
     sign_in_as users(:member)
-    get root_url
+    get hub_url(:profile)
 
     assert_select "a[href=?]", edit_user_profile_path(users(:member))
   end

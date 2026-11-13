@@ -10,15 +10,16 @@ class NavigationHubsTest < ActionDispatch::IntegrationTest
     sign_in_as(@member)
   end
 
-  test "rail shows search, five hubs and the user name only" do
+  test "rail shows search, five hubs and profiel" do
     get dashboard_index_url
 
     assert_select "nav.rail > ul > li", 6
     assert_select "nav.rail > search:first-child > button[data-action='click->search-dialog#open']",
       text: I18n.t("search.open", locale: :nl)
-    assert_equal [ "🏠 Overzicht", "📥 Verwerken", "🗓️ Plannen", "🗄️ Administratie", "🛒 Boodschappen" ],
+    assert_equal [ "🏠 Overzicht", "📥 Verwerken", "🗓️ Plannen", "🗄️ Administratie", "🛒 Boodschappen", "👤 Profiel" ],
       css_select("nav.rail > ul > li > a").map { |link| link.text.squish }
-    assert_select "nav.rail > ul > li > details > summary", text: @member.name
+    assert_select "nav.rail details", 0
+    assert_select "nav.rail", text: /#{Regexp.escape(@member.name)}/, count: 0
   end
 
   test "consolideren tile and badge count transactions to consolidate" do
@@ -189,7 +190,7 @@ class NavigationHubsTest < ActionDispatch::IntegrationTest
     assert_select "main > nav a[href=?]", people_path(from: :setup)
     assert_select "main > nav a[href=?]", groups_path(from: :setup)
     assert_select "main > nav a[href=?]", admin_users_path(from: :setup), count: 0
-    assert_select "nav.rail details a[href=?]", hub_path(:setup)
+    assert_select "nav.rail a[aria-current='true']", text: /Profiel/
   end
 
   test "admin sees gebruikers and admin dashboard in the shell" do
@@ -200,7 +201,7 @@ class NavigationHubsTest < ActionDispatch::IntegrationTest
 
     assert_select "main > nav a[href=?]", admin_users_path(from: :setup)
     assert_select "main > nav a[href=?]", admin_root_path(from: :setup)
-    assert_select "nav.rail details a[href=?]", hub_path(:setup)
+    assert_select "nav.rail a[aria-current='true']", text: /Profiel/
   end
 
   test "show renders the tiles of a hub" do
@@ -236,14 +237,37 @@ class NavigationHubsTest < ActionDispatch::IntegrationTest
     assert_select "nav.rail"
   end
 
-  test "only the overzicht title bar holds the avatar" do
-    get dashboard_index_url
+  test "no title bar holds an avatar" do
+    [ dashboard_index_url, hub_url(:processing), hub_url(:profile) ].each do |url|
+      get url
 
-    assert_select "main > header nav details summary[aria-label=?]", @member.name, text: "👤"
+      assert_select "main > header nav details", 0
+      assert_select "main > header nav", text: /👤/, count: 0
+    end
+  end
 
-    get hub_url(:processing)
+  test "profiel landing and hub column" do
+    labels = %w[Gegevens Voorkeuren Beheer Uitloggen]
 
-    assert_select "main > header nav details", 0
+    get hub_url(:profile)
+
+    assert_response :success
+    assert_equal labels, css_select("main > nav > ul > li > a strong").map { |label| label.text.squish }
+    assert_equal labels, css_select("nav.rail + nav > ul > li > a").map { |link| link.text.squish }
+    assert_select "main > nav > ul > li:last-child > a[href=?][data-turbo-method=delete]", session_path
+    assert_select "nav.rail + nav > ul > li:last-child > a[href=?][data-turbo-method=delete]", session_path
+    assert_select "nav.rail + nav > ul > li:last-child data", 0
+    assert_select "main > nav a[href=?]", edit_user_profile_path(@member, from: :profile)
+    assert_select "main > nav a[href=?]", hub_path(:setup, from: :profile)
+  end
+
+  test "rail marks profiel on voorkeuren and beheer" do
+    [ edit_preferences_url, hub_url(:setup), categories_url ].each do |url|
+      get url
+
+      assert_select "nav.rail a[aria-current='true']", 1
+      assert_select "nav.rail a[aria-current='true']", text: /Profiel/
+    end
   end
 
   test "every title bar holds a search button" do

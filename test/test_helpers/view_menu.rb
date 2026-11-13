@@ -2,6 +2,6 @@
 module ViewMenu
   #: () -> Appkit::Menu
   def menu
-    @menu ||= Appkit::Menu.new(hubs: [], account: [], controller_path: "accounts", params: {})
+    @menu ||= Appkit::Menu.new(hubs: [], controller_path: "accounts", params: {})
   end
 end

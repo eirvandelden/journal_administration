@@ -22,7 +22,7 @@
   <body data-controller="search-dialog">
     <%= render "appkit/shared/skip_link" %>
     <header>
-      <%= render layout: "appkit/shared/nav", locals: { menu: menu, user_name: Current.user&.name.to_s } do %>
+      <%= render layout: "appkit/shared/nav", locals: { menu: menu } do %>
         <search>
           <button type="button"
                   data-action="click->search-dialog#open"

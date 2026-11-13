@@ -11,9 +11,7 @@ module MenuMap
   # The menu map placed on this request, built once per request.
   #: () -> Appkit::Menu
   def menu
-    @menu ||= Appkit::Menu.new(
-      hubs: menu_hubs, account: menu_account_links, controller_path: controller_path, params: request.parameters
-    )
+    @menu ||= Appkit::Menu.new(hubs: menu_hubs, controller_path: controller_path, params: request.parameters)
   end
 
   # i18n-tasks-use t("menu.pages.appropriations.tile")
@@ -41,18 +39,26 @@ module MenuMap
   private
     #: () -> Array[Appkit::Menu::Hub]
     def menu_hubs
-      [ overview_hub, processing_hub, planning_hub, records_hub, shopping_hub, setup_hub ]
+      [ overview_hub, processing_hub, planning_hub, records_hub, shopping_hub, profile_hub, setup_hub ]
     end
 
-    #: () -> Array[Appkit::Menu::Link]
-    def menu_account_links
-      return [] unless Current.user
+    #: () -> Appkit::Menu::Hub
+    def profile_hub
+      menu_hub(:profile, "👤", hub_path(:profile), hub_landing(:profile), pages: [
+        *profile_details_pages,
+        menu_page(:preferences, edit_preferences_path, %w[appkit/preferences]),
+        menu_page(:setup, hub_path(:setup), []),
+        menu_page(:sign_out, session_path, [], verb: :delete)
+      ])
+    end
 
-      [
-        menu_link(t("menu.account.profile"), edit_user_profile_path(Current.user)),
-        menu_link(t("menu.account.preferences"), edit_preferences_path),
-        menu_link(t("menu.hubs.setup.label"), hub_path(:setup))
-      ]
+    # Gegevens edits the signed-in user's own profile, so it needs a user.
+    #: () -> Array[Appkit::Menu::Page]
+    def profile_details_pages
+      user = Current.user
+      return [] unless user
+
+      [ menu_page(:profile_details, edit_user_profile_path(user), %w[users/profiles]) ]
     end
 
     #: () -> Appkit::Menu::Hub
@@ -119,7 +125,7 @@ module MenuMap
 
     #: () -> Appkit::Menu::Hub
     def setup_hub
-      menu_hub(:setup, "🥷", hub_path(:setup), hub_landing(:setup), rail: false, pages: [
+      menu_hub(:setup, "🥷", hub_path(:setup), hub_landing(:setup), parent: :profile, pages: [
         menu_page(:categories, categories_path, %w[categories]),
         menu_page(:product_types, product_types_path, %w[product_types]),
         menu_page(:people, people_path, %w[people]),

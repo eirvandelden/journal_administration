@@ -25,15 +25,16 @@ class MainNavigationTest < ActionDispatch::IntegrationTest
     assert_select "main > header nav a[href='#{transactions_path}']", text: I18n.t("common.back")
   end
 
-  test "member sees the profile link in the account menu but no admin link" do
+  test "member reaches the profile and beheer through profiel but sees no admin link" do
     sign_in_as(@member)
 
-    get dashboard_index_url
+    get hub_url(:profile)
 
     assert_response :success
-    assert_select "nav.rail details a[href='#{edit_user_profile_path(@member)}']", count: 1
-    assert_select "nav.rail details a[href='#{hub_path(:setup)}']", count: 1
-    assert_select "nav.rail a[href='#{admin_root_path}']", count: 0
+    assert_select "nav.rail a[href='#{hub_path(:profile)}']", count: 1
+    assert_select "nav.rail + nav a[href='#{edit_user_profile_path(@member)}']", count: 1
+    assert_select "nav.rail + nav a[href='#{hub_path(:setup)}']", count: 1
+    assert_select "a[href='#{admin_root_path}']", count: 0
   end
 
   test "administrator reaches the admin pages through Beheer" do
@@ -46,11 +47,13 @@ class MainNavigationTest < ActionDispatch::IntegrationTest
     assert_select "nav.rail + nav a[href='#{admin_users_path}']", count: 1
   end
 
-  test "the account menu ends with the sign out button" do
+  test "the profiel hub column ends with the sign out link" do
     sign_in_as(@member)
 
-    get dashboard_index_url
+    get hub_url(:profile)
 
-    assert_select "nav.rail details form[action='#{session_path}'] button"
+    assert_select "nav.rail + nav > ul > li:last-child > a[href='#{session_path}'][data-turbo-method='delete']",
+      text: I18n.t("menu.pages.sign_out.label")
+    assert_select "nav.rail details", 0
   end
 end

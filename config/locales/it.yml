@@ -654,9 +654,6 @@ it:
     nl: Nederlands
   left: "📤 Usciti"
   menu:
-    account:
-      preferences: "🎨 Preferenze"
-      profile: "👤 Profilo"
     hubs:
       overview:
         label: Panoramica
@@ -665,6 +662,8 @@ it:
       processing:
         import: Importa
         label: Da elaborare
+      profile:
+        label: Profilo
       records:
         label: Contabilità
       setup:
@@ -720,6 +719,8 @@ it:
         label: Giornale
       people:
         label: Familiari
+      preferences:
+        label: Preferenze
       product_types:
         label: Tipi di prodotto
       products:
@@ -727,11 +728,17 @@ it:
         tile:
           one: "%{count} prodotto non ancora classificato"
           other: "%{count} prodotti non ancora classificati"
+      profile_details:
+        label: Dati
       receipts:
         label: Fatture
         tile:
           one: "%{count} fattura senza pagamento"
           other: "%{count} fatture senza pagamento"
+      setup:
+        label: Gestione
+      sign_out:
+        label: Esci
       users:
         label: Utenti
   merchant_reassignments:
