@@ -13,7 +13,7 @@ class NavigationHubsLayoutTest < ApplicationSystemTestCase
 
   teardown { current_window.resize_to(*SCREEN_SIZE) }
 
-  test "phone tab bar has six tabs and no avatar" do
+  test "phone tab bar has six hubs and no avatar" do
     current_window.resize_to(*PHONE)
     visit dashboard_index_url
 
