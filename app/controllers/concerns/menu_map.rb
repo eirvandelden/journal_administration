@@ -44,7 +44,7 @@ module MenuMap
 
     #: () -> Appkit::Menu::Hub
     def profile_hub
-      menu_hub(:profile, "👤", hub_path(:profile), hub_landing(:profile), pages: [
+      menu_hub(:profile, "👤", hub_path(:profile), hub_landing(:profile), controllers: %w[users/profiles], pages: [
         *profile_details_pages,
         menu_page(:preferences, edit_preferences_path, %w[appkit/preferences]),
         menu_page(:setup, hub_path(:setup), []),
@@ -52,13 +52,14 @@ module MenuMap
       ])
     end
 
-    # Gegevens edits the signed-in user's own profile, so it needs a user.
+    # Gegevens edits the signed-in user's own profile, so it needs a user; another user's profile stays in the hub.
     #: () -> Array[Appkit::Menu::Page]
     def profile_details_pages
       user = Current.user
       return [] unless user
 
-      [ menu_page(:profile_details, edit_user_profile_path(user), %w[users/profiles]) ]
+      [ menu_page(:profile_details, edit_user_profile_path(user), %w[users/profiles],
+        filter: { "user_id" => user.id.to_s }) ]
     end
 
     #: () -> Appkit::Menu::Hub

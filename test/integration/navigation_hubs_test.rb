@@ -270,6 +270,17 @@ class NavigationHubsTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "gegevens marks only the profile of the signed in user" do
+    get user_profile_url(@member)
+
+    assert_select "nav.rail + nav a[aria-current='page']", text: "Gegevens"
+
+    get user_profile_url(users(:admin))
+
+    assert_select "nav.rail a[aria-current='true']", text: /Profiel/
+    assert_select "nav.rail + nav a[aria-current='page']", 0
+  end
+
   test "every title bar holds a search button" do
     get hub_url(:processing)
 
