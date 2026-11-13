@@ -40,6 +40,34 @@ class OriginBackLinkTest < ActionDispatch::IntegrationTest
     assert_select "main > header nav a[href=?]", list, text: "‹ Consolideren"
   end
 
+  test "record opened from alles returns to alles" do
+    alles = "#{todo_path}?from=processing.all"
+    record = "#{polymorphic_path(@transaction)}?from=processing.all"
+    get todo_url
+
+    assert_select "tbody a[href=?]", record
+
+    get record
+
+    assert_select "main > header nav a[href=?]", alles, text: "‹ Alles"
+
+    get edit_transaction_url(@transaction, from: "processing.all")
+
+    assert_select "form input[name=from][value=?]", "processing.all"
+    assert_select "a[href=?]", record, text: I18n.t("common.cancel", locale: :nl)
+
+    patch transaction_url(@transaction), params: { from: "processing.all", transaction: { note: "kept" } }
+
+    assert_redirected_to record
+    follow_redirect!
+
+    assert_select "main > header nav a[href=?]", alles, text: "‹ Alles"
+
+    delete transaction_url(@transaction), params: { from: "processing.all" }
+
+    assert_redirected_to hub_path(:processing)
+  end
+
   test "delete from a verwerken flow lands on verwerken" do
     delete transaction_url(@transaction), params: { from: "processing" }
 

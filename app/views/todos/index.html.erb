@@ -20,7 +20,7 @@
           <tr role="row">
             <td role="cell" data-label="<%= labels[:date] %>"><time datetime="<%= item.date.to_date.iso8601 %>"><%= l item.date, format: :short %></time></td>
             <td role="cell" data-label="<%= labels[:kind] %>"><%= t(".#{item.kind}") %></td>
-            <td role="cell" data-label="<%= labels[:description] %>"><%= link_to todo_description(item), menu.carry(polymorphic_path(item.record)) %></td>
+            <td role="cell" data-label="<%= labels[:description] %>"><%= link_to todo_description(item), menu.carry_list(polymorphic_path(item.record)) %></td>
           </tr>
         <% end %>
       </tbody>
