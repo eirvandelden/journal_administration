@@ -207,3 +207,36 @@ Design: the new `MenuMap` methods (`profile_hub`, `profile_details_pages`, `proc
 - [ ] Nit: Proof names `test/integration/main_navigation_test.rb` `test_rail_shows_search_five_hubs_and_profiel`, but the test lives in `test/integration/navigation_hubs_test.rb`, and the Implementation notes do not record the move. Update the Proof line or the note — `docs/changes/navigation-hubs/plan.md:704` → fixed (docs: point the rail and phone Proof lines at their tests)
 - [ ] Nit: Gegevens owns the whole `users/profiles` controller, so another user's profile page (`user_profile_path(other)`, linked from `users/_user`) marks Profiel in the rail and Gegevens in the hub column, as if it were the signed-in user's own page — `app/controllers/concerns/menu_map.rb:61` → dismissed: appkit places a request by controller and filter, never by record, so own and other profiles cannot differ without a new appkit change; only an admin reaches another profile, from Beheer, and the rail then rightly marks Profiel, the parent hub of Beheer
 - [ ] Nit: the glossary lists "tab" under `Avoid:` for Hub; the test name "phone tab bar has six tabs and no avatar" calls the hubs tabs. "tab bar" is the glossary's word for the phone rail, so "phone tab bar has six hubs and no avatar" says the same with the agreed word; the Proof line names the test, so it changes too — `test/system/navigation_hubs_layout_test.rb:16` → fixed (Name the phone bar items hubs in the six-item test)
+
+## Round 10 — 2026-11-13 09:47 UTC — 83d2a10f
+
+Scope: `origin/main...HEAD` (merge base `e157f367`, the current `origin/main`), with a focus on the commits since `187efa59` (phases E1 and E2) and the round 9 closures. Working tree clean. No `REVIEW.md` in the repository, so the default Bugs, Security, Compliance and Design passes ran. Checks at this SHA, Ruby 4.0.7: `bin/rails test` green (1697 runs, 0 failures, 0 skips); `bin/rails test:system` green (37 runs, 0 failures); rubocop clean (475 files); herb-lint 0 failing (12 hints); Brakeman no warnings; bundler-audit no vulnerabilities; i18n-tasks normalize leaves the tree unchanged, no unused and no missing keys.
+
+Round 9 closures:
+
+- Gegevens save (`1eed282f`): holds. `update` redirects through `menu.carry`, the form posts `from` through `shared/action_row`, and the show page has no `id` param, so the title bar shows "‹ Profiel". The new test "saving gegevens opened from the profiel tile keeps the profiel back link" proves the round trip; Cancel carries the origin through `shared/action_row`.
+- Test rename (`8f463116`): holds. The Proof line names the new test.
+- Proof lines (`29ba03cb`): the file is right now; see the Nit on the method name.
+- Dismissal of the other-profile highlight: does not hold; see the Nit below.
+
+Compliance: every amended acceptance criterion maps to its test as in round 9. Every test the amended `## Proof` names exists. The only test change since round 9 is the rename and the added Gegevens test. No test is weakened, skipped or deleted.
+
+Design: no new public method, call chain, N+1 loop or glossary `Avoid:` word since round 9. ("order" in `Todo` and "verwerken hub column order" is a sort order, not the Delivery sense.)
+
+- [ ] Nit: the round 9 dismissal of the other-profile highlight rests on two claims that do not hold. (1) "only an admin reaches another profile, from Beheer": `UsersController#index` has no admin guard, the profile show page's "Terug" links to `/users`, and `users/_user` links each other user to `user_profile_path`. A throwaway request confirmed it: a member gets `/users` with status 200, sees a link to another profile, and that profile marks 👤 Profiel in the rail and Gegevens in the hub column. Admin Gebruikers links to `admin_user_path`, not to the profile. (2) "cannot differ without a new appkit change": `Appkit::Menu::Page#score` already matches a `filter:` against `request.parameters`, and the singular profile route has no `id`. `filter: { "user_id" => user.id.to_s }` on the Gegevens page would mark only the user's own profile, and `controllers: %w[users/profiles]` on the Profiel hub would keep the rail on Profiel for another profile, with no hub-column mark. Fix it that way with a test, or close it with a reason that holds — `app/controllers/concerns/menu_map.rb:61` → fixed (Mark Gegevens only on the signed-in user's own profile)
+- [ ] Nit: Proof names `test_rail_shows_search_five_hubs_and_profiel`, but the test is declared as "rail shows search, five hubs and profiel", so Minitest names it `test_rail_shows_search,_five_hubs_and_profiel`. Running `bin/rails test -n` with the Proof name finds no test. Rename the test without the comma, or quote the real name in Proof — `docs/changes/navigation-hubs/plan.md:704` → fixed (Name the rail test as its Proof line does)
+
+## Round 11 — 2026-11-13 12:01 UTC — 2489f1f6
+
+Scope: `origin/main...HEAD` (merge base `e157f367`, the current `origin/main`), with a focus on the commits since `187efa59` (phases E1 and E2) and the round 10 closures. Working tree clean apart from this report. No `REVIEW.md` in the repository, so the default Bugs, Security, Compliance and Design passes ran. Checks at this SHA, Ruby 4.0.7: `bin/rails test` green (1698 runs, 0 failures, 0 skips); `bin/rails test:system` green (37 runs, 0 failures); rubocop clean (475 files); herb-lint 0 failing (12 hints); Brakeman no warnings; bundler-audit no vulnerabilities; i18n-tasks no unused and no missing keys.
+
+Round 10 closures:
+
+- Gegevens highlight (`9cb16430`): holds. The Gegevens page carries `filter: { "user_id" => user.id.to_s }`, and the singular `users/:user_id/profile` route has no `id`, so `Page#score` gives 2 only on the signed-in user's own profile (show, edit, update) and 0 on another user's. The Profiel hub now owns `users/profiles` through `controllers:`, so `Menu#owner_placement` keeps the rail on Profiel for another profile, with no current page. The new test "gegevens marks only the profile of the signed in user" proves both sides; its zero-match check is not vacuous, since the rail check on the same request makes Profiel the current hub, and `_nav` then renders the hub column. The Profiel landing query pin (2) still holds.
+- Rail test name (`2489f1f6`): holds. `bin/rails test -n test_rail_shows_search_five_hubs_and_profiel test/integration/navigation_hubs_test.rb` runs 1 test, 6 assertions.
+
+Compliance: every amended acceptance criterion maps to its test as in round 9. Every test the amended `## Proof` names exists. The only test changes since round 10 are the rename and the added Gegevens test. No test is weakened, skipped or deleted.
+
+Design: no new public method; `profile_hub` and `profile_details_pages` stay private with RBS. No new call chain, no N+1 loop. No glossary `Avoid:` word in the added lines ("tab bar" is the glossary's word for the phone rail).
+
+Nothing new found.
