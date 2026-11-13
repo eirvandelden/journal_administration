@@ -171,3 +171,39 @@ Compliance: every acceptance criterion maps to its test as in round 4. No test w
 Design: no new public method, call chain, N+1 loop or glossary `Avoid:` word since round 7.
 
 Nothing new found.
+
+## Round 9 — 2026-11-13 09:41 UTC — 0ddaca60
+
+Scope: `origin/main...HEAD` (merge base `e157f367`, the current `origin/main`), with a focus on the ten commits since `187efa59` (phases E1 and E2), against the intent amended on 2026-11-11 and the plan's "Amendment of 2026-11-11: phases D and E". Working tree clean. No `REVIEW.md` in the repository, so the default Bugs, Security, Compliance and Design passes ran. Checks at this SHA, Ruby 4.0.7: `bin/rails test` green (1696 runs, 0 failures, 0 skips); `bin/rails test:system` green (37 runs, 0 failures); rubocop clean (475 files); herb-lint 0 failing (12 hints); Brakeman no warnings; bundler-audit no vulnerabilities; i18n-tasks normalize leaves the tree unchanged, no unused and no missing keys.
+
+`Gemfile.lock` against `origin/main` changes only the appkit and mvpa-css revisions. appkit `42e22b3` is the head of appkit `main` (`git ls-remote`), so phase D merged before the bump, as the intent requires.
+
+Compliance, the amended acceptance criteria to proof:
+
+- Rail shows 🔍, five hubs and 👤 Profiel, no pop-up: `navigation_hubs_test.rb` "rail shows search, five hubs and profiel" (see the Nit on its file).
+- Consolideren tile and badge 12: `navigation_hubs_test.rb` "consolideren tile and badge count transactions to consolidate".
+- € 100 split 60 / 40 counts and lists: `navigation_hubs_test.rb` "partly split transaction counts on consolideren".
+- Rekeningen indelen 0 and no badge: `navigation_hubs_test.rb` "rekeningen indelen shows zero and no badge".
+- Consolideren tile opens the filtered journal with "‹ Verwerken": `origin_back_link_test.rb` "consolideren tile opens the filtered journal with a verwerken back link".
+- Show, Bewerken, Opslaan round trip; delete lands on Verwerken; search origin; edit and budget highlight; Bezittingen; Facturen; Budgetten; Begrotingsposten; Overzicht: unchanged since round 4.
+- Verwerken hub column order: `navigation_hubs_test.rb` "verwerken hub column order".
+- Importeren tile, item and title-bar action: `navigation_hubs_test.rb` "importeren tile item and title bar action"; `main_navigation_menus_test.rb` clicks the title-bar action.
+- Alles tile 4 and list newest first: `navigation_hubs_test.rb` "alles tile counts and lists every open item".
+- `/todo` shows Alles in Verwerken: `navigation_hubs_test.rb` "todo shows alles in verwerken".
+- Profiel landing and hub column: `navigation_hubs_test.rb` "profiel landing and hub column".
+- Uitloggen signs out from tile and hub column: `navigation_hubs_layout_test.rb` "uitloggen tile signs out", "uitloggen hub column item signs out".
+- Rail marks Profiel on Voorkeuren, Beheer and Categorieën: `navigation_hubs_test.rb` "rail marks profiel on voorkeuren and beheer".
+- Member and admin Beheer: `navigation_hubs_test.rb` "member sees beheer without gebruikers", "admin sees gebruikers and admin dashboard in the shell", now asserting the Profiel rail mark.
+- Phone: six tabs, no avatar: `navigation_hubs_layout_test.rb` "phone tab bar has six tabs and no avatar"; `navigation_hubs_test.rb` "no title bar holds an avatar".
+- Narrow window: unchanged since round 4. No sideways scroll: `responsive_tables_test.rb`, now with the Profiel landing page and `/todo`.
+
+Every other test that the amended `## Proof` names exists: `hub_queries_test.rb` "verwerken counts run once per request" (still three `SELECT COUNT` with Alles and Importeren), "profiel landing runs no count query", "alles query count is bounded by the page" (25, then 40 open transactions, pinned at 49); `origin_back_link_test.rb` "record opened from alles returns to alles"; `searches_test.rb` "search does not offer uitloggen". The appkit Proof lines live in the appkit repository.
+
+Changed and deleted tests in these commits: the avatar, account-menu and `/todo` redirect tests give way to the amended criteria; the three `show_upload_form?` tests go with the method, as Design decisions say; the two restored `todos_index_test.rb` link assertions expect `from=processing.all`, as Design decisions say. `signing_in_test.rb` and `main_navigation_menus_test.rb` change as the Implementation notes record. None is weakened or skipped.
+
+Design: the new `MenuMap` methods (`profile_hub`, `profile_details_pages`, `processing_open_pages`) are private and carry RBS; `Todo`, `TodosController` and `TodosHelper` differ from `origin/main` only in comments, the `Account.untouched` scope, the removed upload prompt and `menu.carry_list`, so they add no public method. No new call chain. The per-row `uncategorized_amount` read on Alles is the bounded cost that Complexity accepts and the Alles query test pins; it does not contradict a `Query count:` line. `carry_list` writes `from=processing.all` also without an origin, unlike the plan's Signatures text; the Implementation notes record that.
+
+- [ ] Important: saving Gegevens drops the origin. The Profiel tile opens `/users/<id>/profile/edit?from=profile` with "‹ Profiel", and the form posts `from=profile`, but `update` redirects to `user_profile_path(@user)` without `menu.carry`, so the show page loses "‹ Profiel" and shows only "Terug" to `/users` (verified with a throwaway request). Cancel keeps the origin. The intent says the origin survives show → edit → save or cancel for a page opened from a landing tile, and Gegevens became a tile in this phase. Carry the origin in the redirect with a round-trip test, or record the departure in the Implementation notes — `app/controllers/users/profiles_controller.rb:30` → fixed (Keep the Profiel origin after saving Gegevens)
+- [ ] Nit: Proof names `test/integration/main_navigation_test.rb` `test_rail_shows_search_five_hubs_and_profiel`, but the test lives in `test/integration/navigation_hubs_test.rb`, and the Implementation notes do not record the move. Update the Proof line or the note — `docs/changes/navigation-hubs/plan.md:704` → fixed (docs: point the rail and phone Proof lines at their tests)
+- [ ] Nit: Gegevens owns the whole `users/profiles` controller, so another user's profile page (`user_profile_path(other)`, linked from `users/_user`) marks Profiel in the rail and Gegevens in the hub column, as if it were the signed-in user's own page — `app/controllers/concerns/menu_map.rb:61` → dismissed: appkit places a request by controller and filter, never by record, so own and other profiles cannot differ without a new appkit change; only an admin reaches another profile, from Beheer, and the rail then rightly marks Profiel, the parent hub of Beheer
+- [ ] Nit: the glossary lists "tab" under `Avoid:` for Hub; the test name "phone tab bar has six tabs and no avatar" calls the hubs tabs. "tab bar" is the glossary's word for the phone rail, so "phone tab bar has six hubs and no avatar" says the same with the agreed word; the Proof line names the test, so it changes too — `test/system/navigation_hubs_layout_test.rb:16` → fixed (Name the phone bar items hubs in the six-item test)
