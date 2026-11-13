@@ -10,7 +10,7 @@ class NavigationHubsTest < ActionDispatch::IntegrationTest
     sign_in_as(@member)
   end
 
-  test "rail shows search, five hubs and profiel" do
+  test "rail shows search five hubs and profiel" do
     get dashboard_index_url
 
     assert_select "nav.rail > ul > li", 6
