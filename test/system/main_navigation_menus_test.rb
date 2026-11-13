@@ -18,7 +18,7 @@ class MainNavigationMenusTest < ApplicationSystemTestCase
   test "the verwerken import action reaches the import page" do
     visit hub_url(:processing)
 
-    click_link I18n.t("menu.hubs.processing.import", locale: locale)
+    within("main > header nav") { click_link I18n.t("menu.hubs.processing.import", locale: locale) }
 
     assert_current_path new_transactions_import_path
   end
