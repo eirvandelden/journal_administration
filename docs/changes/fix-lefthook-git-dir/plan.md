@@ -144,7 +144,7 @@ No criterion needs a code test: this is configuration.
 
 ## Risks
 
-- **bundler-audit fails today on real advisories:** msgpack 1.8.5 needs 1.8.7 or later, and puma 8.0.2 needs 8.0.3 or later. Once the hooks are installed, any push that includes `Gemfile` is refused until those gems are upgraded. This branch's push does not include `Gemfile`. The upgrade is a separate branch (playbook rule 25). The `--all-files` check in `## Proof` reports these advisories, and that report counts as a real result, not exit status 7.
+- **bundler-audit fails today on real advisories:** msgpack 1.8.5 needs 1.8.7 or later, puma 8.0.2 needs 8.0.3 or later, and net-ssh 7.3.6 needs `~> 7.3.10` or `>= 8.1.2`. Once the hooks are installed, any push that includes `Gemfile` is refused until those gems are upgraded. This branch's push does not include `Gemfile`. The upgrade is a separate branch (playbook rule 25). The `--all-files` check in `## Proof` reports these advisories, and that report counts as a real result, not exit status 7.
 - **`lefthook install` affects every checkout of this clone.** Other agents' worktrees then run the hooks on their next commit or push. A branch that pushes `Gemfile` then hits the bundler-audit advisories above.
 - **The shared `minitest` job calls `bin/rails test`.** A Rails binstub resolves `APP_ROOT` to the main checkout. In a worktree it can boot the main checkout's app. The intent leaves this gotcha out of scope, so this change does not touch it.
 - **The main checkout reads its own `lefthook.yml` until this branch merges.** Criterion 4 can only be proven in full after merge (see `## Proof`). The consent guard blocks `LEFTHOOK_CONFIG`, so a run of the new config from the main checkout before merge is not possible.
