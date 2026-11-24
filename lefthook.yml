@@ -3,7 +3,9 @@ remotes:
     ref: main
     refetch_frequency: 24h
 
-# Jobs the shared dotfiles config does not have. Where both define a job, the shared one runs.
+# Jobs the shared dotfiles config does not have, plus small overrides of shared jobs.
+# Where both name a job, lefthook merges the keys: the shared `run` stays, and a local key such as
+# `skip` or `exclude` is added.
 # Git exports GIT_DIR to its hooks. In a worktree it is absolute, and Bundler's git-sourced gems
 # (appkit, mvpa-css) then read the wrong repository, so every Bundler job unsets it first.
 pre-commit:
