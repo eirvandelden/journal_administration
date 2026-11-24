@@ -58,12 +58,19 @@ pre-commit:
     # erb_lint is not installed here; herb-lint checks ERB.
     erb_lint:
       skip: true
+    # browserslist is not installed here, and .browserslistrc is a webpacker leftover.
+    browserslist:
+      skip: true
+    # i18n-tasks normalize writes sequences that yamllint's indentation rule refuses.
+    # i18n-normalized checks the locale files instead.
+    yamllint:
+      exclude: "config/locales/*.yml"
     herb-lint:
       glob: "*.erb"
       run: npx --no herb-lint {staged_files}
       fail_text: "herb-lint found ERB issues. Run: npx --no herb-lint --fix app/views/"
     i18n-normalized:
-      glob: "config/locales/**/*.yml"
+      glob: "config/locales/*.yml"
       run: |
         unset GIT_DIR
         bundle exec ruby ./bin/check_i18n_normalized
@@ -73,6 +80,10 @@ pre-push:
   commands:
     erb_lint:
       skip: true
+    browserslist:
+      skip: true
+    yamllint:
+      exclude: "config/locales/*.yml"
     herb-lint-full:
       run: npx --no herb-lint app/views/
       fail_text: "herb-lint failed on full view scan"
@@ -159,7 +170,7 @@ No criterion needs a code test: this is configuration.
 
 ## Proof
 
-- A push from a worktree runs the shared rubocop, brakeman, bundle-audit and minitest jobs and the local jobs, and each reports its real result instead of exit status 7. → check: in the worktree, run `GIT_DIR=$(git rev-parse --git-dir) lefthook run pre-push --all-files`. Every job reports its own output. Expected results: bundle-audit fails on the msgpack and puma advisories, and every other job passes. No job exits with status 7 or shows the git-gem error. Then do a real `git push -u origin HEAD`, and the hooks must pass.
+- A push from a worktree runs the shared rubocop, brakeman, bundle-audit and minitest jobs and the local jobs, and each reports its real result instead of exit status 7. → check: in the worktree, run `GIT_DIR=$(git rev-parse --git-dir) lefthook run pre-push --all-files`. Every job reports its own output. Expected results: bundle-audit fails on the msgpack, net-ssh and puma advisories, and every other job passes. No job exits with status 7 or shows the git-gem error. Then do a real `git push -u origin HEAD`, and the hooks must pass.
 - A commit of a staged Ruby file from a worktree runs rubocop on that file and reports its real result. → check: stage a clean change to one `.rb` file and run `GIT_DIR=$(git rev-parse --git-dir) lefthook run pre-commit`. The shared rubocop job reports "no offenses". Then unstage and restore the file.
 - A rubocop offence in a worktree still blocks the commit: the hook is not silenced. → check: create `tmp_offence.rb` with an offence that autocorrect cannot fix (a camelCase method name, `def badName; end`, which `Naming/MethodName` flags without a correction), stage it, and run `git commit -m probe`. The commit must be refused by rubocop. Then unstage and delete the file. No commit remains.
 - A push from the main checkout still runs every hook and passes as before. → check before merge, in the main checkout: `GIT_DIR=.git sh -c 'unset GIT_DIR; bundle exec ruby ./bin/check_i18n_normalized'` passes. Check after merge, once the main checkout is on the merged `main`: `GIT_DIR=.git lefthook run pre-push --all-files` shows the same jobs with the same results as the worktree run.
