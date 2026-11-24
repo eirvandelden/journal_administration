@@ -26,7 +26,7 @@ How the household runs its money, and the method to check transactions and budge
 - Test: `bin/rails test` (Minitest, fixtures under `test/fixtures`).
 - System tests: `bin/rails test:system` runs headless Edge locally and headless Chrome on CI; set `EDGE_BIN` to use another Edge binary.
 - Lint: `bundle exec rubocop`, `npx @herb-tools/linter app/views/` (ERB), `bundle exec brakeman --no-pager -q`, `bundle exec bundler-audit check`. Locale files must stay normalized: `bundle exec i18n-tasks normalize`.
-- All of the above (plus tests) run automatically on `git push` via lefthook.
+- lefthook runs the shared dotfiles hooks plus the herb and i18n checks on commit and push. Run `lefthook install` once per clone.
 
 ## Gotchas
 
