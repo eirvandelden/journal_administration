@@ -11,6 +11,13 @@ pre-commit:
     # erb_lint is not installed here; herb-lint checks ERB.
     erb_lint:
       skip: true
+    # browserslist is not installed here, and .browserslistrc is a webpacker leftover.
+    browserslist:
+      skip: true
+    # i18n-tasks normalize writes sequences that yamllint's indentation rule refuses.
+    # i18n-normalized checks the locale files instead.
+    yamllint:
+      exclude: "config/locales/*.yml"
     herb-lint:
       glob: "*.erb"
       run: npx --no herb-lint {staged_files}
@@ -26,6 +33,10 @@ pre-push:
   commands:
     erb_lint:
       skip: true
+    browserslist:
+      skip: true
+    yamllint:
+      exclude: "config/locales/*.yml"
     herb-lint-full:
       run: npx --no herb-lint app/views/
       fail_text: "herb-lint failed on full view scan"
