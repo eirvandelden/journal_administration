@@ -1,10 +1,12 @@
-# Plan: Make the i18n unused-key check pass again on i18n-tasks 1.2.1
+# Plan: Fix the i18n unused-key check on i18n-tasks 1.2.1 and the puma and net-ssh audit advisories
 
 Author: Etienne van Delden de la Haije. Status: accepted (2026-11-26). Type: chore. Delivery: autonomous. Codex review: no.
 
 ## Problem
 
 Main's Dependabot bump of `i18n-tasks` from 1.1.2 to 1.2.1 (PR #426) made `bundle exec i18n-tasks health` and `I18nTest#test_no_unused_keys` (`test/i18n_test.rb:15`) fail with 141 unused keys: 47 keys in each of the en, it and nl locales. CI runs both (`.github/workflows/ci.yml:35` and `:40`), so main and every branch off it have a red check. It is a pre-existing failure found while delivering `fix-bundler-audit-advisories` (playbook rule 25).
+
+This change also ships that audit fix. `bundle exec bundler-audit check` was red on main too: puma 8.0.3 had 2 advisories and net-ssh 7.3.6 had 3, one of them High (GHSA-hjwv-j52r-xcg7). Each fix's pre-push hooks and CI need the other, so Etienne decided on 2026-11-26 to deliver both in one pull request. `Gemfile.lock` changes only for puma 8.0.3 to 8.1.2 and net-ssh 7.3.6 to 7.3.10 (the latest net-ssh that kamal 2.12.0's `~> 7.3` pin allows), each in its own commit, with no other gem moving. `bundler-audit check --update` then reports no vulnerabilities, and a boot under puma 8.1.2 answers `/up` with 200.
 
 The 47 keys per locale, in eight groups: `menu.pages.*.label` (22), `menu.hubs.*.label` (7), `search.result_types.*` (5), `transactions.types.{credit,debit,transfer}`, `todos.index.{account,product,transaction}`, `people.household.{true,false}`, `payment_providers.{create,destroy}.success`, `language_names.{en,it,nl}`.
 
@@ -46,7 +48,7 @@ Run commands with `PATH="$PWD/bin:$HOME/.local/share/rv/rubies/ruby-4.0.10/bin:$
 - Never delete a key that the app uses, and never add a key to `ignore_unused` just to silence a real unused key. Each of the eight groups is checked above: all are used through a dynamic key, none is dead, so no key is removed.
 - No test is skipped or weakened, and `test/i18n_test.rb` stays unchanged.
 - Locale files stay normalized (`i18n-tasks normalize`).
-- Branches off main. `fix-bundler-audit-advisories` rebases on top of this fix afterwards.
+- Branches off main and carries the two audit commits (puma, net-ssh) that `fix-bundler-audit-advisories` made. That branch is not delivered on its own.
 - Permissions: none needed. No gem, system tool, destructive migration or deploy file is touched (playbook rules 8, 9, 11, 12, 13). `.github/workflows/ci.yml` stays unchanged.
 
 ## In scope
@@ -57,7 +59,7 @@ Run commands with `PATH="$PWD/bin:$HOME/.local/share/rv/rubies/ruby-4.0.10/bin:$
 ## Out of scope
 
 - Pinning, upgrading or removing `i18n-tasks`.
-- Any other gem, any application behaviour, any UI text, any locale value.
+- Any gem other than the puma and net-ssh bumps above, any application behaviour, any UI text, any locale value.
 - The eight existing `# i18n-tasks-use t("menu.pages.*.tile")` markers in `menu_map.rb:17-24`. They stay as they are; whether 1.2.1 makes them redundant is a separate question.
 - The local system-test failure (Capybara CDP reset).
 - Rebasing `fix-bundler-audit-advisories` (it happens after this change merges).
@@ -69,7 +71,7 @@ Run commands with `PATH="$PWD/bin:$HOME/.local/share/rv/rubies/ruby-4.0.10/bin:$
 - `bundle exec i18n-tasks normalize` leaves `config/locales` unchanged.
 - A key that no code reads, directly or through a dynamic key, is still reported as unused. Example: a new `menu.unused_example` key in en, it and nl makes `i18n-tasks unused` list exactly those three keys, and none of the 141 dynamic keys.
 - A key the code reads literally but no locale holds is still reported as missing. Example: with `search.strict: false`, removing `search.shortcut_hint` (read by `app/views/layouts/application.html.erb:53`) from the en locale makes `i18n-tasks missing` list it.
-- The app shows the same labels as before: no application code and no locale value changes. `git diff main --stat` lists only `config/i18n-tasks.yml` and the change folder, and the full `bin/rails test` run passes.
+- The app shows the same labels as before: no application code and no locale value changes. `git diff main --stat` lists only `config/i18n-tasks.yml`, `Gemfile.lock` and the change folder, and the full `bin/rails test` run passes.
 
 ## Decisions
 
@@ -163,7 +165,7 @@ Passing `strict: false` in `test/i18n_test.rb` is not an option: the test must s
 - Scratch setup for the next two checks: copy `config/locales/*.yml` to `<scratch>/locales/`, and copy the changed `config/i18n-tasks.yml` to `<scratch>/i18n-tasks.yml` with `data.read` set to the absolute `<scratch>/locales/%{locale}.yml`. Add `menu.unused_example: x` to the three scratch locales, and remove `search.shortcut_hint` from the scratch `en.yml`. Run both commands from the worktree root.
 - A dead key is still reported → check: `bundle exec i18n-tasks unused -c <scratch>/i18n-tasks.yml` lists exactly three keys, `menu.unused_example` in en, it and nl, and none of the 141 dynamic keys. (Dry run during planning: confirmed.)
 - Invariant: missing-key detection stays strict, enforced by `missing_keys.rb:54,106` passing `strict: true` → check: `bundle exec i18n-tasks missing -c <scratch>/i18n-tasks.yml` lists `en search.shortcut_hint`. (Dry run during planning: confirmed.) `test/i18n_test.rb` `test_no_missing_keys` stays green on the real locales.
-- The app shows the same labels → check: `git diff main --stat` lists only `config/i18n-tasks.yml` and `docs/changes/fix-i18n-unused-keys-1-2/`, and the full `bin/rails test` run passes.
+- The app shows the same labels → check: `git diff main --stat` lists only `config/i18n-tasks.yml`, `Gemfile.lock` and `docs/changes/fix-i18n-unused-keys-1-2/`, and the full `bin/rails test` run passes.
 
 Per changed file, the unit tests expected:
 
