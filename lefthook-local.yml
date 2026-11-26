@@ -2,5 +2,5 @@
 # Example: skip herb linting locally
 # pre-commit:
 #   commands:
-#     herb:
+#     herb-lint:
 #       skip: true
