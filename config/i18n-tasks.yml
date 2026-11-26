@@ -85,7 +85,9 @@ search:
   # only: ["*.rb", "*.html.slim"]
 
   ## If `strict` is `false`, guess usages such as t("categories.#{category}.title"). The default is `true`.
-  # strict: true
+  ## i18n-tasks 1.2 reads this setting in `unused`. The app reads menu, hub, search type, transaction type,
+  ## to-do, household, payment provider and language labels through dynamic keys, so keep it `false`.
+  strict: false
 
   ## Allows adding ast_matchers for finding translations using the AST-scanners
   ## The available matchers are:
